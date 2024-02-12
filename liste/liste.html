@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Participants</title>
+    <script>
+        function showDetails(id) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("details").innerHTML = this.responseText;
+                }
+            };
+            xhr.open("GET", "details.php?id=" + id, true);
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <div id="liste_participants">
+        <?php include 'participants.php'; ?>
+    </div>
+    <div id="details">
+        <!-- Les détails du participant seront affichés ici -->
+    </div>
+</body>
+</html>
