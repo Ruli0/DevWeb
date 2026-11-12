@@ -6,9 +6,9 @@
 
   const COUCHES = {
     journal: { matiere: 'Mousse', role: 'Journalisation', aide: 'Note tout ce qui passe' },
-    filtre: { matiere: 'Charbon', role: 'Filtre de données sensibles', aide: 'Masque les adresses e-mail' },
+    filtre: { matiere: 'Sable', role: 'Filtre de données sensibles', aide: 'Masque les adresses e-mail' },
     cache: { matiere: 'Terreau', role: 'Cache', aide: 'Retient les réponses déjà données' },
-    debit: { matiere: 'Gravier', role: 'Limite de débit', aide: '3 requêtes au maximum' },
+    debit: { matiere: 'Galets', role: 'Limite de débit', aide: '3 requêtes au maximum' },
   };
 
   T.scenes.couches = function (root, env) {

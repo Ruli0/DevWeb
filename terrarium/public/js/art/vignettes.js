@@ -40,8 +40,8 @@
     const FILTRES = [0.42, 0.66, 0.86];
     const pts = FILTRES.map((fr) => ruisseau.getPointAtLength(longueur * fr));
     q('#filtres').innerHTML = `
-      <g><ellipse cx="${pts[0].x}" cy="${pts[0].y}" rx="17" ry="9" fill="#5fa04a"/><circle cx="${pts[0].x - 7}" cy="${pts[0].y - 3}" r="5" fill="#9ad25f"/><circle cx="${pts[0].x + 6}" cy="${pts[0].y - 2}" r="6" fill="#86c44e"/><circle cx="${pts[0].x}" cy="${pts[0].y + 3}" r="4" fill="#9ad25f"/></g>
-      <g><ellipse cx="${pts[1].x}" cy="${pts[1].y}" rx="19" ry="8" fill="#d9bd82"/><ellipse cx="${pts[1].x - 3}" cy="${pts[1].y - 2}" rx="11" ry="4" fill="#ecd7a6"/></g>
+      <g><ellipse cx="${pts[0].x}" cy="${pts[0].y}" rx="19" ry="8" fill="#d9bd82"/><ellipse cx="${pts[0].x - 3}" cy="${pts[0].y - 2}" rx="11" ry="4" fill="#ecd7a6"/></g>
+      <g><ellipse cx="${pts[1].x}" cy="${pts[1].y}" rx="17" ry="9" fill="#5fa04a"/><circle cx="${pts[1].x - 7}" cy="${pts[1].y - 3}" r="5" fill="#9ad25f"/><circle cx="${pts[1].x + 6}" cy="${pts[1].y - 2}" r="6" fill="#86c44e"/><circle cx="${pts[1].x}" cy="${pts[1].y + 3}" r="4" fill="#9ad25f"/></g>
       <g fill="#b9bdb4"><ellipse cx="${pts[2].x - 9}" cy="${pts[2].y + 1}" rx="7" ry="5"/><ellipse cx="${pts[2].x + 2}" cy="${pts[2].y - 3}" rx="6" ry="4.5" fill="#d5d8cf"/><ellipse cx="${pts[2].x + 10}" cy="${pts[2].y + 3}" rx="7" ry="5" fill="#9b9f97"/></g>`;
     const filtres = q('#filtres').children;
     const lueur = q('#cadre-lueur');
@@ -173,11 +173,11 @@
           await att(j, trajet(0, 0.3, 1.1, 'power2.in'));
           await att(j, trajet(0.3, FILTRES[0], 1.2));
           signaler(0);
-          await etape(j, 'La mousse garde une trace de son passage : c\'est le journal.');
-          await att(j, trajet(FILTRES[0], FILTRES[1], 1.5));
-          signaler(1);
           gsap.to(corps, { fill: '#bfeaf2', duration: 1.4 });
           await etape(j, 'Le sable retient les impuretés : les données sensibles sont masquées.');
+          await att(j, trajet(FILTRES[0], FILTRES[1], 1.5));
+          signaler(1);
+          await etape(j, 'La mousse garde une trace de l\'eau déjà propre : c\'est le journal.');
           await att(j, trajet(FILTRES[1], FILTRES[2], 1.3));
           signaler(2);
           await etape(j, 'Les galets freinent le courant : c\'est la limite de débit.');

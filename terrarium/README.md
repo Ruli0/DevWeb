@@ -11,6 +11,7 @@ npm install
 npm start        # http://localhost:3000  (PORT=4000 npm start pour changer de port)
 npm test         # tests de la simulation
 npm run build:demo   # démo en un seul fichier : demo/index.html, jouable sans serveur
+node scripts/build-demo.js --scene=cycle   # page vidéo 9:16 d'une scène : demo/video-cycle.html
 ```
 
 ## Le vivarium
@@ -27,15 +28,19 @@ Cinq scènes de nature (`public/js/art/vignettes.js`) jouent chacune un concept,
 | La dionée | Elle se referme sur un scarabée, puis la grenouille coasse | Hooks avant et après |
 | Les fourmis | Trois éclaireuses partent, puis rapportent chacune une trouvaille | Multi-agents |
 
+## Les vidéos
+
+Les scripts des cinq vidéos (format vertical, plan par plan, avec texte à l'écran et voix off) sont dans [`videos/scripts.md`](videos/scripts.md), avec la marche à suivre pour les produire avec HyperFrames.
+
 ## Les cinq chapitres
 
 | Chapitre | Dans le terrarium | Concept agentique | Ce qu'on manipule |
 |---|---|---|---|
-| 1. Le bocal | Un volume fermé et limité | Fenêtre de contexte, context engineering, compactage | On remplit le bocal, il déborde, on composte |
-| 2. Le cycle de l'eau | L'eau qui tourne en boucle | Boucle d'outils | Une goutte avance étape par étape : pensée, appel, résultat, retour au contexte |
-| 3. Les couches | Mousse, charbon, terreau, gravier | Middleware | On active et on réordonne les couches : fuite dans le journal, cache, quota |
-| 4. Les capteurs | Thermostat, hygromètre | Hooks avant et après l'action | On branche des capteurs qui bloquent, modifient, notent ou informent |
-| 5. L'écosystème | Le jardinier et ses petites bêtes | Orchestrateur et sous-agents | On compare « déléguer » et « tout faire seul » |
+| 1. La boîte en verre | Un volume fermé et limité | Fenêtre de contexte, context engineering, compactage | On remplit le bocal, il déborde, on composte |
+| 2. Le caméléon | Il vise, lance sa langue, avale, recommence | Boucle d'outils | Une goutte avance étape par étape : pensée, appel, résultat, retour au contexte |
+| 3. Le ruisseau | Sable, mousse, terreau, galets | Middleware | On active et on réordonne les couches : fuite dans le journal, cache, quota |
+| 4. Les capteurs | La dionée, la grenouille, des capteurs | Hooks avant et après l'action | On branche des capteurs qui bloquent, modifient, notent ou informent |
+| 5. L'écosystème | La fourmilière et ses éclaireuses | Orchestrateur et sous-agents | On compare « déléguer » et « tout faire seul » |
 
 Chaque chapitre contient une explication courte, une scène interactive, les points à retenir, un exemple de code et un quiz de deux questions. Réussir le quiz termine le chapitre.
 
@@ -50,7 +55,8 @@ public/js/art/         le vivarium illustré et ses cinq scènes animées
 public/js/home.js      page d'accueil (vivarium, légende, liste des chapitres)
 public/js/scenes/      une scène animée par chapitre
 test/                  tests node:test de la simulation
-scripts/build-demo.js  démo autonome en un fichier
+scripts/build-demo.js  démo autonome en un fichier, et pages vidéo par scène
+videos/scripts.md      scripts des vidéos
 ```
 
 ### API

@@ -72,7 +72,7 @@
         step.texte = `Note la requête : « ${payload} »`;
         if (payload.includes('@')) {
           step.fuite = true;
-          lecons.push("Le journal a noté l'e-mail en clair. Place le charbon (filtre) au-dessus de la mousse (journal).");
+          lecons.push("Le journal a noté l'e-mail en clair. Place le sable (filtre) au-dessus de la mousse (journal).");
         }
       } else if (id === 'filtre') {
         payload = payload.replace(/\S+@\S+/, '[e-mail masqué]');
@@ -132,7 +132,7 @@
       lecons.push('Le cache a répondu : le modèle n\'a pas été appelé' + (sousLeCache ? ', et le quota n\'a pas bougé.' : '.'));
     } else if (arret === 'debit') {
       const cacheDessous = ordre.includes('cache') && ordre.indexOf('cache') > ordre.indexOf('debit');
-      lecons.push('Le gravier a refusé la requête : le quota est épuisé.'
+      lecons.push('Les galets ont refusé la requête : le quota est épuisé.'
         + (cacheDessous ? ' Place le terreau (cache) au-dessus : les requêtes déjà vues ne compteront plus.' : ''));
     } else if (!lecons.some((l) => l.includes('clair') || l.includes('Sans filtre'))) {
       lecons.push(ordre.includes('cache')

@@ -16,14 +16,14 @@
     {
       id: 'bocal',
       numero: 1,
-      titre: 'Le bocal',
+      titre: 'La boîte en verre',
       concept: 'Fenêtre de contexte et context engineering',
       resume: 'Un volume limité : tout ce que le modèle voit doit y tenir.',
       intro: [
-        "Un modèle ne voit que ce qui est dans son contexte, comme une plante ne dispose que de ce qui est dans son bocal. Et le bocal a une taille fixe, comptée en tokens (des morceaux de mots).",
+        "Un modèle ne voit que ce qui est dans son contexte, comme les habitants du vivarium ne disposent que de ce qui est dans la boîte en verre. Et cette boîte a une taille fixe, comptée en tokens (des morceaux de mots).",
         "Le context engineering, c'est l'art de choisir ce qu'on y met : la consigne, la demande, les outils, et seulement les extraits utiles des documents. Quand l'ancien prend trop de place, on le composte : on le remplace par un résumé.",
       ],
-      consigne: 'Fais tenir les sept éléments dans le bocal. Touche un élément pour l\'ajouter, puis composte ce qui prend trop de place.',
+      consigne: 'Fais tenir les sept éléments dans la boîte. Touche un élément pour l\'ajouter, puis composte ce qui prend trop de place.',
       retenir: [
         'Ce qui déborde est perdu : le modèle ne le voit plus.',
         'Un bon contexte est choisi, pas rempli : un extrait utile vaut mieux qu\'un document entier.',
@@ -75,14 +75,14 @@ function construireContexte(demande: string, memoire: Memoire) {
     {
       id: 'cycle',
       numero: 2,
-      titre: "Le cycle de l'eau",
+      titre: 'Le caméléon',
       concept: "La boucle d'outils",
-      resume: 'Réfléchir, agir, observer, recommencer : le moteur de tout agent.',
+      resume: 'Viser, lancer la langue, avaler, recommencer : le moteur de tout agent.',
       intro: [
         "Un agent n'est pas une réponse unique : c'est une boucle. Le modèle réfléchit, demande à utiliser un outil, reçoit le résultat, puis réfléchit à nouveau avec cette information en plus.",
-        "Comme l'eau d'un terrarium, qui s'évapore, se condense, retombe et repart, la boucle tourne jusqu'à ce que le modèle réponde sans demander d'outil. C'est lui qui décide quand s'arrêter.",
+        "Le caméléon chasse exactement comme ça. Il repère une proie et vise : le modèle réfléchit. Il lance sa langue : c'est l'appel d'outil. Il ramène la proie : c'est le résultat. Sa couleur change : le résultat enrichit son contexte. Puis il recommence, jusqu'à ce qu'il n'ait plus faim. C'est lui qui décide quand s'arrêter, comme le modèle qui répond sans demander d'outil.",
       ],
-      consigne: "Avance étape par étape et suis la goutte. Compte les tours avant la réponse finale.",
+      consigne: "Ici, l'agent s'occupe de l'humidité du vivarium. Avance étape par étape et suis la goutte autour de la boucle. Compte les tours avant la réponse finale.",
       retenir: [
         'Le modèle ne lance pas l\'outil lui-même : il le demande, et le programme l\'exécute.',
         'Chaque résultat d\'outil retourne dans le contexte avant le tour suivant.',
@@ -133,14 +133,14 @@ function construireContexte(demande: string, memoire: Memoire) {
     {
       id: 'couches',
       numero: 3,
-      titre: 'Les couches',
+      titre: 'Le ruisseau',
       concept: 'Le middleware',
       resume: 'Chaque requête traverse des couches à l\'aller, et la réponse au retour.',
       intro: [
-        "Au fond d'un terrarium, l'eau traverse la mousse, le charbon, le terreau et le gravier. Chaque couche a un rôle : retenir, filtrer, drainer.",
+        "Dans le vivarium, l'eau de la cascade n'arrive jamais directement au bassin. Elle traverse du sable, de la mousse, du terreau et des galets. Chaque couche a un rôle : filtrer, retenir, freiner.",
         "Un middleware, c'est pareil : une couche placée entre la demande et le modèle. La requête descend à travers toutes les couches, la réponse remonte par le même chemin. Chaque couche peut observer, modifier, ou arrêter le passage. Et leur ordre change tout.",
       ],
-      consigne: 'Verse une requête, puis change l\'ordre des couches et observe ce qui change. Essaie de mettre le journal au-dessus du filtre.',
+      consigne: 'Verse une requête : dans cet ordre, une donnée sensible fuit. Trouve le bon ordre des couches, puis verse la même requête deux fois pour voir le cache.',
       retenir: [
         'Une couche voit passer la requête à la descente et la réponse à la remontée.',
         'Une couche peut court-circuiter : le cache répond sans appeler le modèle.',
@@ -199,7 +199,7 @@ const appeler = composer([filtre, journal, cache, limiteDebit], appelerModele);`
       concept: 'Les hooks',
       resume: 'Des déclencheurs avant et après chaque action, qui peuvent la bloquer.',
       intro: [
-        "Un thermostat ne décide pas quoi planter. Il se déclenche tout seul quand quelque chose se produit, et il peut couper le chauffage. Un hook fonctionne de la même façon.",
+        "Dans le vivarium, la dionée ne réfléchit pas : dès qu'un insecte touche ses poils, elle se referme. La grenouille, elle, coasse après coup pour signaler ce qui vient de se passer. Un hook fonctionne de la même façon : il se déclenche tout seul, au bon moment.",
         "C'est un petit programme branché sur un moment précis de la boucle : juste avant qu'un outil s'exécute, ou juste après. Avant, il peut bloquer ou modifier l'action. Après, il peut noter ce qui s'est passé ou ajouter une information au contexte. Le modèle ne peut pas l'ignorer : le hook s'exécute à coup sûr.",
       ],
       consigne: 'Lance l\'agent sans capteur et regarde le résultat. Branche ensuite les capteurs un par un et relance.',
@@ -258,7 +258,7 @@ agent.hook("apresOutil", { outil: "vaporiser" }, async () => {
       concept: 'Le système multi-agents',
       resume: 'Un jardinier qui délègue à des spécialistes, chacun dans son propre bocal.',
       intro: [
-        "Dans un terrarium vivant, personne ne fait tout. Les cloportes nettoient, les collemboles mangent les moisissures, et chacun fait son travail de son côté.",
+        "Dans le vivarium, la fourmilière ne fait pas tout elle-même. Elle envoie des éclaireuses, chacune de son côté, et chacune ne rapporte que l'essentiel. Au sol, les cloportes nettoient et les collemboles mangent les moisissures.",
         "Dans un système multi-agents, un orchestrateur (le jardinier) découpe la tâche et confie chaque morceau à un sous-agent. Chaque sous-agent travaille dans son propre contexte, un mini-bocal isolé, et ne renvoie qu'un court résumé. Le bocal du jardinier reste léger, et les sous-agents peuvent travailler en même temps.",
       ],
       consigne: 'Lance la même tâche des deux façons et compare le bocal du jardinier.',

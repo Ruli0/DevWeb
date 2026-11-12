@@ -273,7 +273,7 @@ main:focus { outline: none; }
 .layer-tools { display: flex; gap: 8px; align-items: center; }
 .texture { flex: none; width: 34px; height: 34px; border-radius: 8px; border: 1.5px solid var(--ink); }
 .l-journal .texture { background: radial-gradient(circle at 30% 30%, var(--moss-soft) 0 3px, transparent 4px) 0 0 / 9px 9px, var(--moss); }
-.l-filtre .texture { background: radial-gradient(circle, var(--gravel) 0 1.5px, transparent 2px) 0 0 / 7px 7px, var(--charcoal); }
+.l-filtre .texture { background: radial-gradient(circle, #f3e6c4 0 1.2px, transparent 1.8px) 0 0 / 6px 6px, #d2b479; }
 .l-cache .texture { background: repeating-linear-gradient(0deg, transparent 0 5px, rgba(0, 0, 0, 0.18) 5px 6px), var(--soil); }
 .l-debit .texture { background: radial-gradient(circle at 50% 50%, var(--surface) 0 3px, transparent 4px) 0 0 / 11px 11px, var(--gravel); }
 .effect { font-size: 0.86rem; color: var(--ink); overflow-wrap: anywhere; }
