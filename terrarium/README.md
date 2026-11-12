@@ -30,6 +30,10 @@ Cinq scènes de nature jouent chacune un concept, avec une caméra qui suit l'ac
 | La dionée | Elle se referme sur un scarabée, puis la grenouille coasse | Hooks avant et après |
 | Les fourmis | Trois éclaireuses partent, puis rapportent chacune une trouvaille | Multi-agents |
 
+## Le carnet de bord de la production
+
+Le dossier [`production/`](production/README.md) suit la construction de l'outil de production TikTok : la vision, l'état actuel, la feuille de route, les décisions et les apprentissages tirés des publications. Il est mis à jour à chaque session.
+
 ## Les vidéos
 
 Une série TikTok de cinq épisodes (9:16, 19 à 24,5 s, sans voix off, avec bruitages). Chaque vidéo est décrite par un scénario JSON (`videos/scenarios/`) : plans, mouvements de caméra, actions des habitants, légendes en morceaux, carte de révélation, accroches à comparer et texte de publication. Le même moteur (`public/js/film/film.js`) la joue sur le site et la transforme en composition HyperFrames prête à rendre en MP4 (`videos/hyperframes/`). Le format, la chaîne de production et la boucle de mesure sont décrits dans [`videos/scripts.md`](videos/scripts.md).
