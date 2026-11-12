@@ -95,40 +95,31 @@ main:focus { outline: none; }
 .mini[disabled] { opacity: 0.35; cursor: default; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px; }
 
-/* --- Accueil ------------------------------------------------------------ */
-.hero { display: grid; gap: 1.5rem; padding-block: 2rem 2.5rem; align-items: center; }
-.hero-text { display: grid; gap: 0.9rem; justify-items: start; }
-.lead { color: var(--muted); max-width: 34rem; }
-.hero-visual { display: flex; justify-content: center; }
-.hero-jar { width: min(100%, 21rem); height: auto; overflow: visible; }
-@media (min-width: 44rem) { .hero { grid-template-columns: 1.1fr 0.9fr; } }
-
-.glass-fill { fill: var(--glass); }
-.glass { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
-.glint { fill: none; stroke: var(--surface); stroke-width: 5; stroke-linecap: round; opacity: 0.7; }
-.cork { fill: var(--soil); }
-.l-gravel { fill: var(--gravel); }
-.pebble { fill: var(--surface); opacity: 0.45; }
-.l-charcoal { fill: var(--charcoal); }
-.l-soil { fill: var(--soil); }
-.l-moss { fill: var(--moss); }
-.mist ellipse { fill: var(--water); opacity: 0.28; }
-.rain { fill: var(--water); }
-.stem { fill: none; stroke: var(--moss); stroke-width: 3.5; stroke-linecap: round; }
-.leaf { fill: var(--moss); }
-.mini-jar rect { fill: var(--surface); stroke: var(--ink); stroke-width: 2.5; }
-.mini-jar .mini-lid { fill: var(--soil); stroke: none; }
-.ant circle { fill: var(--ink); }
-.ant path { stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; fill: none; }
-.sensor rect { fill: var(--surface); stroke: var(--ink); stroke-width: 2.5; }
-.sensor path { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
-.led { fill: var(--amber); }
-.pin { cursor: pointer; }
-.pin-hit { fill: transparent; }
-.pin-dot { fill: var(--ink); stroke: var(--bg); stroke-width: 2.5; }
-.pin text { fill: var(--bg); font: 700 13px var(--body); pointer-events: none; }
-.pin.done .pin-dot { fill: var(--moss); }
-.pin:focus-visible .pin-dot { stroke: var(--water); stroke-width: 4; }
+/* --- Accueil : le vivarium ---------------------------------------------- */
+.hero { display: grid; gap: 0.8rem; padding-block: 1.75rem 1.25rem; }
+.lead { color: var(--muted); max-width: 36rem; }
+.lead.petit { font-size: 0.95rem; margin-bottom: 1rem; }
+.stage-wrap { display: grid; gap: 12px; margin-bottom: 2.5rem; scroll-margin-top: calc(58px + env(safe-area-inset-top, 0px)); }
+.stage { max-width: 30rem; width: 100%; justify-self: center; filter: drop-shadow(0 18px 28px rgba(10, 30, 22, 0.28)); }
+#vivarium { display: block; width: 100%; height: auto; border-radius: 20px; -webkit-tap-highlight-color: transparent; }
+#vivarium .hot { cursor: pointer; }
+.plaque {
+  max-width: 30rem; width: 100%; justify-self: center; min-height: 6.2rem;
+  display: grid; align-content: center; gap: 6px; padding: 12px 16px; border-radius: 14px;
+  background: #1b2925; color: #eef6ee;
+}
+.plaque p { font: 500 1.12rem/1.4 var(--body); text-wrap: balance; }
+.plaque-lien { color: #b9f29a; font-weight: 600; font-size: 0.95rem; }
+.scene-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 30rem; width: 100%; justify-self: center; }
+.chip {
+  display: grid; gap: 1px; align-content: center; text-align: left; min-height: 52px; padding: 8px 12px; border-radius: 12px; cursor: pointer;
+  font: 400 0.82rem/1.3 var(--body); color: var(--ink); background: var(--surface); border: 1.5px solid var(--line);
+}
+.chip strong { font-size: 0.95rem; }
+.chip span { color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--moss-soft); border-color: var(--moss); }
+.chip.tout { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.chip.tout span { color: var(--bg); opacity: 0.75; }
 
 .chapter-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .chapter-card {

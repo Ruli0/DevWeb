@@ -17,6 +17,7 @@
   // --- Navigation ----------------------------------------------------------
   function quitterScene() {
     if (etat.scene) etat.scene.vivant = false;
+    T.home.quitter();
     etat.scene = null;
     ScrollTrigger.getAll().forEach((s) => s.kill());
     gsap.killTweensOf(app.querySelectorAll('*'));

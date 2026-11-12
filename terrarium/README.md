@@ -13,6 +13,20 @@ npm test         # tests de la simulation
 npm run build:demo   # démo en un seul fichier : demo/index.html, jouable sans serveur
 ```
 
+## Le vivarium
+
+La page d'accueil est un vivarium illustré, entièrement dessiné en SVG par `public/js/art/terrarium.js` et animé avec GSAP : cascade et ruisseau, plantes qui bougent chacune à leur rythme, caméléon qui se promène sur sa branche, grenouille, papillons, escargot, fourmis.
+
+Cinq scènes de nature (`public/js/art/vignettes.js`) jouent chacune un concept, avec une légende qui suit l'action. Elles sont pensées pour être filmées, et « Tout regarder » les enchaîne.
+
+| Scène | Ce qu'on voit | Concept |
+|---|---|---|
+| La boîte en verre | Les plantes poussent jusqu'à déborder, puis on taille | Fenêtre de contexte, context engineering |
+| Le caméléon | Il vise, lance sa langue, avale, change de couleur, et recommence | Boucle d'outils |
+| Le ruisseau | Une goutte trouble traverse la mousse, le sable et les galets | Middleware |
+| La dionée | Elle se referme sur un scarabée, puis la grenouille coasse | Hooks avant et après |
+| Les fourmis | Trois éclaireuses partent, puis rapportent chacune une trouvaille | Multi-agents |
+
 ## Les cinq chapitres
 
 | Chapitre | Dans le terrarium | Concept agentique | Ce qu'on manipule |
@@ -32,7 +46,8 @@ server.js              API REST + fichiers statiques
 shared/content.js      contenu des chapitres (textes, code, quiz)
 shared/simulation.js   simulations pas à pas (fonctions pures)
 public/js/app.js       routeur par hash, page de chapitre, quiz, progression
-public/js/home.js      page d'accueil (le grand bocal en SVG)
+public/js/art/         le vivarium illustré et ses cinq scènes animées
+public/js/home.js      page d'accueil (vivarium, légende, liste des chapitres)
 public/js/scenes/      une scène animée par chapitre
 test/                  tests node:test de la simulation
 scripts/build-demo.js  démo autonome en un fichier
