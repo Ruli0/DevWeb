@@ -114,7 +114,7 @@ main:focus { outline: none; }
   opacity: 0;
 }
 .carte-titre { margin: 0 0 10px; font: 650 1.05rem/1.2 var(--display); }
-.carte-code { margin: 0; font: 500 clamp(0.6rem, 2.3vw, 0.74rem)/1.6 var(--mono); color: #cfe3d6; white-space: pre; overflow: hidden; }
+.carte-code { margin: 0; font: 500 clamp(0.6rem, 2.3vw, 0.74rem)/1.6 var(--mono); font-variant-ligatures: none; color: #cfe3d6; white-space: pre; overflow: hidden; }
 .carte-code .ligne { display: block; }
 .carte-code .surligne { color: #0f1b17; background: #9ad25f; border-radius: 4px; margin: 0 -4px; padding: 0 4px; }
 .carte-etapes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
