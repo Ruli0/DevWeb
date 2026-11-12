@@ -1,0 +1,183 @@
+{
+  "id": "ruisseau",
+  "chapitre": "couches",
+  "titre": "Le ruisseau",
+  "concept": "Le middleware",
+  "duree": 38,
+  "decor": {},
+  "plans": [
+    {
+      "debut": 0,
+      "fin": 3,
+      "camera": {
+        "cible": "cascade",
+        "zoom": 2.8,
+        "duree": 0
+      },
+      "legende": "Par où passe ta demande ?",
+      "voix": "Quand tu parles à une IA, ta demande ne va pas directement au modèle.",
+      "actions": [
+        {
+          "type": "goutte.apparaitre",
+          "a": 0.4
+        }
+      ]
+    },
+    {
+      "debut": 3,
+      "fin": 6,
+      "camera": {
+        "cible": "cascade",
+        "zoom": 1.9,
+        "duree": 1.2
+      },
+      "legende": "Elle traverse des couches, comme cette goutte.",
+      "voix": "Elle traverse des couches, comme l'eau de ce ruisseau.",
+      "actions": [
+        {
+          "type": "goutte.couler",
+          "a": 0.2,
+          "duree": 1.3,
+          "ease": "power2.in",
+          "vers": 0.3,
+          "depuis": 0
+        },
+        {
+          "type": "goutte.couler",
+          "a": 1.5,
+          "duree": 1.6,
+          "vers": 0.42,
+          "depuis": 0.3
+        }
+      ]
+    },
+    {
+      "debut": 6,
+      "fin": 11,
+      "camera": {
+        "cible": "sable",
+        "zoom": 2.8,
+        "duree": 0.9
+      },
+      "legende": "Le sable masque les données sensibles.",
+      "voix": "Le sable retient les impuretés : les données sensibles sont masquées.",
+      "actions": [
+        {
+          "type": "filtre.signaler",
+          "filtre": "sable",
+          "a": 0.3
+        },
+        {
+          "type": "goutte.eclaircir",
+          "a": 0.5
+        }
+      ]
+    },
+    {
+      "debut": 11,
+      "fin": 16,
+      "camera": {
+        "cible": "mousse",
+        "zoom": 2.8,
+        "duree": 1.4
+      },
+      "legende": "La mousse garde une trace : c'est le journal.",
+      "voix": "La mousse garde une trace du passage. C'est le journal. Il vient après le filtre, donc il ne note rien de sensible.",
+      "actions": [
+        {
+          "type": "goutte.couler",
+          "duree": 1.6,
+          "vers": 0.66,
+          "depuis": 0.42
+        },
+        {
+          "type": "filtre.signaler",
+          "filtre": "mousse",
+          "a": 1.6
+        }
+      ]
+    },
+    {
+      "debut": 16,
+      "fin": 21,
+      "camera": {
+        "cible": "galets",
+        "zoom": 2.8,
+        "duree": 1.4
+      },
+      "legende": "Les galets freinent le courant : c'est la limite de débit.",
+      "voix": "Les galets freinent le courant : c'est la limite de débit.",
+      "actions": [
+        {
+          "type": "goutte.couler",
+          "duree": 1.8,
+          "ease": "power2.out",
+          "vers": 0.86,
+          "depuis": 0.66
+        },
+        {
+          "type": "filtre.signaler",
+          "filtre": "galets",
+          "a": 1.8
+        }
+      ]
+    },
+    {
+      "debut": 21,
+      "fin": 25,
+      "camera": {
+        "cible": "bassin",
+        "zoom": 2.2,
+        "duree": 1.2
+      },
+      "legende": "L'eau arrive propre au modèle.",
+      "voix": "L'eau arrive propre au bassin, c'est-à-dire au modèle.",
+      "actions": [
+        {
+          "type": "goutte.couler",
+          "duree": 1.3,
+          "vers": 1,
+          "depuis": 0.86
+        },
+        {
+          "type": "goutte.bassin",
+          "a": 1.3
+        }
+      ]
+    },
+    {
+      "debut": 25,
+      "fin": 34,
+      "camera": {
+        "cible": "ensemble",
+        "zoom": 1,
+        "duree": 1
+      },
+      "legende": "L'ordre des couches compte.",
+      "voix": "Chaque couche peut observer, modifier ou arrêter la requête. Et l'ordre compte : un journal placé avant le filtre enregistrerait les données en clair.",
+      "carte": {
+        "type": "code",
+        "titre": "Des couches qui se composent",
+        "lignes": [
+          "const appeler = composer([",
+          "  filtreDonnees,  // le sable",
+          "  journal,        // la mousse",
+          "  cache,          // le terreau",
+          "  limiteDebit,    // les galets",
+          "], appelerModele);"
+        ],
+        "surligne": [
+          1,
+          2
+        ],
+        "rythme": 0.3
+      }
+    },
+    {
+      "debut": 34,
+      "fin": 38,
+      "legende": "C'est ça, le middleware.",
+      "voix": "C'est ça, le middleware."
+    }
+  ]
+}

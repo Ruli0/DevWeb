@@ -8,7 +8,7 @@
 
   const app = document.getElementById('app');
   const pill = document.getElementById('progress-pill');
-  const etat = { chapitres: [], faits: [], scene: null };
+  const etat = { chapitres: [], faits: [], scenarios: [], scene: null };
 
   function majPastille() {
     pill.textContent = `${etat.faits.length} / ${etat.chapitres.length} terminés`;
@@ -31,7 +31,7 @@
     if (resume) await afficherChapitre(resume);
     else {
       document.title = 'Le Terrarium agentique';
-      T.home.render(app, etat.chapitres, etat.faits);
+      T.home.render(app, etat.chapitres, etat.faits, etat.scenarios);
     }
     window.scrollTo(0, 0);
   }
@@ -165,8 +165,9 @@
   // --- Démarrage -------------------------------------------------------------
   async function demarrer() {
     try {
-      const [chapitres, progression] = await Promise.all([T.api.chapters(), T.api.getProgress()]);
+      const [chapitres, progression, scenarios] = await Promise.all([T.api.chapters(), T.api.getProgress(), T.api.scenarios()]);
       etat.chapitres = chapitres;
+      etat.scenarios = scenarios;
       etat.faits = progression.done.filter((id) => chapitres.some((c) => c.id === id));
     } catch {
       app.innerHTML = '<p class="erreur">Impossible de charger les chapitres. Vérifie que le serveur est lancé, puis recharge la page.</p>';

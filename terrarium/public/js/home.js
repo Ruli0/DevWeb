@@ -13,15 +13,15 @@
     { id: 'ecosysteme', acteur: 'Les fourmis', concept: 'Multi-agents' },
   ];
   const INVITE = 'Touche le caméléon, le ruisseau, la dionée, la fourmilière ou le cadre en verre.';
-  let vignettes = null;
+  let lecteur = null; // joue les scénarios : public/js/film/lecteur.js
 
   T.home = {
     quitter() {
-      if (vignettes) vignettes.detruire();
-      vignettes = null;
+      if (lecteur) lecteur.detruire();
+      lecteur = null;
     },
 
-    render(root, chapitres, faits) {
+    render(root, chapitres, faits, scenarios) {
       root.innerHTML = `
         <section class="hero">
           <p class="eyebrow">Cinq scènes à regarder, cinq chapitres pour pratiquer</p>
@@ -67,8 +67,8 @@
         legende.textContent = texte;
         gsap.fromTo(legende, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
       }
-      vignettes = T.vignettes(scene, dire);
-      const mesVignettes = vignettes;
+      lecteur = T.lecteur(scene, dire, root.querySelector('#stage'), scenarios);
+      const monLecteur = lecteur;
 
       function marquer(id) {
         chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.v === id)));
@@ -78,8 +78,8 @@
         lien.hidden = true;
         marquer(id);
         root.querySelector('.stage-wrap').scrollIntoView({ block: 'start', behavior: T.reduce ? 'auto' : 'smooth' });
-        const fini = await mesVignettes.jouer(id);
-        if (!fini || vignettes !== mesVignettes) return false;
+        const fini = await monLecteur.jouer(id);
+        if (!fini || lecteur !== monLecteur) return false;
         marquer(null);
         const chapitre = chapitres.find((c) => c.id === id);
         lien.href = `#${id}`;
@@ -95,12 +95,12 @@
           for (const s of SCENES) {
             if (!(await jouer(s.id))) return;
             await new Promise((ok) => setTimeout(ok, 900));
-            if (vignettes !== mesVignettes) return;
+            if (lecteur !== monLecteur) return;
           }
           lien.hidden = true;
           dire('Fin de la visite. Passe aux chapitres pour pratiquer.');
         } else if (chip.getAttribute('aria-pressed') === 'true') {
-          mesVignettes.arreter();
+          monLecteur.arreter();
           marquer(null);
           dire(INVITE);
         } else {

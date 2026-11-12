@@ -1,0 +1,232 @@
+{
+  "id": "cameleon",
+  "chapitre": "cycle",
+  "titre": "Le caméléon",
+  "concept": "La boucle d'outils",
+  "duree": 38,
+  "decor": {
+    "cameleon": 0.3,
+    "mouche": "cachee"
+  },
+  "plans": [
+    {
+      "debut": 0,
+      "fin": 3,
+      "camera": {
+        "cible": "cameleon-oeil",
+        "zoom": 3.2,
+        "duree": 0
+      },
+      "legende": "Comment pense un agent IA ?",
+      "voix": "Un agent IA, ça ne répond pas d'un coup. Ça chasse.",
+      "actions": [
+        {
+          "type": "cameleon.balayer",
+          "a": 0.2,
+          "duree": 2.6
+        }
+      ]
+    },
+    {
+      "debut": 3,
+      "fin": 6,
+      "camera": {
+        "cible": "cameleon",
+        "zoom": 1.7,
+        "duree": 1.2
+      },
+      "legende": "Un agent travaille en boucle.",
+      "voix": "Regarde ce caméléon."
+    },
+    {
+      "debut": 6,
+      "fin": 9,
+      "legende": "Il vise : le modèle réfléchit.",
+      "voix": "Il repère une proie et il vise. C'est le modèle qui réfléchit.",
+      "actions": [
+        {
+          "type": "mouche.venir",
+          "dx": 56,
+          "dy": -112,
+          "attente": 1.8
+        },
+        {
+          "type": "cameleon.viser",
+          "a": 0.6
+        }
+      ]
+    },
+    {
+      "debut": 9,
+      "fin": 11,
+      "legende": "Il lance sa langue : c'est un appel d'outil.",
+      "voix": "Il lance sa langue. Pour l'agent, c'est un appel d'outil.",
+      "actions": [
+        {
+          "type": "cameleon.langue",
+          "a": 0.3
+        }
+      ]
+    },
+    {
+      "debut": 11,
+      "fin": 14,
+      "legende": "Il ramène sa prise : le résultat de l'outil.",
+      "voix": "Il ramène sa prise : c'est le résultat de l'outil.",
+      "actions": [
+        {
+          "type": "cameleon.ramener",
+          "a": 0.1
+        },
+        {
+          "type": "cameleon.avaler",
+          "a": 0.6
+        }
+      ]
+    },
+    {
+      "debut": 14,
+      "fin": 17,
+      "legende": "Sa couleur change : le résultat enrichit son contexte.",
+      "voix": "Et ce résultat change ce qu'il sait.",
+      "actions": [
+        {
+          "type": "cameleon.teinte",
+          "couleur": "turquoise",
+          "a": 0.2
+        },
+        {
+          "type": "cameleon.repos",
+          "a": 0.2
+        }
+      ]
+    },
+    {
+      "debut": 17,
+      "fin": 23,
+      "camera": {
+        "cible": "cameleon",
+        "zoom": 1.5,
+        "duree": 0.8
+      },
+      "legende": "Puis il recommence. Viser, attraper, avaler.",
+      "voix": "Puis il recommence. Viser, attraper, avaler.",
+      "actions": [
+        {
+          "type": "mouche.venir",
+          "a": 0.2,
+          "dx": 84,
+          "dy": -84,
+          "duree": 0.9,
+          "attente": 0.9
+        },
+        {
+          "type": "cameleon.viser",
+          "a": 0.6,
+          "duree": 0.4
+        },
+        {
+          "type": "cameleon.langue",
+          "a": 2.0
+        },
+        {
+          "type": "cameleon.ramener",
+          "a": 2.8
+        },
+        {
+          "type": "cameleon.avaler",
+          "a": 3.2
+        },
+        {
+          "type": "cameleon.teinte",
+          "couleur": "orange",
+          "a": 3.9,
+          "duree": 1.2
+        },
+        {
+          "type": "cameleon.repos",
+          "a": 4.0
+        }
+      ]
+    },
+    {
+      "debut": 23,
+      "fin": 27,
+      "legende": "Il s'arrête quand il n'a plus besoin d'outil.",
+      "voix": "Il s'arrête quand il n'a plus besoin d'outil. C'est lui qui décide.",
+      "actions": [
+        {
+          "type": "cameleon.balayer",
+          "a": 0.6,
+          "duree": 2.6
+        }
+      ]
+    },
+    {
+      "debut": 27,
+      "fin": 31,
+      "camera": {
+        "cible": "ensemble",
+        "zoom": 1,
+        "duree": 1
+      },
+      "legende": "Dans un agent, c'est la même boucle.",
+      "voix": "Dans un agent, c'est la même boucle.",
+      "carte": {
+        "type": "etapes",
+        "titre": "La boucle d'outils",
+        "etapes": [
+          "Le modèle réfléchit",
+          "Il demande un outil",
+          "Le programme exécute l'outil",
+          "Le résultat revient dans le contexte"
+        ],
+        "boucle": "… et on recommence, jusqu'à la réponse finale."
+      }
+    },
+    {
+      "debut": 31,
+      "fin": 35,
+      "legende": "En code : une simple boucle.",
+      "voix": "En code, c'est une simple boucle : le modèle demande un outil, le programme l'exécute, le résultat revient dans le contexte.",
+      "carte": {
+        "type": "code",
+        "titre": "Dans le code",
+        "lignes": [
+          "while (true) {",
+          "  const r = await modele.generer(messages);",
+          "  if (!r.appelOutil) return r.texte;",
+          "  const resultat = await executer(r.appelOutil);",
+          "  messages.push(resultat);",
+          "}"
+        ],
+        "surligne": [
+          2,
+          3
+        ],
+        "rythme": 0.25
+      }
+    },
+    {
+      "debut": 35,
+      "fin": 38,
+      "legende": "La boucle d'outils : le moteur de tout agent.",
+      "voix": "La boucle d'outils. Le moteur de tout agent.",
+      "actions": [
+        {
+          "type": "cameleon.teinte",
+          "couleur": "vert",
+          "a": 0.2,
+          "duree": 1.2
+        },
+        {
+          "type": "cameleon.marcher",
+          "a": 0.4,
+          "depuis": 0.3,
+          "vers": 0.42,
+          "duree": 2.6
+        }
+      ]
+    }
+  ]
+}

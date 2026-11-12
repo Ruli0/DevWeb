@@ -100,7 +100,36 @@ main:focus { outline: none; }
 .lead { color: var(--muted); max-width: 36rem; }
 .lead.petit { font-size: 0.95rem; margin-bottom: 1rem; }
 .stage-wrap { display: grid; gap: 12px; margin-bottom: 2.5rem; scroll-margin-top: calc(58px + env(safe-area-inset-top, 0px)); }
-.stage { max-width: 30rem; width: 100%; justify-self: center; filter: drop-shadow(0 18px 28px rgba(10, 30, 22, 0.28)); }
+.stage { position: relative; max-width: 30rem; width: 100%; justify-self: center; filter: drop-shadow(0 18px 28px rgba(10, 30, 22, 0.28)); }
+
+/* Cartes de révélation, posées sur le bas du vivarium pendant une scène.
+   Elles sont sombres dans les deux thèmes, comme la plaque de légende. */
+.stage .carte { position: absolute; inset: 0; pointer-events: none; }
+.stage .carte-in {
+  position: absolute; left: 6%; right: 6%; top: 42%;
+  padding: 14px 16px 16px; border-radius: 14px;
+  background: rgba(13, 26, 21, 0.95); color: #eef6ee;
+  border: 1px solid rgba(154, 210, 95, 0.35);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+}
+.carte-titre { margin: 0 0 10px; font: 650 1.05rem/1.2 var(--display); }
+.carte-code { margin: 0; font: 500 clamp(0.6rem, 2.3vw, 0.74rem)/1.6 var(--mono); color: #cfe3d6; white-space: pre; overflow: hidden; }
+.carte-code .ligne { display: block; }
+.carte-code .surligne { color: #0f1b17; background: #9ad25f; border-radius: 4px; margin: 0 -4px; padding: 0 4px; }
+.carte-etapes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.carte-etapes li { display: flex; align-items: center; gap: 10px; font: 600 0.92rem/1.25 var(--body); }
+.carte-etapes .carte-num { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: #9ad25f; color: #0f1b17; font: 700 0.8rem/1 var(--body); }
+.carte-boucle { margin: 10px 0 0; color: #9ad25f; font-size: 0.88rem; }
+.carte-barres { display: grid; gap: 14px; }
+.barre-tete { display: flex; justify-content: space-between; gap: 8px; font: 600 0.86rem/1.25 var(--body); }
+.barre-tete strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.barre-piste { position: relative; height: 12px; margin-top: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.12); }
+.barre-fill { height: 100%; border-radius: 6px; }
+.barre.ok .barre-fill { background: #9ad25f; }
+.barre.alerte .barre-fill { background: #ff6b57; }
+.barre-limite { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1px; border-radius: 2px; background: #ffffff; }
+.barre small { display: block; margin-top: 5px; font-size: 0.78rem; color: #b8ccbf; }
 #vivarium { display: block; width: 100%; height: auto; border-radius: 20px; -webkit-tap-highlight-color: transparent; }
 #vivarium .hot { cursor: pointer; }
 .plaque {

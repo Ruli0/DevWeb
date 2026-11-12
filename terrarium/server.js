@@ -3,10 +3,12 @@
 // et la progression des visiteurs.
 const express = require('express');
 const fs = require('node:fs/promises');
+const fsSync = require('node:fs');
 const path = require('node:path');
 
 const content = require('./shared/content.js');
 const simulation = require('./shared/simulation.js');
+const { valider } = require('./shared/scenarios.js');
 
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
@@ -44,6 +46,18 @@ app.use('/shared', express.static(path.join(__dirname, 'shared')));
 app.use('/vendor/gsap', express.static(path.join(__dirname, 'node_modules/gsap/dist')));
 
 app.get('/api/chapters', (_req, res) => res.json(content.list()));
+
+// Scénarios des scènes (les mêmes que pour les vidéos), relus à chaque démarrage.
+const DOSSIER_SCENARIOS = path.join(__dirname, 'videos/scenarios');
+const scenarios = fsSync.readdirSync(DOSSIER_SCENARIOS)
+  .filter((f) => f.endsWith('.json'))
+  .map((f) => JSON.parse(fsSync.readFileSync(path.join(DOSSIER_SCENARIOS, f), 'utf8')))
+  .filter((sc) => {
+    const erreurs = valider(sc);
+    if (erreurs.length) console.warn(`Scénario ${sc.id} ignoré :`, erreurs.join(' ; '));
+    return erreurs.length === 0;
+  });
+app.get('/api/scenarios', (_req, res) => res.json(scenarios));
 
 app.get('/api/chapters/:id', (req, res) => {
   const chapitre = content.get(req.params.id);

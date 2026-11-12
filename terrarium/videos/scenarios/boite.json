@@ -1,0 +1,62 @@
+{
+  "id": "boite",
+  "chapitre": "bocal",
+  "titre": "La boîte en verre",
+  "concept": "La fenêtre de contexte",
+  "duree": 30,
+  "decor": {},
+  "plans": [
+    {
+      "debut": 0, "fin": 3,
+      "camera": { "cible": "ensemble", "zoom": 1, "duree": 0 },
+      "legende": "Que voit vraiment une IA ?",
+      "voix": "Que voit vraiment une IA quand elle te répond ?",
+      "actions": [{ "type": "cadre.lueur", "a": 0.2, "fois": 2 }]
+    },
+    {
+      "debut": 3, "fin": 8,
+      "legende": "Seulement ce qui tient dans sa boîte.",
+      "voix": "Seulement ce qui tient dans sa boîte. On l'appelle la fenêtre de contexte."
+    },
+    {
+      "debut": 8, "fin": 12,
+      "legende": "Si on y met tout, ça déborde.",
+      "voix": "Si on y met tout, ça déborde, et ce qui dépasse est perdu.",
+      "actions": [
+        { "type": "plantes.grandir", "duree": 2.6 },
+        { "type": "cadre.alerte", "a": 2.4 }
+      ]
+    },
+    {
+      "debut": 12, "fin": 16,
+      "legende": "Alors on taille, et on résume l'ancien.",
+      "voix": "Alors on taille : on garde l'essentiel, on résume le reste.",
+      "actions": [{ "type": "plantes.tailler", "a": 0.1 }]
+    },
+    {
+      "debut": 16, "fin": 19,
+      "legende": "Choisir ce qui entre : le context engineering.",
+      "voix": "Choisir ce qui entre dans la boîte, c'est le context engineering.",
+      "actions": [{ "type": "cadre.apaiser", "a": 0.1 }]
+    },
+    {
+      "debut": 19, "fin": 27,
+      "legende": "Un extrait utile vaut mieux qu'un document entier.",
+      "voix": "Un bon contexte n'est pas rempli, il est choisi : la consigne, la demande, les bons extraits, et un résumé de l'ancien.",
+      "carte": {
+        "type": "barres",
+        "titre": "Une boîte de 8 000 tokens",
+        "barres": [
+          { "label": "Tout, sans tri", "valeur": 12600, "max": 12600, "texte": "12 600 tokens", "ton": "alerte", "limite": 8000, "note": "Ce qui dépasse la limite est perdu." },
+          { "label": "Choisi et résumé", "valeur": 5000, "texte": "5 000 tokens", "ton": "ok", "note": "Tout tient, et il reste de la place pour répondre." }
+        ],
+        "rythme": 0.6
+      }
+    },
+    {
+      "debut": 27, "fin": 30,
+      "legende": "La fenêtre de contexte.",
+      "voix": "La fenêtre de contexte."
+    }
+  ]
+}

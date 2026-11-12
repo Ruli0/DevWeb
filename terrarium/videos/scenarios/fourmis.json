@@ -1,0 +1,77 @@
+{
+  "id": "fourmis",
+  "chapitre": "ecosysteme",
+  "titre": "Les fourmis",
+  "concept": "Le système multi-agents",
+  "duree": 32,
+  "decor": {},
+  "plans": [
+    {
+      "debut": 0, "fin": 3,
+      "camera": { "cible": "fourmiliere", "zoom": 3.2, "duree": 0 },
+      "legende": "Une tâche trop grosse pour un seul agent ?",
+      "voix": "Une tâche trop grosse pour un seul agent ?",
+      "actions": [{ "type": "fourmiliere.agiter", "a": 0.4 }]
+    },
+    {
+      "debut": 3, "fin": 6,
+      "camera": { "cible": "fourmiliere", "zoom": 2.2, "duree": 1.2 },
+      "legende": "Préparer l'hiver, c'est trop pour une seule fourmi.",
+      "voix": "Préparer l'hiver, c'est trop pour une seule fourmi.",
+      "actions": [
+        { "type": "fourmis.ecarter", "a": 0.3 },
+        { "type": "fourmiliere.agiter", "a": 1.2 }
+      ]
+    },
+    {
+      "debut": 6, "fin": 10,
+      "camera": { "cible": "ensemble", "zoom": 1.1, "duree": 1.2 },
+      "legende": "La fourmilière découpe le travail. Trois éclaireuses partent.",
+      "voix": "La fourmilière découpe le travail. Trois éclaireuses partent en même temps.",
+      "actions": [{ "type": "eclaireuses.partir", "a": 0.2, "duree": 3 }]
+    },
+    {
+      "debut": 10, "fin": 13,
+      "legende": "Chacune fouille son coin, dans son propre contexte.",
+      "voix": "Chacune fouille son coin, sans encombrer les autres.",
+      "actions": [{ "type": "eclaireuses.fouiller", "a": 0.2, "duree": 2.6 }]
+    },
+    {
+      "debut": 13, "fin": 18,
+      "legende": "Elles ne rapportent que l'essentiel.",
+      "voix": "Et chacune ne rapporte qu'un résumé de ce qu'elle a trouvé.",
+      "actions": [{ "type": "eclaireuses.revenir", "a": 0.2, "duree": 3 }]
+    },
+    {
+      "debut": 18, "fin": 20.6,
+      "camera": { "cible": "fourmiliere", "zoom": 2.8, "duree": 1 },
+      "legende": "La fourmilière assemble le tout.",
+      "voix": "La fourmilière assemble le tout.",
+      "actions": [{ "type": "butin.montrer", "a": 0.4 }]
+    },
+    {
+      "debut": 20.6, "fin": 29,
+      "camera": { "cible": "ensemble", "zoom": 1, "duree": 1 },
+      "legende": "Déléguer garde le contexte léger.",
+      "voix": "En IA, c'est pareil : un orchestrateur confie des morceaux à des sous-agents. Chacun travaille dans son propre contexte et ne renvoie qu'un résumé. Le contexte principal reste léger.",
+      "actions": [
+        { "type": "butin.cacher", "a": 0.4 },
+        { "type": "fourmis.revenir", "a": 1 }
+      ],
+      "carte": {
+        "type": "barres",
+        "titre": "Le contexte de l'orchestrateur",
+        "barres": [
+          { "label": "En équipe : il ne lit que les résumés", "valeur": 1850, "max": 29300, "texte": "1 850 tokens", "ton": "ok" },
+          { "label": "Tout seul : il fait tout le travail", "valeur": 29300, "texte": "29 300 tokens", "ton": "alerte", "limite": 16000, "note": "Sa limite est de 16 000 tokens : ça déborde." }
+        ],
+        "rythme": 0.6
+      }
+    },
+    {
+      "debut": 29, "fin": 32,
+      "legende": "Le système multi-agents.",
+      "voix": "Le système multi-agents."
+    }
+  ]
+}

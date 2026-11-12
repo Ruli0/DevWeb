@@ -44,6 +44,7 @@
 
   T.api = {
     chapters: () => appel('/api/chapters', undefined, () => T.content.list()),
+    scenarios: () => appel('/api/scenarios', undefined, () => window.TERRARIUM_SCENARIOS || []),
     chapter: (id) => appel(`/api/chapters/${id}`, undefined, () => T.content.get(id)),
     simulate: (scenario, options) => appel('/api/simulate', json('POST', { scenario, options }),
       () => T.simulation.simulate(scenario, options)),

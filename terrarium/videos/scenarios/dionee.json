@@ -1,0 +1,79 @@
+{
+  "id": "dionee",
+  "chapitre": "capteurs",
+  "titre": "La dionée",
+  "concept": "Les hooks",
+  "duree": 32,
+  "decor": {},
+  "plans": [
+    {
+      "debut": 0, "fin": 3,
+      "camera": { "cible": "pousse", "zoom": 3.4, "duree": 0 },
+      "legende": "Comment empêcher un agent de faire une bêtise ?",
+      "voix": "Comment empêcher un agent IA de faire une bêtise ?",
+      "actions": [{ "type": "pousse.trembler", "duree": 3 }]
+    },
+    {
+      "debut": 3, "fin": 6,
+      "camera": { "cible": "pousse", "zoom": 2.4, "duree": 1.2 },
+      "legende": "Voici une jeune pousse. Elle est fragile.",
+      "voix": "Voici une jeune pousse. Elle est fragile.",
+      "actions": [{ "type": "pousse.trembler", "a": 0.2, "duree": 2.6 }]
+    },
+    {
+      "debut": 6, "fin": 9.4,
+      "camera": { "cible": "sol", "zoom": 2.1, "duree": 0.9 },
+      "legende": "Un scarabée file droit dessus.",
+      "voix": "Un scarabée file droit dessus.",
+      "actions": [{ "type": "scarabee.avancer", "duree": 2.6 }]
+    },
+    {
+      "debut": 9.4, "fin": 13.4,
+      "camera": { "cible": "dionee", "zoom": 2.8, "duree": 0.3, "ease": "power3.out" },
+      "legende": "Clac. Bloqué avant d'agir : c'est un hook « avant ».",
+      "voix": "Clac. La dionée se referme avant qu'il n'arrive. C'est un hook avant l'action : il peut tout bloquer.",
+      "actions": [{ "type": "dionee.fermer", "a": 0.05 }]
+    },
+    {
+      "debut": 13.4, "fin": 17.4,
+      "camera": { "cible": "grenouille", "zoom": 2.8, "duree": 1 },
+      "legende": "La grenouille prévient après coup : c'est un hook « après ».",
+      "voix": "La grenouille, elle, coasse après coup pour prévenir tout le monde. C'est un hook après l'action.",
+      "actions": [{ "type": "grenouille.coasser", "a": 0.9, "fois": 3 }]
+    },
+    {
+      "debut": 17.4, "fin": 20,
+      "camera": { "cible": "ensemble", "zoom": 1, "duree": 1.2 },
+      "legende": "Ni l'un ni l'autre ne demande la permission.",
+      "voix": "Aucun des deux ne demande l'avis de l'agent. Ils se déclenchent à coup sûr."
+    },
+    {
+      "debut": 20, "fin": 29,
+      "legende": "Une consigne demande. Un hook garantit.",
+      "voix": "Écrire « n'arrache jamais les plantes » dans la consigne, c'est demander. Brancher un hook, c'est garantir. Avant l'action, il bloque ou modifie. Après, il note ou prévient.",
+      "carte": {
+        "type": "code",
+        "titre": "Deux hooks, dans le code",
+        "lignes": [
+          "agent.hook(\"avantOutil\", (appel) => {",
+          "  if (appel.nom === \"arracher_plantes\")",
+          "    return { decision: \"bloquer\" };",
+          "});",
+          "",
+          "agent.hook(\"apresOutil\", (appel) => {",
+          "  carnet.noter(appel);",
+          "});"
+        ],
+        "surligne": [2, 6],
+        "rythme": 0.3
+      }
+    },
+    {
+      "debut": 29, "fin": 32,
+      "camera": { "cible": "dionee", "zoom": 1.7, "duree": 1.2 },
+      "legende": "Les hooks : des réflexes, pas des conseils.",
+      "voix": "Les hooks : des réflexes, pas des conseils.",
+      "actions": [{ "type": "dionee.ouvrir", "a": 0.4 }]
+    }
+  ]
+}

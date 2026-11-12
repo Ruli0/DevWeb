@@ -196,7 +196,7 @@
       <ellipse cx="0" cy="2" rx="24" ry="5" fill="#2f7d4f"/>
       <ellipse cx="-13" cy="-4" rx="9" ry="6" fill="#3f9c4c"/><ellipse cx="13" cy="-4" rx="9" ry="6" fill="#3f9c4c"/>
       <path d="M-15 -4 C-15 -22 15 -22 15 -4 C12 2 -12 2 -15 -4Z" fill="#5cb85a"/>
-      <ellipse id="grenouille-gorge" cx="0" cy="-5" rx="9" ry="5.5" fill="#e9f2b8"/>
+      <g id="grenouille-sac"><ellipse id="grenouille-gorge" cx="0" cy="-5" rx="9" ry="5.5" fill="#e9f2b8"/></g>
       <path d="M-9 -12 Q0 -8 9 -12" stroke="#2c6e3a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
       <circle cx="-8" cy="-19" r="5.5" fill="#5cb85a"/><circle cx="8" cy="-19" r="5.5" fill="#5cb85a"/>
       <circle cx="-8" cy="-19.5" r="3.4" fill="#fbe38a"/><circle cx="8" cy="-19.5" r="3.4" fill="#fbe38a"/>
@@ -214,8 +214,8 @@
 
   // Vue de dessus : la fourmi peut tourner dans tous les sens sans se retrouver sur le dos.
   function fourmi(classe, charge) {
-    return `<g class="fourmi ${classe}"><path d="M-7 0 l-3 6 M-7 0 l-3 -6 M0 0 v7 M0 0 v-7 M7 0 l3 6 M7 0 l3 -6 M9 -1 l5 -3 M9 1 l5 3" stroke="#1d1410" stroke-width="1.3" stroke-linecap="round" fill="none"/>
-      <ellipse cx="-7" rx="4.6" ry="3.6" fill="#2a1c15"/><circle r="2.8" fill="#2a1c15"/><circle cx="7" r="3.4" fill="#2a1c15"/>${charge || ''}</g>`;
+    return `<g class="fourmi ${classe}"><g class="fourmi-corps"><path d="M-7 0 l-3 6 M-7 0 l-3 -6 M0 0 v7 M0 0 v-7 M7 0 l3 6 M7 0 l3 -6 M9 -1 l5 -3 M9 1 l5 3" stroke="#1d1410" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+      <ellipse cx="-7" rx="4.6" ry="3.6" fill="#2a1c15"/><circle r="2.8" fill="#2a1c15"/><circle cx="7" r="3.4" fill="#2a1c15"/>${charge || ''}</g></g>`;
   }
 
   function escargot(x, y) {
@@ -251,6 +251,25 @@
     turquoise: ['#3fb5a8', '#1f7f86'],
     orange: ['#e9a13a', '#b9661f'],
   };
+
+  // Feuilles taillées : cachées au repos. Chacune porte sa chute (départ, arrivée,
+  // rotation) pour que le site et les vidéos les fassent tomber de la même façon.
+  function feuillesTombantes() {
+    const r = graine(41);
+    let out = '';
+    for (let i = 0; i < 12; i += 1) {
+      const x = 70 + r() * 460;
+      const y = 110 + r() * 170;
+      const a = r() * 360;
+      const dx = (r() - 0.5) * 80;
+      const yFin = 596 + r() * 40;
+      const da = r() * 400 - 200;
+      const d = 1.6 + r();
+      const retard = r() * 0.4;
+      out += `<g class="feuille-chute" opacity="0" data-x="${f(x)}" data-y="${f(y)}" data-a="${f(a)}" data-dx="${f(dx)}" data-yfin="${f(yFin)}" data-da="${f(da)}" data-d="${f(d)}" data-retard="${f(retard)}">${feuille(0, 0, 22 + r() * 16, 8, 0, '#2f8a5a', '#6dbb6a')}</g>`;
+    }
+    return out;
+  }
 
   // --- La scène complète -----------------------------------------------------
   const BRANCHE = 'M44 566 C150 524 250 442 330 372 C382 326 430 252 506 214';
@@ -323,7 +342,11 @@
       <g id="eau" class="hot" data-v="couches">
         <path d="${RUISSEAU.replace('M452 316 L452 462', 'M452 462')}" stroke="#2f7f9a" stroke-width="27" fill="none" stroke-linecap="round" opacity="0.55"/>
         <path d="${RUISSEAU.replace('M452 316 L452 462', 'M452 462')}" stroke="${C.eau[0]}" stroke-width="21" fill="none" stroke-linecap="round"/>
-        <g id="filtres"></g>
+        <g id="filtres">
+          <g id="filtre-sable"><ellipse cx="424.7" cy="503.9" rx="19" ry="8" fill="#d9bd82"/><ellipse cx="421.7" cy="501.9" rx="11" ry="4" fill="#ecd7a6"/></g>
+          <g id="filtre-mousse"><ellipse cx="341.1" cy="578.2" rx="17" ry="9" fill="#5fa04a"/><circle cx="334.1" cy="575.2" r="5" fill="#9ad25f"/><circle cx="347.1" cy="576.2" r="6" fill="#86c44e"/><circle cx="341.1" cy="581.2" r="4" fill="#9ad25f"/></g>
+          <g id="filtre-galets" fill="#b9bdb4"><ellipse cx="244.2" cy="611.4" rx="7" ry="5"/><ellipse cx="255.2" cy="607.4" rx="6" ry="4.5" fill="#d5d8cf"/><ellipse cx="263.2" cy="613.4" rx="7" ry="5" fill="#9b9f97"/></g>
+        </g>
         <path class="courant" d="${RUISSEAU.replace('M452 316 L452 462', 'M452 462')}" stroke="${C.eau[1]}" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="14 22"/>
         <path class="courant lent" d="${RUISSEAU.replace('M452 316 L452 462', 'M452 462')}" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="5 38" opacity="0.8" transform="translate(4 -5)"/>
         <ellipse cx="178" cy="634" rx="108" ry="27" fill="#2b2119"/>
@@ -333,6 +356,7 @@
         <g class="nenuphar"><path d="M146 634 a22 7 0 1 0 6 -5 l12 5Z" fill="#4f9c4a"/><path d="M228 642 a15 5 0 1 0 5 -4 l8 4Z" fill="#5cab52"/>
           <g transform="translate(238 640)"><ellipse rx="3.5" ry="7" cy="-5" fill="#f7a8c4" transform="rotate(-30)"/><ellipse rx="3.5" ry="7" cy="-5" fill="#f7a8c4" transform="rotate(30)"/><ellipse rx="3.5" ry="8" cy="-6" fill="#fbd0df"/></g></g>
         <path id="ruisseau" d="${RUISSEAU}" fill="none" stroke="none"/>
+        <g id="eclats" fill="none" stroke="#ffffff" stroke-width="2"><ellipse cx="196" cy="628" rx="10" ry="3" opacity="0"/><ellipse cx="196" cy="628" rx="10" ry="3" opacity="0"/><ellipse cx="196" cy="628" rx="10" ry="3" opacity="0"/></g>
       </g>
       ${grenouille(166, 630)}
       <g>${herbes(268, 632, 9, 92)}</g>
@@ -360,7 +384,7 @@
       <g id="pousse-tendre"><path d="M318 652 Q316 636 320 626" stroke="#9ad25f" stroke-width="2.5" fill="none" stroke-linecap="round"/>${feuille(320, 627, 15, 6, -150, '#b5e36f', '#d3f39a')}${feuille(320, 627, 15, 6, -30, '#b5e36f', '#d3f39a')}</g>
       ${dionee(398, 648)}
       ${champignon(452, 648, 13)}${champignon(470, 652, 8)}${champignon(438, 654, 6)}
-      <g id="fourmiliere" class="hot" data-v="ecosysteme"><path d="M474 662 Q500 626 526 662Z" fill="#6b4a33"/><path d="M482 660 Q500 636 512 648" stroke="#8a6344" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="500" cy="647" rx="6" ry="3.5" fill="#22160f"/><g id="butin"></g></g>
+      <g id="fourmiliere" class="hot" data-v="ecosysteme"><path d="M474 662 Q500 626 526 662Z" fill="#6b4a33"/><path d="M482 660 Q500 636 512 648" stroke="#8a6344" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="500" cy="647" rx="6" ry="3.5" fill="#22160f"/><g id="butin"><path d="M486 656 q8 -9 16 0 q-8 9 -16 0Z" fill="#9ad25f" opacity="0"/><circle cx="508" cy="658" r="5.5" fill="#7cc15b" opacity="0"/><circle cx="497" cy="664" r="5.5" fill="#8fdbe6" opacity="0"/></g></g>
       <path id="piste" d="${PISTE}" fill="none" stroke="none"/>
       <path id="piste-a" d="M500 654 C456 676 384 672 326 654" fill="none" stroke="none"/>
       <path id="piste-b" d="M500 654 C548 610 560 470 524 318" fill="none" stroke="none"/>
@@ -374,7 +398,7 @@
       ${papillon('papillon-1', '#f2a33a', '#e0662f')}${papillon('papillon-2', '#7fb4f0', '#4f7fd6')}
       <g id="mouche"><ellipse cx="-3" cy="-3" rx="5" ry="2.5" fill="#dff3ff" opacity="0.8" class="aile-m"/><ellipse cx="3" cy="-3" rx="5" ry="2.5" fill="#dff3ff" opacity="0.8" class="aile-m"/><circle r="3.2" fill="#1c1c22"/></g>
       <g id="goutte-requete" opacity="0"><path d="M0 -15 C8 -5 11 2 11 7 A11 11 0 0 1 -11 7 C-11 2 -8 -5 0 -15Z" fill="#8a6a3a" stroke="#ffffff" stroke-width="2.5"/><circle cx="-3" cy="4" r="2.5" fill="#ffffff" opacity="0.7"/></g>
-      <g id="chutes-feuilles"></g>
+      <g id="chutes-feuilles">${feuillesTombantes()}</g>
       <g>${lucioles}</g>
 
       <rect x="34" y="60" width="532" height="622" fill="url(#g-verre)" pointer-events="none"/>
@@ -390,7 +414,20 @@
   </svg>`;
   }
 
-  // --- Vie du vivarium ---------------------------------------------------------
+  // État de repos des habitants, commun au site et aux vidéos.
+  function etatInitial(racine) {
+    const qa = (s) => racine.querySelectorAll(s);
+    gsap.set(qa('#grenouille-ondes, #scarabee, #goutte-requete'), { opacity: 0 });
+    gsap.set(qa('#dionee-g, #dionee-d'), { rotation: -30, svgOrigin: '0 0' });
+    gsap.set(qa('.cam-peau, .cam-oeil'), { fill: PEAU.vert[0] });
+    gsap.set(qa('.cam-trait'), { stroke: PEAU.vert[0] });
+    gsap.set(qa('.cam-trait2, .cam-raie, .cam-crete'), { stroke: PEAU.vert[1] });
+    gsap.set(qa('.cam-ventre'), { fill: '#cfe9a0' });
+    gsap.set(qa('.eclaireuse'), { opacity: 0 });
+    gsap.set(qa('#cam-flip'), { scaleX: 1, svgOrigin: '0 0' });
+  }
+
+  // --- Vie du vivarium (site, en temps réel) ------------------------------------
   function animer(racine) {
     const q = (s) => racine.querySelector(s);
     const qa = (s) => racine.querySelectorAll(s);
@@ -437,13 +474,7 @@
       gsap.to(q('#escargot-in'), { x: 34, duration: 40, ease: 'none', repeat: -1, yoyo: true });
       gsap.to(q('#escargot-in'), { scaleX: 1.05, transformOrigin: '0% 100%', duration: 1.6, repeat: -1, yoyo: true, ease: 'sine.inOut' });
     }
-    gsap.set(q('#grenouille-ondes'), { opacity: 0 });
-    gsap.set('#dionee-g, #dionee-d', { rotation: -30, svgOrigin: '0 0' });
-    gsap.set('.cam-peau, .cam-oeil', { fill: PEAU.vert[0] });
-    gsap.set('.cam-trait', { stroke: PEAU.vert[0] });
-    gsap.set('.cam-trait2, .cam-raie, .cam-crete', { stroke: PEAU.vert[1] });
-    gsap.set('.cam-ventre', { fill: '#cfe9a0' });
-    gsap.set(qa('.eclaireuse'), { opacity: 0 });
+    etatInitial(racine);
 
     // Les fourmis suivent leur piste.
     const marches = [...qa('.fourmi.amb')].map((a, i) => gsap.to(a, {
@@ -481,7 +512,6 @@
       .to('#cam-pupille', { rotation: 0, svgOrigin: '46 -36', duration: 0.5, ease: 'power2.inOut' }, `+=${d * 0.3}`);
 
     gsap.set(cam, { motionPath: { ...chemin, start: 0.2, end: 0.2 } });
-    gsap.set('#cam-flip', { scaleX: 1, svgOrigin: '0 0' });
     const balade = gsap.timeline({ repeat: -1, paused: calme })
       .call(() => pas.play())
       .to(cam, { motionPath: { ...chemin, start: 0.2, end: 0.66 }, duration: 15, ease: 'sine.inOut' })
@@ -489,7 +519,7 @@
       .add(regarder(2))
       .to('#cam-flip', { scaleX: -1, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, '+=0.4')
       .call(() => pas.play())
-      .to(cam, { motionPath: { ...chemin, start: 0.66, end: 0.16 }, duration: 16, ease: 'sine.inOut' })
+      .to(cam, { motionPath: { ...chemin, autoRotate: 180, start: 0.66, end: 0.16 }, duration: 16, ease: 'sine.inOut' })
       .call(() => pas.pause())
       .add(regarder(1.5))
       .to('#cam-flip', { scaleX: 1, svgOrigin: '0 0', duration: 0.5, ease: 'power2.inOut' }, '+=0.4');
@@ -505,6 +535,13 @@
   }
 
   T.art = {
+    // Dessin seul : une chaîne SVG, calculable aussi en Node (sans DOM ni GSAP).
+    svg,
+    feuille,
+    graine,
+    PEAU,
+    etatInitial,
+    // Site : dessin + vie en temps réel.
     monter(conteneur) {
       conteneur.innerHTML = svg();
       const vie = animer(conteneur);

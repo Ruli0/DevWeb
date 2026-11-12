@@ -11,14 +11,14 @@ npm install
 npm start        # http://localhost:3000  (PORT=4000 npm start pour changer de port)
 npm test         # tests de la simulation
 npm run build:demo   # démo en un seul fichier : demo/index.html, jouable sans serveur
-node scripts/build-demo.js --scene=cycle   # page vidéo 9:16 d'une scène : demo/video-cycle.html
+node scripts/build-video.js   # compositions HyperFrames des vidéos : videos/hyperframes/<id>/
 ```
 
 ## Le vivarium
 
 La page d'accueil est un vivarium illustré, entièrement dessiné en SVG par `public/js/art/terrarium.js` et animé avec GSAP : cascade et ruisseau, plantes qui bougent chacune à leur rythme, caméléon qui se promène sur sa branche, grenouille, papillons, escargot, fourmis.
 
-Cinq scènes de nature (`public/js/art/vignettes.js`) jouent chacune un concept, avec une légende qui suit l'action. Elles sont pensées pour être filmées, et « Tout regarder » les enchaîne.
+Cinq scènes de nature jouent chacune un concept, avec une caméra qui suit l'action, une légende et une carte qui révèle le vrai concept. Ce sont exactement les scénarios des vidéos, et « Tout regarder » les enchaîne.
 
 | Scène | Ce qu'on voit | Concept |
 |---|---|---|
@@ -30,7 +30,7 @@ Cinq scènes de nature (`public/js/art/vignettes.js`) jouent chacune un concept,
 
 ## Les vidéos
 
-Les scripts des cinq vidéos (format vertical, plan par plan, avec texte à l'écran et voix off) sont dans [`videos/scripts.md`](videos/scripts.md), avec la marche à suivre pour les produire avec HyperFrames.
+Chaque vidéo est décrite par un scénario JSON (`videos/scenarios/`) : plans, mouvements de caméra, actions des habitants, légendes, voix off et cartes de révélation. Le même moteur (`public/js/film/film.js`) le joue sur le site et le transforme en composition HyperFrames prête à rendre en MP4 (`videos/hyperframes/`). La marche à suivre et les scripts lisibles sont dans [`videos/scripts.md`](videos/scripts.md).
 
 ## Les cinq chapitres
 
@@ -51,11 +51,15 @@ server.js              API REST + fichiers statiques
 shared/content.js      contenu des chapitres (textes, code, quiz)
 shared/simulation.js   simulations pas à pas (fonctions pures)
 public/js/app.js       routeur par hash, page de chapitre, quiz, progression
-public/js/art/         le vivarium illustré et ses cinq scènes animées
+public/js/art/         le vivarium illustré (SVG calculable aussi en Node)
+public/js/film/        le moteur de film (timeline déterministe) et le lecteur du site
 public/js/home.js      page d'accueil (vivarium, légende, liste des chapitres)
 public/js/scenes/      une scène animée par chapitre
 test/                  tests node:test de la simulation
-scripts/build-demo.js  démo autonome en un fichier, et pages vidéo par scène
+scripts/build-demo.js  démo autonome en un fichier
+scripts/build-video.js compositions HyperFrames, une par scénario
+videos/scenarios/      les scénarios des vidéos (JSON)
+videos/hyperframes/    les compositions générées
 videos/scripts.md      scripts des vidéos
 ```
 
