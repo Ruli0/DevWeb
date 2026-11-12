@@ -35,6 +35,11 @@ Le site (`public/`) joue les mêmes scénarios en temps réel, avec cinq chapitr
 - **Avertissements HyperFrames restants** : fichiers trop gros, à découper en sous-compositions, et un faux positif sur un état caché.
 - **Les rendus se lancent à la main.** Il n'y a ni commande unique, ni rendu automatique à chaque modification.
 
-## Dernières vidéos rendues
+## Dernières vidéos rendues (12 nov. 2026)
 
-- 5 épisodes × 3 accroches (15 MP4), avec la phonk. Rendus en cours le 12 novembre ; une vidéo, le caméléon (accroche a), a déjà été contrôlée et envoyée.
+15 MP4 : 5 épisodes × 3 accroches, avec la phonk, de 19 à 24,5 s, 1080 × 1920. Le son est en AAC, avec un niveau moyen de -14,5 à -17 dB. Contrôlés image par image.
+
+Points faibles repérés en les regardant :
+- **La boîte en verre (épisode 5)** est la plus faible : l'idée de « boîte » se voit mal en plein écran (on ne voit plus les parois), la pousse des plantes est peu lisible, et le caméléon qui se promène attire l'œil.
+- **L'accroche des fourmis (épisode 4)** montre une fourmilière presque immobile : peu de mouvement dans la première seconde.
+- **Le caméléon, la dionée et le ruisseau** ont des accroches lisibles et en mouvement.

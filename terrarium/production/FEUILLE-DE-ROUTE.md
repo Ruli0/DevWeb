@@ -8,7 +8,7 @@ Statuts : **à faire**, **en cours**, **fait**, **abandonné**. Les priorités v
 
 | # | Étape | Qui | Statut |
 |---|---|---|---|
-| 1 | Rendre les 15 vidéos (5 épisodes × 3 accroches) avec la phonk | Claude | en cours |
+| 1 | Rendre les 15 vidéos (5 épisodes × 3 accroches) avec la phonk | Claude | fait |
 | 2 | Écouter la phonk et les bruitages sur un téléphone, et donner un avis | Toi | à faire |
 | 3 | Publier les épisodes 1, 2 et 3 (accroche a), à 2 ou 3 jours d'écart | Toi | à faire |
 | 4 | Après 48 h, relever les chiffres dans `videos/resultats.csv` | Toi | à faire |
@@ -18,6 +18,8 @@ Statuts : **à faire**, **en cours**, **fait**, **abandonné**. Les priorités v
 
 | # | Étape | Pourquoi | Statut |
 |---|---|---|---|
+| 19 | Retravailler la boîte en verre : montrer les parois qui se remplissent, et arrêter la promenade du caméléon dans cet épisode | L'épisode le plus faible visuellement | à faire |
+| 20 | Accroche des fourmis : partir d'une fourmilière qui déborde déjà de fourmis | La première seconde manque de mouvement | à faire |
 | 6 | Caler les coupes et les apparitions de texte sur le temps de la musique | Une vidéo synchronisée paraît plus pro et retient mieux | à faire |
 | 7 | Générer l'image de couverture (titre en gros sur la meilleure image) | La couverture compte sur la page de profil | à faire |
 | 8 | Une commande unique : `npm run video -- <id>` (valider, composer, vérifier, rendre) | Moins d'étapes manuelles, moins d'oublis | à faire |
