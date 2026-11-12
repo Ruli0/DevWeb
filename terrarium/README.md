@@ -11,7 +11,9 @@ npm install
 npm start        # http://localhost:3000  (PORT=4000 npm start pour changer de port)
 npm test         # tests de la simulation
 npm run build:demo   # démo en un seul fichier : demo/index.html, jouable sans serveur
-node scripts/build-video.js   # compositions HyperFrames des vidéos : videos/hyperframes/<id>/
+node scripts/build-sons.js    # bruitages synthétisés : videos/sons/
+node scripts/build-video.js   # compositions HyperFrames des vidéos TikTok : videos/hyperframes/<id>/
+node scripts/verifier-videos.js  # zone sûre TikTok (Playwright requis)
 ```
 
 ## Le vivarium
@@ -30,7 +32,7 @@ Cinq scènes de nature jouent chacune un concept, avec une caméra qui suit l'ac
 
 ## Les vidéos
 
-Chaque vidéo est décrite par un scénario JSON (`videos/scenarios/`) : plans, mouvements de caméra, actions des habitants, légendes, voix off et cartes de révélation. Le même moteur (`public/js/film/film.js`) le joue sur le site et le transforme en composition HyperFrames prête à rendre en MP4 (`videos/hyperframes/`). La marche à suivre et les scripts lisibles sont dans [`videos/scripts.md`](videos/scripts.md).
+Une série TikTok de cinq épisodes (9:16, 19 à 24,5 s, sans voix off, avec bruitages). Chaque vidéo est décrite par un scénario JSON (`videos/scenarios/`) : plans, mouvements de caméra, actions des habitants, légendes en morceaux, carte de révélation, accroches à comparer et texte de publication. Le même moteur (`public/js/film/film.js`) la joue sur le site et la transforme en composition HyperFrames prête à rendre en MP4 (`videos/hyperframes/`). Le format, la chaîne de production et la boucle de mesure sont décrits dans [`videos/scripts.md`](videos/scripts.md).
 
 ## Les cinq chapitres
 
@@ -57,7 +59,9 @@ public/js/home.js      page d'accueil (vivarium, légende, liste des chapitres)
 public/js/scenes/      une scène animée par chapitre
 test/                  tests node:test de la simulation
 scripts/build-demo.js  démo autonome en un fichier
-scripts/build-video.js compositions HyperFrames, une par scénario
+scripts/build-video.js compositions HyperFrames, une par scénario et par accroche
+scripts/build-sons.js  synthèse des bruitages (WAV, sans dépendance)
+scripts/verifier-videos.js  vérification de la zone sûre TikTok
 videos/scenarios/      les scénarios des vidéos (JSON)
 videos/hyperframes/    les compositions générées
 videos/scripts.md      scripts des vidéos

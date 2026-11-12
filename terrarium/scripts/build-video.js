@@ -1,48 +1,90 @@
-// Fabrique une composition HyperFrames par scénario : videos/hyperframes/<id>/index.html
-//   node scripts/build-video.js            -> toutes les vidéos
-//   node scripts/build-video.js cameleon   -> une seule
+// Fabrique les compositions HyperFrames des vidéos TikTok (1080 × 1920).
+//   node scripts/build-video.js              -> toutes les vidéos, avec leurs variantes d'accroche
+//   node scripts/build-video.js cameleon     -> une seule vidéo (et ses variantes)
 //
-// La composition est un fichier HTML autonome en 1080 × 1920 :
-// - le vivarium y est écrit en SVG (calculé ici, en Node, toujours identique) ;
-// - légendes et cartes sont des clips (class="clip", data-start, data-duration) ;
-// - une seule timeline GSAP en pause, enregistrée dans window.__timelines[id].
-// Rendu : npx hyperframes render (dans le dossier de la vidéo).
+// Pour chaque scénario videos/scenarios/<id>.json, et chaque variante d'accroche :
+//   videos/hyperframes/<id>[-b|-c]/index.html   la composition (une seule timeline GSAP en pause)
+//   videos/hyperframes/<id>[-b|-c]/assets/      GSAP et les bruitages : le rendu ne télécharge rien
+//   videos/hyperframes/<id>/publication.md      le kit de publication (texte, hashtags, couverture)
+// Rendu : npx hyperframes render, dans le dossier de la vidéo.
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const { valider } = require('../shared/scenarios.js');
+const scenarios = require('../shared/scenarios.js');
+const { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE } = require('../videos/sons/table.js');
 
 const racine = path.join(__dirname, '..');
 const lire = (f) => fs.readFileSync(path.join(racine, f), 'utf8');
-// GSAP est copié dans chaque vidéo (assets/) : le rendu ne télécharge rien.
 const GSAP_FICHIERS = ['gsap.min.js', 'MotionPathPlugin.min.js'];
 const LARGEUR = 1080;
 const HAUTEUR = 1920;
 
-// Le dessin et les cartes sont du texte pur : on les calcule ici.
+// Le dessin, les cartes et le minutage des légendes sont du texte pur : on les calcule ici.
 const bac = { window: {} };
 vm.createContext(bac);
 vm.runInContext(lire('public/js/art/terrarium.js'), bac);
+bac.window.Terrarium.scenarios = scenarios;
 vm.runInContext(lire('public/js/film/film.js'), bac);
 const { art, film } = bac.window.Terrarium;
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const arrondi = (n) => +n.toFixed(3);
+// Durée d'un WAV mono 16 bits à 44,1 kHz (en-tête de 44 octets).
+const dureeSon = (fichier) => (fs.statSync(path.join(racine, 'videos/sons', fichier)).size - 44) / (2 * 44100);
+
+// --- Bruitages : placés d'après les actions du scénario --------------------------
+function bruitages(sc) {
+  const sons = [];
+  const ajouter = (fichier, t, volume) => {
+    if (t >= 0 && t < sc.duree) sons.push({ fichier, t: arrondi(t), volume });
+  };
+  sons.push({ fichier: SON_AMBIANCE.fichier, t: 0, volume: SON_AMBIANCE.volume, duree: sc.duree });
+  let vue = null;
+  sc.plans.forEach((plan) => {
+    if (plan.camera) {
+      const cle = JSON.stringify([plan.camera.cible, plan.camera.zoom]);
+      if (vue !== null && cle !== vue && (plan.camera.duree ?? 0.9) >= 0.5) ajouter(SON_CAMERA.fichier, plan.debut, SON_CAMERA.volume);
+      vue = cle;
+    }
+    (plan.actions || []).forEach((a) => {
+      const t0 = plan.debut + (a.a || 0);
+      (SONS_PAR_ACTION[a.type] || []).forEach((s) => {
+        const repetitions = s.parFois ? (a.fois || 3) : 1;
+        for (let k = 0; k < repetitions; k += 1) ajouter(s.fichier, t0 + (s.decalage || 0) + k * (s.pas || 0), s.volume);
+      });
+    });
+    if (plan.carte) ajouter(SON_CARTE.fichier, plan.debut, SON_CARTE.volume);
+  });
+  sons.sort((a, b) => a.t - b.t);
+  // Chaque son dure sa vraie longueur, et ceux qui se chevauchent vont sur des pistes différentes.
+  const finsDePiste = [];
+  for (const son of sons) {
+    son.duree = arrondi(Math.min(son.duree || dureeSon(son.fichier), sc.duree - son.t));
+    let piste = finsDePiste.findIndex((fin) => fin <= son.t);
+    if (piste === -1) { piste = finsDePiste.length; finsDePiste.push(0); }
+    finsDePiste[piste] = son.t + son.duree;
+    son.piste = 5 + piste;
+  }
+  return sons;
+}
 
 function composition(sc) {
   const pistes = [];
   sc.plans.forEach((p, i) => {
-    const temps = `data-start="${p.debut}" data-duration="${+(p.fin - p.debut).toFixed(2)}"`;
-    if (p.legende) {
-      pistes.push(`    <div id="leg-${i}" class="clip legende" ${temps} data-track-index="2"${p.voix ? ` data-voix="${esc(p.voix)}"` : ''}>
-      <p class="leg-texte">${esc(p.legende)}</p>
+    // Chaque morceau de légende reste affiché jusqu'au suivant : jamais de blanc.
+    film.morceaux(p).forEach((m, k) => {
+      pistes.push(`    <div id="leg-${i}-${k}" class="clip legende" data-start="${arrondi(m.debut)}" data-duration="${arrondi(m.fin - m.debut)}" data-track-index="2">
+      <p class="leg-texte">${film.marquer(m.texte)}</p>
     </div>`);
-    }
+    });
     if (p.carte) {
-      pistes.push(`    <div id="carte-${i}" class="clip carte" ${temps} data-track-index="3" data-layout-allow-overlap>
+      pistes.push(`    <div id="carte-${i}" class="clip carte" data-start="${p.debut}" data-duration="${arrondi(p.fin - p.debut)}" data-track-index="3" data-layout-allow-overlap>
       ${film.carteHTML(p.carte)}
     </div>`);
     }
   });
+  const sons = bruitages(sc).map((s, i) => `    <audio id="son-${i}" class="clip" src="assets/sons/${s.fichier}" data-start="${s.t}" data-duration="${s.duree}" data-track-index="${s.piste}" data-volume="${s.volume}"></audio>`);
+  const serie = sc.serie ? `<div class="serie">${esc(sc.serie.nom)} · <b>${sc.serie.episode}/${sc.serie.total}</b></div>` : '';
 
   return `<!doctype html>
 <html lang="fr">
@@ -58,20 +100,22 @@ ${lire('videos/video.css')}
 </head>
 <body>
   <div id="root" data-composition-id="${sc.id}" data-start="0" data-duration="${sc.duree}" data-width="${LARGEUR}" data-height="${HAUTEUR}">
-    <div class="fond"></div>
-    <header class="titre">
-      <p class="titre-concept">${esc(sc.concept)}</p>
-      <h1 class="titre-acteur">${esc(sc.titre)}</h1>
-    </header>
     <div class="scene" data-layout-allow-overflow>
 ${art.svg()}
     </div>
+    <div class="voile"></div>
+    ${serie}
 ${pistes.join('\n')}
+${sons.join('\n')}
   </div>
 
   <script>
     // Le dessin est déjà dans la page : le moteur n'a besoin que des couleurs et du hasard reproductible.
-    window.Terrarium = { art: { PEAU: ${JSON.stringify(art.PEAU)}, graine: ${art.graine.toString()} } };
+    window.Terrarium = window.Terrarium || {};
+    window.Terrarium.art = { PEAU: ${JSON.stringify(art.PEAU)}, graine: ${art.graine.toString()} };
+  </script>
+  <script>
+${lire('shared/scenarios.js')}
   </script>
   <script>
 ${lire('public/js/film/film.js')}
@@ -84,7 +128,8 @@ ${lire('public/js/film/film.js')}
         svg: document.getElementById('vivarium'),
         racine: document.getElementById('root'),
         scenario: scenario,
-        ambiance: true
+        ambiance: true,
+        cadre: '9:16'
       });
       window.__timelines = window.__timelines || {};
       window.__timelines[scenario.id] = tl;
@@ -95,25 +140,72 @@ ${lire('public/js/film/film.js')}
 `;
 }
 
+// --- Kit de publication ------------------------------------------------------------
+function publication(sc, variantes) {
+  const pub = sc.publication || {};
+  const fr = (n) => Number(n).toLocaleString('fr-FR');
+  const accroche = (legende) => [].concat(legende).map((m) => m.replace(/\*/g, '')).join(' ');
+  const lignes = [
+    `# ${sc.titre} · ${sc.concept}`,
+    '',
+    sc.serie ? `Épisode ${sc.serie.episode} sur ${sc.serie.total} de la série « ${sc.serie.nom} ». Durée : ${fr(sc.duree)} s.` : `Durée : ${fr(sc.duree)} s.`,
+    '',
+    '## Texte du post',
+    '',
+    pub.texte || '',
+    '',
+    (pub.hashtags || []).join(' '),
+    '',
+    '## Couverture',
+    '',
+    `Image à ${fr(pub.couverture ?? 1)} s, avec le titre « ${pub.titreCouverture || sc.titre} ».`,
+    '',
+    '## Commentaire à épingler',
+    '',
+    pub.commentaire || '',
+    '',
+    '## Variantes d\'accroche à comparer',
+    '',
+    '| Variante | Dossier | Accroche |',
+    '|---|---|---|',
+    ...variantes.map((v) => `| ${v.nom} | \`hyperframes/${v.sc.id}/\` | ${accroche(v.sc.plans[0].legende)} |`),
+    '',
+    'Publie une variante à la fois, à quelques jours d\'écart, et note les résultats dans `videos/resultats.csv`.',
+    '',
+    '## Son',
+    '',
+    'Les bruitages et l\'ambiance sont dans la vidéo. Ajoute une musique depuis la bibliothèque de TikTok, volume bas (10 à 20 %), pour profiter des tendances sans risque de droits.',
+    '',
+  ];
+  return lignes.join('\n');
+}
+
+// --- Génération ---------------------------------------------------------------------
 const demandes = process.argv.slice(2);
 const fichiers = fs.readdirSync(path.join(racine, 'videos/scenarios')).filter((f) => f.endsWith('.json'));
+const sonsUtiles = new Set();
 let echec = false;
 for (const f of fichiers) {
-  const sc = JSON.parse(lire(`videos/scenarios/${f}`));
-  if (demandes.length && !demandes.includes(sc.id)) continue;
-  const erreurs = valider(sc);
+  const base = JSON.parse(lire(`videos/scenarios/${f}`));
+  if (demandes.length && !demandes.includes(base.id)) continue;
+  const erreurs = scenarios.valider(base);
   if (erreurs.length) {
     echec = true;
     console.error(`${f} :\n  - ${erreurs.join('\n  - ')}`);
     continue;
   }
-  const sortie = path.join(racine, 'videos/hyperframes', sc.id, 'index.html');
-  fs.mkdirSync(path.dirname(sortie), { recursive: true });
-  fs.writeFileSync(sortie, composition(sc));
-  fs.mkdirSync(path.join(path.dirname(sortie), 'assets'), { recursive: true });
-  for (const f of GSAP_FICHIERS) {
-    fs.copyFileSync(path.join(racine, 'node_modules/gsap/dist', f), path.join(path.dirname(sortie), 'assets', f));
+  const variantes = ['a', ...Object.keys(base.accroches || {})].map((nom) => ({ nom, sc: scenarios.variante(base, nom) }));
+  for (const { sc } of variantes) {
+    const dossier = path.join(racine, 'videos/hyperframes', sc.id);
+    fs.mkdirSync(path.join(dossier, 'assets/sons'), { recursive: true });
+    fs.writeFileSync(path.join(dossier, 'index.html'), composition(sc));
+    for (const g of GSAP_FICHIERS) fs.copyFileSync(path.join(racine, 'node_modules/gsap/dist', g), path.join(dossier, 'assets', g));
+    for (const s of bruitages(sc)) {
+      sonsUtiles.add(s.fichier);
+      fs.copyFileSync(path.join(racine, 'videos/sons', s.fichier), path.join(dossier, 'assets/sons', s.fichier));
+    }
+    console.log(`Composition écrite : videos/hyperframes/${sc.id}/ (${sc.duree} s, ${bruitages(sc).length} sons)`);
   }
-  console.log(`Composition écrite : ${path.relative(racine, sortie)} (${sc.duree} s)`);
+  fs.writeFileSync(path.join(racine, 'videos/hyperframes', base.id, 'publication.md'), publication(base, variantes));
 }
 process.exit(echec ? 1 : 0);

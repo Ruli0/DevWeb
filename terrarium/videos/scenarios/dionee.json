@@ -3,77 +3,147 @@
   "chapitre": "capteurs",
   "titre": "La dionée",
   "concept": "Les hooks",
-  "duree": 32,
+  "serie": {
+    "nom": "Terrarium IA",
+    "episode": 2,
+    "total": 5
+  },
+  "duree": 21,
   "decor": {},
+  "accroches": {
+    "b": [
+      "Comment empêcher une IA…"
+    ],
+    "c": [
+      "L'IA voulait tout *arracher*."
+    ]
+  },
   "plans": [
     {
-      "debut": 0, "fin": 3,
-      "camera": { "cible": "pousse", "zoom": 3.4, "duree": 0 },
-      "legende": "Comment empêcher un agent de faire une bêtise ?",
-      "voix": "Comment empêcher un agent IA de faire une bêtise ?",
-      "actions": [{ "type": "pousse.trembler", "duree": 3 }]
+      "debut": 0,
+      "fin": 2,
+      "camera": {
+        "cible": "dionee",
+        "zoom": 2.6,
+        "duree": 0
+      },
+      "legende": [
+        "Ton IA va tout *casser*."
+      ],
+      "actions": [
+        {
+          "type": "scarabee.avancer",
+          "duree": 2
+        }
+      ]
     },
     {
-      "debut": 3, "fin": 6,
-      "camera": { "cible": "pousse", "zoom": 2.4, "duree": 1.2 },
-      "legende": "Voici une jeune pousse. Elle est fragile.",
-      "voix": "Voici une jeune pousse. Elle est fragile.",
-      "actions": [{ "type": "pousse.trembler", "a": 0.2, "duree": 2.6 }]
+      "debut": 2,
+      "fin": 4,
+      "legende": [
+        "Sauf si…"
+      ],
+      "actions": [
+        {
+          "type": "dionee.fermer",
+          "a": 0.45
+        }
+      ]
     },
     {
-      "debut": 6, "fin": 9.4,
-      "camera": { "cible": "sol", "zoom": 2.1, "duree": 0.9 },
-      "legende": "Un scarabée file droit dessus.",
-      "voix": "Un scarabée file droit dessus.",
-      "actions": [{ "type": "scarabee.avancer", "duree": 2.6 }]
+      "debut": 4,
+      "fin": 6.5,
+      "legende": [
+        "*Clac.* Bloquée",
+        "avant d'agir."
+      ]
     },
     {
-      "debut": 9.4, "fin": 13.4,
-      "camera": { "cible": "dionee", "zoom": 2.8, "duree": 0.3, "ease": "power3.out" },
-      "legende": "Clac. Bloqué avant d'agir : c'est un hook « avant ».",
-      "voix": "Clac. La dionée se referme avant qu'il n'arrive. C'est un hook avant l'action : il peut tout bloquer.",
-      "actions": [{ "type": "dionee.fermer", "a": 0.05 }]
+      "debut": 6.5,
+      "fin": 9.5,
+      "camera": {
+        "cible": "grenouille",
+        "zoom": 2.6,
+        "duree": 0.7
+      },
+      "legende": [
+        "Ça, c'est un *hook*",
+        "« avant »."
+      ]
     },
     {
-      "debut": 13.4, "fin": 17.4,
-      "camera": { "cible": "grenouille", "zoom": 2.8, "duree": 1 },
-      "legende": "La grenouille prévient après coup : c'est un hook « après ».",
-      "voix": "La grenouille, elle, coasse après coup pour prévenir tout le monde. C'est un hook après l'action.",
-      "actions": [{ "type": "grenouille.coasser", "a": 0.9, "fois": 3 }]
+      "debut": 9.5,
+      "fin": 12.5,
+      "legende": [
+        "La grenouille *prévient*",
+        "après coup."
+      ],
+      "actions": [
+        {
+          "type": "grenouille.coasser",
+          "a": 0.2,
+          "fois": 3
+        }
+      ]
     },
     {
-      "debut": 17.4, "fin": 20,
-      "camera": { "cible": "ensemble", "zoom": 1, "duree": 1.2 },
-      "legende": "Ni l'un ni l'autre ne demande la permission.",
-      "voix": "Aucun des deux ne demande l'avis de l'agent. Ils se déclenchent à coup sûr."
+      "debut": 12.5,
+      "fin": 15,
+      "legende": [
+        "Un hook « *après* »."
+      ]
     },
     {
-      "debut": 20, "fin": 29,
-      "legende": "Une consigne demande. Un hook garantit.",
-      "voix": "Écrire « n'arrache jamais les plantes » dans la consigne, c'est demander. Brancher un hook, c'est garantir. Avant l'action, il bloque ou modifie. Après, il note ou prévient.",
-      "carte": {
-        "type": "code",
-        "titre": "Deux hooks, dans le code",
-        "lignes": [
-          "agent.hook(\"avantOutil\", (appel) => {",
-          "  if (appel.nom === \"arracher_plantes\")",
-          "    return { decision: \"bloquer\" };",
-          "});",
-          "",
-          "agent.hook(\"apresOutil\", (appel) => {",
-          "  carnet.noter(appel);",
-          "});"
+      "debut": 15,
+      "fin": 18.5,
+      "camera": {
+        "cible": [
+          392,
+          540
         ],
-        "surligne": [2, 6],
-        "rythme": 0.3
+        "zoom": 1.2,
+        "duree": 0.9
+      },
+      "legende": [
+        "Une consigne *demande*.",
+        "Un hook *garantit*."
+      ],
+      "carte": {
+        "type": "phrase",
+        "titre": "En vrai",
+        "texte": "Un hook, c'est du code qui se déclenche *à coup sûr*, avant ou après chaque action."
       }
     },
     {
-      "debut": 29, "fin": 32,
-      "camera": { "cible": "dionee", "zoom": 1.7, "duree": 1.2 },
-      "legende": "Les hooks : des réflexes, pas des conseils.",
-      "voix": "Les hooks : des réflexes, pas des conseils.",
-      "actions": [{ "type": "dionee.ouvrir", "a": 0.4 }]
+      "debut": 18.5,
+      "fin": 21,
+      "camera": {
+        "cible": "dionee",
+        "zoom": 2.6,
+        "duree": 0.9
+      },
+      "legende": [
+        "Ton IA est *protégée*."
+      ],
+      "actions": [
+        {
+          "type": "dionee.ouvrir",
+          "a": 0.3
+        }
+      ]
     }
-  ]
+  ],
+  "publication": {
+    "texte": "Comment empêcher une IA de faire une bêtise ? Pas avec une consigne : avec un hook. Épisode 2 du Terrarium IA.",
+    "hashtags": [
+      "#ia",
+      "#intelligenceartificielle",
+      "#agentia",
+      "#securite",
+      "#tech"
+    ],
+    "commentaire": "Quelle action tu interdirais en premier à ton IA ?",
+    "couverture": 2.5,
+    "titreCouverture": "Clac !"
+  }
 }

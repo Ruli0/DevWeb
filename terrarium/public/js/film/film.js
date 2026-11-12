@@ -21,6 +21,8 @@
   const HAUTEUR = 744;
   const VERRE = { x0: 34, y0: 60, x1: 566, y1: 682 };
   const VUE_ENTIERE = `0 0 ${LARGEUR} ${HAUTEUR}`;
+  const RAPPORT_9_16 = 1080 / 1920;
+  const SOCLE = 726; // bas du socle du vivarium, dans le dessin
 
   // Points fixes du dessin, pour la caméra (coordonnées du SVG).
   const CIBLES = {
@@ -42,9 +44,21 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[c]));
 
+  // *mot* : mis en valeur (couleur d'accent) dans les légendes et les cartes.
+  const marquer = (s) => esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+  // Découpe la légende d'un plan en morceaux minutés (voir shared/scenarios.js).
+  const morceauxDe = (plan) => (T.scenarios && T.scenarios.morceaux
+    ? T.scenarios.morceaux(plan)
+    : (plan.legende ? [{ texte: [].concat(plan.legende).join(' '), debut: plan.debut, fin: plan.fin }] : []));
+
   // --- Cartes de révélation (HTML pur : utilisable en Node pour la vidéo) ----
   function carteHTML(carte, id) {
     let corps = '';
+    if (carte.type === 'phrase') {
+      // Le format TikTok : une seule phrase forte, lisible en un coup d'œil.
+      return `<div class="carte-in carte-phrase">${carte.titre ? `<p class="carte-titre">${esc(carte.titre)}</p>` : ''}<p class="carte-item carte-texte">${marquer(carte.texte)}</p></div>`;
+    }
     if (carte.type === 'code') {
       corps = `<pre class="carte-code">${carte.lignes.map((l, i) => `<span class="carte-item ligne${(carte.surligne || []).includes(i) ? ' surligne' : ''}">${esc(l) || ' '}</span>`).join('')}</pre>`;
     } else if (carte.type === 'etapes') {
@@ -414,7 +428,6 @@
     }
 
     // --- Plans : caméra, actions, légendes, cartes ---------------------------------
-    let vue = VUE_ENTIERE;
     const cibleDe = (c) => {
       if (Array.isArray(c)) return c;
       if (c === 'cameleon') { const p = versDessin(q('#cam-corps'), 6, -28); return [p.x, p.y]; }
@@ -422,19 +435,44 @@
       if (!CIBLES[c]) throw new Error('Cible de caméra inconnue : ' + c);
       return CIBLES[c];
     };
+    const borne = (v, min, max) => Math.min(Math.max(v, min), max);
     function vueDe(camera) {
-      const zoom = camera.zoom || 1;
+      const zoom = Math.max(1, camera.zoom || 1);
+      if (o.cadre === '9:16') {
+        // Cadre vertical : la caméra filme toujours l'intérieur du verre, au rapport 9:16.
+        const h = (VERRE.y1 - VERRE.y0) / zoom;
+        const w = h * RAPPORT_9_16;
+        const [cx, cy] = cibleDe(camera.cible || 'ensemble');
+        // Le sujet est cadré aux 2/5 de la hauteur : le bas de l'écran reste aux légendes.
+        const x = borne(cx - w / 2, VERRE.x0, VERRE.x1 - w);
+        // Vers le bas, la caméra peut montrer le socle sombre (jusqu'à y = 726) :
+        // il tombe sous la zone que l'interface TikTok recouvre.
+        const y = borne(cy - h * 0.4, VERRE.y0, SOCLE - h);
+        return `${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`;
+      }
       if (zoom <= 1) return VUE_ENTIERE;
       const [cx, cy] = cibleDe(camera.cible || 'ensemble');
       const w = LARGEUR / zoom;
       const h = HAUTEUR / zoom;
-      const borne = (v, min, max) => Math.min(Math.max(v, min), max);
       const x = w <= VERRE.x1 - VERRE.x0 ? borne(cx - w / 2, VERRE.x0, VERRE.x1 - w) : (LARGEUR - w) / 2;
       const y = h <= VERRE.y1 - VERRE.y0 ? borne(cy - h / 2, VERRE.y0, VERRE.y1 - h) : (HAUTEUR - h) / 2;
       return `${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`;
     }
 
+    // Cadrage de départ : celui du premier plan (plein cadre en 9:16).
+    let vue = o.cadre === '9:16' ? vueDe(sc.plans[0].camera || {}) : VUE_ENTIERE;
+    repos(svg, { attr: { viewBox: vue } });
+
+    // Hauteur (0 en haut, 1 en bas) où le sujet du plan tombe à l'écran.
+    let sujet = sc.plans[0].camera || { cible: 'ensemble' };
+    const hauteurSujet = (v) => {
+      const [, cy] = cibleDe(sujet.cible || 'ensemble');
+      const [, vy, , vh] = v.split(' ').map(Number);
+      return (cy - vy) / vh;
+    };
+
     sc.plans.forEach((plan, i) => {
+      if (plan.camera) sujet = plan.camera;
       if (plan.camera && o.camera !== false) {
         const nouvelle = vueDe(plan.camera);
         if (nouvelle !== vue) {
@@ -446,18 +484,28 @@
         if (!A[a.type]) throw new Error('Action inconnue : ' + a.type);
         A[a.type](plan.debut + (a.a || 0), a);
       });
-      if (plan.legende) {
-        if (typeof o.legende === 'function') tl.call(o.legende, [plan.legende, i], plan.debut);
-        else {
-          const el = racine.querySelector('#leg-' + i + ' .leg-texte');
-          repos(el, { opacity: 0 });
-          ft(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, plan.debut + 0.05);
-          ft(el, { opacity: 1 }, { opacity: 0, duration: 0.25 }, plan.fin - 0.3);
-        }
+      // Site : la phrase complète du plan, d'un coup, sur la plaque de légende.
+      if (typeof o.legende === 'function') {
+        if (plan.legende) tl.call(o.legende, [[].concat(plan.legende).join(' ').replace(/\*/g, ''), i], plan.debut);
       }
+      // Vidéo : chaque morceau remplace le précédent, sans blanc entre deux plans.
+      if (typeof o.legende !== 'function') morceauxDe(plan).forEach((m, k) => {
+        const el = racine.querySelector('#leg-' + i + '-' + k + ' .leg-texte');
+        if (!el) return;
+        // Sujet dans la moitié basse : la légende passe en haut pour ne pas le cacher.
+        if (o.cadre === '9:16' && hauteurSujet(vue) > 0.5) el.classList.add('haut');
+        ft(el, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'back.out(2.5)' }, m.debut);
+      });
       if (plan.carte) {
         const carte = racine.querySelector('#carte-' + i);
         const dedans = carte.querySelector('.carte-in');
+        if (o.cadre === '9:16' && hauteurSujet(vue) > 0.5) dedans.classList.add('bas');
+        if (plan.carte.type === 'phrase') {
+          repos(dedans, { opacity: 0 });
+          ft(dedans, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.18, ease: 'back.out(2)' }, plan.debut);
+          ft(dedans, { opacity: 1 }, { opacity: 0, duration: 0.2 }, plan.fin - 0.2);
+          return;
+        }
         repos(dedans, { opacity: 0 });
         ft(dedans, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, plan.debut);
         ft(carte.querySelectorAll('.carte-item'), { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.35, stagger: plan.carte.rythme || 0.32, ease: 'power2.out' }, plan.debut + 0.45);
@@ -473,5 +521,5 @@
     return tl;
   }
 
-  T.film = { construire, carteHTML, CIBLES };
+  T.film = { construire, carteHTML, marquer, morceaux: morceauxDe, CIBLES };
 })();

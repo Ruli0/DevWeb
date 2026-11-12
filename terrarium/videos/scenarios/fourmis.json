@@ -3,75 +3,173 @@
   "chapitre": "ecosysteme",
   "titre": "Les fourmis",
   "concept": "Le système multi-agents",
-  "duree": 32,
+  "serie": {
+    "nom": "Terrarium IA",
+    "episode": 4,
+    "total": 5
+  },
+  "duree": 19,
   "decor": {},
+  "accroches": {
+    "b": [
+      "Une IA, *trois* fourmis."
+    ],
+    "c": [
+      "Comment une IA *délègue*"
+    ]
+  },
   "plans": [
     {
-      "debut": 0, "fin": 3,
-      "camera": { "cible": "fourmiliere", "zoom": 3.2, "duree": 0 },
-      "legende": "Une tâche trop grosse pour un seul agent ?",
-      "voix": "Une tâche trop grosse pour un seul agent ?",
-      "actions": [{ "type": "fourmiliere.agiter", "a": 0.4 }]
-    },
-    {
-      "debut": 3, "fin": 6,
-      "camera": { "cible": "fourmiliere", "zoom": 2.2, "duree": 1.2 },
-      "legende": "Préparer l'hiver, c'est trop pour une seule fourmi.",
-      "voix": "Préparer l'hiver, c'est trop pour une seule fourmi.",
+      "debut": 0,
+      "fin": 2,
+      "camera": {
+        "cible": "fourmiliere",
+        "zoom": 2.8,
+        "duree": 0
+      },
+      "legende": [
+        "Une IA seule *déborde*."
+      ],
       "actions": [
-        { "type": "fourmis.ecarter", "a": 0.3 },
-        { "type": "fourmiliere.agiter", "a": 1.2 }
+        {
+          "type": "fourmiliere.agiter"
+        },
+        {
+          "type": "fourmis.ecarter",
+          "a": 0.6
+        }
       ]
     },
     {
-      "debut": 6, "fin": 10,
-      "camera": { "cible": "ensemble", "zoom": 1.1, "duree": 1.2 },
-      "legende": "La fourmilière découpe le travail. Trois éclaireuses partent.",
-      "voix": "La fourmilière découpe le travail. Trois éclaireuses partent en même temps.",
-      "actions": [{ "type": "eclaireuses.partir", "a": 0.2, "duree": 3 }]
-    },
-    {
-      "debut": 10, "fin": 13,
-      "legende": "Chacune fouille son coin, dans son propre contexte.",
-      "voix": "Chacune fouille son coin, sans encombrer les autres.",
-      "actions": [{ "type": "eclaireuses.fouiller", "a": 0.2, "duree": 2.6 }]
-    },
-    {
-      "debut": 13, "fin": 18,
-      "legende": "Elles ne rapportent que l'essentiel.",
-      "voix": "Et chacune ne rapporte qu'un résumé de ce qu'elle a trouvé.",
-      "actions": [{ "type": "eclaireuses.revenir", "a": 0.2, "duree": 3 }]
-    },
-    {
-      "debut": 18, "fin": 20.6,
-      "camera": { "cible": "fourmiliere", "zoom": 2.8, "duree": 1 },
-      "legende": "La fourmilière assemble le tout.",
-      "voix": "La fourmilière assemble le tout.",
-      "actions": [{ "type": "butin.montrer", "a": 0.4 }]
-    },
-    {
-      "debut": 20.6, "fin": 29,
-      "camera": { "cible": "ensemble", "zoom": 1, "duree": 1 },
-      "legende": "Déléguer garde le contexte léger.",
-      "voix": "En IA, c'est pareil : un orchestrateur confie des morceaux à des sous-agents. Chacun travaille dans son propre contexte et ne renvoie qu'un résumé. Le contexte principal reste léger.",
+      "debut": 2,
+      "fin": 4.5,
+      "legende": [
+        "Alors elle *délègue*."
+      ],
       "actions": [
-        { "type": "butin.cacher", "a": 0.4 },
-        { "type": "fourmis.revenir", "a": 1 }
+        {
+          "type": "eclaireuses.partir",
+          "a": 0.3,
+          "duree": 2.6
+        }
+      ]
+    },
+    {
+      "debut": 4.5,
+      "fin": 7.5,
+      "camera": {
+        "cible": [
+          440,
+          500
+        ],
+        "zoom": 1.3,
+        "duree": 0.9
+      },
+      "legende": [
+        "3 *sous-agents*,",
+        "chacun son coin."
+      ],
+      "actions": [
+        {
+          "type": "eclaireuses.fouiller",
+          "a": 1.4,
+          "duree": 1.4
+        }
+      ]
+    },
+    {
+      "debut": 7.5,
+      "fin": 10.5,
+      "legende": [
+        "Elles ne rapportent",
+        "que l'*essentiel*."
+      ],
+      "actions": [
+        {
+          "type": "eclaireuses.revenir",
+          "duree": 2.4
+        }
+      ]
+    },
+    {
+      "debut": 10.5,
+      "fin": 13,
+      "camera": {
+        "cible": "fourmiliere",
+        "zoom": 2.6,
+        "duree": 0.8
+      },
+      "legende": [
+        "Un *résumé* chacune."
+      ],
+      "actions": [
+        {
+          "type": "butin.montrer",
+          "a": 0.3
+        }
+      ]
+    },
+    {
+      "debut": 13,
+      "fin": 16.5,
+      "camera": {
+        "cible": [
+          440,
+          500
+        ],
+        "zoom": 1.3,
+        "duree": 0.9
+      },
+      "legende": [
+        "C'est un système",
+        "*multi-agents*."
+      ],
+      "actions": [
+        {
+          "type": "butin.cacher",
+          "a": 0.4
+        },
+        {
+          "type": "fourmis.revenir",
+          "a": 0.8
+        }
       ],
       "carte": {
-        "type": "barres",
-        "titre": "Le contexte de l'orchestrateur",
-        "barres": [
-          { "label": "En équipe : il ne lit que les résumés", "valeur": 1850, "max": 29300, "texte": "1 850 tokens", "ton": "ok" },
-          { "label": "Tout seul : il fait tout le travail", "valeur": 29300, "texte": "29 300 tokens", "ton": "alerte", "limite": 16000, "note": "Sa limite est de 16 000 tokens : ça déborde." }
-        ],
-        "rythme": 0.6
+        "type": "phrase",
+        "titre": "En vrai",
+        "texte": "Des *sous-agents* travaillent en parallèle : 1 850 tokens au lieu de 29 300."
       }
     },
     {
-      "debut": 29, "fin": 32,
-      "legende": "Le système multi-agents.",
-      "voix": "Le système multi-agents."
+      "debut": 16.5,
+      "fin": 19,
+      "camera": {
+        "cible": "fourmiliere",
+        "zoom": 2.8,
+        "duree": 0.9
+      },
+      "legende": [
+        "Sinon, *ça déborde*."
+      ],
+      "actions": [
+        {
+          "type": "fourmiliere.agiter",
+          "a": 0.9
+        }
+      ]
     }
-  ]
+  ],
+  "publication": {
+    "texte": "Une seule IA qui fait tout finit par déborder. La solution : déléguer à des sous-agents, comme une fourmilière. Épisode 4 du Terrarium IA.",
+    "hashtags": [
+      "#ia",
+      "#intelligenceartificielle",
+      "#agentia",
+      "#multiagents",
+      "#tech"
+    ],
+    "commentaire": "Tu donnerais quelle tâche à une équipe d'IA ?",
+    "couverture": 3.6,
+    "titreCouverture": "Une IA qui délègue"
+  }
 }

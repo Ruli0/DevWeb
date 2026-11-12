@@ -1,5 +1,7 @@
-/* Mise en page des vidéos 9:16 : titre en haut, vivarium au centre, légende en bas.
-   Polices fournies par HyperFrames : Playfair Display, Inter, JetBrains Mono. */
+/* Vidéos TikTok 9:16 : le vivarium remplit tout l'écran (1080 × 1920).
+   Tout ce qui se lit reste dans la zone sûre (x 60 à 940, y 150 à 1440),
+   hors des icônes de droite et du texte du bas de l'appli.
+   Police fournie par HyperFrames : Inter. */
 * { box-sizing: border-box; }
 html, body { margin: 0; background: #0f1b17; }
 #root {
@@ -7,72 +9,52 @@ html, body { margin: 0; background: #0f1b17; }
   width: 1080px;
   height: 1920px;
   overflow: hidden;
-  color: #eef6ee;
+  color: #ffffff;
   font-family: "Inter", system-ui, sans-serif;
 }
-.fond {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(120% 70% at 50% 38%, #21402f 0%, #0f1b17 72%);
-}
-.titre { position: absolute; top: 96px; left: 0; right: 0; text-align: center; }
-.titre-concept {
-  margin: 0;
-  font: 700 30px/1 "Inter", sans-serif;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #9ad25f;
-}
-.titre-acteur { margin: 16px 0 0; font: 700 78px/1.05 "Playfair Display", Georgia, serif; }
+.scene { position: absolute; inset: 0; }
+#vivarium { display: block; width: 1080px; height: 1920px; }
 
-/* Le vivarium : 940 px de large, donc 1166 px de haut. */
-.scene { position: absolute; top: 262px; left: 70px; width: 940px; height: 1166px; }
-#vivarium { display: block; width: 100%; height: 100%; border-radius: 30px; box-shadow: 0 34px 70px rgba(0, 0, 0, 0.5); }
+/* Un voile sombre en bas, pour que l'interface TikTok et nos légendes restent lisibles. */
+.voile {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 900px; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(8, 18, 14, 0) 0%, rgba(8, 18, 14, 0.5) 55%, rgba(8, 18, 14, 0.78) 100%);
+}
 
-/* Légendes : un clip par plan, dans la zone basse (sûre pour les titres). */
+/* Marque de série, discrète, en haut à gauche de la zone sûre. */
+.serie {
+  position: absolute; left: 60px; top: 150px;
+  padding: 12px 22px; border-radius: 999px;
+  background: rgba(8, 18, 14, 0.62);
+  font: 700 30px/1 "Inter", sans-serif; letter-spacing: 0.04em;
+}
+.serie b { color: #b9f29a; }
+
+/* Légendes : un clip par morceau, gros texte blanc détouré, dans la zone sûre. */
 .legende { position: absolute; inset: 0; pointer-events: none; }
 .leg-texte {
-  position: absolute;
-  left: 120px;
-  right: 120px;
-  top: 1480px;
-  margin: 0;
-  text-align: center;
-  font: 600 52px/1.28 "Inter", sans-serif;
+  position: absolute; left: 90px; width: 810px; top: 1150px;
+  margin: 0; text-align: center;
+  font: 800 80px/1.12 "Inter", sans-serif; letter-spacing: -0.01em;
   text-wrap: balance;
+  text-shadow:
+    0 0 2px #06100c, 4px 0 0 #06100c, -4px 0 0 #06100c, 0 4px 0 #06100c, 0 -4px 0 #06100c,
+    3px 3px 0 #06100c, -3px 3px 0 #06100c, 3px -3px 0 #06100c, -3px -3px 0 #06100c,
+    0 10px 30px rgba(0, 0, 0, 0.55);
 }
+.leg-texte em, .carte-texte em { font-style: normal; color: #b9f29a; }
+/* Quand le sujet est en bas de l'écran, la légende monte en haut de la zone sûre. */
+.leg-texte.haut { top: 300px; }
 
-/* Cartes de révélation : par-dessus le bas du vivarium. */
+/* Révélation : une phrase forte, au milieu de la zone sûre. */
 .carte { position: absolute; inset: 0; pointer-events: none; }
 .carte-in {
-  position: absolute;
-  left: 100px;
-  right: 100px;
-  top: 760px;
-  padding: 44px 48px 50px;
-  border-radius: 34px;
-  background: rgba(13, 26, 21, 0.95);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-  border: 2px solid rgba(154, 210, 95, 0.35);
+  position: absolute; left: 90px; width: 810px; top: 520px;
+  padding: 48px 50px 54px; border-radius: 40px;
+  background: rgba(8, 18, 14, 0.92);
+  border: 3px solid rgba(185, 242, 154, 0.55);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
 }
-.carte-titre { margin: 0 0 28px; font: 700 40px/1.2 "Playfair Display", Georgia, serif; color: #ffffff; }
-.carte-code { margin: 0; font: 500 27px/1.62 "JetBrains Mono", monospace; font-variant-ligatures: none; color: #cfe3d6; white-space: pre; }
-.carte-code .ligne { display: block; }
-.carte-code .surligne { color: #0f1b17; background: #9ad25f; border-radius: 8px; margin: 0 -10px; padding: 0 10px; }
-.carte-etapes { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
-.carte-etapes li { display: flex; align-items: center; gap: 22px; font: 600 38px/1.25 "Inter", sans-serif; }
-.carte-num {
-  flex: none; width: 58px; height: 58px; border-radius: 50%;
-  display: grid; place-items: center;
-  background: #9ad25f; color: #0f1b17; font: 700 30px/1 "Inter", sans-serif;
-}
-.carte-boucle { margin: 28px 0 0; font: 500 34px/1.3 "Inter", sans-serif; color: #9ad25f; }
-.carte-barres { display: grid; gap: 40px; }
-.barre-tete { display: flex; justify-content: space-between; gap: 20px; font: 600 32px/1.25 "Inter", sans-serif; }
-.barre-tete strong { white-space: nowrap; }
-.barre-piste { position: relative; height: 34px; margin-top: 14px; border-radius: 17px; background: rgba(255, 255, 255, 0.1); }
-.barre-fill { height: 100%; border-radius: 17px; }
-.barre.ok .barre-fill { background: #9ad25f; }
-.barre.alerte .barre-fill { background: #ff6b57; }
-.barre-limite { position: absolute; top: -10px; bottom: -10px; width: 5px; margin-left: -2px; border-radius: 3px; background: #ffffff; }
-.barre small { display: block; margin-top: 12px; font: 500 28px/1.3 "Inter", sans-serif; color: #b8ccbf; }
+.carte-in.bas { top: 760px; }
+.carte-titre { margin: 0 0 18px; font: 800 34px/1.2 "Inter", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #b9f29a; }
+.carte-texte { margin: 0; font: 800 66px/1.15 "Inter", sans-serif; text-wrap: balance; }

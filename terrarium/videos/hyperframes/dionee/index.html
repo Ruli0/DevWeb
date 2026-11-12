@@ -7,8 +7,10 @@
 <script src="assets/gsap.min.js"></script>
 <script src="assets/MotionPathPlugin.min.js"></script>
 <style>
-/* Mise en page des vidéos 9:16 : titre en haut, vivarium au centre, légende en bas.
-   Polices fournies par HyperFrames : Playfair Display, Inter, JetBrains Mono. */
+/* Vidéos TikTok 9:16 : le vivarium remplit tout l'écran (1080 × 1920).
+   Tout ce qui se lit reste dans la zone sûre (x 60 à 940, y 150 à 1440),
+   hors des icônes de droite et du texte du bas de l'appli.
+   Police fournie par HyperFrames : Inter. */
 * { box-sizing: border-box; }
 html, body { margin: 0; background: #0f1b17; }
 #root {
@@ -16,85 +18,60 @@ html, body { margin: 0; background: #0f1b17; }
   width: 1080px;
   height: 1920px;
   overflow: hidden;
-  color: #eef6ee;
+  color: #ffffff;
   font-family: "Inter", system-ui, sans-serif;
 }
-.fond {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(120% 70% at 50% 38%, #21402f 0%, #0f1b17 72%);
-}
-.titre { position: absolute; top: 96px; left: 0; right: 0; text-align: center; }
-.titre-concept {
-  margin: 0;
-  font: 700 30px/1 "Inter", sans-serif;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #9ad25f;
-}
-.titre-acteur { margin: 16px 0 0; font: 700 78px/1.05 "Playfair Display", Georgia, serif; }
+.scene { position: absolute; inset: 0; }
+#vivarium { display: block; width: 1080px; height: 1920px; }
 
-/* Le vivarium : 940 px de large, donc 1166 px de haut. */
-.scene { position: absolute; top: 262px; left: 70px; width: 940px; height: 1166px; }
-#vivarium { display: block; width: 100%; height: 100%; border-radius: 30px; box-shadow: 0 34px 70px rgba(0, 0, 0, 0.5); }
+/* Un voile sombre en bas, pour que l'interface TikTok et nos légendes restent lisibles. */
+.voile {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 900px; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(8, 18, 14, 0) 0%, rgba(8, 18, 14, 0.5) 55%, rgba(8, 18, 14, 0.78) 100%);
+}
 
-/* Légendes : un clip par plan, dans la zone basse (sûre pour les titres). */
+/* Marque de série, discrète, en haut à gauche de la zone sûre. */
+.serie {
+  position: absolute; left: 60px; top: 150px;
+  padding: 12px 22px; border-radius: 999px;
+  background: rgba(8, 18, 14, 0.62);
+  font: 700 30px/1 "Inter", sans-serif; letter-spacing: 0.04em;
+}
+.serie b { color: #b9f29a; }
+
+/* Légendes : un clip par morceau, gros texte blanc détouré, dans la zone sûre. */
 .legende { position: absolute; inset: 0; pointer-events: none; }
 .leg-texte {
-  position: absolute;
-  left: 120px;
-  right: 120px;
-  top: 1480px;
-  margin: 0;
-  text-align: center;
-  font: 600 52px/1.28 "Inter", sans-serif;
+  position: absolute; left: 90px; width: 810px; top: 1150px;
+  margin: 0; text-align: center;
+  font: 800 80px/1.12 "Inter", sans-serif; letter-spacing: -0.01em;
   text-wrap: balance;
+  text-shadow:
+    0 0 2px #06100c, 4px 0 0 #06100c, -4px 0 0 #06100c, 0 4px 0 #06100c, 0 -4px 0 #06100c,
+    3px 3px 0 #06100c, -3px 3px 0 #06100c, 3px -3px 0 #06100c, -3px -3px 0 #06100c,
+    0 10px 30px rgba(0, 0, 0, 0.55);
 }
+.leg-texte em, .carte-texte em { font-style: normal; color: #b9f29a; }
+/* Quand le sujet est en bas de l'écran, la légende monte en haut de la zone sûre. */
+.leg-texte.haut { top: 300px; }
 
-/* Cartes de révélation : par-dessus le bas du vivarium. */
+/* Révélation : une phrase forte, au milieu de la zone sûre. */
 .carte { position: absolute; inset: 0; pointer-events: none; }
 .carte-in {
-  position: absolute;
-  left: 100px;
-  right: 100px;
-  top: 760px;
-  padding: 44px 48px 50px;
-  border-radius: 34px;
-  background: rgba(13, 26, 21, 0.95);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-  border: 2px solid rgba(154, 210, 95, 0.35);
+  position: absolute; left: 90px; width: 810px; top: 520px;
+  padding: 48px 50px 54px; border-radius: 40px;
+  background: rgba(8, 18, 14, 0.92);
+  border: 3px solid rgba(185, 242, 154, 0.55);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
 }
-.carte-titre { margin: 0 0 28px; font: 700 40px/1.2 "Playfair Display", Georgia, serif; color: #ffffff; }
-.carte-code { margin: 0; font: 500 27px/1.62 "JetBrains Mono", monospace; font-variant-ligatures: none; color: #cfe3d6; white-space: pre; }
-.carte-code .ligne { display: block; }
-.carte-code .surligne { color: #0f1b17; background: #9ad25f; border-radius: 8px; margin: 0 -10px; padding: 0 10px; }
-.carte-etapes { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
-.carte-etapes li { display: flex; align-items: center; gap: 22px; font: 600 38px/1.25 "Inter", sans-serif; }
-.carte-num {
-  flex: none; width: 58px; height: 58px; border-radius: 50%;
-  display: grid; place-items: center;
-  background: #9ad25f; color: #0f1b17; font: 700 30px/1 "Inter", sans-serif;
-}
-.carte-boucle { margin: 28px 0 0; font: 500 34px/1.3 "Inter", sans-serif; color: #9ad25f; }
-.carte-barres { display: grid; gap: 40px; }
-.barre-tete { display: flex; justify-content: space-between; gap: 20px; font: 600 32px/1.25 "Inter", sans-serif; }
-.barre-tete strong { white-space: nowrap; }
-.barre-piste { position: relative; height: 34px; margin-top: 14px; border-radius: 17px; background: rgba(255, 255, 255, 0.1); }
-.barre-fill { height: 100%; border-radius: 17px; }
-.barre.ok .barre-fill { background: #9ad25f; }
-.barre.alerte .barre-fill { background: #ff6b57; }
-.barre-limite { position: absolute; top: -10px; bottom: -10px; width: 5px; margin-left: -2px; border-radius: 3px; background: #ffffff; }
-.barre small { display: block; margin-top: 12px; font: 500 28px/1.3 "Inter", sans-serif; color: #b8ccbf; }
+.carte-in.bas { top: 760px; }
+.carte-titre { margin: 0 0 18px; font: 800 34px/1.2 "Inter", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #b9f29a; }
+.carte-texte { margin: 0; font: 800 66px/1.15 "Inter", sans-serif; text-wrap: balance; }
 
 </style>
 </head>
 <body>
-  <div id="root" data-composition-id="dionee" data-start="0" data-duration="32" data-width="1080" data-height="1920">
-    <div class="fond"></div>
-    <header class="titre">
-      <p class="titre-concept">Les hooks</p>
-      <h1 class="titre-acteur">La dionée</h1>
-    </header>
+  <div id="root" data-composition-id="dionee" data-start="0" data-duration="21" data-width="1080" data-height="1920">
     <div class="scene" data-layout-allow-overflow>
 <svg id="vivarium" viewBox="0 0 600 744" role="img" aria-label="Un vivarium en verre avec une cascade, un ruisseau, des plantes, un caméléon sur une branche, une grenouille, des papillons et des fourmis.">
     <defs>
@@ -492,45 +469,211 @@ html, body { margin: 0; background: #0f1b17; }
     <g id="reperes" fill="none" stroke="#ffffff" stroke-width="2.5" pointer-events="none"></g>
   </svg>
     </div>
-    <div id="leg-0" class="clip legende" data-start="0" data-duration="3" data-track-index="2" data-voix="Comment empêcher un agent IA de faire une bêtise ?">
-      <p class="leg-texte">Comment empêcher un agent de faire une bêtise ?</p>
+    <div class="voile"></div>
+    <div class="serie">Terrarium IA · <b>2/5</b></div>
+    <div id="leg-0-0" class="clip legende" data-start="0" data-duration="2" data-track-index="2">
+      <p class="leg-texte">Ton IA va tout <em>casser</em>.</p>
     </div>
-    <div id="leg-1" class="clip legende" data-start="3" data-duration="3" data-track-index="2" data-voix="Voici une jeune pousse. Elle est fragile.">
-      <p class="leg-texte">Voici une jeune pousse. Elle est fragile.</p>
+    <div id="leg-1-0" class="clip legende" data-start="2" data-duration="2" data-track-index="2">
+      <p class="leg-texte">Sauf si…</p>
     </div>
-    <div id="leg-2" class="clip legende" data-start="6" data-duration="3.4" data-track-index="2" data-voix="Un scarabée file droit dessus.">
-      <p class="leg-texte">Un scarabée file droit dessus.</p>
+    <div id="leg-2-0" class="clip legende" data-start="4" data-duration="1.25" data-track-index="2">
+      <p class="leg-texte"><em>Clac.</em> Bloquée</p>
     </div>
-    <div id="leg-3" class="clip legende" data-start="9.4" data-duration="4" data-track-index="2" data-voix="Clac. La dionée se referme avant qu'il n'arrive. C'est un hook avant l'action : il peut tout bloquer.">
-      <p class="leg-texte">Clac. Bloqué avant d'agir : c'est un hook « avant ».</p>
+    <div id="leg-2-1" class="clip legende" data-start="5.25" data-duration="1.25" data-track-index="2">
+      <p class="leg-texte">avant d&#39;agir.</p>
     </div>
-    <div id="leg-4" class="clip legende" data-start="13.4" data-duration="4" data-track-index="2" data-voix="La grenouille, elle, coasse après coup pour prévenir tout le monde. C'est un hook après l'action.">
-      <p class="leg-texte">La grenouille prévient après coup : c'est un hook « après ».</p>
+    <div id="leg-3-0" class="clip legende" data-start="6.5" data-duration="2.04" data-track-index="2">
+      <p class="leg-texte">Ça, c&#39;est un <em>hook</em></p>
     </div>
-    <div id="leg-5" class="clip legende" data-start="17.4" data-duration="2.6" data-track-index="2" data-voix="Aucun des deux ne demande l'avis de l'agent. Ils se déclenchent à coup sûr.">
-      <p class="leg-texte">Ni l'un ni l'autre ne demande la permission.</p>
+    <div id="leg-3-1" class="clip legende" data-start="8.54" data-duration="0.96" data-track-index="2">
+      <p class="leg-texte">« avant ».</p>
     </div>
-    <div id="leg-6" class="clip legende" data-start="20" data-duration="9" data-track-index="2" data-voix="Écrire « n'arrache jamais les plantes » dans la consigne, c'est demander. Brancher un hook, c'est garantir. Avant l'action, il bloque ou modifie. Après, il note ou prévient.">
-      <p class="leg-texte">Une consigne demande. Un hook garantit.</p>
+    <div id="leg-4-0" class="clip legende" data-start="9.5" data-duration="1.68" data-track-index="2">
+      <p class="leg-texte">La grenouille <em>prévient</em></p>
     </div>
-    <div id="carte-6" class="clip carte" data-start="20" data-duration="9" data-track-index="3" data-layout-allow-overlap>
-      <div class="carte-in"><p class="carte-titre">Deux hooks, dans le code</p><pre class="carte-code"><span class="carte-item ligne">agent.hook(&quot;avantOutil&quot;, (appel) =&gt; {</span><span class="carte-item ligne">  if (appel.nom === &quot;arracher_plantes&quot;)</span><span class="carte-item ligne surligne">    return { decision: &quot;bloquer&quot; };</span><span class="carte-item ligne">});</span><span class="carte-item ligne"> </span><span class="carte-item ligne">agent.hook(&quot;apresOutil&quot;, (appel) =&gt; {</span><span class="carte-item ligne surligne">  carnet.noter(appel);</span><span class="carte-item ligne">});</span></pre></div>
+    <div id="leg-4-1" class="clip legende" data-start="11.18" data-duration="1.32" data-track-index="2">
+      <p class="leg-texte">après coup.</p>
     </div>
-    <div id="leg-7" class="clip legende" data-start="29" data-duration="3" data-track-index="2" data-voix="Les hooks : des réflexes, pas des conseils.">
-      <p class="leg-texte">Les hooks : des réflexes, pas des conseils.</p>
+    <div id="leg-5-0" class="clip legende" data-start="12.5" data-duration="2.5" data-track-index="2">
+      <p class="leg-texte">Un hook « <em>après</em> ».</p>
     </div>
+    <div id="leg-6-0" class="clip legende" data-start="15" data-duration="1.75" data-track-index="2">
+      <p class="leg-texte">Une consigne <em>demande</em>.</p>
+    </div>
+    <div id="leg-6-1" class="clip legende" data-start="16.75" data-duration="1.75" data-track-index="2">
+      <p class="leg-texte">Un hook <em>garantit</em>.</p>
+    </div>
+    <div id="carte-6" class="clip carte" data-start="15" data-duration="3.5" data-track-index="3" data-layout-allow-overlap>
+      <div class="carte-in carte-phrase"><p class="carte-titre">En vrai</p><p class="carte-item carte-texte">Un hook, c&#39;est du code qui se déclenche <em>à coup sûr</em>, avant ou après chaque action.</p></div>
+    </div>
+    <div id="leg-7-0" class="clip legende" data-start="18.5" data-duration="2.5" data-track-index="2">
+      <p class="leg-texte">Ton IA est <em>protégée</em>.</p>
+    </div>
+    <audio id="son-0" class="clip" src="assets/sons/ambiance.wav" data-start="0" data-duration="21" data-track-index="5" data-volume="0.35"></audio>
+    <audio id="son-1" class="clip" src="assets/sons/trotte.wav" data-start="0.4" data-duration="1.6" data-track-index="6" data-volume="0.5"></audio>
+    <audio id="son-2" class="clip" src="assets/sons/trotte.wav" data-start="1.9" data-duration="1.6" data-track-index="7" data-volume="0.5"></audio>
+    <audio id="son-3" class="clip" src="assets/sons/clac.wav" data-start="2.53" data-duration="0.3" data-track-index="6" data-volume="1"></audio>
+    <audio id="son-4" class="clip" src="assets/sons/souffle.wav" data-start="6.5" data-duration="0.7" data-track-index="6" data-volume="0.35"></audio>
+    <audio id="son-5" class="clip" src="assets/sons/croa.wav" data-start="9.7" data-duration="0.42" data-track-index="6" data-volume="0.75"></audio>
+    <audio id="son-6" class="clip" src="assets/sons/croa.wav" data-start="10.55" data-duration="0.42" data-track-index="6" data-volume="0.75"></audio>
+    <audio id="son-7" class="clip" src="assets/sons/croa.wav" data-start="11.4" data-duration="0.42" data-track-index="6" data-volume="0.75"></audio>
+    <audio id="son-8" class="clip" src="assets/sons/souffle.wav" data-start="15" data-duration="0.7" data-track-index="6" data-volume="0.35"></audio>
+    <audio id="son-9" class="clip" src="assets/sons/pop.wav" data-start="15" data-duration="0.2" data-track-index="7" data-volume="0.8"></audio>
+    <audio id="son-10" class="clip" src="assets/sons/souffle.wav" data-start="18.5" data-duration="0.7" data-track-index="6" data-volume="0.35"></audio>
   </div>
 
   <script>
     // Le dessin est déjà dans la page : le moteur n'a besoin que des couleurs et du hasard reproductible.
-    window.Terrarium = { art: { PEAU: {"vert":["#6fbf4a","#3f8f3a"],"turquoise":["#3fb5a8","#1f7f86"],"orange":["#e9a13a","#b9661f"]}, graine: function graine(a) {
+    window.Terrarium = window.Terrarium || {};
+    window.Terrarium.art = { PEAU: {"vert":["#6fbf4a","#3f8f3a"],"turquoise":["#3fb5a8","#1f7f86"],"orange":["#e9a13a","#b9661f"]}, graine: function graine(a) {
     return function () {
       a |= 0; a = (a + 0x6d2b79f5) | 0;
       let t = Math.imul(a ^ (a >>> 15), 1 | a);
       t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
-  } } };
+  } };
+  </script>
+  <script>
+/*
+ * Format des scénarios vidéo (videos/scenarios/*.json) et leur validation.
+ *
+ * {
+ *   "id": "cameleon",            identifiant (nom du fichier, de la composition)
+ *   "chapitre": "cycle",         chapitre du site illustré par la scène
+ *   "titre": "Le caméléon",      "concept": "La boucle d'outils",
+ *   "duree": 38,                 secondes
+ *   "decor": { "cameleon": 0.3 | "promenade", "mouche": "cachee" | "libre" },
+ *   "plans": [{
+ *     "debut": 0, "fin": 3,                       secondes, bout à bout
+ *     "camera": { "cible": "cameleon-oeil" | [x, y], "zoom": 3, "duree": 0.9, "ease": "power2.inOut" },
+ *     "legende": ["Ton IA", "ne répond pas."],     morceaux affichés l'un après l'autre (*mot* = mis en valeur)
+ *     "actions": [{ "type": "cameleon.langue", "a": 0.3, ...paramètres }],   "a" : décalage dans le plan
+ *     "carte": { "type": "phrase" | "code" | "etapes" | "barres", "titre": "…", ... }
+ *   }],
+ *   "serie": { "nom": "Terrarium IA", "episode": 1, "total": 5 },
+ *   "accroches": { "b": ["Autre accroche"], "c": [...] },   variantes de la légende du premier plan
+ *   "publication": { "texte": "…", "hashtags": ["#ia"], "commentaire": "…", "couverture": 1.2 }
+ * }
+ */
+(function (racine, fabrique) {
+  const api = fabrique();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else {
+    racine.Terrarium = racine.Terrarium || {};
+    racine.Terrarium.scenarios = api;
+  }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const ACTIONS = [
+    'cadre.lueur', 'plantes.grandir', 'cadre.alerte', 'plantes.tailler', 'cadre.apaiser',
+    'cameleon.balayer', 'cameleon.marcher', 'cameleon.tourner', 'mouche.venir', 'cameleon.viser',
+    'cameleon.langue', 'cameleon.ramener', 'cameleon.avaler', 'cameleon.teinte', 'cameleon.repos',
+    'pousse.trembler', 'scarabee.avancer', 'dionee.fermer', 'dionee.ouvrir', 'grenouille.coasser',
+    'goutte.apparaitre', 'goutte.couler', 'goutte.eclaircir', 'filtre.signaler', 'goutte.bassin',
+    'fourmiliere.agiter', 'fourmis.ecarter', 'fourmis.revenir', 'eclaireuses.partir',
+    'eclaireuses.fouiller', 'eclaireuses.revenir', 'butin.montrer', 'butin.cacher',
+  ];
+  const CIBLES = ['ensemble', 'branche', 'cascade', 'sable', 'mousse', 'galets', 'bassin', 'pousse',
+    'dionee', 'grenouille', 'fourmiliere', 'sol', 'cameleon', 'cameleon-oeil'];
+  const COULEURS = ['vert', 'turquoise', 'orange'];
+  const CARTES = ['phrase', 'code', 'etapes', 'barres'];
+
+  // Règles de lecture des légendes (sans voix, le texte porte toute la narration).
+  const LECTURE = { parMot: 0.3, parMorceau: 0.5, caracteresMax: 34 };
+  // Zone sûre TikTok en 1080 × 1920 : hors des icônes à droite et du texte en bas.
+  const ZONE_SURE = { x0: 60, y0: 150, x1: 940, y1: 1440 };
+
+  const nettoyer = (texte) => String(texte).replace(/\*/g, '');
+  // Un mot contient au moins une lettre ou un chiffre : « : » ou « » » ne comptent pas.
+  const nbMots = (texte) => nettoyer(texte).trim().split(/\s+/).filter((m) => /[\p{L}\p{N}]/u.test(m)).length;
+
+  // Découpe la légende d'un plan en morceaux, chacun avec sa part du plan,
+  // proportionnelle au temps qu'il faut pour le lire.
+  function morceaux(plan) {
+    const liste = plan.legende ? [].concat(plan.legende) : [];
+    const besoin = liste.map((m) => LECTURE.parMot * nbMots(m) + LECTURE.parMorceau);
+    const total = besoin.reduce((a, b) => a + b, 0);
+    const duree = plan.fin - plan.debut;
+    let t = plan.debut;
+    return liste.map((texte, i) => {
+      const d = (duree * besoin[i]) / total;
+      const m = { texte, debut: +t.toFixed(3), fin: +(t + d).toFixed(3), besoin: +besoin[i].toFixed(2) };
+      t += d;
+      return m;
+    });
+  }
+
+  function valider(sc) {
+    const err = [];
+    const non = (cond, msg) => { if (!cond) err.push(msg); };
+    non(sc && typeof sc === 'object', 'le scénario doit être un objet');
+    if (err.length) return err;
+    non(/^[a-z0-9-]+$/.test(sc.id || ''), 'id : lettres minuscules, chiffres et tirets');
+    non(typeof sc.titre === 'string' && sc.titre, 'titre manquant');
+    non(typeof sc.concept === 'string' && sc.concept, 'concept manquant');
+    non(typeof sc.duree === 'number' && sc.duree > 0 && sc.duree <= 60, 'duree : entre 0 et 60 secondes');
+    non(Array.isArray(sc.plans) && sc.plans.length > 0, 'plans : au moins un plan');
+    if (!Array.isArray(sc.plans)) return err;
+
+    let attendu = 0;
+    sc.plans.forEach((p, i) => {
+      const ici = `plan ${i + 1}`;
+      non(p.debut === attendu, `${ici} : commence à ${p.debut} s au lieu de ${attendu} s (les plans se suivent sans trou)`);
+      non(p.fin > p.debut, `${ici} : fin avant le début`);
+      attendu = p.fin;
+      if (p.legende !== undefined) {
+        const liste = [].concat(p.legende);
+        non(liste.every((m) => typeof m === 'string' && m.trim()), `${ici} : légende vide`);
+        liste.forEach((m) => non(nettoyer(m).length <= LECTURE.caracteresMax, `${ici} : « ${nettoyer(m)} » dépasse ${LECTURE.caracteresMax} caractères (2 lignes)`));
+        morceaux(p).forEach((m) => non(m.fin - m.debut >= m.besoin - 1e-6, `${ici} : « ${nettoyer(m.texte)} » reste ${(m.fin - m.debut).toFixed(2)} s, il en faut ${m.besoin} pour le lire`));
+      }
+      if (p.camera) {
+        const c = p.camera;
+        non(c.cible === undefined || CIBLES.includes(c.cible) || (Array.isArray(c.cible) && c.cible.length === 2), `${ici} : cible de caméra inconnue (${c.cible})`);
+        non(c.zoom === undefined || (c.zoom >= 1 && c.zoom <= 5), `${ici} : zoom entre 1 et 5`);
+      }
+      (p.actions || []).forEach((a) => {
+        non(ACTIONS.includes(a.type), `${ici} : action inconnue (${a.type})`);
+        const t = p.debut + (a.a || 0);
+        non(t >= p.debut && t < p.fin, `${ici} : l'action ${a.type} démarre hors du plan`);
+        if (a.type === 'cameleon.teinte') non(COULEURS.includes(a.couleur), `${ici} : couleur inconnue (${a.couleur})`);
+        if (a.type === 'goutte.couler' || a.type === 'cameleon.marcher') {
+          non(a.depuis >= 0 && a.depuis <= 1 && a.vers >= 0 && a.vers <= 1, `${ici} : ${a.type} attend depuis et vers entre 0 et 1`);
+        }
+        if (a.type === 'filtre.signaler') non(['sable', 'mousse', 'galets'].includes(a.filtre), `${ici} : filtre inconnu (${a.filtre})`);
+      });
+      if (p.carte) {
+        non(CARTES.includes(p.carte.type), `${ici} : type de carte inconnu (${p.carte.type})`);
+        non(typeof p.carte.titre === 'string', `${ici} : carte sans titre`);
+        non(p.fin - p.debut >= 3, `${ici} : une carte reste au moins 3 s à l'écran`);
+      }
+    });
+    non(attendu === sc.duree, `les plans finissent à ${attendu} s, la durée annoncée est ${sc.duree} s`);
+    if (sc.accroches) {
+      Object.entries(sc.accroches).forEach(([nom, legende]) => {
+        non(/^[b-z]$/.test(nom), `accroche « ${nom} » : une lettre de b à z (a est celle du premier plan)`);
+        const essai = { ...sc.plans[0], legende };
+        morceaux(essai).forEach((m) => non(m.fin - m.debut >= m.besoin - 1e-6 && nettoyer(m.texte).length <= LECTURE.caracteresMax, `accroche ${nom} : « ${nettoyer(m.texte)} » trop longue pour le premier plan`));
+      });
+    }
+    return err;
+  }
+
+  // Le scénario d'une variante : la même vidéo, avec une autre accroche.
+  function variante(sc, nom) {
+    if (!nom || nom === 'a') return sc;
+    const legende = (sc.accroches || {})[nom];
+    if (!legende) throw new Error(`Variante inconnue : ${nom}`);
+    const plans = sc.plans.map((p, i) => (i === 0 ? { ...p, legende } : p));
+    return { ...sc, id: `${sc.id}-${nom}`, variante: nom, plans };
+  }
+
+  return { valider, morceaux, variante, ACTIONS, CIBLES, LECTURE, ZONE_SURE };
+});
+
   </script>
   <script>
 /*
@@ -556,6 +699,8 @@ html, body { margin: 0; background: #0f1b17; }
   const HAUTEUR = 744;
   const VERRE = { x0: 34, y0: 60, x1: 566, y1: 682 };
   const VUE_ENTIERE = `0 0 ${LARGEUR} ${HAUTEUR}`;
+  const RAPPORT_9_16 = 1080 / 1920;
+  const SOCLE = 726; // bas du socle du vivarium, dans le dessin
 
   // Points fixes du dessin, pour la caméra (coordonnées du SVG).
   const CIBLES = {
@@ -577,9 +722,21 @@ html, body { margin: 0; background: #0f1b17; }
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[c]));
 
+  // *mot* : mis en valeur (couleur d'accent) dans les légendes et les cartes.
+  const marquer = (s) => esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+  // Découpe la légende d'un plan en morceaux minutés (voir shared/scenarios.js).
+  const morceauxDe = (plan) => (T.scenarios && T.scenarios.morceaux
+    ? T.scenarios.morceaux(plan)
+    : (plan.legende ? [{ texte: [].concat(plan.legende).join(' '), debut: plan.debut, fin: plan.fin }] : []));
+
   // --- Cartes de révélation (HTML pur : utilisable en Node pour la vidéo) ----
   function carteHTML(carte, id) {
     let corps = '';
+    if (carte.type === 'phrase') {
+      // Le format TikTok : une seule phrase forte, lisible en un coup d'œil.
+      return `<div class="carte-in carte-phrase">${carte.titre ? `<p class="carte-titre">${esc(carte.titre)}</p>` : ''}<p class="carte-item carte-texte">${marquer(carte.texte)}</p></div>`;
+    }
     if (carte.type === 'code') {
       corps = `<pre class="carte-code">${carte.lignes.map((l, i) => `<span class="carte-item ligne${(carte.surligne || []).includes(i) ? ' surligne' : ''}">${esc(l) || ' '}</span>`).join('')}</pre>`;
     } else if (carte.type === 'etapes') {
@@ -949,7 +1106,6 @@ html, body { margin: 0; background: #0f1b17; }
     }
 
     // --- Plans : caméra, actions, légendes, cartes ---------------------------------
-    let vue = VUE_ENTIERE;
     const cibleDe = (c) => {
       if (Array.isArray(c)) return c;
       if (c === 'cameleon') { const p = versDessin(q('#cam-corps'), 6, -28); return [p.x, p.y]; }
@@ -957,19 +1113,44 @@ html, body { margin: 0; background: #0f1b17; }
       if (!CIBLES[c]) throw new Error('Cible de caméra inconnue : ' + c);
       return CIBLES[c];
     };
+    const borne = (v, min, max) => Math.min(Math.max(v, min), max);
     function vueDe(camera) {
-      const zoom = camera.zoom || 1;
+      const zoom = Math.max(1, camera.zoom || 1);
+      if (o.cadre === '9:16') {
+        // Cadre vertical : la caméra filme toujours l'intérieur du verre, au rapport 9:16.
+        const h = (VERRE.y1 - VERRE.y0) / zoom;
+        const w = h * RAPPORT_9_16;
+        const [cx, cy] = cibleDe(camera.cible || 'ensemble');
+        // Le sujet est cadré aux 2/5 de la hauteur : le bas de l'écran reste aux légendes.
+        const x = borne(cx - w / 2, VERRE.x0, VERRE.x1 - w);
+        // Vers le bas, la caméra peut montrer le socle sombre (jusqu'à y = 726) :
+        // il tombe sous la zone que l'interface TikTok recouvre.
+        const y = borne(cy - h * 0.4, VERRE.y0, SOCLE - h);
+        return `${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`;
+      }
       if (zoom <= 1) return VUE_ENTIERE;
       const [cx, cy] = cibleDe(camera.cible || 'ensemble');
       const w = LARGEUR / zoom;
       const h = HAUTEUR / zoom;
-      const borne = (v, min, max) => Math.min(Math.max(v, min), max);
       const x = w <= VERRE.x1 - VERRE.x0 ? borne(cx - w / 2, VERRE.x0, VERRE.x1 - w) : (LARGEUR - w) / 2;
       const y = h <= VERRE.y1 - VERRE.y0 ? borne(cy - h / 2, VERRE.y0, VERRE.y1 - h) : (HAUTEUR - h) / 2;
       return `${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`;
     }
 
+    // Cadrage de départ : celui du premier plan (plein cadre en 9:16).
+    let vue = o.cadre === '9:16' ? vueDe(sc.plans[0].camera || {}) : VUE_ENTIERE;
+    repos(svg, { attr: { viewBox: vue } });
+
+    // Hauteur (0 en haut, 1 en bas) où le sujet du plan tombe à l'écran.
+    let sujet = sc.plans[0].camera || { cible: 'ensemble' };
+    const hauteurSujet = (v) => {
+      const [, cy] = cibleDe(sujet.cible || 'ensemble');
+      const [, vy, , vh] = v.split(' ').map(Number);
+      return (cy - vy) / vh;
+    };
+
     sc.plans.forEach((plan, i) => {
+      if (plan.camera) sujet = plan.camera;
       if (plan.camera && o.camera !== false) {
         const nouvelle = vueDe(plan.camera);
         if (nouvelle !== vue) {
@@ -981,18 +1162,28 @@ html, body { margin: 0; background: #0f1b17; }
         if (!A[a.type]) throw new Error('Action inconnue : ' + a.type);
         A[a.type](plan.debut + (a.a || 0), a);
       });
-      if (plan.legende) {
-        if (typeof o.legende === 'function') tl.call(o.legende, [plan.legende, i], plan.debut);
-        else {
-          const el = racine.querySelector('#leg-' + i + ' .leg-texte');
-          repos(el, { opacity: 0 });
-          ft(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, plan.debut + 0.05);
-          ft(el, { opacity: 1 }, { opacity: 0, duration: 0.25 }, plan.fin - 0.3);
-        }
+      // Site : la phrase complète du plan, d'un coup, sur la plaque de légende.
+      if (typeof o.legende === 'function') {
+        if (plan.legende) tl.call(o.legende, [[].concat(plan.legende).join(' ').replace(/\*/g, ''), i], plan.debut);
       }
+      // Vidéo : chaque morceau remplace le précédent, sans blanc entre deux plans.
+      if (typeof o.legende !== 'function') morceauxDe(plan).forEach((m, k) => {
+        const el = racine.querySelector('#leg-' + i + '-' + k + ' .leg-texte');
+        if (!el) return;
+        // Sujet dans la moitié basse : la légende passe en haut pour ne pas le cacher.
+        if (o.cadre === '9:16' && hauteurSujet(vue) > 0.5) el.classList.add('haut');
+        ft(el, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'back.out(2.5)' }, m.debut);
+      });
       if (plan.carte) {
         const carte = racine.querySelector('#carte-' + i);
         const dedans = carte.querySelector('.carte-in');
+        if (o.cadre === '9:16' && hauteurSujet(vue) > 0.5) dedans.classList.add('bas');
+        if (plan.carte.type === 'phrase') {
+          repos(dedans, { opacity: 0 });
+          ft(dedans, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.18, ease: 'back.out(2)' }, plan.debut);
+          ft(dedans, { opacity: 1 }, { opacity: 0, duration: 0.2 }, plan.fin - 0.2);
+          return;
+        }
         repos(dedans, { opacity: 0 });
         ft(dedans, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, plan.debut);
         ft(carte.querySelectorAll('.carte-item'), { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.35, stagger: plan.carte.rythme || 0.32, ease: 'power2.out' }, plan.debut + 0.45);
@@ -1008,19 +1199,20 @@ html, body { margin: 0; background: #0f1b17; }
     return tl;
   }
 
-  T.film = { construire, carteHTML, CIBLES };
+  T.film = { construire, carteHTML, marquer, morceaux: morceauxDe, CIBLES };
 })();
 
 
     // Construction et enregistrement de la timeline, dans le même bloc que le moteur.
     (function () {
       gsap.registerPlugin(MotionPathPlugin);
-      var scenario = {"id":"dionee","chapitre":"capteurs","titre":"La dionée","concept":"Les hooks","duree":32,"decor":{},"plans":[{"debut":0,"fin":3,"camera":{"cible":"pousse","zoom":3.4,"duree":0},"legende":"Comment empêcher un agent de faire une bêtise ?","voix":"Comment empêcher un agent IA de faire une bêtise ?","actions":[{"type":"pousse.trembler","duree":3}]},{"debut":3,"fin":6,"camera":{"cible":"pousse","zoom":2.4,"duree":1.2},"legende":"Voici une jeune pousse. Elle est fragile.","voix":"Voici une jeune pousse. Elle est fragile.","actions":[{"type":"pousse.trembler","a":0.2,"duree":2.6}]},{"debut":6,"fin":9.4,"camera":{"cible":"sol","zoom":2.1,"duree":0.9},"legende":"Un scarabée file droit dessus.","voix":"Un scarabée file droit dessus.","actions":[{"type":"scarabee.avancer","duree":2.6}]},{"debut":9.4,"fin":13.4,"camera":{"cible":"dionee","zoom":2.8,"duree":0.3,"ease":"power3.out"},"legende":"Clac. Bloqué avant d'agir : c'est un hook « avant ».","voix":"Clac. La dionée se referme avant qu'il n'arrive. C'est un hook avant l'action : il peut tout bloquer.","actions":[{"type":"dionee.fermer","a":0.05}]},{"debut":13.4,"fin":17.4,"camera":{"cible":"grenouille","zoom":2.8,"duree":1},"legende":"La grenouille prévient après coup : c'est un hook « après ».","voix":"La grenouille, elle, coasse après coup pour prévenir tout le monde. C'est un hook après l'action.","actions":[{"type":"grenouille.coasser","a":0.9,"fois":3}]},{"debut":17.4,"fin":20,"camera":{"cible":"ensemble","zoom":1,"duree":1.2},"legende":"Ni l'un ni l'autre ne demande la permission.","voix":"Aucun des deux ne demande l'avis de l'agent. Ils se déclenchent à coup sûr."},{"debut":20,"fin":29,"legende":"Une consigne demande. Un hook garantit.","voix":"Écrire « n'arrache jamais les plantes » dans la consigne, c'est demander. Brancher un hook, c'est garantir. Avant l'action, il bloque ou modifie. Après, il note ou prévient.","carte":{"type":"code","titre":"Deux hooks, dans le code","lignes":["agent.hook(\"avantOutil\", (appel) => {","  if (appel.nom === \"arracher_plantes\")","    return { decision: \"bloquer\" };","});","","agent.hook(\"apresOutil\", (appel) => {","  carnet.noter(appel);","});"],"surligne":[2,6],"rythme":0.3}},{"debut":29,"fin":32,"camera":{"cible":"dionee","zoom":1.7,"duree":1.2},"legende":"Les hooks : des réflexes, pas des conseils.","voix":"Les hooks : des réflexes, pas des conseils.","actions":[{"type":"dionee.ouvrir","a":0.4}]}]};
+      var scenario = {"id":"dionee","chapitre":"capteurs","titre":"La dionée","concept":"Les hooks","serie":{"nom":"Terrarium IA","episode":2,"total":5},"duree":21,"decor":{},"accroches":{"b":["Comment empêcher une IA…"],"c":["L'IA voulait tout *arracher*."]},"plans":[{"debut":0,"fin":2,"camera":{"cible":"dionee","zoom":2.6,"duree":0},"legende":["Ton IA va tout *casser*."],"actions":[{"type":"scarabee.avancer","duree":2}]},{"debut":2,"fin":4,"legende":["Sauf si…"],"actions":[{"type":"dionee.fermer","a":0.45}]},{"debut":4,"fin":6.5,"legende":["*Clac.* Bloquée","avant d'agir."]},{"debut":6.5,"fin":9.5,"camera":{"cible":"grenouille","zoom":2.6,"duree":0.7},"legende":["Ça, c'est un *hook*","« avant »."]},{"debut":9.5,"fin":12.5,"legende":["La grenouille *prévient*","après coup."],"actions":[{"type":"grenouille.coasser","a":0.2,"fois":3}]},{"debut":12.5,"fin":15,"legende":["Un hook « *après* »."]},{"debut":15,"fin":18.5,"camera":{"cible":[392,540],"zoom":1.2,"duree":0.9},"legende":["Une consigne *demande*.","Un hook *garantit*."],"carte":{"type":"phrase","titre":"En vrai","texte":"Un hook, c'est du code qui se déclenche *à coup sûr*, avant ou après chaque action."}},{"debut":18.5,"fin":21,"camera":{"cible":"dionee","zoom":2.6,"duree":0.9},"legende":["Ton IA est *protégée*."],"actions":[{"type":"dionee.ouvrir","a":0.3}]}],"publication":{"texte":"Comment empêcher une IA de faire une bêtise ? Pas avec une consigne : avec un hook. Épisode 2 du Terrarium IA.","hashtags":["#ia","#intelligenceartificielle","#agentia","#securite","#tech"],"commentaire":"Quelle action tu interdirais en premier à ton IA ?","couverture":2.5,"titreCouverture":"Clac !"}};
       var tl = Terrarium.film.construire({
         svg: document.getElementById('vivarium'),
         racine: document.getElementById('root'),
         scenario: scenario,
-        ambiance: true
+        ambiance: true,
+        cadre: '9:16'
       });
       window.__timelines = window.__timelines || {};
       window.__timelines[scenario.id] = tl;
