@@ -10,7 +10,8 @@ Une série de cinq vidéos verticales, une par concept d'agent IA, jouées par l
 - **Une révélation de 3 à 3,5 s** : une seule phrase forte (« En vrai : … »), pas de bloc de code.
 - **Une fin qui boucle** : le dernier plan reprend le cadrage du premier, et la dernière phrase s'enchaîne avec l'accroche.
 - **La zone sûre TikTok** (x 60 à 940, y 150 à 1440) : légendes, cartes et sujets filmés y restent. Quand le sujet est bas dans l'image, la légende passe en haut.
-- **Le son** : des bruitages synthétisés, calés sur les actions (langue, avalé, « clac », coassement, gouttes, fourmis…), et une ambiance d'eau et d'oiseaux. La musique s'ajoute dans TikTok au moment de publier.
+- **Le son** : une boucle **phonk** originale (130 BPM, fa mineur : cloche « cowbell », basse 808 saturée, claps, charleston), des bruitages calés sur les actions (langue, avalé, « clac », coassement, gouttes, fourmis…) et une ambiance d'eau en fond. Tout est synthétisé par `scripts/build-sons.js` : libre de droits, utilisable aussi sur Reels et Shorts.
+- **Un son tendance plutôt ?** `node scripts/build-video.js --sans-musique` produit les mêmes vidéos sans la phonk, pour ajouter un son de la bibliothèque TikTok dans l'appli. Un son tendance peut aider la diffusion. Un scénario peut aussi choisir `"musique": null`.
 
 ## Les épisodes
 

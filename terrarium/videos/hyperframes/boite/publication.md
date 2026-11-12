@@ -28,4 +28,6 @@ Publie une variante à la fois, à quelques jours d'écart, et note les résulta
 
 ## Son
 
-Les bruitages et l'ambiance sont dans la vidéo. Ajoute une musique depuis la bibliothèque de TikTok, volume bas (10 à 20 %), pour profiter des tendances sans risque de droits.
+La vidéo contient une boucle phonk originale (libre de droits, utilisable aussi sur Reels et Shorts), les bruitages et l'ambiance.
+
+Pour surfer sur un son phonk tendance de TikTok à la place : régénère sans musique (`node scripts/build-video.js --sans-musique`), refais le rendu, puis ajoute le son dans l'appli. Un son tendance peut aider la diffusion.

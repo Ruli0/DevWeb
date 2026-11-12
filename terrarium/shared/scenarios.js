@@ -15,6 +15,7 @@
  *     "carte": { "type": "phrase" | "code" | "etapes" | "barres", "titre": "…", ... }
  *   }],
  *   "serie": { "nom": "Terrarium IA", "episode": 1, "total": 5 },
+ *   "musique": "phonk" | null,     (phonk par défaut ; null : sans musique)
  *   "accroches": { "b": ["Autre accroche"], "c": [...] },   variantes de la légende du premier plan
  *   "publication": { "texte": "…", "hashtags": ["#ia"], "commentaire": "…", "couverture": 1.2 }
  * }
@@ -78,6 +79,7 @@
     non(typeof sc.concept === 'string' && sc.concept, 'concept manquant');
     non(typeof sc.duree === 'number' && sc.duree > 0 && sc.duree <= 60, 'duree : entre 0 et 60 secondes');
     non(Array.isArray(sc.plans) && sc.plans.length > 0, 'plans : au moins un plan');
+    non(sc.musique === undefined || sc.musique === null || sc.musique === 'phonk', `musique inconnue (${sc.musique}) : « phonk » ou null`);
     if (!Array.isArray(sc.plans)) return err;
 
     let attendu = 0;

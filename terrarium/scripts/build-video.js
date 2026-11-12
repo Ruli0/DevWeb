@@ -1,6 +1,7 @@
 // Fabrique les compositions HyperFrames des vidéos TikTok (1080 × 1920).
 //   node scripts/build-video.js              -> toutes les vidéos, avec leurs variantes d'accroche
 //   node scripts/build-video.js cameleon     -> une seule vidéo (et ses variantes)
+//   node scripts/build-video.js --sans-musique  -> sans la musique phonk (pour ajouter un son tendance dans TikTok)
 //
 // Pour chaque scénario videos/scenarios/<id>.json, et chaque variante d'accroche :
 //   videos/hyperframes/<id>[-b|-c]/index.html   la composition (une seule timeline GSAP en pause)
@@ -11,7 +12,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const scenarios = require('../shared/scenarios.js');
-const { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE } = require('../videos/sons/table.js');
+const { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE, SON_AMBIANCE_SOUS_MUSIQUE, MUSIQUES } = require('../videos/sons/table.js');
+const SANS_MUSIQUE = process.argv.includes('--sans-musique');
 
 const racine = path.join(__dirname, '..');
 const lire = (f) => fs.readFileSync(path.join(racine, f), 'utf8');
@@ -38,7 +40,10 @@ function bruitages(sc) {
   const ajouter = (fichier, t, volume) => {
     if (t >= 0 && t < sc.duree) sons.push({ fichier, t: arrondi(t), volume });
   };
-  sons.push({ fichier: SON_AMBIANCE.fichier, t: 0, volume: SON_AMBIANCE.volume, duree: sc.duree });
+  // Musique : celle du scénario (phonk par défaut), sauf « musique": null » ou --sans-musique.
+  const musique = SANS_MUSIQUE ? null : MUSIQUES[sc.musique === undefined ? 'phonk' : sc.musique];
+  if (musique) sons.push({ fichier: musique.fichier, t: 0, volume: musique.volume, duree: sc.duree, fondu: musique.fonduSortie, musique: true });
+  sons.push({ fichier: SON_AMBIANCE.fichier, t: 0, volume: musique ? SON_AMBIANCE_SOUS_MUSIQUE : SON_AMBIANCE.volume, duree: sc.duree });
   let vue = null;
   sc.plans.forEach((plan) => {
     if (plan.camera) {
@@ -83,7 +88,7 @@ function composition(sc) {
     </div>`);
     }
   });
-  const sons = bruitages(sc).map((s, i) => `    <audio id="son-${i}" class="clip" src="assets/sons/${s.fichier}" data-start="${s.t}" data-duration="${s.duree}" data-track-index="${s.piste}" data-volume="${s.volume}"></audio>`);
+  const sons = bruitages(sc).map((s, i) => `    <audio id="son-${i}" class="clip" src="assets/sons/${s.fichier}" data-start="${s.t}" data-duration="${s.duree}" data-track-index="${s.piste}" data-volume="${s.volume}"${s.fondu ? ` data-fade-out="${s.fondu}"` : ''}></audio>`);
   const serie = sc.serie ? `<div class="serie">${esc(sc.serie.nom)} · <b>${sc.serie.episode}/${sc.serie.total}</b></div>` : '';
 
   return `<!doctype html>
@@ -174,14 +179,16 @@ function publication(sc, variantes) {
     '',
     '## Son',
     '',
-    'Les bruitages et l\'ambiance sont dans la vidéo. Ajoute une musique depuis la bibliothèque de TikTok, volume bas (10 à 20 %), pour profiter des tendances sans risque de droits.',
+    'La vidéo contient une boucle phonk originale (libre de droits, utilisable aussi sur Reels et Shorts), les bruitages et l\'ambiance.',
+    '',
+    'Pour surfer sur un son phonk tendance de TikTok à la place : régénère sans musique (`node scripts/build-video.js --sans-musique`), refais le rendu, puis ajoute le son dans l\'appli. Un son tendance peut aider la diffusion.',
     '',
   ];
   return lignes.join('\n');
 }
 
 // --- Génération ---------------------------------------------------------------------
-const demandes = process.argv.slice(2);
+const demandes = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const fichiers = fs.readdirSync(path.join(racine, 'videos/scenarios')).filter((f) => f.endsWith('.json'));
 const sonsUtiles = new Set();
 let echec = false;

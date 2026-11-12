@@ -26,5 +26,9 @@ const SONS_PAR_ACTION = {
 const SON_CARTE = { fichier: 'pop.wav', volume: 0.8 };
 const SON_CAMERA = { fichier: 'souffle.wav', volume: 0.35 };
 const SON_AMBIANCE = { fichier: 'ambiance.wav', volume: 0.35 };
+// Avec la musique, l'ambiance passe en fond.
+const SON_AMBIANCE_SOUS_MUSIQUE = 0.15;
+// Musiques originales, synthétisées par scripts/build-sons.js.
+const MUSIQUES = { phonk: { fichier: 'phonk.wav', volume: 0.5, fonduSortie: 0.4 } };
 
-module.exports = { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE };
+module.exports = { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE, SON_AMBIANCE_SOUS_MUSIQUE, MUSIQUES };

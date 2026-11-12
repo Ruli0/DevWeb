@@ -21,9 +21,10 @@ const tampon = (secondes) => new Float32Array(Math.round(secondes * FREQ));
 const enveloppe = (t, attaque, chute) => (t < attaque ? t / attaque : Math.exp(-(t - attaque) / chute));
 
 // Oscillateur dont la fréquence suit une fonction du temps.
-function sinus(buf, freq, ampli, debut = 0, forme = 'sin') {
+function sinus(buf, freq, ampli, debut = 0, forme = 'sin', duree = Infinity) {
   let phase = 0;
-  for (let i = Math.round(debut * FREQ); i < buf.length; i += 1) {
+  const fin = Math.min(buf.length, Math.round((debut + duree) * FREQ));
+  for (let i = Math.round(debut * FREQ); i < fin; i += 1) {
     const t = i / FREQ - debut;
     const a = ampli(t);
     if (a === 0 && t > 0.01) continue;
@@ -34,11 +35,12 @@ function sinus(buf, freq, ampli, debut = 0, forme = 'sin') {
 }
 
 // Bruit filtré (passe-bande approximatif par deux filtres d'ordre 1).
-function bruit(buf, ampli, { bas = 200, haut = 8000, debut = 0, hasard = graine(1) } = {}) {
+function bruit(buf, ampli, { bas = 200, haut = 8000, debut = 0, hasard = graine(1), duree = Infinity } = {}) {
   let lp = 0;
   let hp = 0;
   let precedent = 0;
-  for (let i = Math.round(debut * FREQ); i < buf.length; i += 1) {
+  const fin = Math.min(buf.length, Math.round((debut + duree) * FREQ));
+  for (let i = Math.round(debut * FREQ); i < fin; i += 1) {
     const t = i / FREQ - debut;
     const h = typeof haut === 'function' ? haut(t) : haut;
     const kLp = 1 - Math.exp((-2 * Math.PI * h) / FREQ);
@@ -184,7 +186,80 @@ const SONS = {
   },
 };
 
+// --- Musique : une boucle phonk originale ------------------------------------------
+// 130 BPM, fa mineur. Mélodie de cloche (« cowbell »), basse 808 saturée qui glisse,
+// claps sur les temps 2 et 4, charleston en croches avec des roulements, grain « lo-fi ».
+function phonk() {
+  const BPM = 130;
+  const DOUBLE = 60 / BPM / 4; // une double croche
+  const MESURES = 24; // 44 s : plus que la plus longue vidéo
+  const b = tampon(MESURES * 16 * DOUBLE + 1);
+  const cloche = tampon(b.length / FREQ);
+  const basse = tampon(b.length / FREQ);
+  const N = { Db5: 554.4, Eb5: 622.3, F5: 698.5, Ab5: 830.6, Bb5: 932.3, C6: 1046.5 };
+  // Deux mesures de mélodie : [double croche, note]
+  const MELODIE = [
+    [[0, 'F5'], [3, 'F5'], [6, 'Ab5'], [8, 'C6'], [10, 'Bb5'], [12, 'Ab5'], [14, 'F5']],
+    [[0, 'Eb5'], [3, 'Eb5'], [6, 'F5'], [8, 'Ab5'], [10, 'F5'], [12, 'Eb5'], [14, 'Db5']],
+  ];
+  // Basse 808 : [double croche, fréquence]
+  const BASSE = [
+    [[0, 87.3], [6, 87.3], [10, 103.8]],
+    [[0, 69.3], [6, 77.8], [11, 87.3]],
+  ];
+  const h = graine(21);
+  for (let m = 0; m < MESURES; m += 1) {
+    const t0 = m * 16 * DOUBLE;
+    const phrase = m % 2;
+    // Cloche : deux carrés au rapport 1,48 (le timbre de la cloche de la 808).
+    MELODIE[phrase].forEach(([pas, note]) => {
+      const f = N[note];
+      const env = (t) => (t < 0 ? 0 : 0.5 * enveloppe(t, 0.001, 0.09));
+      sinus(cloche, () => f, env, t0 + pas * DOUBLE, 'carre', 0.5);
+      sinus(cloche, () => f * 1.48, (t) => 0.6 * env(t), t0 + pas * DOUBLE, 'carre', 0.5);
+    });
+    // Basse 808 : chaque note s'arrête quand la suivante commence.
+    const notes = BASSE[phrase];
+    notes.forEach(([pas, f], k) => {
+      const debut = t0 + pas * DOUBLE;
+      const fin = k + 1 < notes.length ? t0 + notes[k + 1][0] * DOUBLE : t0 + 16 * DOUBLE;
+      const d = fin - debut;
+      sinus(basse, (t) => f * (1 + 2.2 * Math.exp(-t * 45)), (t) => enveloppe(t, 0.003, 0.32) * Math.min(1, (d - t) / 0.02), debut, 'sin', d);
+    });
+    // Claps sur les temps 2 et 4 : trois éclats de bruit rapprochés.
+    [4, 12].forEach((pas) => {
+      const debut = t0 + pas * DOUBLE;
+      [0, 0.011, 0.023].forEach((dt, k) => bruit(b, (t) => (t < 0 ? 0 : (k === 2 ? 0.55 : 0.35) * enveloppe(t, 0.001, k === 2 ? 0.07 : 0.01)), { bas: 900, haut: 5500, debut: debut + dt, hasard: graine(100 + m * 10 + pas + k), duree: 0.4 }));
+      sinus(b, () => 190, (t) => 0.18 * enveloppe(t, 0.001, 0.04), debut, 'sin', 0.25);
+    });
+    // Charleston : croches, et un roulement en fin de phrase.
+    for (let pas = 0; pas < 16; pas += 2) {
+      bruit(b, (t) => (t < 0 ? 0 : (pas % 4 ? 0.13 : 0.2) * enveloppe(t, 0.0005, 0.018)), { bas: 7000, haut: 16000, debut: t0 + pas * DOUBLE, hasard: graine(500 + m * 16 + pas), duree: 0.15 });
+    }
+    if (phrase === 1) {
+      for (let k = 0; k < 6; k += 1) {
+        bruit(b, (t) => (t < 0 ? 0 : (0.08 + 0.02 * k) * enveloppe(t, 0.0005, 0.012)), { bas: 7000, haut: 16000, debut: t0 + 13 * DOUBLE + (k * DOUBLE) / 2, hasard: graine(900 + m * 8 + k), duree: 0.1 });
+      }
+    }
+    h();
+  }
+  // La cloche : filtrée (ni trop grave, ni trop aiguë). La basse : saturée.
+  let bas = 0;
+  let haut = 0;
+  let precedent = 0;
+  for (let i = 0; i < b.length; i += 1) {
+    bas += 0.35 * (cloche[i] - bas);
+    haut = 0.92 * (haut + bas - precedent);
+    precedent = bas;
+    b[i] += 0.8 * haut + 0.6 * Math.tanh(2 * basse[i]);
+  }
+  // Grain lo-fi : légère saturation et résolution réduite.
+  for (let i = 0; i < b.length; i += 1) b[i] = Math.round(Math.tanh(1.1 * b[i]) * 4096) / 4096;
+  return b;
+}
+SONS['phonk.wav'] = phonk;
+
 fs.mkdirSync(dossier, { recursive: true });
 for (const [nom, fabrique] of Object.entries(SONS)) {
-  ecrireWav(nom, normaliser(fabrique(), nom === 'ambiance.wav' ? 0.5 : 0.89));
+  ecrireWav(nom, normaliser(fabrique(), { 'ambiance.wav': 0.5, 'phonk.wav': 0.8 }[nom] || 0.89));
 }
