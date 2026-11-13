@@ -190,5 +190,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 ### Pastilles violettes, tour 6 (13 nov.)
 
-- **Montré** : quatre violets translucides (`maquettes.cjs violets`) : W1 violet bleuté et mot clé lavande, W2 violet bleuté et cyan, W3 prune chaude et ambre (la lanterne), W4 violet profond et vert mousse.
+- **Montré d'abord** : le fond lui-même en violet (quatre variantes).
+- **Ton retour** : « Non, pas pour le fond, pour la pastille. » Le violet est donc pour la **pastille du mot clé** ; le fond reste translucide, comme le décor.
+- **Montré ensuite** (`maquettes.cjs violets`) : le fond bleu nuit translucide, et la pastille du mot clé en W1 lavande claire, W2 violet moyen (texte blanc), W3 violet translucide fondu dans le décor, W4 dégradé violet vers bleu.
 - **Ton retour** : en attente.

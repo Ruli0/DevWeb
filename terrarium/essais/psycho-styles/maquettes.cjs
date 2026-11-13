@@ -406,12 +406,13 @@ const PASTILLES = {
 };
 for (const [id, v] of Object.entries(PASTILLES)) STYLES[id] = Object.assign({}, STYLES.s1c, { nom: v.nom, police: 'Poppins:wght@800', css: cssPastille(v.css) });
 
-// --- Violets (tour 6) : la pastille en violet, tiré des teintes du décor ---
+// --- Violets (tour 6) : le fond reste translucide comme le décor ; c'est la pastille du MOT CLÉ qui devient violette ---
+const FOND_DECOR = { fond: 'rgba(20,50,70,.34)', bord: 'rgba(154,248,255,.22)' };
 const VIOLETS = {
-  w1: { nom: 'W1 · Violet bleuté + lavande', css: { fond: 'rgba(78,70,160,.34)', bord: 'rgba(190,175,255,.28)', cle: 'rgba(201,184,255,.92)', texteCle: '#2a2466' } },
-  w2: { nom: 'W2 · Violet bleuté + cyan', css: { fond: 'rgba(78,70,160,.34)', bord: 'rgba(154,248,255,.26)', cle: 'rgba(154,248,255,.9)', texteCle: '#1c2a66' } },
-  w3: { nom: 'W3 · Prune chaude + ambre', css: { fond: 'rgba(120,66,150,.34)', bord: 'rgba(255,198,92,.3)', cle: 'rgba(255,198,92,.92)', texteCle: '#4a2210' } },
-  w4: { nom: 'W4 · Violet profond + vert mousse', css: { fond: 'rgba(60,44,120,.4)', bord: 'rgba(182,255,92,.26)', cle: 'rgba(182,255,92,.9)', texteCle: '#1d2a66' } },
+  w1: { nom: 'W1 · Lavande claire', css: { ...FOND_DECOR, cle: 'rgba(201,184,255,.92)', texteCle: '#2a2466' } },
+  w2: { nom: 'W2 · Violet moyen', css: { ...FOND_DECOR, cle: 'rgba(138,120,255,.88)', texteCle: '#ffffff' } },
+  w3: { nom: 'W3 · Violet translucide, fondu dans le décor', css: { ...FOND_DECOR, cle: 'rgba(120,100,230,.5)', texteCle: '#ffffff' } },
+  w4: { nom: 'W4 · Dégradé violet vers bleu', css: { ...FOND_DECOR, cle: 'linear-gradient(90deg, rgba(176,140,255,.92), rgba(120,170,255,.92))', texteCle: '#1c1a5c' } },
 };
 for (const [id, v] of Object.entries(VIOLETS)) STYLES[id] = Object.assign({}, STYLES.s1c, { nom: v.nom, police: 'Poppins:wght@800', css: cssPastille(v.css) });
 
