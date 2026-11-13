@@ -4,6 +4,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 ## Ce qui est décidé
 
+- **Texte** : **le terminal de Mousse** (T6, validé le 13 nov.). C'est l'écran du robot qui raconte : texte vert en Space Mono, tapé lettre par lettre, avec un curseur et l'invite `mousse@terrarium:~$`.
 - **Musique** : **Drift**, phonk à 145 BPM, cloche rapide et saturée, 808 lourde (validée le 13 nov.).
 - **Style** : **nuit bioluminescente à la lanterne, dosage B** (validé le 13 nov.). Palette du style 1 (vert acide, cyan, langue rose, fond bleu nuit), obscurité forte (0,75) autour de la zone éclairée, faisceau chaud de la lanterne, et ce qui est bioluminescent brille dans le noir.
 - **Âme du compte** : **le gardien du terrarium**, un personnage récurrent qui garde des IA dans son terrarium et commente avec humour.
@@ -16,8 +17,8 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 | Style de nuit | **validé** (tour 2, dosage B) | — |
 | Le gardien | premier croquis | « Mousse » (nom provisoire) : petit robot rond, tête moussue, un œil cyan, lanterne au bout d'une perche |
 | Musique | **validée** : Drift (145 BPM) | — |
-| Texte à l'écran | tour 2 envoyé | T5 edit phonk, T6 terminal de Mousse, T7 annotations, T8 cinéma |
-| Scénarios | à venir (étape 3) | un pitch de 4 ou 5 lignes par épisode, avec un gag |
+| Texte à l'écran | **validé** : T6, le terminal de Mousse | — |
+| Scénarios | tour 1 en cours | 6 pitchs (nuits 0 à 5), un gag par épisode, le caméléon comme personnage récurrent |
 | Nom du compte et bio | plus tard | `@les.nuits.du.terrarium`, `@mousse.terrarium` |
 
 ## Itérations
@@ -71,4 +72,4 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - **T7, annotations** : Permanent Marker et flèches dessinées sur la scène (« ton IA », « un outil ! »).
   - **T8, cinéma** : EB Garamond en italique, avec des filets, en fondu lent.
 - **Contraintes** : tous dans la zone sûre. T7 utilise une police non fournie par HyperFrames : il faudra l'embarquer dans `assets/fonts/`.
-- **Ton retour** : _en attente_.
+- **Ton retour** : « T6 ». Texte validé.
