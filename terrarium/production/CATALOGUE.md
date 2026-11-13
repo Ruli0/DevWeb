@@ -33,6 +33,13 @@ Un fichier `videos/episodes/<id>.json`, puis `npm run video -- <id>` (planche d'
 | `reponse` | 1 | L'agent a fini : une bulle de réponse sort, il change de couleur, Mousse saute ; tout le schéma s'allume. | couleur (turquoise) ; texte |
 | `formule` | 2 | La définition : plan large, étiquettes sur l'IA et sur ses outils, puis le schéma passe au centre et la comète fait un tour complet. | texte : un morceau par mesure |
 | `cout` | 2 | Le prix de la boucle : le schéma reste au centre, tout allumé, avec le temps et les tokens dépensés ; Mousse rit jaune. | texte |
+| `hesiter` | 2 | Ouvre sur l'hésitation : gros plan sur l'œil et la tâche, le caméléon veut tirer mais il tremble. | texte |
+| `imaginer` | 3 | Ce qu'il imagine : un projecteur se braque sur lui, la scène s'assombrit, la grenouille et les lucioles le fixent avec de grands yeux. La musique se creuse. | texte (voisins : true) |
+| `cacher` | 2 | Il se camoufle (presque invisible) pour échapper aux regards ; la tâche en profite et remonte sur son fil. Mousse est dépité. | texte (voisins : true) |
+| `penser` | 3 | Ce qui occupe vraiment les autres : une mesure par personnage (la grenouille, les lucioles, Mousse), avec sa bulle de pensée. Personne ne pense au caméléon. | texte : un morceau par mesure (voisins : true) |
+| `nommer` | 2 | Plan large : le projecteur réapparaît sur le caméléon, étiqueté « dans sa tête », puis s'éteint : il n'existait que dans son imagination. | texte (voisins : true) |
+| `oser` | 2 | La tâche revient, il réapparaît, tire et l'attrape (la basse revient). Les voisins ne réagissent pas : la grenouille cligne des yeux, les lucioles regardent ailleurs. | texte (voisins : true) |
+| `conseil` | 2 | Le conseil : il devient turquoise, Mousse saute de joie, la grenouille coasse et les lucioles dansent. | couleur (turquoise) ; texte (voisins : true) |
 | `boucler` | 2 | Plan large, la scène revient à son état de départ (la tâche, les outils, le schéma), et la caméra revient au cadrage du début : la vidéo boucle. | texte |
 
 `"mesures": n` dans un temps fort allonge sa durée (la mise en scène reste calée sur ses premières mesures).
@@ -52,6 +59,8 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 | `reflechir` | Il réfléchit : l'œil fait un tour, trois points lumineux s'allument au-dessus de sa tête. | duree |
 | `absorber` | Le résultat de l'outil : une goutte lumineuse remonte de la bouche à la tête, les taches flashent. | — |
 | `repondre` | Une bulle de réponse lumineuse sort de sa bouche. | duree |
+| `camoufler` | Il se camoufle : il devient presque invisible, ou réapparaît. | vers : vrai (presque invisible) ou faux |
+| `trembler` | Il tremble de peur (petites secousses rapides). | duree |
 | `teinte` | Le contour et les taches changent de couleur. | de, vers : vert, turquoise, orange, rose ; duree |
 
 ### mouche (la mouche)
@@ -94,11 +103,42 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 | `compteur` | Le tour, le chrono et les tokens avancent (ou reviennent à zéro). | de, vers : { tour, s, k } ; duree |
 | `centrer` | Le schéma passe au centre de l'écran pour l'explication, ou revient. | vers : vrai (au centre, en grand) ou faux |
 
+### grenouille (la grenouille)
+
+| Geste | Ce qu'il fait | Paramètres |
+|---|---|---|
+| `regarder` | Ses pupilles suivent un point. | de, vers : décalages des pupilles (calculés par le compilateur) ; duree |
+| `fixer` | Elle fixe : ses yeux grossissent et rosissent, les pupilles rétrécissent. | — |
+| `relacher` | Elle relâche son regard : ses yeux reviennent à la normale. | — |
+| `cligner` | Elle cligne des yeux, indifférente. | fois (1) |
+| `coasser` | Sa gorge gonfle : elle coasse. | fois (2) |
+
+### lucioles (les lucioles)
+
+| Geste | Ce qu'il fait | Paramètres |
+|---|---|---|
+| `regarder` | Les pupilles de la luciole i suivent un point. | i ; de, vers : décalages des pupilles ; duree |
+| `fixer` | La luciole i fixe : ses yeux grossissent. | i |
+| `relacher` | La luciole i relâche son regard. | i |
+| `danser` | La luciole i fait une petite pirouette de joie. | i ; duree |
+
+### pensees (les bulles de pensée)
+
+| Geste | Ce qu'il fait | Paramètres |
+|---|---|---|
+| `penser` | Une bulle de pensée apparaît au-dessus du personnage, avec ce qui l'occupe, puis disparaît. | sur : grenouille, lucioles ou mousse ; duree |
+
+### ambiance (l'ambiance (projecteur))
+
+| Geste | Ce qu'il fait | Paramètres |
+|---|---|---|
+| `projecteur` | Le projecteur s'allume (la scène s'assombrit autour du caméléon) ou s'éteint. | etat : allumer ou eteindre |
+
 ## Décors
 
 | Décor | Places |
 |---|---|
-| `branche` (la branche) | ia : [380,920] ; tache : [820,640] ; outils : [null,null] |
+| `branche` (la branche) | ia : [380,920] ; tache : [820,640] ; outils : [null,null] ; grenouille : [150,1262] ; lucioles : [[120,610],[230,545],[335,625]] |
 
 ## Cadrages
 

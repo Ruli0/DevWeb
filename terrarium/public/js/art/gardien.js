@@ -25,9 +25,13 @@
   const POSE = { x: 905, y: 1180, echelle: 1.25 };
   const ecran = (x, y) => [POSE.x - POSE.echelle * x, POSE.y + POSE.echelle * y];
   // Points utiles, en coordonnées d'écran.
-  const FLAMME = ecran(346, 36); // la lanterne
+  const FLAMME = ecran(346, 62); // le cœur de la lanterne
   const OEIL = ecran(150, 182);
   const SUJET = [540, 768]; // la caméra cadre le sujet aux 2/5 de la hauteur
+
+  // La lanterne : des rayons autour de la flamme, et deux dégradés (halo chaud, reflet du verre).
+  const RAYONS = Array.from({ length: 10 }, (_, k) => { const a = (k / 10) * Math.PI * 2; return `<line x1="${(46 * Math.cos(a)).toFixed(1)}" y1="${(46 * Math.sin(a)).toFixed(1)}" x2="${(78 * Math.cos(a)).toFixed(1)}" y2="${(78 * Math.sin(a)).toFixed(1)}" stroke="#ffd98a" stroke-width="3" stroke-linecap="round" opacity="0.45"/>`; }).join('');
+  const DEFS_LANTERNE = '<radialGradient id="lanterne-halo"><stop offset="0" stop-color="#ffc65c" stop-opacity="0.55"/><stop offset="0.45" stop-color="#ffc65c" stop-opacity="0.2"/><stop offset="1" stop-color="#ffc65c" stop-opacity="0"/></radialGradient><linearGradient id="lanterne-reflet" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.5"/><stop offset="0.4" stop-color="#fff" stop-opacity="0"/></linearGradient>';
 
   function mousse() {
     return `
@@ -40,15 +44,16 @@
   <g id="mousse-perche-geste"><g id="mousse-perche">
     <path d="M215 215 L330 -30" stroke="${C.metal2}" stroke-width="9" stroke-linecap="round"/>
     <path d="M330 -30 q14 -4 16 12" stroke="${C.metal2}" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <g id="lanterne" transform="translate(346 -4)">
-      <g id="lanterne-lueur"><circle cy="40" r="90" fill="${C.lumiere}" opacity="0.12"/><circle cy="40" r="52" fill="${C.lumiere}" opacity="0.22"/></g>
-      <circle cy="-6" r="7" fill="none" stroke="${C.metal2}" stroke-width="4"/>
-      <path d="M-20 12 L0 -2 L20 12 Z" fill="${C.metal2}"/>
-      <rect x="-20" y="12" width="40" height="5" rx="2" fill="${C.metal2}"/>
-      <rect id="lanterne-verre" x="-17" y="17" width="34" height="46" rx="12" fill="${C.lumiere}" opacity="0.55"/>
-      <path id="lanterne-flamme" d="M0 26 C9 38 10 46 6 54 A7 7 0 0 1 -6 54 C-10 46 -9 38 0 26Z" fill="#fff8e6"/>
-      <path d="M-17 30 h34 M-17 50 h34" stroke="${C.metal2}" stroke-width="2" opacity="0.45"/>
-      <rect x="-21" y="62" width="42" height="7" rx="3" fill="${C.metal2}"/>
+    <g id="lanterne" transform="translate(346 62) scale(1.24)">
+      <g id="lanterne-lueur"><circle r="150" fill="url(#lanterne-halo)" style="mix-blend-mode:screen"/>${RAYONS}</g>
+      <path d="M0 -62 L0 -48" stroke="#c8913a" stroke-width="3"/><circle cy="-66" r="7" fill="none" stroke="#c8913a" stroke-width="3.5"/>
+      <path d="M-28 -30 Q0 -54 28 -30 Z" fill="#4a3220" stroke="#e0a94a" stroke-width="2.5"/>
+      <rect id="lanterne-verre" x="-23" y="-30" width="46" height="60" rx="7" fill="#ffd27a" opacity="0.75"/>
+      <rect x="-23" y="-30" width="46" height="60" rx="7" fill="url(#lanterne-reflet)"/>
+      <g id="lanterne-flamme"><path d="M0 -14 C10 0 11 9 6 18 A7 7 0 0 1 -6 18 C-11 9 -10 0 0 -14Z" fill="#fff8e0"/><path d="M0 0 C5 7 5 12 2 17 A3 3 0 0 1 -2 17 C-5 12 -5 7 0 0Z" fill="#ffb347"/></g>
+      <rect x="-23" y="-30" width="46" height="60" rx="7" fill="none" stroke="#e0a94a" stroke-width="4"/>
+      <path d="M-8 -30 V30 M8 -30 V30" stroke="#c8913a" stroke-width="2.5" opacity="0.8"/>
+      <rect x="-28" y="29" width="56" height="9" rx="4" fill="#4a3220" stroke="#e0a94a" stroke-width="2.5"/>
     </g>
   </g></g>
   <g id="mousse-corps">
@@ -87,6 +92,7 @@
     <linearGradient id="cone" x1="${lx}" y1="${ly}" x2="${cx}" y2="${cy}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.lumiere}" stop-opacity="0.64"/><stop offset="1" stop-color="${C.lumiere}" stop-opacity="0.12"/></linearGradient>
     <radialGradient id="vignette" cx="540" cy="900" r="1150" gradientUnits="userSpaceOnUse"><stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.75"/></radialGradient>
     <radialGradient id="oeil-dans-le-noir" cx="${ox}" cy="${oy}" r="90" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.oeil}" stop-opacity="0.9"/><stop offset="0.35" stop-color="${C.oeil}" stop-opacity="0.35"/><stop offset="1" stop-color="${C.oeil}" stop-opacity="0"/></radialGradient>
+    ${DEFS_LANTERNE}
     <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0"/></filter>
     <filter id="flou-cone" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="18"/></filter>
   </defs>
@@ -106,5 +112,5 @@
   const PIEDS = [135, 336];
   const EPAULE = [35, 210];
   const MAIN = [246, 172];
-  return { calque, mousse, FLAMME, OEIL, SUJET, PIEDS, EPAULE, MAIN, couleurs: C };
+  return { calque, mousse, FLAMME, OEIL, SUJET, PIEDS, EPAULE, MAIN, DEFS_LANTERNE, couleurs: C };
 });

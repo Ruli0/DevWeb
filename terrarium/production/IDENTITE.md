@@ -201,3 +201,10 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Personnages** : caméléon, grenouille et lucioles en silhouettes lumineuses ; Mousse en couleurs claires (corps bleu, mousse verte, bottes brunes) avec la nouvelle lanterne en laiton.
 - **Texte** : Poppins ExtraBold, sans lueur. Un fond bleu nuit translucide et flou, fondu dans le décor. Le mot clé passe seul sur une pastille **violette translucide** (W3), en blanc.
 - **Musique** : phonk Drift (inchangée).
+
+### Épisode 1 « La peur du jugement » : planche d'aperçu (13 nov.)
+
+- **Montré** : la planche d'aperçu de `videos/episodes/jugement.json` (18 mesures, 29,8 s), dans l'identité visuelle décidée.
+- **L'histoire** : le caméléon veut attraper la mouche mais il tremble (« tu as peur qu'on te juge ? »). Il s'imagine sous un projecteur, la scène s'assombrit, la grenouille et les lucioles le fixent. Il se camoufle et rate sa mouche. Puis on voit ce que pensent vraiment les autres (bulles de pensée : la grenouille pense à sa mouche, les lucioles à leur lumière, Mousse à sa plante). Le nom : « l'effet projecteur », qui n'existait que dans sa tête. Il ose, attrape la mouche, et personne ne réagit. Le conseil : « ils pensent à eux, pas à toi ». Fin qui reboucle.
+- **Ajouté au studio** : les rigs grenouille, lucioles, bulles de pensée et projecteur ; le camouflage et le tremblement du caméléon ; `studio/lumiere.js` (liserés chauds, ombres portées, flaques de lumière) ; Mousse en couleurs claires avec la nouvelle lanterne ; le texte Poppins sur fond translucide avec la pastille violette ; sept temps forts (`hesiter`, `imaginer`, `cacher`, `penser`, `nommer`, `oser`, `conseil`).
+- **Ton retour** : en attente.

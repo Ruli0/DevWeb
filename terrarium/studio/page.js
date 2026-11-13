@@ -7,6 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { RIGS, DECORS } = require('./compiler.js');
 const { ecrireMusique } = require('../scripts/build-sons.js');
+const lumiere = require('./lumiere.js');
 
 const RACINE = path.join(__dirname, '..');
 const lire = (f) => fs.readFileSync(path.join(RACINE, f), 'utf8');
@@ -41,9 +42,8 @@ function lettres(texte) {
     else if (m.espace && dernier && dernier.groupe && dernier.ouvert && suivantAcc) { dernier.h += m.h; dernier.n += 1; }
     else { if (dernier && dernier.groupe) dernier.ouvert = false; blocs.push(m); }
   });
-  // Taille du groupe géant : sur une ligne s'il est court, sinon sur deux lignes, sans descendre sous 130 px.
-  // Sur une ligne si la taille reste grande, sinon sur deux lignes (taille plafonnée, pour ne pas manger l'écran).
-  const geant = (b) => { const une = Math.floor(820 / (b.n * 0.56)); return une >= 120 ? Math.min(176, une) : Math.min(132, Math.floor(820 / (Math.max(b.long, Math.ceil(b.n / 2)) * 0.56))); };
+  // Taille du mot clé : sur une ligne s'il reste grand (jusqu'à 112 px), sinon sur deux lignes (100 px au plus).
+  const geant = (b) => { const une = Math.floor(760 / (b.n * 0.62)); return une >= 84 ? Math.min(112, une) : Math.min(100, Math.floor(760 / (Math.max(b.long, Math.ceil(b.n / 2)) * 0.62))); };
   return `${blocs.map((b) => (b.groupe ? `<span class="mot acc" style="font-size:${geant(b)}px">${b.h}</span>` : b.espace ? b.h : `<span class="mot">${b.h}</span>`)).join('')}<span class="c fin">&nbsp;</span>`;
 }
 
@@ -54,28 +54,29 @@ const DEFS = `
   <radialGradient id="vignette" cx="540" cy="880" r="1150" gradientUnits="userSpaceOnUse"><stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.8"/></radialGradient>
   <radialGradient id="halo-mouche"><stop offset="0" stop-color="#eaff7a" stop-opacity="0.55"/><stop offset="1" stop-color="#eaff7a" stop-opacity="0"/></radialGradient>
   <radialGradient id="halo-outil"><stop offset="0" stop-color="#9af8ff" stop-opacity="0.4"/><stop offset="1" stop-color="#9af8ff" stop-opacity="0"/></radialGradient>
-  <filter id="flou-schema" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>`;
+  <filter id="flou-schema" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>
+  ${lumiere.DEFS}`;
 
 const CSS = `
 * { box-sizing: border-box; } html, body { margin: 0; background: #000; }
 #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Space Mono", monospace; }
 #scene { position: absolute; left: 0; top: 0; }
-/* Le texte de Mousse (choisi le 13 nov. : D1 + D2 + D3) : grandes lettres rondes en néon,
-   le mot clé géant sur sa propre ligne, sur un bandeau sombre aux bords flous. */
+/* Le texte (choisi le 13 nov. 2026) : Poppins ExtraBold, sans lueur, sur un fond bleu nuit translucide
+   fondu dans le décor ; le mot clé passe seul sur une pastille violette translucide. */
 .invite { display: none; }
-.ligne-texte { position: absolute; left: 60px; width: 880px; top: 190px; text-align: center; pointer-events: none; }
-.ligne { display: inline-block; margin: 0; padding: 22px 40px 30px; border-radius: 48px;
-  background: rgba(2,6,10,.72); box-shadow: 0 0 40px 30px rgba(2,6,10,.55);
-  font: 800 104px/0.98 "Baloo 2", sans-serif; color: #fbfff6; -webkit-text-stroke: 6px #0a3a16; paint-order: stroke fill;
-  text-shadow: 0 0 8px #b6ff5c, 0 0 26px #8dff6a, 0 0 60px rgba(141,255,106,.8), 0 0 110px rgba(141,255,106,.5); }
+.ligne-texte { position: absolute; left: 60px; width: 880px; top: 180px; text-align: center; pointer-events: none; }
+.ligne { display: inline-block; margin: 0; padding: 24px 44px 28px; border-radius: 56px;
+  background: rgba(20,50,70,.34); border: 2px solid rgba(154,248,255,.22); backdrop-filter: blur(8px);
+  font: 800 74px/1.1 "Poppins", sans-serif; letter-spacing: -.01em; color: #fff; text-shadow: 0 2px 12px rgba(0,10,25,.45); }
 .chevron { display: none; }
 .mot { display: inline-block; white-space: nowrap; }
-.mot.acc { display: block; line-height: 0.95; white-space: normal; }
+.mot.acc { display: block; white-space: normal; line-height: 1; margin-top: 12px; padding: 4px 28px 10px; border-radius: 38px; background: transparent; color: #fff; text-shadow: none; }
+/* La pastille n'apparaît qu'avec la première lettre du mot : pas de pastille vide. */
+.mot.acc:has(.c.vu), .mot.acc:has(.c.cur) { background: rgba(120,100,230,.5); }
 .mot .m { display: inline-block; white-space: nowrap; }
 .c { visibility: hidden; } .c.vu { visibility: visible; }
-.c.acc { color: #fbfeff; -webkit-text-stroke: 6px #063040; text-shadow: 0 0 8px #9af8ff, 0 0 26px #5ef2ff, 0 0 60px rgba(94,242,255,.85), 0 0 110px rgba(94,242,255,.5); }
-.c.cur { visibility: visible; color: transparent; -webkit-text-stroke: 0; text-shadow: none;
-  background: linear-gradient(#fbfff6, #fbfff6) left center / 0.09em 80% no-repeat; filter: drop-shadow(0 0 8px rgba(141,255,106,.9)); }
+.c.acc { color: #fff; }
+.c.cur { visibility: visible; color: transparent; text-shadow: none; background: linear-gradient(#fff, #fff) left center / 0.09em 80% no-repeat; }
 .c.fin { display: none; }
 `;
 
@@ -83,8 +84,13 @@ function html(f) {
   const decor = DECORS[f.decor];
   const d = decor.dessin();
   const place = decor.PLACES;
-  const acteurs = RIGS.cameleon.dessin(place.ia) + RIGS.outils.dessin() + RIGS.mouche.dessin();
-  const calques = d.calques.map((c) => `   <g class="calque" id="calque-${c.id}" data-f="${c.f}">${c.svg}${c.acteurs ? acteurs : ''}</g>`).join('\n');
+  // Les acteurs, du fond vers l'avant : la grenouille, le caméléon, les outils, les lucioles, la tâche, les bulles.
+  const v = f.voisins;
+  const acteurs = (v ? RIGS.grenouille.dessin(place.grenouille) : '') + RIGS.cameleon.dessin(place.ia) + lumiere.surCameleon() + RIGS.outils.dessin()
+    + (v ? RIGS.lucioles.dessin(place.lucioles) : '') + RIGS.mouche.dessin() + (v ? RIGS.pensees.dessinDecor() : '');
+  // Le projecteur et son voile passent derrière les acteurs : eux restent éclairés.
+  const ambiance = v ? RIGS.ambiance.dessin(place.ia.x + 40) : '';
+  const calques = d.calques.map((c) => `   <g class="calque" id="calque-${c.id}" data-f="${c.f}">${c.svg}${c.acteurs ? ambiance + acteurs : ''}</g>`).join('\n');
   const textes = f.textes.map((m, k) => `  <div id="ligne-${k}" class="clip ligne-texte" data-start="${m.debut}" data-duration="${(m.fin - m.debut).toFixed(3)}" data-track-index="2"><p class="ligne"><span class="chevron">&gt;</span> ${lettres(m.texte)}</p></div>`).join('\n');
 
   // Sons : chaque son dure sa vraie longueur ; ceux qui se chevauchent vont sur des pistes différentes.
@@ -102,7 +108,7 @@ function html(f) {
   return `<!doctype html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=1920">
 <title>${esc(f.titre)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=block" rel="stylesheet">
 <script src="assets/gsap.min.js"></script><script src="assets/MotionPathPlugin.min.js"></script>
 <style>${CSS}</style></head>
 <body>
@@ -114,6 +120,7 @@ function html(f) {
 ${calques}
   </g>
   ${RIGS.mousse.dessin()}
+  ${v ? RIGS.pensees.dessinEcran() : ''}
   ${RIGS.schema.dessin()}
   <g id="etiquettes"></g>
   <rect width="1080" height="1920" fill="url(#vignette)"/>
@@ -130,6 +137,10 @@ ${lire('studio/rigs/mouche.js')}
 ${lire('studio/rigs/mousse.js')}
 ${lire('studio/rigs/outils.js')}
 ${lire('studio/rigs/schema.js')}
+${lire('studio/rigs/grenouille.js')}
+${lire('studio/rigs/lucioles.js')}
+${lire('studio/rigs/pensees.js')}
+${lire('studio/rigs/ambiance.js')}
 ${lire(`studio/decors/${f.decor}.js`)}
 (function () {
   gsap.registerPlugin(MotionPathPlugin);

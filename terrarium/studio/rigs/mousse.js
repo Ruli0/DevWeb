@@ -14,18 +14,16 @@
   'use strict';
 
   const HUMEURS = ['neutre', 'content', 'surpris', 'blase'];
-  const SILHOUETTE = { '#2a3550': '#0b1424', '#151c2e': '#04080f', '#3fa34d': '#163d28', '#3b2a24': '#06070a', '#0a1020': '#02050a' };
+  // Mousse en couleurs claires (13 nov. 2026) : corps bleu, mousse verte, bottes brunes.
+  const SILHOUETTE = { '#2a3550': '#5a6fae', '#151c2e': '#34407a', '#3fa34d': '#5fc46a', '#3b2a24': '#7a5236', '#0a1020': '#0a1020' };
 
-  // Node seulement : le dessin du gardien (public/js/art/gardien.js) + la lumière de sa lanterne.
+  // Node seulement : le dessin du gardien (public/js/art/gardien.js), avec ses ombres et sa lumière (studio/lumiere.js).
   function dessin() {
     const gardien = require('../../public/js/art/gardien.js');
+    const lumiere = require('../lumiere.js');
     let s = gardien.mousse();
     for (const [de, vers] of Object.entries(SILHOUETTE)) s = s.split(de).join(vers);
-    const [fx, fy] = gardien.FLAMME;
-    return `
-  <defs><radialGradient id="mousse-chaud" cx="${fx}" cy="${fy}" r="560" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffc65c" stop-opacity="0.36"/><stop offset="1" stop-color="#ffc65c" stop-opacity="0"/></radialGradient></defs>
-  <rect id="mousse-lumiere" width="1080" height="1920" fill="url(#mousse-chaud)" style="mix-blend-mode:screen"/>
-  ${s}`;
+    return `${lumiere.sousMousse()}${s}${lumiere.surMousse()}`;
   }
 
   const GESTES = {

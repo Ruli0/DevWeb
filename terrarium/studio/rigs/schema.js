@@ -20,7 +20,7 @@
   const ETAPES = { pense: -90, outil: 30, resultat: 150 };
   const NOMS = { pense: 'pense', outil: 'outil', resultat: 'résultat' };
   const pt = (a) => [+(R * Math.cos((a * Math.PI) / 180)).toFixed(1), +(R * Math.sin((a * Math.PI) / 180)).toFixed(1)];
-  const BALOO = 'font-family="&quot;Baloo 2&quot;, sans-serif" font-weight="800"';
+  const BALOO = 'font-family="Poppins, sans-serif" font-weight="800"';
 
   function dessin() {
     const fleches = [-90, 30, 150].map((a) => {

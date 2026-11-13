@@ -16,7 +16,9 @@ La nouvelle chaîne, dans la direction artistique A2, vit dans `studio/`. Une vi
 | Page et musique | `studio/page.js` | Composition HyperFrames, Drift arrangée par mesure |
 | Catalogue | `studio/catalogue.js` → `production/CATALOGUE.md` | Tout ce qu'il faut lire pour écrire un épisode |
 | Tests | `test/studio.test.js` | 9 tests (32 au total avec l'ancienne chaîne) |
-| Épisodes | `videos/episodes/` | `demo` (16,6 s), `nuit-1` (le pilote, 29,8 s) |
+| Épisodes | `videos/episodes/` | `demo` (16,6 s), `nuit-1` (IA, abandonné), `jugement` (la peur du jugement, 29,8 s) |
+| Lumière | `studio/lumiere.js` | Liserés chauds sur Mousse et le caméléon, ombres portées, flaques de lumière, projecteur à faisceau |
+| Voisins | `studio/rigs/{grenouille,lucioles,pensees,ambiance}.js` | La grenouille, les trois lucioles, les bulles de pensée, le projecteur et son voile (`"voisins": true` dans l'épisode) |
 
 Limites : un seul décor, un seul couple de rôles (caméléon et mouche), six temps forts. La sortie (`videos/studio/`) n'est pas versionnée : elle se régénère à l'identique.
 

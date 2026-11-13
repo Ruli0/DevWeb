@@ -1,0 +1,19 @@
+{
+  "id": "jugement",
+  "titre": "La peur du jugement",
+  "concept": "L'effet projecteur",
+  "decor": "branche",
+  "musique": "drift",
+  "voisins": true,
+  "roles": { "ia": "cameleon", "tache": "mouche" },
+  "temps": [
+    { "fort": "hesiter", "texte": "tu as peur qu'on te *juge* ?" },
+    { "fort": "imaginer", "texte": ["il croit que *tout le monde*", "le *regarde*."] },
+    { "fort": "cacher", "texte": ["alors il se *cache*…", "…et *rate*."] },
+    { "fort": "penser", "texte": ["grenouille : *sa mouche*", "lucioles : *leur lumière*", "Mousse : *sa plante*"] },
+    { "fort": "nommer", "texte": ["= l'effet *projecteur*", "on se croit au *centre*."] },
+    { "fort": "oser", "texte": ["il *ose*.", "*personne* ne réagit."] },
+    { "fort": "conseil", "texte": ["ils pensent à *eux*.", "pas à *toi*."] },
+    { "fort": "boucler", "texte": "alors… *ose*." }
+  ]
+}

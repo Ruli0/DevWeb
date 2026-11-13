@@ -265,6 +265,124 @@ const TEMPS_FORTS = {
       return { parties: ['plein', 'plein'] };
     },
   },
+  // --- La série « psycho en métaphores » (13 nov. 2026) : les voisins regardent, ou croit-on. ---
+  hesiter: {
+    mesures: 2,
+    role: "Ouvre sur l'hésitation : gros plan sur l'œil et la tâche, le caméléon veut tirer mais il tremble.",
+    params: 'texte',
+    jouer(ctx) {
+      ctx.camera(0, 'gros-plan', ['ia.oeil', 'tache'], 0);
+      ctx.geste('ia', 'cligner', ctx.b(1.5), { fois: 1 });
+      ctx.trembler(ctx.b(1), ctx.b(7.5) - ctx.b(1));
+      ctx.geste('mousse', 'pencher', ctx.b(1), { duree: ctx.b(7) - ctx.b(1) });
+      return { parties: ['plein', 'plein'] };
+    },
+  },
+  imaginer: {
+    mesures: 3,
+    role: "Ce qu'il imagine : un projecteur se braque sur lui, la scène s'assombrit, la grenouille et les lucioles le fixent avec de grands yeux. La musique se creuse.",
+    params: 'texte (voisins : true)',
+    jouer(ctx) {
+      ctx.camera(0, 'plan-moyen', ['ia', 'grenouille.oeil', 'lucioles'], 0.6);
+      ctx.projecteur(ctx.b(0.5), true);
+      ctx.trembler(ctx.b(0.2), ctx.b(11) - ctx.b(0.2));
+      ctx.regarderVoisin('grenouille', 0, ctx.b(1), 'ia.oeil');
+      ctx.fixerVoisin('grenouille', 0, ctx.b(1.2), true);
+      [0, 1, 2].forEach((i) => {
+        ctx.regarderVoisin('lucioles', i, ctx.b(1.6 + 0.5 * i), 'ia.oeil');
+        ctx.fixerVoisin('lucioles', i, ctx.b(2 + 0.5 * i), true);
+      });
+      ctx.humeur(ctx.b(2.5), 'surpris');
+      ctx.geste('mousse', 'pencher', ctx.b(3), { duree: ctx.b(8) - ctx.b(3) });
+      return { parties: ['plein', 'creux', 'creux'] };
+    },
+  },
+  cacher: {
+    mesures: 2,
+    role: 'Il se camoufle (presque invisible) pour échapper aux regards ; la tâche en profite et remonte sur son fil. Mousse est dépité.',
+    params: 'texte (voisins : true)',
+    jouer(ctx) {
+      ctx.camera(0, 'plan-moyen', ['ia', 'tache'], 0.5);
+      ctx.camoufler(ctx.b(0.3), true);
+      ctx.humeur(ctx.b(1), 'blase');
+      ctx.projecteur(ctx.b(1.5), false);
+      ctx.fixerVoisin('grenouille', 0, ctx.b(2.2), false);
+      [0, 1, 2].forEach((i) => ctx.fixerVoisin('lucioles', i, ctx.b(2.4), false));
+      ctx.mouche('remonter', ctx.b(5), { duree: 0.8 });
+      ctx.geste('mousse', 'depit', ctx.b(2.5), { duree: ctx.b(7) - ctx.b(2.5) });
+      return { parties: ['creux', 'creux'] };
+    },
+  },
+  penser: {
+    mesures: 3,
+    texteParMesure: true,
+    role: "Ce qui occupe vraiment les autres : une mesure par personnage (la grenouille, les lucioles, Mousse), avec sa bulle de pensée. Personne ne pense au caméléon.",
+    params: 'texte : un morceau par mesure (voisins : true)',
+    jouer(ctx) {
+      // La grenouille pense à sa mouche.
+      ctx.camera(0, 'plan-moyen', ['grenouille.oeil', [330, 960]], 0.5);
+      ctx.regarderVoisin('grenouille', 0, ctx.b(0.3), [330, 900]);
+      ctx.pensee('grenouille', ctx.b(0.5), ctx.b(3.8) - ctx.b(0.5));
+      ctx.geste('grenouille', 'coasser', ctx.b(2.2), { fois: 1 });
+      // Les lucioles pensent à leur lumière.
+      ctx.camera(4, 'plan-moyen', ['lucioles', [250, 400]], 0.5);
+      [0, 1, 2].forEach((i) => ctx.regarderVoisin('lucioles', i, ctx.b(4.3), [250, 400]));
+      ctx.pensee('lucioles', ctx.b(4.5), ctx.b(7.8) - ctx.b(4.5));
+      ctx.geste('lucioles', 'danser', ctx.b(5.5), { i: 1, duree: 1.2 });
+      // Mousse pense à sa plante (il est devant la vitre : plan large).
+      ctx.camera(8, 'large', [], 0.6);
+      ctx.humeur(ctx.b(8.2), 'content');
+      ctx.pensee('mousse', ctx.b(8.5), ctx.b(11.8) - ctx.b(8.5));
+      ctx.geste('mousse', 'pencher', ctx.b(8.5), { duree: ctx.b(11.8) - ctx.b(8.5) });
+      return { parties: ['creux', 'plein', 'plein'] };
+    },
+  },
+  nommer: {
+    mesures: 2,
+    role: "Plan large : le projecteur réapparaît sur le caméléon, étiqueté « dans sa tête », puis s'éteint : il n'existait que dans son imagination.",
+    params: 'texte (voisins : true)',
+    jouer(ctx) {
+      ctx.camera(0, 'plan-moyen', ['ia', 'lucioles'], 0.6);
+      ctx.projecteur(ctx.b(0.5), true);
+      ctx.etiquette(ctx.b(1), ctx.b(5) - ctx.b(1), 'ia.corps', 'dans sa tête', { dx: 220, dy: -110 });
+      ctx.projecteur(ctx.b(5.5), false);
+      ctx.humeur(ctx.b(6), 'neutre');
+      return { parties: ['plein', 'plein'] };
+    },
+  },
+  oser: {
+    mesures: 2,
+    role: "La tâche revient, il réapparaît, tire et l'attrape (la basse revient). Les voisins ne réagissent pas : la grenouille cligne des yeux, les lucioles regardent ailleurs.",
+    params: 'texte (voisins : true)',
+    jouer(ctx) {
+      const depart = ctx.point('tache.depart');
+      ctx.camera(0, 'plan-moyen', ['ia', 'tache.depart'], 0.5);
+      ctx.mouche('descendre', ctx.b(0), { vers: depart, duree: ctx.b(2.5) - ctx.b(0) });
+      ctx.camoufler(ctx.b(1), false);
+      ctx.regarder(ctx.b(2), 'tache.depart', 0.25);
+      ctx.langue(ctx.b(4) - 0.1, { vers: 'tache' });
+      ctx.mouche('disparaitre', ctx.b(4));
+      ctx.humeur(ctx.b(4), 'content');
+      ctx.regarderVoisin('grenouille', 0, ctx.b(5), [150, 600], 0.4);
+      ctx.geste('grenouille', 'cligner', ctx.b(5.5), { fois: 1 });
+      [0, 1, 2].forEach((i) => ctx.regarderVoisin('lucioles', i, ctx.b(5.2 + 0.2 * i), [ctx.point(`luciole.${i}`)[0] + (i - 1) * 90, ctx.point(`luciole.${i}`)[1] - 160], 0.4));
+      ctx.geste('ia', 'avaler', ctx.b(4.8));
+      return { parties: ['montee', 'plein'] };
+    },
+  },
+  conseil: {
+    mesures: 2,
+    role: 'Le conseil : il devient turquoise, Mousse saute de joie, la grenouille coasse et les lucioles dansent.',
+    params: 'couleur (turquoise) ; texte (voisins : true)',
+    jouer(ctx, p) {
+      ctx.camera(0, 'plan-moyen', ['ia', 'grenouille.oeil'], 0.6);
+      ctx.teinte(ctx.b(0.3), p.couleur || 'turquoise');
+      ctx.geste('mousse', 'sauter', ctx.b(0.5), { fois: 2, duree: ctx.b(4.5) - ctx.b(0.5) });
+      ctx.geste('grenouille', 'coasser', ctx.b(4.5), { fois: 2 });
+      [0, 2].forEach((i) => ctx.geste('lucioles', 'danser', ctx.b(4.8 + 0.3 * i), { i, duree: 1.2 }));
+      return { parties: ['plein', 'plein'] };
+    },
+  },
   boucler: {
     mesures: 2,
     role: 'Plan large, la scène revient à son état de départ (la tâche, les outils, le schéma), et la caméra revient au cadrage du début : la vidéo boucle.',

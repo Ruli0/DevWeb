@@ -28,6 +28,8 @@
     ia: { x: 380, y: 920, s: 2.2 }, // le caméléon, sur la branche
     tache: [820, 640], // la mouche, devant la gueule
     outils: { loupe: [905, 530], page: [745, 440] }, // les outils, suspendus à droite de la tête
+    grenouille: { x: 150, y: 1262, s: 1.55 }, // sur la feuille, sous la queue du caméléon
+    lucioles: [[120, 610], [230, 545], [335, 625]], // en haut à gauche, au-dessus du dos du caméléon
   };
 
   function dessin() {
@@ -61,7 +63,8 @@
       <path d="M-260 1170 C 180 1010 360 975 540 962 C 720 948 880 905 1340 780" stroke="#9ff2c0" stroke-width="44" fill="none" opacity="0.18" filter="url(#lueur-forte)"/>
       <path d="M-260 1175 C 180 1015 360 980 540 967 C 720 953 880 910 1340 785" stroke="#03080d" stroke-width="40" fill="none" stroke-linecap="round"/>
       <path d="M-260 1155 C 180 995 360 960 540 947 C 720 933 880 890 1340 765" stroke="#5fbf9a" stroke-width="2.5" fill="none" opacity="0.55"/>
-      ${palme(820, 900, 170, -60, 4, '#03080d')}`;
+      ${palme(820, 900, 170, -60, 4, '#03080d')}
+      <path d="M-120 1330 C 40 1245 220 1235 340 1268 C 240 1302 120 1322 -120 1390 Z" fill="#03080d" stroke="#5fbf9a" stroke-width="2.2" opacity="0.95"/>`;
     const pres = `${palme(-40, 1720, 520, -55, 6, '#010306')}${palme(1120, 120, 420, 150, 5, '#010306')}`;
     return {
       defs: `
@@ -72,7 +75,8 @@
       fond: '<rect width="1080" height="1920" fill="url(#ciel)"/><rect width="1080" height="1920" fill="url(#lune)"/>',
       calques: [
         { id: 'loin', f: 0.35, svg: `<g filter="url(#flou-loin)" opacity="0.95">${loin}</g>` },
-        { id: 'milieu', f: 0.7, svg: milieu + spores },
+        // L'éclaircissement de la nuit (dosage A, 13 nov. 2026) : un voile bleu clair en mode « screen ».
+        { id: 'milieu', f: 0.7, svg: milieu + spores + '<rect x="-4000" y="-4000" width="9000" height="10000" fill="#3a6f8c" opacity="0.2" style="mix-blend-mode:screen"/>' },
         { id: 'action', f: 1, svg: branche, acteurs: true },
         { id: 'pres', f: 1.5, svg: `<g filter="url(#flou-pres)">${pres}</g>` },
       ],

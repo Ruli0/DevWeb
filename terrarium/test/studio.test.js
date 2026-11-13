@@ -51,7 +51,7 @@ test('deux gestes du même canal ne peuvent pas se chevaucher', () => {
 });
 
 test('le runtime et les rigs ne contiennent ni minuterie, ni hasard, ni répétition infinie', () => {
-  for (const f of ['studio/runtime.js', 'studio/rigs/cameleon.js', 'studio/rigs/mouche.js', 'studio/rigs/mousse.js', 'studio/decors/branche.js']) {
+  for (const f of ['studio/runtime.js', 'studio/rigs/cameleon.js', 'studio/rigs/mouche.js', 'studio/rigs/mousse.js', 'studio/rigs/outils.js', 'studio/rigs/schema.js', 'studio/rigs/grenouille.js', 'studio/rigs/lucioles.js', 'studio/rigs/pensees.js', 'studio/rigs/ambiance.js', 'studio/decors/branche.js']) {
     const s = fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
     assert.ok(!/setTimeout|setInterval|requestAnimationFrame|Math\.random|repeat:\s*-1/.test(s), f);
   }
@@ -82,4 +82,22 @@ test('nuit-1 : quatre tours de boucle comptés (tour, temps, tokens), puis le co
   const outils = feuille.ordres.filter((o) => o.qui === 'outils');
   assert.ok(outils.some((o) => o.geste === 'attrape' && o.p.id === 'loupe') && outils.some((o) => o.geste === 'attrape' && o.p.id === 'page'));
   assert.equal(feuille.depart.mouche.visible, false, 'la tâche (le bug) arrive plus tard');
+});
+
+test('jugement : le projecteur et le camouflage reviennent à leur état de départ, et chaque voisin a sa bulle de pensée', () => {
+  const j = episodes.find((x) => x.ep.id === 'jugement');
+  const { feuille, erreurs } = compiler(j.ep);
+  assert.deepEqual(erreurs, []);
+  const projo = feuille.ordres.filter((o) => o.qui === 'ambiance').map((o) => o.p.etat);
+  assert.equal(projo[projo.length - 1], 'eteindre');
+  assert.equal(projo.filter((e) => e === 'allumer').length, projo.filter((e) => e === 'eteindre').length, 'chaque projecteur allumé est éteint');
+  const camo = feuille.ordres.filter((o) => o.geste === 'camoufler').map((o) => o.p.vers);
+  assert.equal(camo[camo.length - 1], false);
+  assert.deepEqual(feuille.ordres.filter((o) => o.qui === 'pensees').map((o) => o.p.sur), ['grenouille', 'lucioles', 'mousse']);
+});
+
+test('un épisode sans « voisins » ne peut pas utiliser la grenouille, les lucioles ou le projecteur', () => {
+  const j = episodes.find((x) => x.ep.id === 'jugement').ep;
+  const { erreurs } = compiler({ ...j, voisins: false });
+  assert.ok(erreurs.some((e) => e.includes('voisins')));
 });
