@@ -232,3 +232,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Fait** : dans l'épisode `jugement`, Mousse (et sa lanterne) disparaît (`"mousse": false`) ; l'escargot prend sa place de troisième voisin. Il est lent à tourner les yeux et pense à sa salade. Un nouveau rig `studio/rigs/escargot.js` (contour ambre, coquille en spirale, yeux sur pédoncules), posé sur la feuille sous le caméléon.
 - **Réversible** : Mousse et ses gestes restent dans le studio ; il suffit de retirer `"mousse": false` d'un épisode. Reste à décider si Mousse revient dans la série ou s'il est abandonné pour de bon (il était « l'âme du compte »).
 - **Ton retour** : en attente.
+
+### « La peur du jugement » (sondage, sans Mousse) : vidéo rendue (13 nov.)
+
+- **Montré** : `videos/studio/jugement/jugement.mp4`, 26,5 s, 60 images par seconde (30 Mo). Rendu plus rapide qu'avec Mousse (moins de masques de lumière).
+- **Contrôles** : 36 tests, lint à 0 erreur, silence de la musique sur le début de la partie « creux » (environ −22 dB).
+- **Ton retour** : en attente.
