@@ -156,4 +156,10 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 ### Maquettes de style, tour 1 (13 nov.)
 
 - **Montré** : quatre styles complets, sur deux moments de l'épisode (`essais/psycho-styles/`) : S1 ombres lumineuses, S2 doux et pastel, S3 bande dessinée, S4 livre en papier découpé.
+- **Ton retour** : « Fais des propositions de style et ensuite de texte, et on va choisir. »
+
+### Styles, tour 2 (13 nov.) : décor et personnages seuls
+
+- **Montré** : six styles, sans texte, au moment « il croit que tout le monde le regarde » : S1 à S4, plus S5 pâte à modeler (volumes doux, flou d'arrière-plan) et S6 aplats géométriques (sarcelle et orange, triangles).
+- **Ensuite** : les propositions de texte, une fois le style choisi.
 - **Ton retour** : en attente.

@@ -225,9 +225,62 @@ const STYLES = {
     css: `.texte { font: 400 84px/1.05 "Patrick Hand"; color: #3a2414; display: inline-block; padding: 24px 44px 28px; background: #f6edd5; border-radius: 6px; box-shadow: 6px 10px 0 rgba(30,15,5,.45); transform: rotate(-1.5deg); }
       .texte b { display: block; font-weight: 400; font-size: 130px; line-height: 1; color: #b8322c; text-decoration: underline; text-decoration-thickness: 6px; text-underline-offset: 10px; }`,
   },
+  s5: {
+    nom: 'S5 · Pâte à modeler',
+    defs: (() => {
+      const pate = (id, clair, base, sombre) => `<radialGradient id="${id}" cx="0.35" cy="0.28" r="0.85"><stop offset="0" stop-color="${clair}"/><stop offset="0.55" stop-color="${base}"/><stop offset="1" stop-color="${sombre}"/></radialGradient>`;
+      return `<linearGradient id="ciel5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2547"/><stop offset="0.6" stop-color="#3b3f78"/><stop offset="1" stop-color="#6a5a8c"/></linearGradient>
+        <filter id="flou5"><feGaussianBlur stdDeviation="14"/></filter>
+        <filter id="pate" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="#0b0f24" flood-opacity="0.55"/></filter>
+        <radialGradient id="spot5" cx="590" cy="860" r="460" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff0d0" stop-opacity="0.6"/><stop offset="1" stop-color="#fff0d0" stop-opacity="0"/></radialGradient>
+        ${pate('p-cam', '#b8f59a', '#5cc85a', '#2f7d3a')}${pate('p-cam2', '#e8ffd0', '#b9ec98', '#7cbf63')}${pate('p-gr', '#ffd2a0', '#f08b4a', '#a54e22')}${pate('p-gr2', '#fff1d8', '#ffd6a0', '#d9a066')}
+        ${pate('p-bois', '#c59265', '#8a5a36', '#4f311c')}${pate('p-feuille', '#8fe0a0', '#3f9a5c', '#1f5a34')}${pate('p-lune', '#fffbe8', '#ffe6a8', '#d9b766')}${pate('p-mouche', '#fffbd0', '#ffe066', '#c79a20')}${pate('p-lu', '#6a6a8a', '#3a3a55', '#1c1c2c')}
+        ${pate('p-mousse', '#a5b4f0', '#5e6fc0', '#2c3570')}${pate('p-mousse2', '#c4f5b8', '#62c26e', '#2f7a3c')}`;
+    })(),
+    fond: `<rect width="1080" height="1920" fill="url(#ciel5)"/>
+      <g filter="url(#flou5)" opacity="0.8"><circle cx="160" cy="420" r="60" fill="#ffd58a" opacity="0.5"/><circle cx="900" cy="760" r="40" fill="#9af8ff" opacity="0.45"/><circle cx="300" cy="1500" r="90" fill="#ff9fc0" opacity="0.3"/><circle cx="980" cy="1380" r="70" fill="#ffd58a" opacity="0.35"/></g>
+      <g filter="url(#pate)"><circle cx="840" cy="380" r="105" fill="url(#p-lune)"/>
+      <path d="M-30 150 q 120 -70 230 20 q -120 60 -230 -20Z" fill="url(#p-feuille)"/><path d="M1110 160 q -120 -60 -220 30 q 120 50 220 -30Z" fill="url(#p-feuille)"/>
+      <path d="M-60 1095 C 180 1010 360 975 540 962 C 720 948 880 905 1140 835" stroke="url(#p-bois)" stroke-width="46" fill="none" stroke-linecap="round"/>
+      <path d="M-60 1330 C 60 1250 220 1240 330 1270 C 240 1300 120 1320 -60 1380 Z" fill="url(#p-feuille)"/>
+      <ellipse cx="160" cy="1720" rx="260" ry="120" fill="url(#p-feuille)"/><ellipse cx="920" cy="1740" rx="280" ry="130" fill="url(#p-feuille)"/></g>`,
+    cam: { corps: 'url(#p-cam)', membres: '#3f9a46', dos: 'none', ventre: 'url(#p-cam2)', taches: '#2f7d3a', oeilFond: 'url(#p-cam)', sclere: '#ffffff', pupille: '#1a1a2a', trait: '#24592c', joue: '#ff9fb0', sueur: '#bfe9ff', filtre: 'pate' },
+    gr: { corps: 'url(#p-gr)', pattes: '#c86a30', gorge: 'url(#p-gr2)', sclere: '#ffffff', fixe: '#ffffff', pupille: '#1a1a2a', trait: '#7a3a14', joue: '#ff8fa8', filtre: 'pate' },
+    lu: { corps: 'url(#p-lu)', lumiere: 'url(#p-mouche)', aile: '#e8f4ff', lueur: true, filtre: 'pate' },
+    mo: { corps: 'url(#p-mouche)', aile: '#e8f4ff', fil: '#f4f0e0', filtre: 'pate' },
+    mousse: { '#2a3550': 'url(#p-mousse)', '#151c2e': '#3a4790', '#3fa34d': 'url(#p-mousse2)', '#b6ff5c': '#d8ffc8', '#3b2a24': '#7a4a34', '#0a1020': '#1c2150' },
+    mousseFiltre: 'pate',
+    pensee: { fond: '#fffaf0', bord: '#e6dcc8', bordL: 4, mouche: 'url(#p-mouche)', aile: '#e8f4ff', coeur: '#ff6f8f', filtre: 'pate' },
+    imaginer: '<rect width="1080" height="1920" fill="#0b0f24" opacity="0.5"/><rect width="1080" height="1920" fill="url(#spot5)"/>',
+    apres: '',
+    police: 'Fredoka:wght@700',
+    css: '.texte { font: 700 90px/1.05 "Fredoka"; color: #fff; } .texte b { display: block; font-size: 130px; color: #ffe066; }',
+  },
+  s6: {
+    nom: 'S6 · Aplats géométriques',
+    defs: '<linearGradient id="ciel6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f3b4f"/><stop offset="1" stop-color="#1f6f78"/></linearGradient><radialGradient id="spot6" cx="590" cy="860" r="480" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffcf5a" stop-opacity="0.55"/><stop offset="1" stop-color="#ffcf5a" stop-opacity="0"/></radialGradient>',
+    fond: `<rect width="1080" height="1920" fill="url(#ciel6)"/>
+      <circle cx="840" cy="380" r="140" fill="#ffcf5a" opacity="0.25"/><circle cx="840" cy="380" r="100" fill="#ffcf5a"/>
+      <polygon points="-40,1520 220,1180 480,1520" fill="#145560"/><polygon points="360,1560 680,1150 1000,1560" fill="#185f6a"/><polygon points="760,1540 1000,1240 1240,1540" fill="#145560"/>
+      <rect y="1500" width="1080" height="420" fill="#0c3640"/>
+      <polygon points="0,90 260,260 0,380" fill="#1f8a6e"/><polygon points="1080,60 820,240 1080,330" fill="#1f8a6e"/>
+      <path d="M-60 1095 C 180 1010 360 975 540 962 C 720 948 880 905 1140 835" stroke="#e07a3c" stroke-width="40" fill="none"/>
+      <path d="M-60 1080 C 180 995 360 960 540 947 C 720 933 880 890 1140 820" stroke="#f29a5a" stroke-width="8" fill="none"/>
+      <polygon points="-60,1330 330,1265 -60,1385" fill="#2fb08a"/>`,
+    cam: { corps: '#2fd1a0', membres: '#24a882', dos: '#5ee8bd', ventre: '#c8f7e6', taches: '#1f8a6e', oeilFond: '#5ee8bd', sclere: '#ffffff', pupille: '#0c2a33', trait: '#145560', sueur: '#9ad8ff' },
+    gr: { corps: '#f25f5c', pattes: '#c94744', gorge: '#ffb8a8', sclere: '#ffffff', fixe: '#ffffff', pupille: '#0c2a33', trait: '#8a2a28' },
+    lu: { corps: '#0c2a33', lumiere: '#ffcf5a', aile: '#ffffff' },
+    mo: { corps: '#ffcf5a', aile: '#ffffff', fil: '#ffffff' },
+    mousse: { '#2a3550': '#3d5a80', '#151c2e': '#293d5a', '#3fa34d': '#2fb08a', '#b6ff5c': '#9ff0d0', '#3b2a24': '#e07a3c', '#0a1020': '#0c2a33' },
+    pensee: { fond: '#ffffff', bord: '#0c2a33', bordL: 4, mouche: '#ffcf5a', aile: '#d0f0ff', coeur: '#f25f5c' },
+    imaginer: '<rect width="1080" height="1920" fill="#06222a" opacity="0.5"/><polygon points="470,0 620,0 900,1080 300,1080" fill="url(#spot6)"/>',
+    apres: '',
+    police: 'Fredoka:wght@700',
+    css: '.texte { font: 700 90px/1.05 "Fredoka"; color: #fff; } .texte b { display: block; font-size: 130px; color: #ffcf5a; }',
+  },
 };
 
-function page(st, m) {
+function page(st, m, avecTexte = true) {
   const texte = m === 'imaginer' ? 'il croit que tout le monde le <b>regarde</b>' : 'la grenouille pense à <b>sa mouche</b>';
   return `<!doctype html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=${st.police}&display=block" rel="stylesheet">
   <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#r{position:relative;width:1080px;height:1920px;overflow:hidden}
@@ -244,17 +297,20 @@ function page(st, m) {
   ${m === 'penser' ? pensee(st) : ''}
   ${mousse(st, m)}
   ${st.apres}
-  </svg><div class="bandeau"><span class="texte">${texte}</span></div></div></body></html>`;
+  </svg>${avecTexte ? `<div class="bandeau"><span class="texte">${texte}</span></div>` : ''}</div></body></html>`;
 }
 
 (async () => {
   const { chromium } = require('playwright');
   const b = await chromium.launch();
   const images = [];
+  // « styles » : décor et personnages seuls (sans texte), au moment « tout le monde le regarde ».
+  const seulStyle = process.argv.includes('styles');
   for (const [id, st] of Object.entries(STYLES)) {
-    for (const m of ['imaginer', 'penser']) {
+    if (!seulStyle && (id === 's5' || id === 's6')) continue;
+    for (const m of seulStyle ? ['imaginer'] : ['imaginer', 'penser']) {
       const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
-      await p.setContent(page(st, m));
+      await p.setContent(page(st, m, !seulStyle));
       await p.evaluate(() => document.fonts.ready.then(() => true));
       await p.waitForTimeout(500);
       const f = `/tmp/maquette-${id}-${m}.png`;
@@ -264,7 +320,8 @@ function page(st, m) {
     }
   }
   await b.close();
-  const n = images.length;
-  execSync(`ffmpeg -v error -y ${images.map((f) => `-i ${f}`).join(' ')} -filter_complex "${images.map((_, i) => `[${i}:v]scale=432:768[v${i}]`).join(';')};${images.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${n}:layout=${images.map((_, i) => `${(i % 4) * 432}_${Math.floor(i / 4) * 768}`).join('|')}" ${path.join(__dirname, 'planche.png')}`);
-  console.log('Planche écrite : essais/psycho-styles/planche.png');
+  const n = images.length; const col = seulStyle ? 3 : 4;
+  const sortie = path.join(__dirname, seulStyle ? 'planche-styles.png' : 'planche.png');
+  execSync(`ffmpeg -v error -y ${images.map((f) => `-i ${f}`).join(' ')} -filter_complex "${images.map((_, i) => `[${i}:v]scale=432:768[v${i}]`).join(';')};${images.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${n}:layout=${images.map((_, i) => `${(i % col) * 432}_${Math.floor(i / col) * 768}`).join('|')}" ${sortie}`);
+  console.log(`Planche écrite : ${path.relative(path.join(__dirname, '../..'), sortie)}`);
 })();
