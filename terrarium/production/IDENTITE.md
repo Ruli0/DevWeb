@@ -145,3 +145,15 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **L'histoire** : l'accroche, puis la présentation de l'IA, de la tâche et de l'outil (la langue à mi-portée), chacune avec son étiquette. Viennent deux ratés, à l'aveugle puis trop court, avec un silence après chacun. La tâche se moque. La boucle est montrée une mesure par étape (observer, agir, vérifier), la basse revenant sur l'attrape. Puis la révélation « = boucle d'outils », « comme ton IA. », et le retour au début.
 - **Ajouté au studio** : la langue à portée partielle, le raté « trop court », le rire de Mousse, les temps forts `etapes` et `reveler`, le texte par mesure, les expressions mises en valeur sur plusieurs mots (groupées), et des étiquettes plus grandes.
 - **Ton retour** : en attente.
+
+### Changement de sujet (13 nov.)
+
+- **Ton retour sur la Nuit 1 « comment marche un agent »** : « L'histoire n'est pas assez bonne… on n'apprend rien de spécial. » Puis : « Je ne veux plus que ça parle d'IA, malheureusement c'est un sujet qui n'est pas tellement viral sur les réseaux. »
+- **Nouveau sujet choisi** : « psycho en métaphores », des petites leçons de psychologie jouées par les bêtes du terrarium, chacune avec un conseil simple.
+- **Premier épisode choisi** : la peur du jugement (l'effet projecteur).
+- **Tu as demandé** des maquettes de style pour le décor, les personnages et le texte, pour choisir.
+
+### Maquettes de style, tour 1 (13 nov.)
+
+- **Montré** : quatre styles complets, sur deux moments de l'épisode (`essais/psycho-styles/`) : S1 ombres lumineuses, S2 doux et pastel, S3 bande dessinée, S4 livre en papier découpé.
+- **Ton retour** : en attente.
