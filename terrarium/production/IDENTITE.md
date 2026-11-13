@@ -111,4 +111,13 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 ### Studio, démo (13 nov.)
 
 - **Montré** : `videos/episodes/demo.json` (15 lignes) et sa vidéo de 16,6 s (10 mesures), en 60 images par seconde. L'épisode enchaîne accroche, présentation de la tâche (étiquette « la tâche »), raté avec silence d'un temps, moquerie, réussite avec retour de la basse et saut de Mousse, puis la boucle.
+- **Ton retour** : « Le texte reste un problème ». Précisé : trop petit et mal placé, et le style (police, couleurs) ne va pas. La frappe lettre par lettre et les mots eux-mêmes conviennent.
+
+### Texte, tour 3 (13 nov.)
+
+- **Montré** : quatre styles, sur deux images de la démo. Ils sont tous centrés en haut, en grand (80 à 118 px au lieu de 54), et gardent la frappe lettre par lettre (script : `essais/textes/tour3.cjs`).
+  - **A. Bulle** : Fredoka gras, blanc avec un épais contour sombre, mot clé en vert lumineux. Ronde et très lisible.
+  - **B. Titre phonk** : Rubik extra-gras italique, en majuscules, ombre portée dure, mot clé en vert.
+  - **C. Écran de Mousse XXL** : la police terminal, en grand, dans un cadre sombre bordé de la couleur ambre de la lanterne.
+  - **D. Lettres lumineuses** : Baloo extra-gras, en vert qui brille comme le caméléon, mot clé en cyan.
 - **Ton retour** : en attente.
