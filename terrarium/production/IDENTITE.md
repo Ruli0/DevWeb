@@ -167,4 +167,17 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 ### Styles, tour 3 (13 nov.)
 
 - **Montré** : S1 éclairci en deux dosages (A un peu, B nettement), avec le texte de S2 (lettres rondes blanches, pastille rose, sans lueur). Mousse a des couleurs plus claires (bleu, mousse verte, bottes brunes), et sa lanterne est redessinée : plus grande, cadre en laiton, vitres, flamme, rayons et halo chaud (`essais/psycho-styles/maquettes.cjs tour3`).
+- **Ton retour** : « A, et le reste me va. Après, on passe à la police. Travaille un peu plus les ombres et l'éclairage des lampes et de la lanterne. »
+- **Décidé** : décor S1 au dosage A (un peu plus clair), texte sans lueur, nouveau Mousse et nouvelle lanterne.
+
+### Éclairage et polices, tour 4 (13 nov.)
+
+- **Éclairage** (`maquettes.cjs tour4`) :
+  - lanterne : halo chaud plus large, cœur très clair, flaque de lumière chaude sur le sol, lueur sur tout ce qui est proche ;
+  - Mousse : un **liseré chaud** sur le bord tourné vers la lanterne, une ombre douce de l'autre côté, une ombre portée au sol qui s'éloigne de la lanterne ;
+  - caméléon : liseré chaud sous le ventre (lanterne), liseré clair sur le dos (projecteur) ;
+  - projecteur : faisceau doux avec un cœur plus net, flaque de lumière sur la branche, ombre du caméléon dans la flaque, poussière dans le faisceau ;
+  - les lucioles et la mouche éclairent autour d'elles.
+  - **Écarté** : un voile orange sur Mousse et le caméléon : il grisait les couleurs.
+- **Polices** (`maquettes.cjs polices`), toutes sur la même pastille : 1 Fredoka (actuelle), 2 Nunito Black, 3 Lilita One, 4 Chewy, 5 DM Serif Display (élégante, mot clé en italique), 6 Poppins ExtraBold.
 - **Ton retour** : en attente.

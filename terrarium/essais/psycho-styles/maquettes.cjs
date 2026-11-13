@@ -312,24 +312,107 @@ const s1clair = (nom, voile, ciel) => Object.assign({}, STYLES.s1, {
   police: 'Fredoka:wght@600;700', css: TEXTE_S2,
 });
 STYLES.s1a = s1clair('S1 clair · dosage A', 0.22, ['#3f7a9a', '#2a4a5a']);
+STYLES.s1c = Object.assign({}, STYLES.s1a, { nom: 'S1 clair A + éclairage retravaillé', eclairage: true });
+// Propositions de police (même pastille, même décor) : seule la police change.
+const cssPolice = (fam, poids, base, cle, extra = '', extraCle = '') => `.texte { font: ${poids} ${base}px/1.1 "${fam}"; color: #fff; display: inline-block; padding: 26px 46px 30px; border-radius: 60px; background: rgba(110,95,200,.62); box-shadow: 0 12px 40px rgba(20,10,60,.4); ${extra} }
+  .texte b { display: block; font-weight: ${poids}; font-size: ${cle}px; line-height: 1; color: #fff; background: #ff9fc0; border-radius: 40px; padding: 4px 28px 10px; margin-top: 12px; box-shadow: 0 6px 0 #e77fa6; ${extraCle} }`;
+const POLICES = {
+  f1: { nom: 'Fredoka (actuelle)', police: 'Fredoka:wght@600;700', fam: 'Fredoka', poids: 600, base: 84, cle: 132 },
+  f2: { nom: 'Nunito Black', police: 'Nunito:wght@900', fam: 'Nunito', poids: 900, base: 84, cle: 130 },
+  f3: { nom: 'Lilita One', police: 'Lilita+One', fam: 'Lilita One', poids: 400, base: 88, cle: 136, extra: 'letter-spacing: .01em;' },
+  f4: { nom: 'Chewy', police: 'Chewy', fam: 'Chewy', poids: 400, base: 84, cle: 128 },
+  f5: { nom: 'DM Serif Display', police: 'DM+Serif+Display', fam: 'DM Serif Display', poids: 400, base: 88, cle: 138, extraCle: 'font-style: italic;' },
+  f6: { nom: 'Poppins ExtraBold', police: 'Poppins:wght@800', fam: 'Poppins', poids: 800, base: 74, cle: 112, extra: 'letter-spacing: -.01em;' },
+};
+for (const [id, f] of Object.entries(POLICES)) STYLES[id] = Object.assign({}, STYLES.s1c, { nom: f.nom, police: f.police, css: cssPolice(f.fam, f.poids, f.base, f.cle, f.extra || '', f.extraCle || '') });
 STYLES.s1b = s1clair('S1 clair · dosage B', 0.7, ['#6aa8c8', '#3d6a7a']);
+
+// --- L'éclairage (tour 4) : lanterne, projecteur, ombres portées, lueur des lucioles ---
+const [FX, FY] = gardien.FLAMME;
+const DEFS_ECLAIRAGE = `
+  <filter id="blanc"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter>
+  <filter id="noir"><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/></filter>
+  <radialGradient id="chaud-rim" cx="${FX}" cy="${FY}" r="620" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffe2a0" stop-opacity="1"/><stop offset="0.5" stop-color="#ffb347" stop-opacity="0.75"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0.15"/></radialGradient>
+  <linearGradient id="rim-haut" x1="0" y1="800" x2="0" y2="1000" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff6dc" stop-opacity="1"/><stop offset="1" stop-color="#fff6dc" stop-opacity="0.2"/></linearGradient>
+  <filter id="flou8" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="flou16" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+  <filter id="flou26" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
+  <radialGradient id="chaud-grand" cx="${FX}" cy="${FY}" r="600" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffc65c" stop-opacity="0.3"/><stop offset="0.3" stop-color="#ffb347" stop-opacity="0.13"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
+  <radialGradient id="chaud-mousse" cx="${FX}" cy="${FY + 40}" r="360" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffb347" stop-opacity="0.26"/><stop offset="0.5" stop-color="#ff9a3c" stop-opacity="0.1"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
+  <radialGradient id="chaud-cam" cx="${FX}" cy="${FY}" r="420" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffb347" stop-opacity="0.4"/><stop offset="0.6" stop-color="#ff9a3c" stop-opacity="0.12"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="ombre-droite" x1="${FX + 40}" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#050a1c" stop-opacity="0"/><stop offset="1" stop-color="#050a1c" stop-opacity="0.3"/></linearGradient>
+  <linearGradient id="ombre-bas" x1="0" y1="1380" x2="0" y2="1610" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#050a1c" stop-opacity="0"/><stop offset="1" stop-color="#050a1c" stop-opacity="0.18"/></linearGradient>
+  <linearGradient id="cone-spot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d8" stop-opacity="0.85"/><stop offset="0.6" stop-color="#fff0c0" stop-opacity="0.32"/><stop offset="1" stop-color="#fff0c0" stop-opacity="0.12"/></linearGradient>
+  <radialGradient id="flaque"><stop offset="0" stop-color="#fff2c8" stop-opacity="0.85"/><stop offset="0.6" stop-color="#ffe29a" stop-opacity="0.3"/><stop offset="1" stop-color="#ffe29a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="flaque-chaude"><stop offset="0" stop-color="#ffc65c" stop-opacity="0.8"/><stop offset="0.6" stop-color="#ff9a3c" stop-opacity="0.3"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="haut-lumiere" x1="0" y1="800" x2="0" y2="1010" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff6dc" stop-opacity="0.3"/><stop offset="1" stop-color="#fff6dc" stop-opacity="0"/></linearGradient>
+  <radialGradient id="halo-luciole"><stop offset="0" stop-color="#eaff7a" stop-opacity="0.5"/><stop offset="1" stop-color="#eaff7a" stop-opacity="0"/></radialGradient>`;
+const sansLueur = (st) => Object.assign({}, st, { cam: Object.assign({}, st.cam, { lueur: null }) });
+function mousseSeul(st, m) {
+  let s = recolorer(gardien.mousse(), st.mousse);
+  // La perche n'est pas éclairée comme le corps : on la sort du masque.
+  return s.replace('<g id="lanterne" ', '<g id="lanterne" style="display:none" ').replace('<g id="mousse-perche-geste">', '<g id="mousse-perche-geste" style="display:none">');
+}
+function poussiere() {
+  const R = (() => { let a = 17; return () => { a = (a * 16807) % 2147483647; return a / 2147483647; }; })();
+  return Array.from({ length: 22 }, () => { const y = 80 + R() * 1000; const demi = 70 + (y / 1080) * 250; const x = 540 + (R() * 2 - 1) * demi; return `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(1.5 + R() * 3).toFixed(1)}" fill="#fff6d8" opacity="${(0.3 + R() * 0.5).toFixed(2)}"/>`; }).join('');
+}
+// Couches posées par-dessus les personnages (la lumière chaude, les masques, les halos).
+function eclairage(st, m) {
+  const cam = cameleon(sansLueur(st), m);
+  const mou = mousseSeul(st, m);
+  // Liseré : la silhouette moins sa copie décalée = le bord tourné vers la lumière.
+  const rim = (id, contenu, dx, dy) => `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><g filter="url(#blanc)">${contenu}</g><g transform="translate(${dx} ${dy})" filter="url(#noir)">${contenu}</g></mask>`;
+  return `<defs>
+    <mask id="mk-mousse" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><g filter="url(#blanc)">${mou}</g></mask>
+    ${rim('rim-mousse', mou, 20, 12)}${rim('rim-cam-bas', cam, 0, -11)}${rim('rim-cam-haut', cam, 0, 12)}</defs>
+  <!-- le caméléon : liseré chaud sous le ventre (lanterne), liseré clair sur le dos (projecteur) -->
+  <rect width="1080" height="1920" fill="url(#chaud-rim)" mask="url(#rim-cam-bas)" style="mix-blend-mode:screen"/>
+  ${m === 'imaginer' ? '<rect width="1080" height="1920" fill="url(#rim-haut)" mask="url(#rim-cam-haut)" style="mix-blend-mode:screen"/>' : ''}`;
+}
+function eclairageMousse(st, m) {
+  return `<!-- Mousse : liseré chaud du côté de la lanterne, léger éclaircissement, ombre de l'autre côté -->
+  <rect width="1080" height="1920" fill="url(#chaud-mousse)" mask="url(#mk-mousse)" style="mix-blend-mode:screen"/>
+  <rect width="1080" height="1920" fill="url(#chaud-rim)" mask="url(#rim-mousse)" style="mix-blend-mode:screen"/>
+  <rect width="1080" height="1920" fill="url(#ombre-droite)" mask="url(#mk-mousse)"/>
+  <rect width="1080" height="1920" fill="url(#ombre-bas)" mask="url(#mk-mousse)"/>
+  <rect width="1080" height="1920" fill="url(#chaud-grand)" style="mix-blend-mode:screen"/>
+  <!-- les lucioles éclairent autour d'elles -->
+  ${[...LUCIOLES, MOUCHE].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="86" fill="url(#halo-luciole)" style="mix-blend-mode:screen"/>`).join('')}
+  <!-- la lanterne : un cœur très clair, flou, par-dessus -->
+  <circle cx="${FX}" cy="${FY - 4}" r="46" fill="#fff1c8" opacity="0.4" filter="url(#flou16)" style="mix-blend-mode:screen"/>`;
+}
+// Sous Mousse : la flaque de lumière de la lanterne sur le sol, et son ombre portée (loin de la lanterne).
+const sousMousse = () => `
+  <ellipse cx="${FX + 120}" cy="1604" rx="330" ry="34" fill="url(#flaque-chaude)" style="mix-blend-mode:screen"/>
+  <ellipse cx="900" cy="1610" rx="230" ry="17" fill="#02050a" opacity="0.5" filter="url(#flou8)"/>
+  <path d="M770 1600 L1010 1618 L990 1636 L760 1618Z" fill="#02050a" opacity="0.32" filter="url(#flou8)"/>`;
+// Le projecteur : faisceau doux, cœur plus net, flaque sur la branche, ombre du caméléon dans la flaque, poussière.
+const PROJECTEUR = `<rect width="1080" height="1920" fill="#02060e" opacity="0.4"/>
+  <polygon points="425,0 655,0 930,1090 280,1090" fill="url(#cone-spot)" filter="url(#flou26)" style="mix-blend-mode:screen"/>
+  <polygon points="505,0 575,0 700,1060 440,1060" fill="url(#cone-spot)" opacity="0.7" filter="url(#flou16)" style="mix-blend-mode:screen"/>
+  <ellipse cx="600" cy="1034" rx="360" ry="40" fill="url(#flaque)" style="mix-blend-mode:screen"/>
+  <ellipse cx="590" cy="1040" rx="250" ry="13" fill="#02050a" opacity="0.4" filter="url(#flou8)"/>
+  ${poussiere()}`;
 
 function page(st, m, avecTexte = true) {
   const texte = m === 'imaginer' ? 'il croit que tout le monde le <b>regarde</b>' : 'la grenouille pense à <b>sa mouche</b>';
   return `<!doctype html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=${st.police}&display=block" rel="stylesheet">
   <style>*{box-sizing:border-box}html,body{margin:0;background:#000}#r{position:relative;width:1080px;height:1920px;overflow:hidden}
   .bandeau{position:absolute;left:60px;width:880px;top:180px;text-align:center}${st.css}</style></head><body><div id="r">
-  <svg width="1080" height="1920" viewBox="0 0 1080 1920"><defs>${FILTRES}${st.defs}</defs>
+  <svg width="1080" height="1920" viewBox="0 0 1080 1920"><defs>${FILTRES}${st.defs}${st.eclairage ? DEFS_ECLAIRAGE : ''}</defs>
   ${st.fond}
   ${m === 'imaginer' ? '' : ''}
   ${mouche(st)}
   ${cameleon(st, m)}
   ${grenouille(st, m)}
   ${lucioles(st, m)}
-  ${m === 'imaginer' ? st.imaginer : ''}
+  ${m === 'imaginer' ? (st.eclairage ? PROJECTEUR : st.imaginer) : ''}
   ${m === 'imaginer' ? cameleon(st, m) + grenouille(st, m) + lucioles(st, m) : ''}
   ${m === 'penser' ? pensee(st) : ''}
+  ${st.eclairage ? sousMousse() : ''}
   ${mousse(st, m)}
+  ${st.eclairage ? eclairage(st, m) + eclairageMousse(st, m) : ''}
   ${st.apres}
   </svg>${avecTexte ? `<div class="bandeau"><span class="texte">${texte}</span></div>` : ''}</div></body></html>`;
 }
@@ -338,12 +421,13 @@ function page(st, m, avecTexte = true) {
   const { chromium } = require('playwright');
   const b = await chromium.launch();
   const images = [];
-  // « styles » : décor et personnages seuls (sans texte), au moment « tout le monde le regarde ».
+  // Modes : styles (6 styles sans texte), tour3, tour4 (avant/après l'éclairage), polices (6 polices).
   const seulStyle = process.argv.includes('styles');
-  const tour3 = process.argv.includes('tour3'); // S1 plus clair, Mousse et sa lanterne revus, texte S2
+  const mode = ['polices', 'tour4', 'tour3'].find((x) => process.argv.includes(x)) || (seulStyle ? 'styles' : 'quatre');
+  const ids = { polices: Object.keys(POLICES), tour4: ['s1a', 's1c'], tour3: ['s1a', 's1b'] }[mode];
   for (const [id, st] of Object.entries(STYLES)) {
-    if (tour3 ? !['s1a', 's1b'].includes(id) : id === 's1a' || id === 's1b' || (!seulStyle && (id === 's5' || id === 's6'))) continue;
-    for (const m of seulStyle ? ['imaginer'] : ['imaginer', 'penser']) {
+    if (ids ? !ids.includes(id) : id === 's1a' || id === 's1b' || id === 's1c' || /^f\d$/.test(id) || (!seulStyle && (id === 's5' || id === 's6'))) continue;
+    for (const m of seulStyle || mode === 'polices' ? ['imaginer'] : ['imaginer', 'penser']) {
       const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
       await p.setContent(page(st, m, !seulStyle));
       await p.evaluate(() => document.fonts.ready.then(() => true));
@@ -355,8 +439,8 @@ function page(st, m, avecTexte = true) {
     }
   }
   await b.close();
-  const n = images.length; const col = seulStyle ? 3 : 4;
-  const sortie = path.join(__dirname, tour3 ? 'planche-tour3.png' : seulStyle ? 'planche-styles.png' : 'planche.png');
+  const n = images.length; const col = seulStyle || mode === 'polices' ? 3 : 4;
+  const sortie = path.join(__dirname, { polices: 'planche-polices.png', tour4: 'planche-tour4.png', tour3: 'planche-tour3.png', styles: 'planche-styles.png', quatre: 'planche.png' }[mode]);
   execSync(`ffmpeg -v error -y ${images.map((f) => `-i ${f}`).join(' ')} -filter_complex "${images.map((_, i) => `[${i}:v]scale=432:768[v${i}]`).join(';')};${images.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${n}:layout=${images.map((_, i) => `${(i % col) * 432}_${Math.floor(i / col) * 768}`).join('|')}" ${sortie}`);
   console.log(`Planche écrite : ${path.relative(path.join(__dirname, '../..'), sortie)}`);
 })();
