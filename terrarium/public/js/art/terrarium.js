@@ -396,7 +396,15 @@
       ${scarabee()}
       
       ${papillon('papillon-1', '#f2a33a', '#e0662f')}${papillon('papillon-2', '#7fb4f0', '#4f7fd6')}
-      <g id="mouche"><ellipse cx="-3" cy="-3" rx="5" ry="2.5" fill="#dff3ff" opacity="0.8" class="aile-m"/><ellipse cx="3" cy="-3" rx="5" ry="2.5" fill="#dff3ff" opacity="0.8" class="aile-m"/><circle r="3.2" fill="#1c1c22"/></g>
+      <g id="mouche"><g id="mouche-in">
+        <ellipse cx="-6.5" cy="-4.5" rx="6.5" ry="3.4" fill="#dff3fe" opacity="0.8" class="aile-m"/><ellipse cx="6.5" cy="-4.5" rx="6.5" ry="3.4" fill="#dff3fe" opacity="0.8" class="aile-m"/>
+        <ellipse cx="0" cy="4.6" rx="3.8" ry="4.2" fill="#f6ffb1"/>
+        <circle r="5.2" fill="#2b2b37"/>
+        <path d="M-2.6 -5 q-1.6 -3 -3.4 -3.2 M2.6 -5 q1.6 -3 3.4 -3.2" stroke="#2b2b37" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+        <circle cx="-2.3" cy="-0.9" r="2.2" fill="#fffffe"/><circle cx="2.3" cy="-0.9" r="2.2" fill="#fffffe"/>
+        <g id="mouche-pupilles"><circle cx="-2.3" cy="-0.7" r="1.05" fill="#111112"/><circle cx="2.3" cy="-0.7" r="1.05" fill="#111112"/></g>
+        <path d="M-1.5 2.4 q1.5 1.3 3 0" stroke="#fffffe" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+      </g></g>
       <g id="goutte-requete" opacity="0"><path d="M0 -15 C8 -5 11 2 11 7 A11 11 0 0 1 -11 7 C-11 2 -8 -5 0 -15Z" fill="#8a6a3a" stroke="#ffffff" stroke-width="2.5"/><circle cx="-3" cy="4" r="2.5" fill="#ffffff" opacity="0.7"/></g>
       <g id="chutes-feuilles">${feuillesTombantes()}</g>
       <g>${lucioles}</g>

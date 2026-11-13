@@ -19,7 +19,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 | Musique | **validée** : Drift (145 BPM) | — |
 | Texte à l'écran | **validé** : T6, le terminal de Mousse | — |
 | Scénarios | **validés** (« Go ») | 6 pitchs (nuits 0 à 5), un gag par épisode, le caméléon comme personnage récurrent |
-| Pilote Nuit 1 | **envoyé, en attente de ton avis** | `videos/scenarios/cameleon.json`, 25,2 s |
+| Pilote Nuit 1 | **tour 2 envoyé, en attente de ton avis** | `videos/scenarios/cameleon.json`, 29,8 s, 60 images par seconde |
 | Nom du compte et bio | plus tard | `@les.nuits.du.terrarium`, `@mousse.terrarium` |
 
 ## Itérations
@@ -79,4 +79,14 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Montré** : la vidéo complète (25,2 s). Elle s'ouvre dans le noir, avec seulement l'œil cyan de Mousse ; la lanterne s'allume. Le caméléon tire la langue et rate : la mouche esquive puis le nargue, et Mousse est blasé. Au deuxième essai, il l'attrape, devient turquoise et en veut encore. Le terminal tape « réfléchir. agir. recommencer. = boucle d'outils », puis annonce la nuit suivante, et la lanterne s'éteint : la fin reboucle sur le début.
 - **Corrigé avant l'envoi** : l'esquive envoyait la mouche hors de l'écran. Au zoom 2,6, une unité du décor vaut environ 8 pixels, donc les déplacements de la mouche doivent rester petits.
+- **Ton retour** : le texte se décale à la fin de la frappe ; pas assez d'animation, le robot ne bouge pas assez ; la mouche est mal dessinée ; la métaphore n'est pas claire, il faut des zooms qui présentent les personnages ; la vidéo doit suivre la musique (la musique est bonne) ; 30 s ; pas d'annonce « demain » ; tout doit être fluide.
+
+### Pilote « Nuit 1 », tour 2 (13 nov.)
+
+- **Montré** : 29,8 s (18 mesures de Drift), en 60 images par seconde.
+- **Métaphore posée par des étiquettes** : caméléon = « l'IA », mouche = « la tâche », langue = « l'outil ». Chaque personnage a son gros plan.
+- **Boucle nommée pas à pas** : après le tir à l'aveugle raté, « 1. observer », « 2. agir », « 3. vérifier », puis « = boucle d'outils » et « et ça recommence… ». Plus d'annonce de la nuit suivante.
+- **Calé sur la musique** : chaque plan commence sur le premier temps d'une mesure. La piste est arrangée pour la vidéo : intro douce, basse à l'arrivée de la mouche, creux pendant le raté avec un temps de silence, roulement sur « vérifier », retour à fond sur « attrapée ! ».
+- **Animation** : nouvelle mouche (yeux, ailes, abdomen lumineux, vols courbes, pirouette d'esquive, dandinement moqueur). Mousse hoche la tête sur le temps, pointe sa lanterne, se penche, se cache l'œil, saute de joie et rit. La caméra avance lentement pendant chaque plan.
+- **Texte** : les lettres ont leur place dès le début, donc plus rien ne se décale. La lettre suivante sert de curseur.
 - **Ton retour** : en attente.

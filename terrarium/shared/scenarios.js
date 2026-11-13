@@ -18,6 +18,9 @@
  *   "musique": "phonk" | "drift" | null,     (phonk par défaut ; null : sans musique)
  *   "theme": "jour" | "nuit",        (nuit : vivarium nocturne, Mousse, terminal)
  *   "decor": { ..., "lanterne": "eteinte" }   (la vidéo commence dans le noir)
+ *   "tempo": 145,                    (BPM de la musique : les plans doivent commencer sur un temps)
+ *   "arrangement": { "parties": ["intro", "plein", …], "coupures": [11.586] },   (une partie par mesure)
+ *   "poussee": 0.05,                 (la caméra avance de 5 % pendant chaque plan)
  *   "accroches": { "b": ["Autre accroche"], "c": [...] },   variantes de la légende du premier plan
  *   "publication": { "texte": "…", "hashtags": ["#ia"], "commentaire": "…", "couverture": 1.2 }
  * }
@@ -41,10 +44,13 @@
     'fourmiliere.agiter', 'fourmis.ecarter', 'fourmis.revenir', 'eclaireuses.partir',
     'eclaireuses.fouiller', 'eclaireuses.revenir', 'butin.montrer', 'butin.cacher',
     'mouche.esquiver', 'mouche.narguer', 'gardien.lanterne', 'gardien.expression',
+    'gardien.geste', 'scene.etiquette',
   ];
+  const GESTES = ['pencher', 'depit', 'rire', 'sauter', 'pointer'];
+  const PARTIES = ['intro', 'creux', 'montee', 'plein'];
   const HUMEURS = ['neutre', 'content', 'surpris', 'blase'];
   const CIBLES = ['ensemble', 'branche', 'cascade', 'sable', 'mousse', 'galets', 'bassin', 'pousse',
-    'dionee', 'grenouille', 'fourmiliere', 'sol', 'cameleon', 'cameleon-oeil'];
+    'dionee', 'grenouille', 'fourmiliere', 'sol', 'cameleon', 'cameleon-oeil', 'mouche'];
   const COULEURS = ['vert', 'turquoise', 'orange'];
   const CARTES = ['phrase', 'code', 'etapes', 'barres'];
 
@@ -86,12 +92,20 @@
     non(sc.musique === undefined || sc.musique === null || ['phonk', 'drift'].includes(sc.musique), `musique inconnue (${sc.musique}) : « phonk », « drift » ou null`);
     non(sc.theme === undefined || ['jour', 'nuit'].includes(sc.theme), `thème inconnu (${sc.theme}) : « jour » ou « nuit »`);
     if (!Array.isArray(sc.plans)) return err;
+    // Tempo : chaque plan commence sur un temps de la musique (à 20 ms près).
+    const surLeTemps = (t) => { const n = (t * sc.tempo) / 60; return Math.abs(n - Math.round(n)) * (60 / sc.tempo) <= 0.02; };
+    if (sc.arrangement) {
+      non(sc.tempo > 0, 'arrangement : il faut aussi un tempo');
+      non((sc.arrangement.parties || []).every((x) => PARTIES.includes(x)), `arrangement : parties parmi ${PARTIES.join(', ')}`);
+      non((sc.arrangement.coupures || []).every((t) => t >= 0 && t < sc.duree), 'arrangement : coupure hors de la vidéo');
+    }
 
     let attendu = 0;
     sc.plans.forEach((p, i) => {
       const ici = `plan ${i + 1}`;
       non(p.debut === attendu, `${ici} : commence à ${p.debut} s au lieu de ${attendu} s (les plans se suivent sans trou)`);
       non(p.fin > p.debut, `${ici} : fin avant le début`);
+      if (sc.tempo) non(surLeTemps(p.debut), `${ici} : ne commence pas sur un temps (${sc.tempo} BPM)`);
       attendu = p.fin;
       if (p.legende !== undefined) {
         const liste = [].concat(p.legende);
@@ -113,6 +127,11 @@
           non(a.depuis >= 0 && a.depuis <= 1 && a.vers >= 0 && a.vers <= 1, `${ici} : ${a.type} attend depuis et vers entre 0 et 1`);
         }
         if (a.type === 'gardien.expression') non(HUMEURS.includes(a.humeur), `${ici} : humeur inconnue (${a.humeur})`);
+        if (a.type === 'gardien.geste') non(GESTES.includes(a.geste), `${ici} : geste inconnu (${a.geste})`);
+        if (a.type === 'scene.etiquette') {
+          non(typeof a.texte === 'string' && a.texte.length > 0 && a.texte.length <= 14, `${ici} : étiquette de 1 à 14 caractères`);
+          non(['cameleon', 'oeil', 'mouche', 'langue'].includes(a.sur), `${ici} : étiquette sur cameleon, oeil, mouche ou langue (${a.sur})`);
+        }
         if (a.type === 'gardien.lanterne') non(['allumer', 'eteindre'].includes(a.etat), `${ici} : la lanterne s'allume ou s'éteint (${a.etat})`);
         if (a.type === 'filtre.signaler') non(['sable', 'mousse', 'galets'].includes(a.filtre), `${ici} : filtre inconnu (${a.filtre})`);
       });

@@ -32,8 +32,12 @@
   function mousse() {
     return `
 <g id="mousse" transform="translate(${POSE.x} ${POSE.y}) scale(-${POSE.echelle} ${POSE.echelle})">
-  <ellipse cx="135" cy="345" rx="120" ry="16" fill="#000" opacity="0.35"/>
-  <g id="mousse-perche">
+  <ellipse id="mousse-ombre" cx="135" cy="345" rx="120" ry="16" fill="#000" opacity="0.35"/>
+  <g id="mousse-saut">
+  <path d="M95 280 v38 M175 280 v38" stroke="${C.metal2}" stroke-width="16" stroke-linecap="round"/>
+  <path d="M70 318 h50 a10 10 0 0 1 10 10 v8 h-70 v-8 a10 10 0 0 1 10 -10Z M150 318 h50 a10 10 0 0 1 10 10 v8 h-70 v-8 a10 10 0 0 1 10 -10Z" fill="${C.botte}"/>
+  <g id="mousse-geste"><g id="mousse-battement">
+  <g id="mousse-perche-geste"><g id="mousse-perche">
     <path d="M215 215 L330 -30" stroke="${C.metal2}" stroke-width="9" stroke-linecap="round"/>
     <path d="M330 -30 q14 -4 16 12" stroke="${C.metal2}" stroke-width="5" fill="none" stroke-linecap="round"/>
     <g id="lanterne" transform="translate(346 -4)">
@@ -46,9 +50,7 @@
       <path d="M-17 30 h34 M-17 50 h34" stroke="${C.metal2}" stroke-width="2" opacity="0.45"/>
       <rect x="-21" y="62" width="42" height="7" rx="3" fill="${C.metal2}"/>
     </g>
-  </g>
-  <path d="M95 280 v38 M175 280 v38" stroke="${C.metal2}" stroke-width="16" stroke-linecap="round"/>
-  <path d="M70 318 h50 a10 10 0 0 1 10 10 v8 h-70 v-8 a10 10 0 0 1 10 -10Z M150 318 h50 a10 10 0 0 1 10 10 v8 h-70 v-8 a10 10 0 0 1 10 -10Z" fill="${C.botte}"/>
+  </g></g>
   <g id="mousse-corps">
     <ellipse cx="135" cy="200" rx="118" ry="112" fill="${C.metal}"/>
     <ellipse cx="160" cy="165" rx="70" ry="60" fill="${C.lumiere}" opacity="0.12"/>
@@ -56,7 +58,7 @@
     <circle cx="135" cy="262" r="9" fill="${C.oeil}" opacity="0.8"/>
     <path d="M235 205 Q262 215 248 175" stroke="${C.metal2}" stroke-width="16" stroke-linecap="round" fill="none"/>
     <circle cx="246" cy="172" r="13" fill="${C.metal2}"/>
-    <path d="M35 210 Q10 240 30 265" stroke="${C.metal2}" stroke-width="16" stroke-linecap="round" fill="none"/>
+    <g id="mousse-bras"><path d="M35 210 Q10 240 30 265" stroke="${C.metal2}" stroke-width="16" stroke-linecap="round" fill="none"/><circle cx="30" cy="267" r="11" fill="${C.metal2}"/></g>
     <g fill="${C.mousse}">
       <circle cx="70" cy="110" r="34"/><circle cx="112" cy="88" r="40"/><circle cx="162" cy="86" r="42"/><circle cx="205" cy="108" r="34"/><circle cx="138" cy="70" r="30"/>
     </g>
@@ -69,6 +71,8 @@
       <g id="oeil-surpris" opacity="0"><circle cx="150" cy="182" r="34" fill="none" stroke="${C.oeil}" stroke-width="7"/><circle cx="150" cy="182" r="12" fill="${C.oeil}"/></g>
       <g id="oeil-blase" opacity="0"><path d="M126 176 h48" stroke="${C.oeil}" stroke-width="8" stroke-linecap="round"/><path d="M130 180 Q150 202 170 180 Z" fill="${C.oeil}"/></g>
     </g>
+  </g>
+  </g></g>
   </g>
 </g>`;
   }
@@ -97,5 +101,10 @@
 </svg>`;
   }
 
-  return { calque, mousse, FLAMME, OEIL, SUJET, couleurs: C };
+  // Points d'appui des gestes.
+  // (svgOrigin se lit dans le repère de Mousse, avant sa mise en place à l'écran.)
+  const PIEDS = [135, 336];
+  const EPAULE = [35, 210];
+  const MAIN = [246, 172];
+  return { calque, mousse, FLAMME, OEIL, SUJET, PIEDS, EPAULE, MAIN, couleurs: C };
 });

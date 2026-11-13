@@ -86,9 +86,11 @@ html, body { margin: 0; background: #0f1b17; }
   text-shadow: 0 0 12px rgba(182, 255, 92, 0.8);
 }
 .term-texte .invite { color: rgba(182, 255, 92, 0.55); }
-.term-texte .c { display: none; }
+/* Toutes les lettres occupent déjà leur place : rien ne se décale pendant la frappe. */
+.term-texte .c { visibility: hidden; }
+.term-texte .c.vu { visibility: visible; }
 .term-texte .c.acc { color: #5ef2ff; text-shadow: 0 0 14px rgba(94, 242, 255, 0.9); }
-.curseur {
-  display: inline-block; width: 0.55em; height: 0.95em; margin-left: 6px;
-  background: #b6ff5c; vertical-align: -0.12em; box-shadow: 0 0 10px rgba(182, 255, 92, 0.8);
+.term-texte .c.cur {
+  visibility: visible; color: transparent; text-shadow: none;
+  background: #b6ff5c; box-shadow: 0 0 10px rgba(182, 255, 92, 0.8);
 }

@@ -18,10 +18,10 @@ test('cinq scénarios, un par chapitre', () => {
 });
 
 for (const { f, sc } of scenarios) {
-  test(`${f} : format TikTok (valide, 18 à 28 s, accroche courte, révélation brève, boucle)`, () => {
+  test(`${f} : format TikTok (valide, 18 à 32 s, accroche courte, révélation brève, boucle)`, () => {
     assert.deepEqual(valider(sc), []);
     assert.equal(sc.id, path.basename(f, '.json'));
-    assert.ok(sc.duree >= 18 && sc.duree <= 28, `durée ${sc.duree} s`);
+    assert.ok(sc.duree >= 18 && sc.duree <= 32, `durée ${sc.duree} s`);
     assert.ok(sc.plans[0].fin <= 3, 'une accroche de 3 s au plus');
     assert.ok(sc.plans[0].legende, 'une accroche écrite dès la première image');
     for (const p of sc.plans) if (p.carte) assert.ok(p.fin - p.debut <= 3.5, 'une révélation de 3,5 s au plus');

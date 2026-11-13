@@ -1,16 +1,16 @@
 # Nuit 1 : la langue · La boucle d'outils
 
-Épisode 1 sur 5 de la série « Les nuits du terrarium ». Durée : 25,2 s.
+Épisode 1 sur 5 de la série « Les nuits du terrarium ». Durée : 29,793 s.
 
 ## Texte du post
 
-> nuit 1. mon caméléon rate, recommence, et finit par l'avoir. c'est exactement comme ça qu'un agent IA travaille : la boucle d'outils. — Mousse, gardien du terrarium
+> nuit 1. mon IA rate, observe, recommence, et finit par l'avoir. observer, agir, vérifier : c'est la boucle d'outils d'un agent IA. — Mousse, gardien du terrarium
 
 #ia #intelligenceartificielle #agentia #apprendresurtiktok #phonk #tech
 
 ## Couverture
 
-Image à 2,6 s, avec le titre « Nuit 1 : la langue ».
+Image à 22,117 s, avec le titre « Nuit 1 : la langue ».
 
 ## Commentaire à épingler
 
@@ -20,9 +20,9 @@ Image à 2,6 s, avec le titre « Nuit 1 : la langue ».
 
 | Variante | Dossier | Accroche |
 |---|---|---|
-| a | `hyperframes/cameleon/` | mon IA ne répond jamais |
-| b | `hyperframes/cameleon-b/` | ton IA rate souvent ? |
-| c | `hyperframes/cameleon-c/` | regarde mon IA chasser |
+| a | `hyperframes/cameleon/` | voici mon IA. |
+| b | `hyperframes/cameleon-b/` | mon IA chasse. |
+| c | `hyperframes/cameleon-c/` | ton IA rate ? |
 
 Publie une variante à la fois, à quelques jours d'écart, et note les résultats dans `videos/resultats.csv`.
 

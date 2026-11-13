@@ -57,6 +57,10 @@ const ids = fs.readdirSync(dossier).filter((d) => fs.existsSync(path.join(dossie
         const svg = document.getElementById('vivarium');
         const T = window.Terrarium.film;
         let xy = Array.isArray(cible) ? cible : T.CIBLES[cible];
+        if (cible === 'mouche') {
+          const p = new DOMPoint(0, 0).matrixTransform(document.getElementById('mouche-in').getScreenCTM());
+          return [p.x, p.y];
+        }
         if (!xy) {
           const corps = document.getElementById('cam-corps');
           const m = corps.getScreenCTM();

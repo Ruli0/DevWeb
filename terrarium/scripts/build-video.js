@@ -15,6 +15,7 @@ const scenarios = require('../shared/scenarios.js');
 const { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE, SON_AMBIANCE_SOUS_MUSIQUE, SON_TERMINAL, MUSIQUES } = require('../videos/sons/table.js');
 const theme = require('../public/js/art/nuit.js');
 const gardien = require('../public/js/art/gardien.js');
+const { ecrireMusique } = require('./build-sons.js');
 const SANS_MUSIQUE = process.argv.includes('--sans-musique');
 
 const racine = path.join(__dirname, '..');
@@ -44,7 +45,8 @@ function bruitages(sc) {
   };
   // Musique : celle du scénario (phonk par défaut), sauf « musique": null » ou --sans-musique.
   const musique = SANS_MUSIQUE ? null : MUSIQUES[sc.musique === undefined ? 'phonk' : sc.musique];
-  if (musique) sons.push({ fichier: musique.fichier, t: 0, volume: musique.volume, duree: sc.duree, fondu: musique.fonduSortie, musique: true });
+  // Avec un arrangement, la piste est fabriquée pour cette vidéo (assets/sons/musique.wav).
+  if (musique) sons.push({ fichier: sc.arrangement ? 'musique.wav' : musique.fichier, arrangee: Boolean(sc.arrangement), t: 0, volume: musique.volume, duree: sc.duree, fondu: musique.fonduSortie, musique: true });
   sons.push({ fichier: SON_AMBIANCE.fichier, t: 0, volume: musique ? SON_AMBIANCE_SOUS_MUSIQUE : SON_AMBIANCE.volume, duree: sc.duree });
   let vue = null;
   sc.plans.forEach((plan) => {
@@ -86,7 +88,8 @@ function lettres(texte) {
     if (ch === '*') { acc = !acc; continue; }
     html += `<span class="c${acc ? ' acc' : ''}">${ch === ' ' ? ' ' : esc(ch)}</span>`;
   }
-  return html;
+  // La dernière case est le curseur qui clignote en fin de ligne.
+  return `${html}<span class="c fin">&nbsp;</span>`;
 }
 
 function composition(sc) {
@@ -97,7 +100,7 @@ function composition(sc) {
     film.morceaux(p).forEach((m, k) => {
       if (nocturne) {
         pistes.push(`    <div id="leg-${i}-${k}" class="clip term-ligne" data-start="${arrondi(m.debut)}" data-duration="${arrondi(m.fin - m.debut)}" data-track-index="2">
-      <p class="term-texte"><span class="invite">&gt;</span> ${lettres(m.texte)}<span class="curseur"></span></p>
+      <p class="term-texte"><span class="invite">&gt;</span> ${lettres(m.texte)}</p>
     </div>`);
         return;
       }
@@ -134,7 +137,7 @@ ${lire('videos/video.css')}
 </style>
 </head>
 <body>
-  <div id="root"${nocturne ? ' class="nuit"' : ''} data-composition-id="${sc.id}" data-start="0" data-duration="${sc.duree}" data-width="${LARGEUR}" data-height="${HAUTEUR}">
+  <div id="root"${nocturne ? ' class="nuit" data-fps="60"' : ''} data-composition-id="${sc.id}" data-start="0" data-duration="${sc.duree}" data-width="${LARGEUR}" data-height="${HAUTEUR}">
     <div class="scene" data-layout-allow-overflow>
 ${dessin}
     </div>
@@ -148,7 +151,7 @@ ${sons.join('\n')}
   <script>
     // Le dessin est déjà dans la page : le moteur n'a besoin que des couleurs et du hasard reproductible.
     window.Terrarium = window.Terrarium || {};
-    window.Terrarium.art = { PEAU: ${JSON.stringify(peau)}, graine: ${art.graine.toString()} };
+    window.Terrarium.art = { PEAU: ${JSON.stringify(peau)}, gardien: ${JSON.stringify({ PIEDS: gardien.PIEDS, EPAULE: gardien.EPAULE, MAIN: gardien.MAIN })}, graine: ${art.graine.toString()} };
   </script>
   <script>
 ${lire('shared/scenarios.js')}
@@ -239,6 +242,11 @@ for (const f of fichiers) {
     fs.writeFileSync(path.join(dossier, 'index.html'), composition(sc));
     for (const g of GSAP_FICHIERS) fs.copyFileSync(path.join(racine, 'node_modules/gsap/dist', g), path.join(dossier, 'assets', g));
     for (const s of bruitages(sc)) {
+      if (s.arrangee) {
+        const a = sc.arrangement;
+        ecrireMusique(sc.musique, { duree: sc.duree + 0.5, parties: a.parties, coupures: a.coupures }, path.join(dossier, 'assets/sons/musique.wav'));
+        continue;
+      }
       sonsUtiles.add(s.fichier);
       fs.copyFileSync(path.join(racine, 'videos/sons', s.fichier), path.join(dossier, 'assets/sons', s.fichier));
     }

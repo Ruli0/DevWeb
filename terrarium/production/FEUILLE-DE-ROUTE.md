@@ -18,12 +18,12 @@ Statuts : **à faire**, **en cours**, **fait**, **abandonné**. Les priorités v
 
 | # | Étape | Pourquoi | Statut |
 |---|---|---|---|
-| 21 | Pilote « Nuit 1 » : recueillir ton avis et ajuster | Valider l'identité avant de produire le reste | en attente de ton retour |
+| 21 | Pilote « Nuit 1 » : recueillir ton avis et ajuster | Valider l'identité avant de produire le reste | tour 2 envoyé, en attente de ton retour |
 | 22 | Passer les nuits 0, 2, 3, 4 et 5 au thème de nuit, avec leurs gags | La série « Les nuits du terrarium » | après le pilote |
 | 23 | Photo de profil, bio et kit de publication dans la voix de Mousse | L'âme du compte | après le pilote |
 | 19 | Retravailler la boîte en verre : montrer les parois qui se remplissent, et arrêter la promenade du caméléon dans cet épisode | L'épisode le plus faible visuellement | à faire |
 | 20 | Accroche des fourmis : partir d'une fourmilière qui déborde déjà de fourmis | La première seconde manque de mouvement | à faire |
-| 6 | Caler les coupes et les apparitions de texte sur le temps de la musique | Une vidéo synchronisée paraît plus pro et retient mieux | à faire |
+| 6 | Caler les coupes et les apparitions de texte sur le temps de la musique | Une vidéo synchronisée paraît plus pro et retient mieux | fait pour la Nuit 1 (`tempo`, `arrangement`) ; à étendre aux autres épisodes |
 | 7 | Générer l'image de couverture (titre en gros sur la meilleure image) | La couverture compte sur la page de profil | à faire |
 | 8 | Une commande unique : `npm run video -- <id>` (valider, composer, vérifier, rendre) | Moins d'étapes manuelles, moins d'oublis | à faire |
 | 9 | Deux ou trois boucles phonk de plus, choisies par scénario | Éviter que toutes les vidéos sonnent pareil | à faire |

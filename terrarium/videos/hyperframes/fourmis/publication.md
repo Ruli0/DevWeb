@@ -28,6 +28,6 @@ Publie une variante à la fois, à quelques jours d'écart, et note les résulta
 
 ## Son
 
-La vidéo contient une boucle phonk originale (libre de droits, utilisable aussi sur Reels et Shorts), les bruitages et l'ambiance.
+La vidéo contient une boucle phonk originale, « phonk » (libre de droits, utilisable aussi sur Reels et Shorts), les bruitages et l'ambiance.
 
 Pour surfer sur un son phonk tendance de TikTok à la place : régénère sans musique (`node scripts/build-video.js --sans-musique`), refais le rendu, puis ajoute le son dans l'appli. Un son tendance peut aider la diffusion.

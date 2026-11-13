@@ -68,6 +68,42 @@ html, body { margin: 0; background: #0f1b17; }
 .carte-titre { margin: 0 0 18px; font: 800 34px/1.2 "Inter", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #b9f29a; }
 .carte-texte { margin: 0; font: 800 66px/1.15 "Inter", sans-serif; text-wrap: balance; }
 
+/* --- Nuit : le vivarium nocturne et le terminal de Mousse (style B, texte T6) --- */
+#root.nuit { font-family: "Space Mono", monospace; background: #02040a; }
+#calque-lumiere { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+.serie.nuit {
+  background: rgba(3, 10, 8, 0.8); border: 2px solid rgba(182, 255, 92, 0.45);
+  font: 700 30px/1 "Space Mono", monospace; letter-spacing: 0.02em; color: rgba(233, 253, 255, 0.85);
+}
+.serie.nuit b { color: #b6ff5c; text-shadow: 0 0 10px rgba(182, 255, 92, 0.8); }
+.terminal {
+  position: absolute; left: 80px; width: 640px; top: 930px; height: 220px;
+  padding: 24px 28px 30px; border-radius: 18px;
+  background: rgba(3, 10, 8, 0.92);
+  border: 2px solid rgba(182, 255, 92, 0.6);
+  box-shadow: 0 0 28px rgba(182, 255, 92, 0.35);
+}
+.terminal::after {
+  content: ""; position: absolute; inset: 0; border-radius: 18px; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0 2px, transparent 2px 5px);
+}
+.term-prompt { margin: 0; font: 700 22px/1 "Space Mono", monospace; color: rgba(182, 255, 92, 0.6); }
+.term-fil { position: absolute; left: 0; top: 0; pointer-events: none; }
+.term-ligne { position: absolute; left: 108px; width: 584px; top: 990px; pointer-events: none; }
+.term-texte {
+  margin: 0; font: 700 46px/1.2 "Space Mono", monospace; color: #b6ff5c;
+  text-shadow: 0 0 12px rgba(182, 255, 92, 0.8);
+}
+.term-texte .invite { color: rgba(182, 255, 92, 0.55); }
+/* Toutes les lettres occupent déjà leur place : rien ne se décale pendant la frappe. */
+.term-texte .c { visibility: hidden; }
+.term-texte .c.vu { visibility: visible; }
+.term-texte .c.acc { color: #5ef2ff; text-shadow: 0 0 14px rgba(94, 242, 255, 0.9); }
+.term-texte .c.cur {
+  visibility: visible; color: transparent; text-shadow: none;
+  background: #b6ff5c; box-shadow: 0 0 10px rgba(182, 255, 92, 0.8);
+}
+
 </style>
 </head>
 <body>
@@ -416,7 +452,15 @@ html, body { margin: 0; background: #0f1b17; }
       <path d="M0 -8 V8" stroke="#141a2e" stroke-width="1.2"/><circle cx="-14" r="4.5" fill="#141a2e"/></g>
       
       <g id="papillon-1" class="papillon"><g class="aile"><path d="M0 0 C-4 -16 -20 -20 -22 -8 C-23 0 -10 3 0 0Z" fill="#f2a33a"/><path d="M0 0 C-10 2 -18 8 -14 15 C-9 20 -2 10 0 0Z" fill="#e0662f"/><circle cx="-14" cy="-9" r="2.4" fill="#fff8e0" opacity="0.85"/></g><g transform="scale(-1 1)"><g class="aile"><path d="M0 0 C-4 -16 -20 -20 -22 -8 C-23 0 -10 3 0 0Z" fill="#f2a33a"/><path d="M0 0 C-10 2 -18 8 -14 15 C-9 20 -2 10 0 0Z" fill="#e0662f"/><circle cx="-14" cy="-9" r="2.4" fill="#fff8e0" opacity="0.85"/></g></g><ellipse rx="1.6" ry="7" fill="#2a2018"/></g><g id="papillon-2" class="papillon"><g class="aile"><path d="M0 0 C-4 -16 -20 -20 -22 -8 C-23 0 -10 3 0 0Z" fill="#7fb4f0"/><path d="M0 0 C-10 2 -18 8 -14 15 C-9 20 -2 10 0 0Z" fill="#4f7fd6"/><circle cx="-14" cy="-9" r="2.4" fill="#fff8e0" opacity="0.85"/></g><g transform="scale(-1 1)"><g class="aile"><path d="M0 0 C-4 -16 -20 -20 -22 -8 C-23 0 -10 3 0 0Z" fill="#7fb4f0"/><path d="M0 0 C-10 2 -18 8 -14 15 C-9 20 -2 10 0 0Z" fill="#4f7fd6"/><circle cx="-14" cy="-9" r="2.4" fill="#fff8e0" opacity="0.85"/></g></g><ellipse rx="1.6" ry="7" fill="#2a2018"/></g>
-      <g id="mouche"><ellipse cx="-3" cy="-3" rx="5" ry="2.5" fill="#dff3ff" opacity="0.8" class="aile-m"/><ellipse cx="3" cy="-3" rx="5" ry="2.5" fill="#dff3ff" opacity="0.8" class="aile-m"/><circle r="3.2" fill="#1c1c22"/></g>
+      <g id="mouche"><g id="mouche-in">
+        <ellipse cx="-6.5" cy="-4.5" rx="6.5" ry="3.4" fill="#dff3fe" opacity="0.8" class="aile-m"/><ellipse cx="6.5" cy="-4.5" rx="6.5" ry="3.4" fill="#dff3fe" opacity="0.8" class="aile-m"/>
+        <ellipse cx="0" cy="4.6" rx="3.8" ry="4.2" fill="#f6ffb1"/>
+        <circle r="5.2" fill="#2b2b37"/>
+        <path d="M-2.6 -5 q-1.6 -3 -3.4 -3.2 M2.6 -5 q1.6 -3 3.4 -3.2" stroke="#2b2b37" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+        <circle cx="-2.3" cy="-0.9" r="2.2" fill="#fffffe"/><circle cx="2.3" cy="-0.9" r="2.2" fill="#fffffe"/>
+        <g id="mouche-pupilles"><circle cx="-2.3" cy="-0.7" r="1.05" fill="#111112"/><circle cx="2.3" cy="-0.7" r="1.05" fill="#111112"/></g>
+        <path d="M-1.5 2.4 q1.5 1.3 3 0" stroke="#fffffe" stroke-width="0.6" fill="none" stroke-linecap="round"/>
+      </g></g>
       <g id="goutte-requete" opacity="0"><path d="M0 -15 C8 -5 11 2 11 7 A11 11 0 0 1 -11 7 C-11 2 -8 -5 0 -15Z" fill="#8a6a3a" stroke="#ffffff" stroke-width="2.5"/><circle cx="-3" cy="4" r="2.5" fill="#ffffff" opacity="0.7"/></g>
       <g id="chutes-feuilles"><g class="feuille-chute" opacity="0" data-x="461.5" data-y="196.5" data-a="228.4" data-dx="3.3" data-yfin="630.1" data-da="-3.2" data-d="2.5" data-retard="0.2"><g transform="translate(0.0 0.0) rotate(0.0)">
       <path d="M0 0 C5.7 -8.0 17.2 -7.2 22.9 0 C17.2 7.2 5.7 8.0 0 0Z" fill="#2f8a5a"/>
@@ -471,6 +515,7 @@ html, body { margin: 0; background: #0f1b17; }
     </div>
     <div class="voile"></div>
     <div class="serie">Terrarium IA · <b>5/5</b></div>
+
     <div id="leg-0-0" class="clip legende" data-start="0" data-duration="1.568" data-track-index="2">
       <p class="leg-texte">Pourquoi ton IA</p>
     </div>
@@ -529,7 +574,7 @@ html, body { margin: 0; background: #0f1b17; }
   <script>
     // Le dessin est déjà dans la page : le moteur n'a besoin que des couleurs et du hasard reproductible.
     window.Terrarium = window.Terrarium || {};
-    window.Terrarium.art = { PEAU: {"vert":["#6fbf4a","#3f8f3a"],"turquoise":["#3fb5a8","#1f7f86"],"orange":["#e9a13a","#b9661f"]}, graine: function graine(a) {
+    window.Terrarium.art = { PEAU: {"vert":["#6fbf4a","#3f8f3a"],"turquoise":["#3fb5a8","#1f7f86"],"orange":["#e9a13a","#b9661f"]}, gardien: {"PIEDS":[135,336],"EPAULE":[35,210],"MAIN":[246,172]}, graine: function graine(a) {
     return function () {
       a |= 0; a = (a + 0x6d2b79f5) | 0;
       let t = Math.imul(a ^ (a >>> 15), 1 | a);
@@ -556,6 +601,12 @@ html, body { margin: 0; background: #0f1b17; }
  *     "carte": { "type": "phrase" | "code" | "etapes" | "barres", "titre": "…", ... }
  *   }],
  *   "serie": { "nom": "Terrarium IA", "episode": 1, "total": 5 },
+ *   "musique": "phonk" | "drift" | null,     (phonk par défaut ; null : sans musique)
+ *   "theme": "jour" | "nuit",        (nuit : vivarium nocturne, Mousse, terminal)
+ *   "decor": { ..., "lanterne": "eteinte" }   (la vidéo commence dans le noir)
+ *   "tempo": 145,                    (BPM de la musique : les plans doivent commencer sur un temps)
+ *   "arrangement": { "parties": ["intro", "plein", …], "coupures": [11.586] },   (une partie par mesure)
+ *   "poussee": 0.05,                 (la caméra avance de 5 % pendant chaque plan)
  *   "accroches": { "b": ["Autre accroche"], "c": [...] },   variantes de la légende du premier plan
  *   "publication": { "texte": "…", "hashtags": ["#ia"], "commentaire": "…", "couverture": 1.2 }
  * }
@@ -578,9 +629,14 @@ html, body { margin: 0; background: #0f1b17; }
     'goutte.apparaitre', 'goutte.couler', 'goutte.eclaircir', 'filtre.signaler', 'goutte.bassin',
     'fourmiliere.agiter', 'fourmis.ecarter', 'fourmis.revenir', 'eclaireuses.partir',
     'eclaireuses.fouiller', 'eclaireuses.revenir', 'butin.montrer', 'butin.cacher',
+    'mouche.esquiver', 'mouche.narguer', 'gardien.lanterne', 'gardien.expression',
+    'gardien.geste', 'scene.etiquette',
   ];
+  const GESTES = ['pencher', 'depit', 'rire', 'sauter', 'pointer'];
+  const PARTIES = ['intro', 'creux', 'montee', 'plein'];
+  const HUMEURS = ['neutre', 'content', 'surpris', 'blase'];
   const CIBLES = ['ensemble', 'branche', 'cascade', 'sable', 'mousse', 'galets', 'bassin', 'pousse',
-    'dionee', 'grenouille', 'fourmiliere', 'sol', 'cameleon', 'cameleon-oeil'];
+    'dionee', 'grenouille', 'fourmiliere', 'sol', 'cameleon', 'cameleon-oeil', 'mouche'];
   const COULEURS = ['vert', 'turquoise', 'orange'];
   const CARTES = ['phrase', 'code', 'etapes', 'barres'];
 
@@ -619,13 +675,23 @@ html, body { margin: 0; background: #0f1b17; }
     non(typeof sc.concept === 'string' && sc.concept, 'concept manquant');
     non(typeof sc.duree === 'number' && sc.duree > 0 && sc.duree <= 60, 'duree : entre 0 et 60 secondes');
     non(Array.isArray(sc.plans) && sc.plans.length > 0, 'plans : au moins un plan');
+    non(sc.musique === undefined || sc.musique === null || ['phonk', 'drift'].includes(sc.musique), `musique inconnue (${sc.musique}) : « phonk », « drift » ou null`);
+    non(sc.theme === undefined || ['jour', 'nuit'].includes(sc.theme), `thème inconnu (${sc.theme}) : « jour » ou « nuit »`);
     if (!Array.isArray(sc.plans)) return err;
+    // Tempo : chaque plan commence sur un temps de la musique (à 20 ms près).
+    const surLeTemps = (t) => { const n = (t * sc.tempo) / 60; return Math.abs(n - Math.round(n)) * (60 / sc.tempo) <= 0.02; };
+    if (sc.arrangement) {
+      non(sc.tempo > 0, 'arrangement : il faut aussi un tempo');
+      non((sc.arrangement.parties || []).every((x) => PARTIES.includes(x)), `arrangement : parties parmi ${PARTIES.join(', ')}`);
+      non((sc.arrangement.coupures || []).every((t) => t >= 0 && t < sc.duree), 'arrangement : coupure hors de la vidéo');
+    }
 
     let attendu = 0;
     sc.plans.forEach((p, i) => {
       const ici = `plan ${i + 1}`;
       non(p.debut === attendu, `${ici} : commence à ${p.debut} s au lieu de ${attendu} s (les plans se suivent sans trou)`);
       non(p.fin > p.debut, `${ici} : fin avant le début`);
+      if (sc.tempo) non(surLeTemps(p.debut), `${ici} : ne commence pas sur un temps (${sc.tempo} BPM)`);
       attendu = p.fin;
       if (p.legende !== undefined) {
         const liste = [].concat(p.legende);
@@ -646,6 +712,13 @@ html, body { margin: 0; background: #0f1b17; }
         if (a.type === 'goutte.couler' || a.type === 'cameleon.marcher') {
           non(a.depuis >= 0 && a.depuis <= 1 && a.vers >= 0 && a.vers <= 1, `${ici} : ${a.type} attend depuis et vers entre 0 et 1`);
         }
+        if (a.type === 'gardien.expression') non(HUMEURS.includes(a.humeur), `${ici} : humeur inconnue (${a.humeur})`);
+        if (a.type === 'gardien.geste') non(GESTES.includes(a.geste), `${ici} : geste inconnu (${a.geste})`);
+        if (a.type === 'scene.etiquette') {
+          non(typeof a.texte === 'string' && a.texte.length > 0 && a.texte.length <= 14, `${ici} : étiquette de 1 à 14 caractères`);
+          non(['cameleon', 'oeil', 'mouche', 'langue'].includes(a.sur), `${ici} : étiquette sur cameleon, oeil, mouche ou langue (${a.sur})`);
+        }
+        if (a.type === 'gardien.lanterne') non(['allumer', 'eteindre'].includes(a.etat), `${ici} : la lanterne s'allume ou s'éteint (${a.etat})`);
         if (a.type === 'filtre.signaler') non(['sable', 'mousse', 'galets'].includes(a.filtre), `${ici} : filtre inconnu (${a.filtre})`);
       });
       if (p.carte) {
@@ -811,7 +884,7 @@ html, body { margin: 0; background: #0f1b17; }
     repos(qa('.cam-peau, .cam-oeil'), { fill: PEAU.vert[0] });
     repos(qa('.cam-trait'), { stroke: PEAU.vert[0] });
     repos(qa('.cam-trait2, .cam-raie, .cam-crete'), { stroke: PEAU.vert[1] });
-    repos(qa('.cam-ventre'), { fill: '#cfe9a0' });
+    repos(qa('.cam-ventre'), { fill: PEAU.ventre || '#cfe9a0' });
     repos(q('#cam-flip'), { scaleX: 1, svgOrigin: '0 0' });
     repos(q('#cam-pupille'), { rotation: 0, svgOrigin: '46 -36' });
 
@@ -821,6 +894,26 @@ html, body { margin: 0; background: #0f1b17; }
       etat.place = decor.cameleon;
     }
     if (decor.mouche === 'cachee') repos(q('#mouche'), { opacity: 0, x: 560, y: 100 });
+
+    // Mousse et sa lanterne (calque d'écran, présent seulement dans les vidéos de nuit).
+    const rq = (s) => racine.querySelector(s);
+    const rqa = (s) => racine.querySelectorAll(s);
+    const gardien = rq('#mousse');
+    if (gardien) {
+      const eteinte = decor.lanterne === 'eteinte';
+      repos(rq('#noir'), { opacity: eteinte ? 1 : 0 });
+      repos(rq('#lumiere'), { opacity: eteinte ? 0 : 1 });
+      repos(rq('#lanterne-lueur'), { opacity: eteinte ? 0 : 1 });
+      repos(rqa('#mousse-oeil > g'), { opacity: 0 });
+      repos(rq('#oeil-neutre'), { opacity: 1 });
+      etat.humeur = 'neutre';
+    }
+    // Le voile d'obscurité suit la caméra : le sujet reste éclairé.
+    const voile = q('#nuit-trou');
+    const trou = (v) => {
+      const [x, y, w, h] = v.split(' ').map(Number);
+      return { cx: x + w / 2, cy: y + 0.4 * h, r: 0.33 * w };
+    };
 
     // --- Gestes du caméléon -----------------------------------------------------
     const oeil = () => versDessin(q('#cam-corps'), 46, -36);
@@ -898,32 +991,47 @@ html, body { margin: 0; background: #0f1b17; }
         const cible = { x: o.x + (p.dx ?? 56), y: o.y + (p.dy ?? -112) };
         const duree = p.duree || 1.1;
         tl.set(q('#mouche'), { opacity: 1 }, t);
-        ft(q('#mouche'), { x: p.depuisX ?? 560, y: p.depuisY ?? 100 }, { x: cible.x, y: cible.y, duration: duree, ease: 'power2.out' }, t);
-        const n = Math.max(1, Math.round((p.attente ?? 1.5) / 0.12));
-        ft(q('#mouche'), { x: cible.x, y: cible.y }, { x: cible.x + 5, y: cible.y - 4, duration: 0.12, yoyo: true, repeat: n % 2 ? n : n + 1 }, t + duree);
+        const de = { x: p.depuisX ?? 560, y: p.depuisY ?? 100 };
+        if (p.courbe) {
+          // Vol courbe : la mouche arrive en virage, penchée, puis se redresse.
+          const milieu = { x: (de.x + cible.x) / 2 + p.courbe * (cible.y - de.y) * 0.5, y: (de.y + cible.y) / 2 - p.courbe * (cible.x - de.x) * 0.5 };
+          ft(q('#mouche'), { x: de.x, y: de.y }, { motionPath: { path: [de, milieu, cible], curviness: 1.4 }, duration: duree, ease: 'power2.out' }, t);
+          ft(q('#mouche-in'), { rotation: -28, svgOrigin: '0 0' }, { rotation: 0, svgOrigin: '0 0', duration: duree, ease: 'back.out(2.5)' }, t);
+          const n = Math.max(1, Math.round((p.attente ?? 1.5) / 0.3));
+          ft(q('#mouche'), { x: cible.x, y: cible.y }, { x: cible.x, y: cible.y - 2.2, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: n % 2 ? n : n + 1 }, t + duree);
+        } else {
+          ft(q('#mouche'), { x: de.x, y: de.y }, { x: cible.x, y: cible.y, duration: duree, ease: 'power2.out' }, t);
+          const n = Math.max(1, Math.round((p.attente ?? 1.5) / 0.12));
+          ft(q('#mouche'), { x: cible.x, y: cible.y }, { x: cible.x + 5, y: cible.y - 4, duration: 0.12, yoyo: true, repeat: n % 2 ? n : n + 1 }, t + duree);
+        }
         etat.mouche = cible;
       },
       'cameleon.viser'(t, p) {
         const local = versElement(q('#cam-corps'), etat.mouche);
         pupilleVers((Math.atan2(local.y + 36, local.x - 46) * 180) / Math.PI, t, p.duree || 0.6);
       },
-      'cameleon.langue'(t) {
-        const local = versElement(q('#cam-corps'), etat.mouche);
+      'cameleon.langue'(t, p) {
+        let local = versElement(q('#cam-corps'), etat.mouche);
+        // « portee » : la langue ne sort qu'en partie (pour la montrer, sans chasser).
+        if (p.portee) { local = { x: 64 + (local.x - 64) * p.portee, y: -28 + (local.y + 28) * p.portee }; }
+        etat.rate = Boolean(p.rate || p.portee);
         tl.set(q('#cam-langue'), { opacity: 1 }, t);
         ft(q('#cam-langue-fil'), { attr: { x2: 64, y2: -28 } }, { attr: { x2: local.x, y2: local.y }, duration: 0.16, ease: 'power3.out' }, t);
         tl.set(q('#cam-langue-bout'), { attr: { r: 4.5 } }, t);
         ft(q('#cam-langue-bout'), { attr: { cx: 64, cy: -28 } }, { attr: { cx: local.x, cy: local.y }, duration: 0.16, ease: 'power3.out' }, t);
         ft(q('#cam-tete'), { x: 0 }, { x: 3, duration: 0.1, yoyo: true, repeat: 1 }, t);
-        tl.set(q('#mouche'), { opacity: 0 }, t + 0.16);
-        ft(q('#cam-langue-bout'), { attr: { r: 4.5 } }, { attr: { r: 7 }, duration: 0.15 }, t + 0.16);
+        if (!etat.rate) {
+          tl.set(q('#mouche'), { opacity: 0 }, t + 0.16);
+          ft(q('#cam-langue-bout'), { attr: { r: 4.5 } }, { attr: { r: 7 }, duration: 0.15 }, t + 0.16);
+        }
         etat.langue = local;
       },
       'cameleon.ramener'(t) {
         const l = etat.langue;
         ft(q('#cam-langue-fil'), { attr: { x2: l.x, y2: l.y } }, { attr: { x2: 64, y2: -28 }, duration: 0.3, ease: 'power2.in' }, t);
-        ft(q('#cam-langue-bout'), { attr: { cx: l.x, cy: l.y, r: 7 } }, { attr: { cx: 64, cy: -28, r: 4.5 }, duration: 0.3, ease: 'power2.in' }, t);
+        ft(q('#cam-langue-bout'), { attr: { cx: l.x, cy: l.y, r: etat.rate ? 4.5 : 7 } }, { attr: { cx: 64, cy: -28, r: 4.5 }, duration: 0.3, ease: 'power2.in' }, t);
         tl.set(q('#cam-langue'), { opacity: 0 }, t + 0.3);
-        tl.set(q('#mouche'), { x: 560, y: 100 }, t + 0.3);
+        if (!etat.rate) tl.set(q('#mouche'), { x: 560, y: 100 }, t + 0.3);
       },
       'cameleon.avaler'(t) {
         ft(q('#cam-corps'), { scaleY: 1, svgOrigin: '0 0' }, { scaleY: 1.07, svgOrigin: '0 0', duration: 0.22, yoyo: true, repeat: 3, ease: 'sine.inOut' }, t);
@@ -1022,6 +1130,126 @@ html, body { margin: 0; background: #0f1b17; }
         A['fourmiliere.agiter'](t);
       },
       'butin.cacher'(t) { ft(qa('#butin > *'), { opacity: 1 }, { opacity: 0, duration: 0.5 }, t); },
+
+      // Les gags de la mouche
+      'mouche.esquiver'(t, p) {
+        const de = etat.mouche;
+        const vers = { x: de.x + (p.dx ?? 60), y: de.y + (p.dy ?? -50) };
+        ft(q('#mouche'), { x: de.x, y: de.y }, { x: vers.x, y: vers.y, duration: p.duree || 0.18, ease: 'power3.out' }, t);
+        if (q('#mouche-in')) ft(q('#mouche-in'), { rotation: 0, svgOrigin: '0 0' }, { rotation: (p.dx ?? 60) < 0 ? -360 : 360, svgOrigin: '0 0', duration: 0.45, ease: 'power2.out' }, t);
+        etat.mouche = vers;
+      },
+      'mouche.narguer'(t, p) {
+        // Deux petites boucles moqueuses au-dessus de sa place, puis retour.
+        const c = etat.mouche;
+        const r = p.rayon || 18;
+        const n = 16;
+        const duree = p.duree || 1.6;
+        const points = [];
+        for (let k = 1; k <= n; k += 1) {
+          const a = (k / n) * Math.PI * 4;
+          points.push(k === n ? { x: c.x, y: c.y } : { x: c.x + r * Math.sin(a), y: c.y - r * (1 - Math.cos(a)) });
+        }
+        ft(q('#mouche'), { x: c.x, y: c.y }, { motionPath: { path: [{ x: c.x, y: c.y }].concat(points), curviness: 1.2 }, duration: duree, ease: 'sine.inOut' }, t);
+        // Elle se dandine pour se moquer.
+        if (q('#mouche-in')) {
+          const m = Math.max(2, Math.round(duree / 0.2));
+          ft(q('#mouche-in'), { rotation: -16, svgOrigin: '0 0' }, { rotation: 16, svgOrigin: '0 0', duration: duree / m, ease: 'sine.inOut', yoyo: true, repeat: m - 1 }, t);
+          ft(q('#mouche-in'), { rotation: m % 2 ? 16 : -16, svgOrigin: '0 0' }, { rotation: 0, svgOrigin: '0 0', duration: 0.15 }, t + duree);
+        }
+      },
+
+      // Mousse, le gardien
+      'gardien.lanterne'(t, p) {
+        if (!gardien) return;
+        const allumer = p.etat !== 'eteindre';
+        const [avant, apres] = allumer ? [0, 1] : [1, 0];
+        ft(rq('#lanterne-lueur'), { opacity: avant }, { opacity: apres, duration: 0.1 }, t);
+        ft(rq('#lumiere'), { opacity: avant }, { opacity: apres, duration: allumer ? 0.15 : 0.3 }, t + (allumer ? 0.05 : 0));
+        ft(rq('#noir'), { opacity: apres }, { opacity: avant, duration: allumer ? 0.12 : 0.3 }, t + (allumer ? 0.05 : 0));
+        if (allumer) ft(rq('#lanterne-flamme'), { scale: 0.3, transformOrigin: '50% 100%' }, { scale: 1, transformOrigin: '50% 100%', duration: 0.25, ease: 'back.out(3)' }, t);
+      },
+      'gardien.expression'(t, p) {
+        if (!gardien) return;
+        const humeur = p.humeur || 'neutre';
+        if (humeur === etat.humeur) return;
+        tl.set(rq('#oeil-' + etat.humeur), { opacity: 0 }, t);
+        tl.set(rq('#oeil-' + humeur), { opacity: 1 }, t);
+        ft(rq('#mousse-pousse'), { rotation: 0, transformOrigin: '0% 100%' }, { rotation: 22, transformOrigin: '0% 100%', duration: 0.09, yoyo: true, repeat: 3, ease: 'sine.inOut' }, t);
+        ft(rq('#mousse-oeil'), { scaleX: 1.35, transformOrigin: '50% 50%' }, { scaleX: 1, transformOrigin: '50% 50%', duration: 0.3, ease: 'back.out(3)' }, t);
+        etat.humeur = humeur;
+      },
+      // Les gestes de Mousse. Chacun revient à la pose de repos : ils ne se chevauchent pas.
+      'gardien.geste'(t, p) {
+        if (!gardien) return;
+        const G = art.gardien;
+        const pieds = G.PIEDS.join(' ');
+        const corps = rq('#mousse-geste');
+        const d = p.duree || 1.2;
+        if (p.geste === 'pencher') {
+          // Il se penche vers la scène, curieux.
+          ft(corps, { rotation: 0, svgOrigin: pieds }, { rotation: -9, svgOrigin: pieds, duration: 0.4, ease: 'back.out(1.8)' }, t);
+          ft(corps, { rotation: -9, svgOrigin: pieds }, { rotation: 0, svgOrigin: pieds, duration: 0.45, ease: 'power2.inOut' }, t + d - 0.45);
+        } else if (p.geste === 'depit') {
+          // Il s'affaisse et se cache l'œil.
+          ft(corps, { rotation: 0, y: 0, svgOrigin: pieds }, { rotation: 7, y: 16, svgOrigin: pieds, duration: 0.3, ease: 'back.out(2)' }, t);
+          ft(rq('#mousse-bras'), { rotation: 0, scale: 1, svgOrigin: G.EPAULE.join(' ') }, { rotation: -109, scale: 1.5, svgOrigin: G.EPAULE.join(' '), duration: 0.28, ease: 'back.out(1.6)' }, t + 0.05);
+          ft(rq('#mousse-bras'), { rotation: -109, scale: 1.5, svgOrigin: G.EPAULE.join(' ') }, { rotation: 0, scale: 1, svgOrigin: G.EPAULE.join(' '), duration: 0.35, ease: 'power2.inOut' }, t + d - 0.4);
+          ft(corps, { rotation: 7, y: 16, svgOrigin: pieds }, { rotation: 0, y: 0, svgOrigin: pieds, duration: 0.4, ease: 'power2.inOut' }, t + d - 0.4);
+        } else if (p.geste === 'rire') {
+          const n = Math.max(2, Math.round(d / 0.2));
+          ft(corps, { y: 0 }, { y: -10, duration: d / (2 * n), ease: 'sine.inOut', yoyo: true, repeat: 2 * n - 1 }, t);
+        } else if (p.geste === 'sauter') {
+          // Élan (il se tasse), saut, réception souple. « fois » sauts, un par temps.
+          const saut = rq('#mousse-saut');
+          const un = d / (p.fois || 2);
+          for (let k = 0; k < (p.fois || 2); k += 1) {
+            const t0 = t + k * un;
+            ft(saut, { scaleY: 1, svgOrigin: pieds }, { scaleY: 0.86, svgOrigin: pieds, duration: un * 0.18, ease: 'power2.out' }, t0);
+            ft(saut, { scaleY: 0.86, svgOrigin: pieds }, { scaleY: 1.07, svgOrigin: pieds, duration: un * 0.14, ease: 'power2.out' }, t0 + un * 0.18);
+            ft(saut, { y: 0 }, { y: -(p.hauteur || 80), duration: un * 0.3, ease: 'power2.out' }, t0 + un * 0.18);
+            ft(saut, { y: -(p.hauteur || 80) }, { y: 0, duration: un * 0.3, ease: 'power2.in' }, t0 + un * 0.48);
+            ft(saut, { scaleY: 1.07, svgOrigin: pieds }, { scaleY: 0.9, svgOrigin: pieds, duration: un * 0.08 }, t0 + un * 0.78);
+            ft(saut, { scaleY: 0.9, svgOrigin: pieds }, { scaleY: 1, svgOrigin: pieds, duration: un * 0.14, ease: 'back.out(3)' }, t0 + un * 0.86);
+            ft(rq('#mousse-ombre'), { scaleX: 1, opacity: 0.35, transformOrigin: '50% 50%' }, { scaleX: 0.6, opacity: 0.15, transformOrigin: '50% 50%', duration: un * 0.3, ease: 'power2.out', yoyo: true, repeat: 1 }, t0 + un * 0.18);
+          }
+        } else if (p.geste === 'pointer') {
+          // Il tend sa lanterne vers ce qu'il présente.
+          const main = G.MAIN.join(' ');
+          const perche = rq('#mousse-perche-geste');
+          ft(perche, { rotation: 0, svgOrigin: main }, { rotation: -13, svgOrigin: main, duration: 0.35, ease: 'back.out(2.5)' }, t);
+          ft(perche, { rotation: -13, svgOrigin: main }, { rotation: 0, svgOrigin: main, duration: 0.6, ease: 'elastic.out(1, 0.5)' }, t + d - 0.6);
+          ft(corps, { rotation: 0, svgOrigin: pieds }, { rotation: -5, svgOrigin: pieds, duration: 0.35, ease: 'back.out(2)' }, t);
+          ft(corps, { rotation: -5, svgOrigin: pieds }, { rotation: 0, svgOrigin: pieds, duration: 0.45, ease: 'power2.inOut' }, t + d - 0.5);
+        }
+      },
+      // Une étiquette accrochée à un personnage : elle vit dans le décor, donc elle suit la caméra.
+      'scene.etiquette'(t, p) {
+        const ancre = p.sur === 'mouche' ? etat.mouche
+          : p.sur === 'langue' ? versDessin(q('#cam-corps'), etat.langue.x, etat.langue.y)
+            : p.sur === 'oeil' ? oeil() : versDessin(q('#cam-corps'), 6, -28);
+        const e = 1080 / Number(vue.split(' ')[2]); // pixels d'écran par unité du décor
+        const u = (px) => +(px / e).toFixed(2);
+        const texte = String(p.texte);
+        const corps = u(40);
+        const large = u(texte.length * 24 + 44);
+        const haut = u(64);
+        const cx = ancre.x + u(p.dx ?? 150);
+        const cy = ancre.y + u(p.dy ?? -130);
+        const NS = 'http://www.w3.org/2000/svg';
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('class', 'etiquette');
+        g.innerHTML = '<line x1="' + ancre.x.toFixed(2) + '" y1="' + ancre.y.toFixed(2) + '" x2="' + cx.toFixed(2) + '" y2="' + cy.toFixed(2) + '" stroke="#b6ff5c" stroke-width="' + u(3) + '" stroke-dasharray="' + u(7) + ' ' + u(8) + '" opacity="0.8"/>'
+          + '<circle cx="' + ancre.x.toFixed(2) + '" cy="' + ancre.y.toFixed(2) + '" r="' + u(9) + '" fill="none" stroke="#b6ff5c" stroke-width="' + u(3) + '"/>'
+          + '<rect x="' + (cx - large / 2).toFixed(2) + '" y="' + (cy - haut / 2).toFixed(2) + '" width="' + large + '" height="' + haut + '" rx="' + u(12) + '" fill="#030a08" fill-opacity="0.94" stroke="#b6ff5c" stroke-width="' + u(2.5) + '"/>'
+          + '<text x="' + cx.toFixed(2) + '" y="' + cy.toFixed(2) + '" text-anchor="middle" dominant-baseline="central" font-family="Space Mono, monospace" font-weight="700" font-size="' + corps + '" fill="#b6ff5c"></text>';
+        g.querySelector('text').textContent = texte;
+        svg.appendChild(g);
+        const o2 = ancre.x.toFixed(2) + ' ' + ancre.y.toFixed(2);
+        repos(g, { opacity: 0 });
+        ft(g, { opacity: 0, scale: 0.4, svgOrigin: o2 }, { opacity: 1, scale: 1, svgOrigin: o2, duration: 0.28, ease: 'back.out(2.2)' }, t);
+        ft(g, { opacity: 1 }, { opacity: 0, duration: 0.2 }, t + (p.duree || 1.6) - 0.2);
+      },
     };
 
     // --- Ambiance (vidéo seulement : sur le site, le vivarium vit déjà) -----------
@@ -1087,6 +1315,20 @@ html, body { margin: 0; background: #0f1b17; }
           }
         });
       }
+      if (gardien) {
+        if (sc.tempo) {
+          // Mousse hoche la tête sur chaque temps, et la lanterne pulse avec la musique.
+          const temps = 60 / sc.tempo;
+          boucle((s) => s.fromTo(rq('#mousse-battement'), { y: 7 }, { y: 0, duration: temps / 2, yoyo: true, repeat: fois(temps / 2), ease: 'sine.inOut' }));
+          boucle((s) => s.fromTo(rq('#lanterne-lueur > circle'), { scale: 1.22, transformOrigin: '50% 50%' }, { scale: 1, transformOrigin: '50% 50%', duration: temps, repeat: fois(temps), ease: 'power2.out' }));
+          boucle((s) => s.fromTo(rq('#mousse-pousse'), { skewX: -8, transformOrigin: '0% 100%' }, { skewX: 8, transformOrigin: '0% 100%', duration: temps, yoyo: true, repeat: fois(temps), ease: 'sine.inOut' }));
+        }
+        boucle((s) => s.fromTo(rq('#mousse-corps'), { scaleY: 1, transformOrigin: '50% 100%' }, { scaleY: 1.025, transformOrigin: '50% 100%', duration: 1.4, yoyo: true, repeat: fois(1.4), ease: 'sine.inOut' }));
+        boucle((s) => s.fromTo(rq('#mousse-perche'), { rotation: -2, svgOrigin: '246 172' }, { rotation: 2.5, svgOrigin: '246 172', duration: 2.2, yoyo: true, repeat: fois(2.2), ease: 'sine.inOut' }));
+        boucle((s) => s.fromTo(rq('#mousse-oeil'), { scaleY: 1, transformOrigin: '50% 50%' }, { scaleY: 0.1, transformOrigin: '50% 50%', duration: 0.08, yoyo: true, repeat: fois(3.2), repeatDelay: 3 }), 1.5);
+        boucle((s) => s.fromTo(rq('#lanterne-flamme'), { scaleY: 0.92, transformOrigin: '50% 100%' }, { scaleY: 1.06, transformOrigin: '50% 100%', duration: 0.13, yoyo: true, repeat: fois(0.13), ease: 'sine.inOut' }));
+      }
+      if (rq('.c.fin')) boucle((s) => s.fromTo(rqa('.c.fin'), { opacity: 1 }, { opacity: 0, duration: 0.45, yoyo: true, repeat: fois(0.45), ease: 'steps(1)' }));
       // Sans rôle dans la scène, le caméléon se promène sur sa branche.
       if (decor.cameleon === undefined || decor.cameleon === 'promenade') {
         let t = 0;
@@ -1113,6 +1355,7 @@ html, body { margin: 0; background: #0f1b17; }
       if (Array.isArray(c)) return c;
       if (c === 'cameleon') { const p = versDessin(q('#cam-corps'), 6, -28); return [p.x, p.y]; }
       if (c === 'cameleon-oeil') { const p = oeil(); return [p.x, p.y]; }
+      if (c === 'mouche') return [etat.mouche.x, etat.mouche.y];
       if (!CIBLES[c]) throw new Error('Cible de caméra inconnue : ' + c);
       return CIBLES[c];
     };
@@ -1143,6 +1386,7 @@ html, body { margin: 0; background: #0f1b17; }
     // Cadrage de départ : celui du premier plan (plein cadre en 9:16).
     let vue = o.cadre === '9:16' ? vueDe(sc.plans[0].camera || {}) : VUE_ENTIERE;
     repos(svg, { attr: { viewBox: vue } });
+    if (voile) repos(voile, { attr: trou(vue) });
 
     // Hauteur (0 en haut, 1 en bas) où le sujet du plan tombe à l'écran.
     let sujet = sc.plans[0].camera || { cible: 'ensemble' };
@@ -1152,25 +1396,59 @@ html, body { margin: 0; background: #0f1b17; }
       return (cy - vy) / vh;
     };
 
+    // Poussée lente : la caméra avance un peu pendant tout le plan, l'image n'est jamais figée.
+    const pousser = (v, k) => {
+      const [x, y, w, h] = v.split(' ').map(Number);
+      const nw = w / (1 + k); const nh = h / (1 + k);
+      return `${(x + (w - nw) / 2).toFixed(2)} ${(y + (h - nh) * 0.4).toFixed(2)} ${nw.toFixed(2)} ${nh.toFixed(2)}`;
+    };
     sc.plans.forEach((plan, i) => {
       if (plan.camera) sujet = plan.camera;
-      if (plan.camera && o.camera !== false) {
-        const nouvelle = vueDe(plan.camera);
-        if (nouvelle !== vue) {
-          ft(svg, { attr: { viewBox: vue } }, { attr: { viewBox: nouvelle }, duration: plan.camera.duree ?? 0.9, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
-          vue = nouvelle;
-        }
-      }
-      (plan.actions || []).forEach((a) => {
+      const jouer = (liste) => liste.forEach((a) => {
         if (!A[a.type]) throw new Error('Action inconnue : ' + a.type);
         A[a.type](plan.debut + (a.a || 0), a);
       });
+      // Une caméra qui cadre la mouche a besoin de savoir où elle se pose : ses vols d'abord.
+      const dAbord = plan.camera && plan.camera.cible === 'mouche' ? (plan.actions || []).filter((a) => a.type.indexOf('mouche.') === 0) : [];
+      jouer(dAbord);
+      let finCamera = plan.debut;
+      if (plan.camera && o.camera !== false) {
+        const nouvelle = vueDe(plan.camera);
+        if (nouvelle !== vue) {
+          const d = plan.camera.duree ?? 0.9;
+          ft(svg, { attr: { viewBox: vue } }, { attr: { viewBox: nouvelle }, duration: d, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
+          if (voile) ft(voile, { attr: trou(vue) }, { attr: trou(nouvelle), duration: d, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
+          vue = nouvelle;
+          finCamera = plan.debut + d;
+        }
+      }
+      jouer((plan.actions || []).filter((a) => dAbord.indexOf(a) === -1));
+      if (sc.poussee && o.camera !== false && o.cadre === '9:16' && plan.fin - finCamera > 0.3) {
+        const avancee = pousser(vue, sc.poussee);
+        ft(svg, { attr: { viewBox: vue } }, { attr: { viewBox: avancee }, duration: plan.fin - finCamera, ease: 'none' }, finCamera);
+        if (voile) ft(voile, { attr: trou(vue) }, { attr: trou(avancee), duration: plan.fin - finCamera, ease: 'none' }, finCamera);
+        vue = avancee;
+      }
       // Site : la phrase complète du plan, d'un coup, sur la plaque de légende.
       if (typeof o.legende === 'function') {
         if (plan.legende) tl.call(o.legende, [[].concat(plan.legende).join(' ').replace(/\*/g, ''), i], plan.debut);
       }
       // Vidéo : chaque morceau remplace le précédent, sans blanc entre deux plans.
       if (typeof o.legende !== 'function') morceauxDe(plan).forEach((m, k) => {
+        const terminal = racine.querySelector('#leg-' + i + '-' + k + ' .term-texte');
+        if (terminal) {
+          // Terminal de Mousse : 35 ms par lettre, jamais plus de la moitié du morceau.
+          // Toutes les lettres sont déjà en place (invisibles) : le texte ne bouge jamais.
+          // La lettre suivante sert de curseur (.cur), puis s'affiche (.vu).
+          const lettres = terminal.querySelectorAll('.c');
+          const pas = Math.min(0.035, ((m.fin - m.debut) * 0.5) / Math.max(1, lettres.length));
+          lettres.forEach((c, j) => {
+            const classe = c.getAttribute('class');
+            tl.set(c, { attr: { class: classe + ' cur' } }, m.debut + Math.max(0, j - 1) * pas + (j ? 0.001 : 0));
+            if (j < lettres.length - 1) tl.set(c, { attr: { class: classe + ' vu' } }, m.debut + j * pas + 0.002);
+          });
+          return;
+        }
         const el = racine.querySelector('#leg-' + i + '-' + k + ' .leg-texte');
         if (!el) return;
         // Sujet dans la moitié basse : la légende passe en haut pour ne pas le cacher.

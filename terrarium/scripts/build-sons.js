@@ -63,7 +63,7 @@ function normaliser(buf, crete = 0.89) {
   return buf;
 }
 
-function ecrireWav(nom, buf) {
+function ecrireWav(nom, buf, silencieux) {
   const donnees = Buffer.alloc(buf.length * 2);
   buf.forEach((v, i) => donnees.writeInt16LE(Math.max(-32768, Math.min(32767, Math.round(v * 32767))), i * 2));
   const tete = Buffer.alloc(44);
@@ -71,8 +71,8 @@ function ecrireWav(nom, buf) {
   tete.write('fmt ', 12); tete.writeUInt32LE(16, 16); tete.writeUInt16LE(1, 20); tete.writeUInt16LE(1, 22);
   tete.writeUInt32LE(FREQ, 24); tete.writeUInt32LE(FREQ * 2, 28); tete.writeUInt16LE(2, 32); tete.writeUInt16LE(16, 34);
   tete.write('data', 36); tete.writeUInt32LE(donnees.length, 40);
-  fs.writeFileSync(path.join(dossier, nom), Buffer.concat([tete, donnees]));
-  console.log(`${nom.padEnd(14)} ${(buf.length / FREQ).toFixed(2)} s`);
+  fs.writeFileSync(path.isAbsolute(nom) ? nom : path.join(dossier, nom), Buffer.concat([tete, donnees]));
+  if (!silencieux) console.log(`${nom.padEnd(14)} ${(buf.length / FREQ).toFixed(2)} s`);
 }
 
 // --- Les sons ------------------------------------------------------------------------
@@ -259,12 +259,16 @@ function phonk() {
 }
 SONS['phonk.wav'] = phonk;
 
+// Arrangement (facultatif) de drift() : { duree, parties, coupures }.
+//   parties[m] : « intro » (cloche douce), « creux » (sans basse ni claps), « montee » (roulement), « plein ».
+//   coupures : instants (en secondes) où la musique se tait pendant un temps.
 // --- Drift : la phonk validée pour « Les nuits du terrarium » (13 nov. 2026) ---------
 // 145 BPM, fa dièse mineur : cloche rapide et saturée, charleston en doubles croches,
 // 808 lourde qui glisse, claps sur 2 et 4, roulement en fin de phrase.
 const note = (n) => 440 * 2 ** ((n - 69) / 12);
-function drift() {
-  const DUREE = 45;
+function drift(arrangement = {}) {
+  const DUREE = arrangement.duree || 45;
+  const parties = arrangement.parties || [];
   const DOUBLE = 60 / 145 / 4;
   const b = tampon(DUREE);
   const cloche = tampon(DUREE);
@@ -278,25 +282,32 @@ function drift() {
   for (let m = 0; m < mesures; m += 1) {
     const t0 = m * 16 * DOUBLE;
     const phrase = m % 2;
+    const partie = parties[m] || 'plein';
+    const plein = partie === 'plein';
     MELODIE[phrase].forEach(([pas, n]) => {
-      const env = (x) => 0.6 * enveloppe(x, 0.001, 0.07);
+      const env = (x) => (partie === 'intro' ? 0.38 : 0.6) * enveloppe(x, 0.001, 0.07);
       sinus(cloche, () => note(n), env, t0 + pas * DOUBLE, 'carre', 0.5);
       sinus(cloche, () => note(n) * 1.48, (x) => 0.6 * env(x), t0 + pas * DOUBLE, 'carre', 0.5);
     });
-    BASSE[phrase].forEach(([pas, n], k, notes) => {
+    if (plein) BASSE[phrase].forEach(([pas, n], k, notes) => {
       const debut = t0 + pas * DOUBLE;
       const fin = k + 1 < notes.length ? t0 + notes[k + 1][0] * DOUBLE : t0 + 16 * DOUBLE;
       const d = fin - debut;
       sinus(basse, (x) => note(n) * (1 + 2.6 * Math.exp(-x * 40)), (x) => enveloppe(x, 0.003, 0.45) * Math.min(1, (d - x) / 0.02), debut, 'sin', d);
     });
-    [4, 12].forEach((pas) => {
+    if (plein) [4, 12].forEach((pas) => {
       const debut = t0 + pas * DOUBLE;
       [0, 0.011, 0.023].forEach((dt, k) => bruit(b, (x) => (k === 2 ? 0.55 : 0.35) * enveloppe(x, 0.001, k === 2 ? 0.07 : 0.01), { bas: 900, haut: 5500, debut: debut + dt, hasard: graine(100 + m * 10 + pas + k), duree: 0.4 }));
     });
     for (let pas = 0; pas < 16; pas += 1) {
+      if (partie === 'intro' && pas % 4) continue;
       bruit(b, (x) => 0.2 * (pas % 4 ? 0.65 : 1) * enveloppe(x, 0.0005, 0.018), { bas: 7000, haut: 16000, debut: t0 + pas * DOUBLE, hasard: graine(500 + m * 16 + pas), duree: 0.15 });
     }
-    if (phrase === 1) {
+    if (partie === 'montee') {
+      // Roulement qui accélère et monte : il annonce le retour de la basse.
+      for (let k = 0; k < 32; k += 1) bruit(b, (x) => (0.06 + 0.006 * k) * enveloppe(x, 0.0005, 0.01), { bas: 5000 + 150 * k, haut: 16000, debut: t0 + (k * DOUBLE) / 2, hasard: graine(1300 + m * 40 + k), duree: 0.08 });
+    }
+    if (phrase === 1 && plein) {
       for (let k = 0; k < 6; k += 1) bruit(b, (x) => (0.08 + 0.02 * k) * enveloppe(x, 0.0005, 0.012), { bas: 7000, haut: 16000, debut: t0 + 13 * DOUBLE + (k * DOUBLE) / 2, hasard: graine(900 + m * 8 + k), duree: 0.1 });
     }
   }
@@ -306,9 +317,17 @@ function drift() {
     b[i] += 0.8 * haut + 0.7 * Math.tanh(3 * basse[i]);
   }
   for (let i = 0; i < b.length; i += 1) b[i] = Math.round(Math.tanh(1.5 * b[i]) * 4096) / 4096;
+  // Coupures : un temps de silence, avec 4 ms de fondu de chaque côté.
+  const TEMPS = 4 * DOUBLE;
+  (arrangement.coupures || []).forEach((t) => {
+    const i0 = Math.round(t * FREQ); const i1 = Math.round((t + TEMPS) * FREQ); const f = Math.round(0.004 * FREQ);
+    for (let i = Math.max(0, i0 - f); i < Math.min(b.length, i1 + f); i += 1) {
+      b[i] *= i < i0 ? (i0 - i) / f : i >= i1 ? (i - i1) / f : 0;
+    }
+  });
   return b;
 }
-SONS['drift.wav'] = drift;
+SONS['drift.wav'] = () => drift();
 
 // --- Les sons de Mousse ---------------------------------------------------------------
 // Le clic de la lanterne : un déclic sec et un petit « toc » métallique.
@@ -336,7 +355,17 @@ SONS['clavier.wav'] = () => {
   return b;
 };
 
-fs.mkdirSync(dossier, { recursive: true });
-for (const [nom, fabrique] of Object.entries(SONS)) {
-  ecrireWav(nom, normaliser(fabrique(), { 'ambiance.wav': 0.5, 'phonk.wav': 0.8 }[nom] || 0.89));
+// Une musique arrangée pour une vidéo (voir « arrangement » dans le scénario) :
+// écrite à l'endroit demandé (chemin absolu), au même niveau que la boucle générale.
+const MUSIQUES_ARRANGEES = { drift };
+function ecrireMusique(nom, arrangement, fichier) {
+  ecrireWav(fichier, normaliser(MUSIQUES_ARRANGEES[nom](arrangement), 0.8), true);
 }
+
+if (require.main === module) {
+  fs.mkdirSync(dossier, { recursive: true });
+  for (const [nom, fabrique] of Object.entries(SONS)) {
+    ecrireWav(nom, normaliser(fabrique(), { 'ambiance.wav': 0.5, 'phonk.wav': 0.8 }[nom] || 0.89));
+  }
+}
+module.exports = { ecrireMusique, MUSIQUES_ARRANGEES };

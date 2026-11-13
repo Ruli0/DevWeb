@@ -27,7 +27,11 @@
     '#f6ffb0': '#eaff7a', // lucioles
     '#e2c89a': '#ffd7a0', // escargot
     '#e8667a': '#ff6fb5', '#f08a9a': '#ff6fb5', // langue du caméléon
+    '#f6ffb1': '#eaff7a', '#dff3fe': '#c9f1ff', // la mouche : abdomen lumineux, ailes
   };
+
+  // Recolorées pour rester lisibles la nuit, mais sans lueur (la mouche : corps, yeux, pupilles).
+  const NET = { '#2b2b37': '#4a5a94', '#fffffe': '#ffffff', '#111112': '#0a1020' };
 
   // Le caméléon (couleurs posées par le moteur) : version de nuit, plus lumineuse.
   const PEAU = {
@@ -81,6 +85,7 @@
       const a = attrs.replace(/\b(fill|stroke|stop-color)="(#[0-9a-fA-F]{3,6})"/g, (m, attr, c) => {
         const n = normal(c);
         if (BIO[n]) { bio = true; return `${attr}="${BIO[n]}"`; }
+        if (NET[n]) return `${attr}="${NET[n]}"`;
         return `${attr}="${assombrir(n)}"`;
       });
       const halo = bio && !/\bfilter=/.test(a) && nom !== 'stop' ? ' filter="url(#halo)"' : '';
@@ -88,8 +93,7 @@
     });
     // 2. Le fond du verre : dégradé de nuit.
     s = s.replace(/(<linearGradient id="g-fond"[^>]*>)([\s\S]*?)(<\/linearGradient>)/, (m, o, corps, f) => `${o}<stop offset="0" stop-color="${FOND[0]}"/><stop offset="0.5" stop-color="${FOND[1]}"/><stop offset="1" stop-color="${FOND[0]}"/>${f}`);
-    // 3. La mouche devient une luciole ; les lucioles grossissent ; les papillons dorment.
-    s = s.replace(/(<g id="mouche">[\s\S]*?<circle r=")3\.2(" fill=")[^"]*(")/, '$16$2#eaff7a$3 filter="url(#halo)"');
+    // 3. Les lucioles grossissent ; les papillons dorment.
     s = s.replace(/<circle class="luciole"([^>]*?) r="([\d.]+)"/g, (m, avant, r) => `<circle class="luciole"${avant} r="${(r * 1.6).toFixed(2)}"`);
     s = s.replace(/<g id="(papillon-\d)" class="papillon">/g, '<g id="$1" class="papillon" style="display:none">');
     // 4. Filtres, et le voile d'obscurité : centré sur le sujet, il suit la caméra (le moteur l'anime).

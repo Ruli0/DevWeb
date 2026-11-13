@@ -237,9 +237,19 @@
         const cible = { x: o.x + (p.dx ?? 56), y: o.y + (p.dy ?? -112) };
         const duree = p.duree || 1.1;
         tl.set(q('#mouche'), { opacity: 1 }, t);
-        ft(q('#mouche'), { x: p.depuisX ?? 560, y: p.depuisY ?? 100 }, { x: cible.x, y: cible.y, duration: duree, ease: 'power2.out' }, t);
-        const n = Math.max(1, Math.round((p.attente ?? 1.5) / 0.12));
-        ft(q('#mouche'), { x: cible.x, y: cible.y }, { x: cible.x + 5, y: cible.y - 4, duration: 0.12, yoyo: true, repeat: n % 2 ? n : n + 1 }, t + duree);
+        const de = { x: p.depuisX ?? 560, y: p.depuisY ?? 100 };
+        if (p.courbe) {
+          // Vol courbe : la mouche arrive en virage, penchée, puis se redresse.
+          const milieu = { x: (de.x + cible.x) / 2 + p.courbe * (cible.y - de.y) * 0.5, y: (de.y + cible.y) / 2 - p.courbe * (cible.x - de.x) * 0.5 };
+          ft(q('#mouche'), { x: de.x, y: de.y }, { motionPath: { path: [de, milieu, cible], curviness: 1.4 }, duration: duree, ease: 'power2.out' }, t);
+          ft(q('#mouche-in'), { rotation: -28, svgOrigin: '0 0' }, { rotation: 0, svgOrigin: '0 0', duration: duree, ease: 'back.out(2.5)' }, t);
+          const n = Math.max(1, Math.round((p.attente ?? 1.5) / 0.3));
+          ft(q('#mouche'), { x: cible.x, y: cible.y }, { x: cible.x, y: cible.y - 2.2, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: n % 2 ? n : n + 1 }, t + duree);
+        } else {
+          ft(q('#mouche'), { x: de.x, y: de.y }, { x: cible.x, y: cible.y, duration: duree, ease: 'power2.out' }, t);
+          const n = Math.max(1, Math.round((p.attente ?? 1.5) / 0.12));
+          ft(q('#mouche'), { x: cible.x, y: cible.y }, { x: cible.x + 5, y: cible.y - 4, duration: 0.12, yoyo: true, repeat: n % 2 ? n : n + 1 }, t + duree);
+        }
         etat.mouche = cible;
       },
       'cameleon.viser'(t, p) {
@@ -247,14 +257,16 @@
         pupilleVers((Math.atan2(local.y + 36, local.x - 46) * 180) / Math.PI, t, p.duree || 0.6);
       },
       'cameleon.langue'(t, p) {
-        const local = versElement(q('#cam-corps'), etat.mouche);
-        etat.rate = Boolean(p.rate);
+        let local = versElement(q('#cam-corps'), etat.mouche);
+        // « portee » : la langue ne sort qu'en partie (pour la montrer, sans chasser).
+        if (p.portee) { local = { x: 64 + (local.x - 64) * p.portee, y: -28 + (local.y + 28) * p.portee }; }
+        etat.rate = Boolean(p.rate || p.portee);
         tl.set(q('#cam-langue'), { opacity: 1 }, t);
         ft(q('#cam-langue-fil'), { attr: { x2: 64, y2: -28 } }, { attr: { x2: local.x, y2: local.y }, duration: 0.16, ease: 'power3.out' }, t);
         tl.set(q('#cam-langue-bout'), { attr: { r: 4.5 } }, t);
         ft(q('#cam-langue-bout'), { attr: { cx: 64, cy: -28 } }, { attr: { cx: local.x, cy: local.y }, duration: 0.16, ease: 'power3.out' }, t);
         ft(q('#cam-tete'), { x: 0 }, { x: 3, duration: 0.1, yoyo: true, repeat: 1 }, t);
-        if (!p.rate) {
+        if (!etat.rate) {
           tl.set(q('#mouche'), { opacity: 0 }, t + 0.16);
           ft(q('#cam-langue-bout'), { attr: { r: 4.5 } }, { attr: { r: 7 }, duration: 0.15 }, t + 0.16);
         }
@@ -370,6 +382,7 @@
         const de = etat.mouche;
         const vers = { x: de.x + (p.dx ?? 60), y: de.y + (p.dy ?? -50) };
         ft(q('#mouche'), { x: de.x, y: de.y }, { x: vers.x, y: vers.y, duration: p.duree || 0.18, ease: 'power3.out' }, t);
+        if (q('#mouche-in')) ft(q('#mouche-in'), { rotation: 0, svgOrigin: '0 0' }, { rotation: (p.dx ?? 60) < 0 ? -360 : 360, svgOrigin: '0 0', duration: 0.45, ease: 'power2.out' }, t);
         etat.mouche = vers;
       },
       'mouche.narguer'(t, p) {
@@ -377,13 +390,18 @@
         const c = etat.mouche;
         const r = p.rayon || 18;
         const n = 16;
-        const d = (p.duree || 1.6) / n;
-        let prec = { x: c.x, y: c.y };
+        const duree = p.duree || 1.6;
+        const points = [];
         for (let k = 1; k <= n; k += 1) {
           const a = (k / n) * Math.PI * 4;
-          const pt = k === n ? { x: c.x, y: c.y } : { x: c.x + r * Math.sin(a), y: c.y - r * (1 - Math.cos(a)) };
-          ft(q('#mouche'), { x: prec.x, y: prec.y }, { x: pt.x, y: pt.y, duration: d, ease: 'none' }, t + (k - 1) * d);
-          prec = pt;
+          points.push(k === n ? { x: c.x, y: c.y } : { x: c.x + r * Math.sin(a), y: c.y - r * (1 - Math.cos(a)) });
+        }
+        ft(q('#mouche'), { x: c.x, y: c.y }, { motionPath: { path: [{ x: c.x, y: c.y }].concat(points), curviness: 1.2 }, duration: duree, ease: 'sine.inOut' }, t);
+        // Elle se dandine pour se moquer.
+        if (q('#mouche-in')) {
+          const m = Math.max(2, Math.round(duree / 0.2));
+          ft(q('#mouche-in'), { rotation: -16, svgOrigin: '0 0' }, { rotation: 16, svgOrigin: '0 0', duration: duree / m, ease: 'sine.inOut', yoyo: true, repeat: m - 1 }, t);
+          ft(q('#mouche-in'), { rotation: m % 2 ? 16 : -16, svgOrigin: '0 0' }, { rotation: 0, svgOrigin: '0 0', duration: 0.15 }, t + duree);
         }
       },
 
@@ -403,8 +421,80 @@
         if (humeur === etat.humeur) return;
         tl.set(rq('#oeil-' + etat.humeur), { opacity: 0 }, t);
         tl.set(rq('#oeil-' + humeur), { opacity: 1 }, t);
-        ft(rq('#mousse-corps'), { y: 0 }, { y: -14, duration: 0.12, yoyo: true, repeat: 1, ease: 'power2.out' }, t);
+        ft(rq('#mousse-pousse'), { rotation: 0, transformOrigin: '0% 100%' }, { rotation: 22, transformOrigin: '0% 100%', duration: 0.09, yoyo: true, repeat: 3, ease: 'sine.inOut' }, t);
+        ft(rq('#mousse-oeil'), { scaleX: 1.35, transformOrigin: '50% 50%' }, { scaleX: 1, transformOrigin: '50% 50%', duration: 0.3, ease: 'back.out(3)' }, t);
         etat.humeur = humeur;
+      },
+      // Les gestes de Mousse. Chacun revient à la pose de repos : ils ne se chevauchent pas.
+      'gardien.geste'(t, p) {
+        if (!gardien) return;
+        const G = art.gardien;
+        const pieds = G.PIEDS.join(' ');
+        const corps = rq('#mousse-geste');
+        const d = p.duree || 1.2;
+        if (p.geste === 'pencher') {
+          // Il se penche vers la scène, curieux.
+          ft(corps, { rotation: 0, svgOrigin: pieds }, { rotation: -9, svgOrigin: pieds, duration: 0.4, ease: 'back.out(1.8)' }, t);
+          ft(corps, { rotation: -9, svgOrigin: pieds }, { rotation: 0, svgOrigin: pieds, duration: 0.45, ease: 'power2.inOut' }, t + d - 0.45);
+        } else if (p.geste === 'depit') {
+          // Il s'affaisse et se cache l'œil.
+          ft(corps, { rotation: 0, y: 0, svgOrigin: pieds }, { rotation: 7, y: 16, svgOrigin: pieds, duration: 0.3, ease: 'back.out(2)' }, t);
+          ft(rq('#mousse-bras'), { rotation: 0, scale: 1, svgOrigin: G.EPAULE.join(' ') }, { rotation: -109, scale: 1.5, svgOrigin: G.EPAULE.join(' '), duration: 0.28, ease: 'back.out(1.6)' }, t + 0.05);
+          ft(rq('#mousse-bras'), { rotation: -109, scale: 1.5, svgOrigin: G.EPAULE.join(' ') }, { rotation: 0, scale: 1, svgOrigin: G.EPAULE.join(' '), duration: 0.35, ease: 'power2.inOut' }, t + d - 0.4);
+          ft(corps, { rotation: 7, y: 16, svgOrigin: pieds }, { rotation: 0, y: 0, svgOrigin: pieds, duration: 0.4, ease: 'power2.inOut' }, t + d - 0.4);
+        } else if (p.geste === 'rire') {
+          const n = Math.max(2, Math.round(d / 0.2));
+          ft(corps, { y: 0 }, { y: -10, duration: d / (2 * n), ease: 'sine.inOut', yoyo: true, repeat: 2 * n - 1 }, t);
+        } else if (p.geste === 'sauter') {
+          // Élan (il se tasse), saut, réception souple. « fois » sauts, un par temps.
+          const saut = rq('#mousse-saut');
+          const un = d / (p.fois || 2);
+          for (let k = 0; k < (p.fois || 2); k += 1) {
+            const t0 = t + k * un;
+            ft(saut, { scaleY: 1, svgOrigin: pieds }, { scaleY: 0.86, svgOrigin: pieds, duration: un * 0.18, ease: 'power2.out' }, t0);
+            ft(saut, { scaleY: 0.86, svgOrigin: pieds }, { scaleY: 1.07, svgOrigin: pieds, duration: un * 0.14, ease: 'power2.out' }, t0 + un * 0.18);
+            ft(saut, { y: 0 }, { y: -(p.hauteur || 80), duration: un * 0.3, ease: 'power2.out' }, t0 + un * 0.18);
+            ft(saut, { y: -(p.hauteur || 80) }, { y: 0, duration: un * 0.3, ease: 'power2.in' }, t0 + un * 0.48);
+            ft(saut, { scaleY: 1.07, svgOrigin: pieds }, { scaleY: 0.9, svgOrigin: pieds, duration: un * 0.08 }, t0 + un * 0.78);
+            ft(saut, { scaleY: 0.9, svgOrigin: pieds }, { scaleY: 1, svgOrigin: pieds, duration: un * 0.14, ease: 'back.out(3)' }, t0 + un * 0.86);
+            ft(rq('#mousse-ombre'), { scaleX: 1, opacity: 0.35, transformOrigin: '50% 50%' }, { scaleX: 0.6, opacity: 0.15, transformOrigin: '50% 50%', duration: un * 0.3, ease: 'power2.out', yoyo: true, repeat: 1 }, t0 + un * 0.18);
+          }
+        } else if (p.geste === 'pointer') {
+          // Il tend sa lanterne vers ce qu'il présente.
+          const main = G.MAIN.join(' ');
+          const perche = rq('#mousse-perche-geste');
+          ft(perche, { rotation: 0, svgOrigin: main }, { rotation: -13, svgOrigin: main, duration: 0.35, ease: 'back.out(2.5)' }, t);
+          ft(perche, { rotation: -13, svgOrigin: main }, { rotation: 0, svgOrigin: main, duration: 0.6, ease: 'elastic.out(1, 0.5)' }, t + d - 0.6);
+          ft(corps, { rotation: 0, svgOrigin: pieds }, { rotation: -5, svgOrigin: pieds, duration: 0.35, ease: 'back.out(2)' }, t);
+          ft(corps, { rotation: -5, svgOrigin: pieds }, { rotation: 0, svgOrigin: pieds, duration: 0.45, ease: 'power2.inOut' }, t + d - 0.5);
+        }
+      },
+      // Une étiquette accrochée à un personnage : elle vit dans le décor, donc elle suit la caméra.
+      'scene.etiquette'(t, p) {
+        const ancre = p.sur === 'mouche' ? etat.mouche
+          : p.sur === 'langue' ? versDessin(q('#cam-corps'), etat.langue.x, etat.langue.y)
+            : p.sur === 'oeil' ? oeil() : versDessin(q('#cam-corps'), 6, -28);
+        const e = 1080 / Number(vue.split(' ')[2]); // pixels d'écran par unité du décor
+        const u = (px) => +(px / e).toFixed(2);
+        const texte = String(p.texte);
+        const corps = u(40);
+        const large = u(texte.length * 24 + 44);
+        const haut = u(64);
+        const cx = ancre.x + u(p.dx ?? 150);
+        const cy = ancre.y + u(p.dy ?? -130);
+        const NS = 'http://www.w3.org/2000/svg';
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('class', 'etiquette');
+        g.innerHTML = '<line x1="' + ancre.x.toFixed(2) + '" y1="' + ancre.y.toFixed(2) + '" x2="' + cx.toFixed(2) + '" y2="' + cy.toFixed(2) + '" stroke="#b6ff5c" stroke-width="' + u(3) + '" stroke-dasharray="' + u(7) + ' ' + u(8) + '" opacity="0.8"/>'
+          + '<circle cx="' + ancre.x.toFixed(2) + '" cy="' + ancre.y.toFixed(2) + '" r="' + u(9) + '" fill="none" stroke="#b6ff5c" stroke-width="' + u(3) + '"/>'
+          + '<rect x="' + (cx - large / 2).toFixed(2) + '" y="' + (cy - haut / 2).toFixed(2) + '" width="' + large + '" height="' + haut + '" rx="' + u(12) + '" fill="#030a08" fill-opacity="0.94" stroke="#b6ff5c" stroke-width="' + u(2.5) + '"/>'
+          + '<text x="' + cx.toFixed(2) + '" y="' + cy.toFixed(2) + '" text-anchor="middle" dominant-baseline="central" font-family="Space Mono, monospace" font-weight="700" font-size="' + corps + '" fill="#b6ff5c"></text>';
+        g.querySelector('text').textContent = texte;
+        svg.appendChild(g);
+        const o2 = ancre.x.toFixed(2) + ' ' + ancre.y.toFixed(2);
+        repos(g, { opacity: 0 });
+        ft(g, { opacity: 0, scale: 0.4, svgOrigin: o2 }, { opacity: 1, scale: 1, svgOrigin: o2, duration: 0.28, ease: 'back.out(2.2)' }, t);
+        ft(g, { opacity: 1 }, { opacity: 0, duration: 0.2 }, t + (p.duree || 1.6) - 0.2);
       },
     };
 
@@ -472,12 +562,19 @@
         });
       }
       if (gardien) {
+        if (sc.tempo) {
+          // Mousse hoche la tête sur chaque temps, et la lanterne pulse avec la musique.
+          const temps = 60 / sc.tempo;
+          boucle((s) => s.fromTo(rq('#mousse-battement'), { y: 7 }, { y: 0, duration: temps / 2, yoyo: true, repeat: fois(temps / 2), ease: 'sine.inOut' }));
+          boucle((s) => s.fromTo(rq('#lanterne-lueur > circle'), { scale: 1.22, transformOrigin: '50% 50%' }, { scale: 1, transformOrigin: '50% 50%', duration: temps, repeat: fois(temps), ease: 'power2.out' }));
+          boucle((s) => s.fromTo(rq('#mousse-pousse'), { skewX: -8, transformOrigin: '0% 100%' }, { skewX: 8, transformOrigin: '0% 100%', duration: temps, yoyo: true, repeat: fois(temps), ease: 'sine.inOut' }));
+        }
         boucle((s) => s.fromTo(rq('#mousse-corps'), { scaleY: 1, transformOrigin: '50% 100%' }, { scaleY: 1.025, transformOrigin: '50% 100%', duration: 1.4, yoyo: true, repeat: fois(1.4), ease: 'sine.inOut' }));
-        boucle((s) => s.fromTo(rq('#mousse-perche'), { rotation: -2, svgOrigin: '597.5 1395' }, { rotation: 2.5, svgOrigin: '597.5 1395', duration: 2.2, yoyo: true, repeat: fois(2.2), ease: 'sine.inOut' }));
+        boucle((s) => s.fromTo(rq('#mousse-perche'), { rotation: -2, svgOrigin: '246 172' }, { rotation: 2.5, svgOrigin: '246 172', duration: 2.2, yoyo: true, repeat: fois(2.2), ease: 'sine.inOut' }));
         boucle((s) => s.fromTo(rq('#mousse-oeil'), { scaleY: 1, transformOrigin: '50% 50%' }, { scaleY: 0.1, transformOrigin: '50% 50%', duration: 0.08, yoyo: true, repeat: fois(3.2), repeatDelay: 3 }), 1.5);
         boucle((s) => s.fromTo(rq('#lanterne-flamme'), { scaleY: 0.92, transformOrigin: '50% 100%' }, { scaleY: 1.06, transformOrigin: '50% 100%', duration: 0.13, yoyo: true, repeat: fois(0.13), ease: 'sine.inOut' }));
       }
-      if (rq('.curseur')) boucle((s) => s.fromTo(rqa('.curseur'), { opacity: 1 }, { opacity: 0, duration: 0.45, yoyo: true, repeat: fois(0.45), ease: 'steps(1)' }));
+      if (rq('.c.fin')) boucle((s) => s.fromTo(rqa('.c.fin'), { opacity: 1 }, { opacity: 0, duration: 0.45, yoyo: true, repeat: fois(0.45), ease: 'steps(1)' }));
       // Sans rôle dans la scène, le caméléon se promène sur sa branche.
       if (decor.cameleon === undefined || decor.cameleon === 'promenade') {
         let t = 0;
@@ -504,6 +601,7 @@
       if (Array.isArray(c)) return c;
       if (c === 'cameleon') { const p = versDessin(q('#cam-corps'), 6, -28); return [p.x, p.y]; }
       if (c === 'cameleon-oeil') { const p = oeil(); return [p.x, p.y]; }
+      if (c === 'mouche') return [etat.mouche.x, etat.mouche.y];
       if (!CIBLES[c]) throw new Error('Cible de caméra inconnue : ' + c);
       return CIBLES[c];
     };
@@ -544,20 +642,39 @@
       return (cy - vy) / vh;
     };
 
+    // Poussée lente : la caméra avance un peu pendant tout le plan, l'image n'est jamais figée.
+    const pousser = (v, k) => {
+      const [x, y, w, h] = v.split(' ').map(Number);
+      const nw = w / (1 + k); const nh = h / (1 + k);
+      return `${(x + (w - nw) / 2).toFixed(2)} ${(y + (h - nh) * 0.4).toFixed(2)} ${nw.toFixed(2)} ${nh.toFixed(2)}`;
+    };
     sc.plans.forEach((plan, i) => {
       if (plan.camera) sujet = plan.camera;
-      if (plan.camera && o.camera !== false) {
-        const nouvelle = vueDe(plan.camera);
-        if (nouvelle !== vue) {
-          ft(svg, { attr: { viewBox: vue } }, { attr: { viewBox: nouvelle }, duration: plan.camera.duree ?? 0.9, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
-          if (voile) ft(voile, { attr: trou(vue) }, { attr: trou(nouvelle), duration: plan.camera.duree ?? 0.9, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
-          vue = nouvelle;
-        }
-      }
-      (plan.actions || []).forEach((a) => {
+      const jouer = (liste) => liste.forEach((a) => {
         if (!A[a.type]) throw new Error('Action inconnue : ' + a.type);
         A[a.type](plan.debut + (a.a || 0), a);
       });
+      // Une caméra qui cadre la mouche a besoin de savoir où elle se pose : ses vols d'abord.
+      const dAbord = plan.camera && plan.camera.cible === 'mouche' ? (plan.actions || []).filter((a) => a.type.indexOf('mouche.') === 0) : [];
+      jouer(dAbord);
+      let finCamera = plan.debut;
+      if (plan.camera && o.camera !== false) {
+        const nouvelle = vueDe(plan.camera);
+        if (nouvelle !== vue) {
+          const d = plan.camera.duree ?? 0.9;
+          ft(svg, { attr: { viewBox: vue } }, { attr: { viewBox: nouvelle }, duration: d, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
+          if (voile) ft(voile, { attr: trou(vue) }, { attr: trou(nouvelle), duration: d, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
+          vue = nouvelle;
+          finCamera = plan.debut + d;
+        }
+      }
+      jouer((plan.actions || []).filter((a) => dAbord.indexOf(a) === -1));
+      if (sc.poussee && o.camera !== false && o.cadre === '9:16' && plan.fin - finCamera > 0.3) {
+        const avancee = pousser(vue, sc.poussee);
+        ft(svg, { attr: { viewBox: vue } }, { attr: { viewBox: avancee }, duration: plan.fin - finCamera, ease: 'none' }, finCamera);
+        if (voile) ft(voile, { attr: trou(vue) }, { attr: trou(avancee), duration: plan.fin - finCamera, ease: 'none' }, finCamera);
+        vue = avancee;
+      }
       // Site : la phrase complète du plan, d'un coup, sur la plaque de légende.
       if (typeof o.legende === 'function') {
         if (plan.legende) tl.call(o.legende, [[].concat(plan.legende).join(' ').replace(/\*/g, ''), i], plan.debut);
@@ -567,9 +684,15 @@
         const terminal = racine.querySelector('#leg-' + i + '-' + k + ' .term-texte');
         if (terminal) {
           // Terminal de Mousse : 35 ms par lettre, jamais plus de la moitié du morceau.
+          // Toutes les lettres sont déjà en place (invisibles) : le texte ne bouge jamais.
+          // La lettre suivante sert de curseur (.cur), puis s'affiche (.vu).
           const lettres = terminal.querySelectorAll('.c');
           const pas = Math.min(0.035, ((m.fin - m.debut) * 0.5) / Math.max(1, lettres.length));
-          lettres.forEach((c, j) => tl.set(c, { display: 'inline' }, m.debut + j * pas));
+          lettres.forEach((c, j) => {
+            const classe = c.getAttribute('class');
+            tl.set(c, { attr: { class: classe + ' cur' } }, m.debut + Math.max(0, j - 1) * pas + (j ? 0.001 : 0));
+            if (j < lettres.length - 1) tl.set(c, { attr: { class: classe + ' vu' } }, m.debut + j * pas + 0.002);
+          });
           return;
         }
         const el = racine.querySelector('#leg-' + i + '-' + k + ' .leg-texte');
