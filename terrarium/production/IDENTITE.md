@@ -90,3 +90,13 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Animation** : nouvelle mouche (yeux, ailes, abdomen lumineux, vols courbes, pirouette d'esquive, dandinement moqueur). Mousse hoche la tête sur le temps, pointe sa lanterne, se penche, se cache l'œil, saute de joie et rit. La caméra avance lentement pendant chaque plan.
 - **Texte** : les lettres ont leur place dès le début, donc plus rien ne se décale. La lettre suivante sert de curseur.
 - **Ton retour** : en attente.
+
+### Direction artistique, refonte, tour 1 (13 nov.)
+
+- **Contexte** : après le pilote, refonte décidée (`PLAN-REFONTE.md`, étape 1).
+- **Montré** : la même scène de 4 mesures (environ 6,6 s, en boucle, avec Drift) dans trois pistes. Le caméléon tire la langue et rate, la mouche esquive et se moque, Mousse se cache l'œil. Le terminal tape « mon IA *rate* tout. ».
+  - **A. Ombres lumineuses** : silhouettes sombres sur trois plans de profondeur, contours et taches lumineux, mouche-luciole avec traînée, parallaxe.
+  - **B. L'écran de Mousse** : pixel art vert phosphore, mouvements case par case, balayage cathodique, bug d'écran magenta au moment du raté.
+  - **C. Papier découpé** : calques de papier aux bords irréguliers, ombres portées, attaches dorées aux articulations, mouche suspendue à un fil qui fait le yoyo devant la lune.
+- **Fabrication** : `essais/direction-artistique/` (reproductible, hors du moteur).
+- **Ton retour** : en attente.
