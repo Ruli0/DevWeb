@@ -186,4 +186,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 ### Pastilles, tour 5 (13 nov.)
 
 - **Montré** : quatre pastilles peu opaques (fond translucide avec flou, fines bordures), le mot clé dans une couleur du décor (`maquettes.cjs pastilles`) : V1 bleu nuit et jaune luciole, V2 bleu brume et cyan, V3 ambre de la lanterne, V4 vert mousse.
+- **Ton retour** : « Essaye avec un violet qui reprend un peu les couleurs du décor pour la pastille. »
+
+### Pastilles violettes, tour 6 (13 nov.)
+
+- **Montré** : quatre violets translucides (`maquettes.cjs violets`) : W1 violet bleuté et mot clé lavande, W2 violet bleuté et cyan, W3 prune chaude et ambre (la lanterne), W4 violet profond et vert mousse.
 - **Ton retour** : en attente.

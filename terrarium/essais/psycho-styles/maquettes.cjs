@@ -406,6 +406,15 @@ const PASTILLES = {
 };
 for (const [id, v] of Object.entries(PASTILLES)) STYLES[id] = Object.assign({}, STYLES.s1c, { nom: v.nom, police: 'Poppins:wght@800', css: cssPastille(v.css) });
 
+// --- Violets (tour 6) : la pastille en violet, tiré des teintes du décor ---
+const VIOLETS = {
+  w1: { nom: 'W1 · Violet bleuté + lavande', css: { fond: 'rgba(78,70,160,.34)', bord: 'rgba(190,175,255,.28)', cle: 'rgba(201,184,255,.92)', texteCle: '#2a2466' } },
+  w2: { nom: 'W2 · Violet bleuté + cyan', css: { fond: 'rgba(78,70,160,.34)', bord: 'rgba(154,248,255,.26)', cle: 'rgba(154,248,255,.9)', texteCle: '#1c2a66' } },
+  w3: { nom: 'W3 · Prune chaude + ambre', css: { fond: 'rgba(120,66,150,.34)', bord: 'rgba(255,198,92,.3)', cle: 'rgba(255,198,92,.92)', texteCle: '#4a2210' } },
+  w4: { nom: 'W4 · Violet profond + vert mousse', css: { fond: 'rgba(60,44,120,.4)', bord: 'rgba(182,255,92,.26)', cle: 'rgba(182,255,92,.9)', texteCle: '#1d2a66' } },
+};
+for (const [id, v] of Object.entries(VIOLETS)) STYLES[id] = Object.assign({}, STYLES.s1c, { nom: v.nom, police: 'Poppins:wght@800', css: cssPastille(v.css) });
+
 function page(st, m, avecTexte = true) {
   const texte = m === 'imaginer' ? 'il croit que tout le monde le <b>regarde</b>' : 'la grenouille pense à <b>sa mouche</b>';
   return `<!doctype html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=${st.police}&display=block" rel="stylesheet">
@@ -434,11 +443,11 @@ function page(st, m, avecTexte = true) {
   const images = [];
   // Modes : styles (6 styles sans texte), tour3, tour4 (avant/après l'éclairage), polices (6 polices).
   const seulStyle = process.argv.includes('styles');
-  const mode = ['pastilles', 'polices', 'tour4', 'tour3'].find((x) => process.argv.includes(x)) || (seulStyle ? 'styles' : 'quatre');
-  const ids = { pastilles: Object.keys(PASTILLES), polices: Object.keys(POLICES), tour4: ['s1a', 's1c'], tour3: ['s1a', 's1b'] }[mode];
+  const mode = ['violets', 'pastilles', 'polices', 'tour4', 'tour3'].find((x) => process.argv.includes(x)) || (seulStyle ? 'styles' : 'quatre');
+  const ids = { violets: Object.keys(VIOLETS), pastilles: Object.keys(PASTILLES), polices: Object.keys(POLICES), tour4: ['s1a', 's1c'], tour3: ['s1a', 's1b'] }[mode];
   for (const [id, st] of Object.entries(STYLES)) {
-    if (ids ? !ids.includes(id) : id === 's1a' || id === 's1b' || id === 's1c' || /^[fv]\d$/.test(id) || (!seulStyle && (id === 's5' || id === 's6'))) continue;
-    for (const m of seulStyle || mode === 'polices' || mode === 'pastilles' ? ['imaginer'] : ['imaginer', 'penser']) {
+    if (ids ? !ids.includes(id) : id === 's1a' || id === 's1b' || id === 's1c' || /^[fvw]\d$/.test(id) || (!seulStyle && (id === 's5' || id === 's6'))) continue;
+    for (const m of seulStyle || mode === 'polices' || mode === 'pastilles' || mode === 'violets' ? ['imaginer'] : ['imaginer', 'penser']) {
       const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
       await p.setContent(page(st, m, !seulStyle));
       await p.evaluate(() => document.fonts.ready.then(() => true));
@@ -451,7 +460,7 @@ function page(st, m, avecTexte = true) {
   }
   await b.close();
   const n = images.length; const col = seulStyle || mode === 'polices' ? 3 : 4;
-  const sortie = path.join(__dirname, { pastilles: 'planche-pastilles.png', polices: 'planche-polices.png', tour4: 'planche-tour4.png', tour3: 'planche-tour3.png', styles: 'planche-styles.png', quatre: 'planche.png' }[mode]);
+  const sortie = path.join(__dirname, { violets: 'planche-violets.png', pastilles: 'planche-pastilles.png', polices: 'planche-polices.png', tour4: 'planche-tour4.png', tour3: 'planche-tour3.png', styles: 'planche-styles.png', quatre: 'planche.png' }[mode]);
   execSync(`ffmpeg -v error -y ${images.map((f) => `-i ${f}`).join(' ')} -filter_complex "${images.map((_, i) => `[${i}:v]scale=432:768[v${i}]`).join(';')};${images.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${n}:layout=${images.map((_, i) => `${(i % col) * 432}_${Math.floor(i / col) * 768}`).join('|')}" ${sortie}`);
   console.log(`Planche écrite : ${path.relative(path.join(__dirname, '../..'), sortie)}`);
 })();
