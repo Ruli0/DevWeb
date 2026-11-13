@@ -395,6 +395,17 @@ const PROJECTEUR = `<rect width="1080" height="1920" fill="#02060e" opacity="0.4
   <ellipse cx="590" cy="1040" rx="250" ry="13" fill="#02050a" opacity="0.4" filter="url(#flou8)"/>
   ${poussiere()}`;
 
+// --- Pastilles (tour 5) : Poppins ExtraBold, pastilles peu opaques fondues dans le décor, mot clé dans une couleur du décor ---
+const cssPastille = ({ fond, bord, cle, texteCle, flou = 8 }) => `.texte { font: 800 74px/1.1 "Poppins"; letter-spacing: -.01em; color: #fff; display: inline-block; padding: 24px 44px 28px; border-radius: 56px; background: ${fond}; border: 2px solid ${bord}; backdrop-filter: blur(${flou}px); text-shadow: 0 2px 12px rgba(0,10,25,.45); }
+  .texte b { display: block; font-weight: 800; font-size: 112px; line-height: 1; color: ${texteCle}; background: ${cle}; border-radius: 38px; padding: 4px 28px 10px; margin-top: 12px; text-shadow: none; }`;
+const PASTILLES = {
+  v1: { nom: 'V1 · Bleu nuit + jaune luciole', css: { fond: 'rgba(20,50,70,.34)', bord: 'rgba(154,248,255,.22)', cle: 'rgba(234,255,122,.9)', texteCle: '#14323f' } },
+  v2: { nom: 'V2 · Bleu brume + cyan', css: { fond: 'rgba(90,150,185,.26)', bord: 'rgba(255,255,255,.2)', cle: 'rgba(154,248,255,.88)', texteCle: '#0f3a4a' } },
+  v3: { nom: 'V3 · Ambre lanterne', css: { fond: 'rgba(255,190,90,.17)', bord: 'rgba(255,198,92,.3)', cle: 'rgba(255,198,92,.92)', texteCle: '#4a2c0a' } },
+  v4: { nom: 'V4 · Vert mousse', css: { fond: 'rgba(40,110,85,.3)', bord: 'rgba(182,255,92,.26)', cle: 'rgba(182,255,92,.9)', texteCle: '#123a1c' } },
+};
+for (const [id, v] of Object.entries(PASTILLES)) STYLES[id] = Object.assign({}, STYLES.s1c, { nom: v.nom, police: 'Poppins:wght@800', css: cssPastille(v.css) });
+
 function page(st, m, avecTexte = true) {
   const texte = m === 'imaginer' ? 'il croit que tout le monde le <b>regarde</b>' : 'la grenouille pense à <b>sa mouche</b>';
   return `<!doctype html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=${st.police}&display=block" rel="stylesheet">
@@ -423,11 +434,11 @@ function page(st, m, avecTexte = true) {
   const images = [];
   // Modes : styles (6 styles sans texte), tour3, tour4 (avant/après l'éclairage), polices (6 polices).
   const seulStyle = process.argv.includes('styles');
-  const mode = ['polices', 'tour4', 'tour3'].find((x) => process.argv.includes(x)) || (seulStyle ? 'styles' : 'quatre');
-  const ids = { polices: Object.keys(POLICES), tour4: ['s1a', 's1c'], tour3: ['s1a', 's1b'] }[mode];
+  const mode = ['pastilles', 'polices', 'tour4', 'tour3'].find((x) => process.argv.includes(x)) || (seulStyle ? 'styles' : 'quatre');
+  const ids = { pastilles: Object.keys(PASTILLES), polices: Object.keys(POLICES), tour4: ['s1a', 's1c'], tour3: ['s1a', 's1b'] }[mode];
   for (const [id, st] of Object.entries(STYLES)) {
-    if (ids ? !ids.includes(id) : id === 's1a' || id === 's1b' || id === 's1c' || /^f\d$/.test(id) || (!seulStyle && (id === 's5' || id === 's6'))) continue;
-    for (const m of seulStyle || mode === 'polices' ? ['imaginer'] : ['imaginer', 'penser']) {
+    if (ids ? !ids.includes(id) : id === 's1a' || id === 's1b' || id === 's1c' || /^[fv]\d$/.test(id) || (!seulStyle && (id === 's5' || id === 's6'))) continue;
+    for (const m of seulStyle || mode === 'polices' || mode === 'pastilles' ? ['imaginer'] : ['imaginer', 'penser']) {
       const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
       await p.setContent(page(st, m, !seulStyle));
       await p.evaluate(() => document.fonts.ready.then(() => true));
@@ -440,7 +451,7 @@ function page(st, m, avecTexte = true) {
   }
   await b.close();
   const n = images.length; const col = seulStyle || mode === 'polices' ? 3 : 4;
-  const sortie = path.join(__dirname, { polices: 'planche-polices.png', tour4: 'planche-tour4.png', tour3: 'planche-tour3.png', styles: 'planche-styles.png', quatre: 'planche.png' }[mode]);
+  const sortie = path.join(__dirname, { pastilles: 'planche-pastilles.png', polices: 'planche-polices.png', tour4: 'planche-tour4.png', tour3: 'planche-tour3.png', styles: 'planche-styles.png', quatre: 'planche.png' }[mode]);
   execSync(`ffmpeg -v error -y ${images.map((f) => `-i ${f}`).join(' ')} -filter_complex "${images.map((_, i) => `[${i}:v]scale=432:768[v${i}]`).join(';')};${images.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${n}:layout=${images.map((_, i) => `${(i % col) * 432}_${Math.floor(i / col) * 768}`).join('|')}" ${sortie}`);
   console.log(`Planche écrite : ${path.relative(path.join(__dirname, '../..'), sortie)}`);
 })();

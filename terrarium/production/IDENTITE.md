@@ -180,4 +180,10 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - les lucioles et la mouche éclairent autour d'elles.
   - **Écarté** : un voile orange sur Mousse et le caméléon : il grisait les couleurs.
 - **Polices** (`maquettes.cjs polices`), toutes sur la même pastille : 1 Fredoka (actuelle), 2 Nunito Black, 3 Lilita One, 4 Chewy, 5 DM Serif Display (élégante, mot clé en italique), 6 Poppins ExtraBold.
+- **Ton retour** : « 6 [Poppins ExtraBold]. Change la couleur des pastilles, avec moins d'opacité : il faut que ça se confonde avec le décor. À la place du rose, prends une couleur du décor. J'aime bien la police 6. »
+- **Décidé** : la police est **Poppins ExtraBold**.
+
+### Pastilles, tour 5 (13 nov.)
+
+- **Montré** : quatre pastilles peu opaques (fond translucide avec flou, fines bordures), le mot clé dans une couleur du décor (`maquettes.cjs pastilles`) : V1 bleu nuit et jaune luciole, V2 bleu brume et cyan, V3 ambre de la lanterne, V4 vert mousse.
 - **Ton retour** : en attente.
