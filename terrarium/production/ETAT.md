@@ -1,6 +1,25 @@
 # État de l'outil
 
-_Dernière mise à jour : 13 novembre 2026._
+_Dernière mise à jour : 13 novembre 2026 (soir)._
+
+## Le studio (refonte, étape 2)
+
+La nouvelle chaîne, dans la direction artistique A2, vit dans `studio/`. Une vidéo s'écrit en temps forts, dans `videos/episodes/<id>.json` (la démo fait 22 lignes), et `npm run video -- <id> [--rendu]` fait le reste.
+
+| Brique | Fichier | État |
+|---|---|---|
+| Compilateur (épisode → feuille de route) | `studio/compiler.js` | Fonction pure. Suit l'état de la scène, vérifie la lecture des textes, les chevauchements de gestes et la boucle |
+| Temps forts | `studio/temps-forts.js` | `accroche`, `presenter`, `rater`, `narguer`, `reussir`, `boucler` |
+| Personnages | `studio/rigs/` | caméléon (5 gestes), mouche au fil (5), Mousse (5) |
+| Décor | `studio/decors/branche.js` | 4 calques de profondeur, parallaxe pendant les zooms |
+| Lecteur | `studio/runtime.js` | Code fixe : caméra, gestes, texte tapé, étiquettes |
+| Page et musique | `studio/page.js` | Composition HyperFrames, Drift arrangée par mesure |
+| Catalogue | `studio/catalogue.js` → `production/CATALOGUE.md` | Tout ce qu'il faut lire pour écrire un épisode |
+| Tests | `test/studio.test.js` | 7 tests (30 au total avec l'ancienne chaîne) |
+
+Limites : un seul décor, un seul couple de rôles (caméléon et mouche), six temps forts. La sortie (`videos/studio/`) n'est pas versionnée : elle se régénère à l'identique.
+
+L'ancienne chaîne (`videos/scenarios/`, `scripts/build-video.js`, `public/js/film/film.js`) et le site sont gelés.
 
 ## En une phrase
 

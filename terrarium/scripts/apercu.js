@@ -1,5 +1,5 @@
 // Planche d'aperçu d'une vidéo, sans rendu : quelques secondes au lieu de plusieurs minutes.
-//   NODE_PATH=$(npm root -g) node scripts/apercu.js <id> <sortie.png> [t1 t2 …]
+//   NODE_PATH=$(npm root -g) node scripts/apercu.js <id | chemin/index.html> <sortie.png> [t1 t2 …]
 // Sans instants donnés : le milieu de chaque plan du scénario.
 // Utilise Playwright (installé globalement) et ffmpeg.
 const fs = require('node:fs');
@@ -11,10 +11,14 @@ const { chromium } = require('playwright');
   const [id, sortie, ...donnes] = process.argv.slice(2);
   if (!id || !sortie) { console.error('Usage : node scripts/apercu.js <id> <sortie.png> [t1 t2 …]'); process.exit(1); }
   const racine = path.join(__dirname, '..');
-  const html = path.join(racine, 'videos/hyperframes', id, 'index.html');
-  const base = id.replace(/-[b-z]$/, '');
-  const sc = JSON.parse(fs.readFileSync(path.join(racine, 'videos/scenarios', `${base}.json`), 'utf8'));
-  const temps = donnes.length ? donnes.map(Number) : sc.plans.map((p) => +((p.debut + p.fin) / 2).toFixed(2));
+  // <id> d'une vidéo de l'ancienne chaîne, ou chemin direct vers un index.html (studio).
+  const html = id.endsWith('.html') ? path.resolve(id) : path.join(racine, 'videos/hyperframes', id, 'index.html');
+  let temps = donnes.map(Number);
+  if (!temps.length) {
+    const base = id.replace(/-[b-z]$/, '');
+    const sc = JSON.parse(fs.readFileSync(path.join(racine, 'videos/scenarios', `${base}.json`), 'utf8'));
+    temps = sc.plans.map((p) => +((p.debut + p.fin) / 2).toFixed(2));
+  }
 
   const navigateur = await chromium.launch();
   const page = await navigateur.newPage({ viewport: { width: 1080, height: 1920 } });

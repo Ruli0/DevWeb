@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test",
-    "build:demo": "node scripts/build-demo.js"
+    "build:demo": "node scripts/build-demo.js",
+    "video": "node scripts/video.js"
   },
   "license": "MIT",
   "dependencies": {

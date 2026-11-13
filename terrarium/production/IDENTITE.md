@@ -106,4 +106,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 ### Direction artistique, refonte, tour 2 (13 nov.)
 
 - **Montré** : le mélange A2 (`essais/direction-artistique/a2.cjs`). Il garde les ombres lumineuses de A. Le texte du terminal s'affiche directement sur l'image, sans cadre, comme en B. La mouche-luciole pend à un fil de soie lumineux et fait le yoyo, comme en C.
+- **Ton retour** : « Oui ! » (validé).
+
+### Studio, démo (13 nov.)
+
+- **Montré** : `videos/episodes/demo.json` (22 lignes) et sa vidéo de 16,6 s (10 mesures), en 60 images par seconde. L'épisode enchaîne accroche, présentation de la tâche (étiquette « la tâche »), raté avec silence d'un temps, moquerie, réussite avec retour de la basse et saut de Mousse, puis la boucle.
 - **Ton retour** : en attente.

@@ -8,7 +8,7 @@ Lire le moins possible : c'est le premier poste de dépense.
 
 | Tâche | À lire | À ne pas lire |
 |---|---|---|
-| **Écrire un épisode** avec les briques existantes | Ce guide, `CATALOGUE.md`, un épisode existant comme modèle | Le moteur, les rigs, le compilateur |
+| **Écrire un épisode** avec les briques existantes | Ce guide, `CATALOGUE.md`, `videos/episodes/demo.json` comme modèle. Puis `npm run video -- <id>` et regarder `videos/studio/<id>/apercu.png` | Le moteur, les rigs, le compilateur |
 | **Corriger un épisode** après un retour | L'épisode, le retour, la planche d'aperçu | Tout le reste |
 | **Ajouter un temps fort ou un geste** | `SPEC-STUDIO.md` (sections 2 et 3), un temps fort voisin | Le dessin du décor |
 | **Ajouter un rig ou un décor** | `SPEC-STUDIO.md` (sections 3 et 4), un rig existant, la direction artistique dans `IDENTITE.md` | Le compilateur |

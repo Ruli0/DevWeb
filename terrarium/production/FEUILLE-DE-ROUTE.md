@@ -16,7 +16,7 @@ Statuts : **à faire**, **en cours**, **fait**, **abandonné**. Les priorités v
 
 ## Refonte en cours (13 nov. 2026)
 
-Le plan est dans `PLAN-REFONTE.md` : 7 étapes, de la publication du pilote actuel (étape 0) à la production en série (étape 6). Prochaine action : ta réponse à l'étape 0 (publier le pilote) et le lancement de l'étape 1 (test de direction artistique). Les lignes ci-dessous restent valables, mais passent après la refonte.
+Le plan est dans `PLAN-REFONTE.md` : 7 étapes, de la publication du pilote actuel (étape 0) à la production en série (étape 6). Étape 1 faite : direction artistique A2 (ombres lumineuses, texte sans cadre, mouche au fil). Étape 2 faite : le socle du studio (`studio/`), avec l'épisode de démonstration `videos/episodes/demo.json`. Prochaine action : ton avis sur la démo, puis le pilote complet de 30 s écrit avec le studio (étapes 3 et 4 fusionnées : de nouveaux gestes et temps forts au fil des besoins). Les lignes ci-dessous restent valables, mais passent après la refonte.
 
 ## P1 : qualité et rétention
 
