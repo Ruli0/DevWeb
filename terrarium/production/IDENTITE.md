@@ -12,7 +12,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 | Élément | Statut | Pistes |
 |---|---|---|
-| Style de nuit | tour 1 envoyé | 1 bioluminescente, 2 lanterne, 3 néon phonk, 4 douce |
+| Style de nuit | tour 2 envoyé | couleurs du 1 + nuit du 2, en 3 dosages (A, B, C) |
 | Le gardien | premier croquis | « Mousse » (nom provisoire) : petit robot rond, tête moussue, un œil cyan, lanterne au bout d'une perche |
 | Musique | à venir (étape 2) | drift phonk, phonk sombre, phonk joueuse |
 | Scénarios | à venir (étape 3) | un pitch de 4 ou 5 lignes par épisode, avec un gag |
@@ -29,4 +29,14 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   4. **Douce** : bleu clair de lune, couleurs adoucies, proche du style actuel.
 - **Méthode** : recoloration de l'image actuelle par un script d'essai (hors du dépôt), pas encore intégrée au moteur.
 - **Corrigé avant l'envoi** : plan trop serré, papillon devant le sujet, langue devenue bleue, lanterne peu lisible, carrés autour des lucioles.
+- **Ton retour** : « Couleur du 1 avec l'effet nuit du 2. »
+
+### Style, tour 2 (13 nov.)
+
+- **Montré** : le mélange demandé, en 3 dosages d'obscurité sur la même image. La palette est celle du 1 : caméléon vert acide, langue rose, mousse et lucioles qui luisent. La nuit est celle du 2 : obscurité autour d'une zone éclairée, et un faisceau chaud qui part de la lanterne vers le caméléon.
+  - A : obscurité 0,6 ;
+  - B : 0,75 ;
+  - C : 0,85.
+- **Nouveau** : les éléments bioluminescents gardent leur propre lueur par-dessus l'obscurité. On les voit dans le noir, sans que la lanterne les éclaire.
+- **Corrigé avant l'envoi** : lueurs trop grosses, dosages trop proches, faisceau invisible.
 - **Ton retour** : _en attente_.
