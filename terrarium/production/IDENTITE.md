@@ -6,7 +6,8 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Direction artistique (refonte)** : piste A, « ombres lumineuses », avec le texte sans cadre de B et la mouche au fil de C (choisi le 13 nov., mélange A2 en validation).
 
-- **Texte** : **le terminal de Mousse** (T6, validé le 13 nov.). C'est l'écran du robot qui raconte : texte vert en Space Mono, tapé lettre par lettre, avec un curseur et l'invite `mousse@terrarium:~$`.
+- **Texte (refonte)** : D1 + D2 + D3 (13 nov., en validation) : grandes lettres rondes en néon, mot clé géant sur sa ligne, bandeau sombre flou, centré en haut. Remplace le terminal T6 pour la taille et le style ; la frappe lettre par lettre est gardée.
+- **Texte (avant la refonte)** : **le terminal de Mousse** (T6, validé le 13 nov.). C'est l'écran du robot qui raconte : texte vert en Space Mono, tapé lettre par lettre, avec un curseur et l'invite `mousse@terrarium:~$`.
 - **Musique** : **Drift**, phonk à 145 BPM, cloche rapide et saturée, 808 lourde (validée le 13 nov.).
 - **Style** : **nuit bioluminescente à la lanterne, dosage B** (validé le 13 nov.). Palette du style 1 (vert acide, cyan, langue rose, fond bleu nuit), obscurité forte (0,75) autour de la zone éclairée, faisceau chaud de la lanterne, et ce qui est bioluminescent brille dans le noir.
 - **Âme du compte** : **le gardien du terrarium**, un personnage récurrent qui garde des IA dans son terrarium et commente avec humour.
@@ -130,4 +131,10 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - **D3. Sur bandeau** : D sur un bandeau sombre aux bords flous, qui le détache toujours de l'image.
   - **D4. Autocollant** : le mot clé en noir sur une pastille cyan penchée.
 - **Changé dans le studio** : les mots ne sont plus jamais coupés entre deux lignes (chaque mot est regroupé), et un mot en valeur peut être stylé en entier.
+- **Ton retour** : « D1 avec le néon de D2 et le bandeau de D3. »
+
+### Texte, tour 5 (13 nov.) : le mélange, intégré au studio
+
+- **Montré** : la démo refaite avec le mélange. Les grandes lettres rondes (Baloo 2) sont en néon (cœur blanc, halo vert), le mot clé passe seul sur sa ligne en géant (halo cyan, taille adaptée à sa longueur), le tout sur un bandeau sombre aux bords flous, centré en haut. La ponctuation (« ! », « … ») reste collée au mot.
+- **Changé aussi** : la caméra cadre le sujet un peu plus bas (y = 860 au lieu de 768), pour que la mouche ne passe plus sous le texte.
 - **Ton retour** : en attente.

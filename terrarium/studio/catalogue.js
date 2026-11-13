@@ -48,7 +48,7 @@ function catalogue() {
   }
   l.push('## Décors', '', '| Décor | Places |', '|---|---|');
   for (const d of Object.values(DECORS)) l.push(`| \`${d.id}\` (${d.nom}) | ${Object.entries(d.PLACES).map(([k, v]) => `${k} : ${JSON.stringify(Array.isArray(v) ? v : [v.x, v.y])}`).join(' ; ')} |`);
-  l.push('', '## Cadrages', '', `${Object.entries(CADRAGES).map(([k, z]) => `\`${k}\` (zoom ${String(z).replace('.', ',')})`).join(', ')}. Le sujet est cadré aux 2/5 de la hauteur ; avec plusieurs sujets, le zoom diminue pour les garder tous à l'écran. Entre deux mouvements, la caméra avance doucement.`);
+  l.push('', '## Cadrages', '', `${Object.entries(CADRAGES).map(([k, z]) => `\`${k}\` (zoom ${String(z).replace('.', ',')})`).join(', ')}. Le sujet est cadré un peu sous le tiers haut (le texte occupe le haut) ; avec plusieurs sujets, le zoom diminue pour les garder tous à l'écran. Entre deux mouvements, la caméra avance doucement.`);
   l.push('', '## Musique', '', `Une partie par mesure, choisie par les temps forts : ${PARTIES.map((p) => `\`${p}\``).join(', ')}. Une « coupure » fait taire la musique pendant un temps (sur le raté).`, '');
   return l.join('\n');
 }

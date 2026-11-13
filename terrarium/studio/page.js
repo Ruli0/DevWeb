@@ -14,18 +14,25 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 const dureeSon = (f) => (fs.statSync(path.join(RACINE, 'videos/sons', f)).size - 44) / 88200;
 
 // Le texte de Mousse : toutes les lettres dans la page dès le début, invisibles.
-// Chaque mot est regroupé (.mot, insécable) : un mot n'est jamais coupé entre deux lignes,
-// et un mot en valeur (*mot*) porte la classe .acc, pour le styler en entier.
+// Chaque mot est regroupé (.mot, insécable) : un mot n'est jamais coupé entre deux lignes.
+// Un mot en valeur (*mot*) passe seul sur sa ligne, en géant (style D1 + D2 + D3, 13 nov.) ;
+// sa taille dépend de sa longueur, pour tenir dans la largeur.
+// La ponctuation française (« ! », « ? », « : ») reste collée au mot qui la précède.
+const COLLEE = '!?:;»…';
 function lettres(texte) {
-  let acc = false; const mots = []; let mot = { acc: false, h: '' };
-  for (const ch of texte) {
-    if (ch === '*') { acc = !acc; continue; }
-    if (ch === ' ') { if (mot.h) mots.push(mot); mots.push(null); mot = { acc: false, h: '' }; continue; }
-    if (!mot.h) mot.acc = acc;
-    mot.h += `<span class="c${acc ? ' acc' : ''}">${esc(ch)}</span>`;
-  }
+  let acc = false; const mots = []; let mot = { acc: false, h: '', n: 0 };
+  const car = (ch) => `<span class="c${acc ? ' acc' : ''}">${esc(ch)}</span>`;
+  const chars = [...texte];
+  chars.forEach((ch, i) => {
+    if (ch === '*') { acc = !acc; return; }
+    if (ch === ' ' && COLLEE.includes(chars[i + 1] || '')) { mot.h += car('\u00a0'); mot.n += 1; return; }
+    if (ch === ' ') { if (mot.h) mots.push(mot); mots.push(null); mot = { acc: false, h: '', n: 0 }; return; }
+    if (acc) mot.acc = true;
+    mot.h += car(ch); mot.n += 1;
+  });
   if (mot.h) mots.push(mot);
-  return `${mots.map((m) => (m ? `<span class="mot${m.acc ? ' acc' : ''}">${m.h}</span>` : '<span class="c"> </span>')).join('')}<span class="c fin">&nbsp;</span>`;
+  const geant = (n) => Math.min(176, Math.floor(820 / (n * 0.56)));
+  return `${mots.map((m) => (!m ? '<span class="c"> </span>' : m.acc ? `<span class="mot acc" style="font-size:${geant(m.n)}px">${m.h}</span>` : `<span class="mot">${m.h}</span>`)).join('')}<span class="c fin">&nbsp;</span>`;
 }
 
 const DEFS = `
@@ -39,15 +46,21 @@ const CSS = `
 * { box-sizing: border-box; } html, body { margin: 0; background: #000; }
 #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Space Mono", monospace; }
 #scene { position: absolute; left: 0; top: 0; }
-/* Le texte de Mousse, sans cadre, en haut de la zone sûre. */
-.invite { position: absolute; left: 80px; top: 170px; margin: 0; font: 700 22px/1 "Space Mono", monospace; color: rgba(182,255,92,.6); }
-.ligne-texte { position: absolute; left: 80px; width: 760px; top: 206px; pointer-events: none; }
-.ligne { margin: 0; font: 700 54px/1.2 "Space Mono", monospace; color: #b6ff5c; text-shadow: 0 0 12px rgba(182,255,92,.8), 0 2px 14px rgba(0,0,0,.9); }
-.ligne .chevron { opacity: .55; }
+/* Le texte de Mousse (choisi le 13 nov. : D1 + D2 + D3) : grandes lettres rondes en néon,
+   le mot clé géant sur sa propre ligne, sur un bandeau sombre aux bords flous. */
+.invite { display: none; }
+.ligne-texte { position: absolute; left: 60px; width: 880px; top: 190px; text-align: center; pointer-events: none; }
+.ligne { display: inline-block; margin: 0; padding: 22px 40px 30px; border-radius: 48px;
+  background: rgba(2,6,10,.72); box-shadow: 0 0 40px 30px rgba(2,6,10,.55);
+  font: 800 104px/0.98 "Baloo 2", sans-serif; color: #fbfff6; -webkit-text-stroke: 6px #0a3a16; paint-order: stroke fill;
+  text-shadow: 0 0 8px #b6ff5c, 0 0 26px #8dff6a, 0 0 60px rgba(141,255,106,.8), 0 0 110px rgba(141,255,106,.5); }
+.chevron { display: none; }
 .mot { display: inline-block; white-space: nowrap; }
+.mot.acc { display: block; line-height: 0.95; }
 .c { visibility: hidden; } .c.vu { visibility: visible; }
-.c.acc { color: #ff6fb5; text-shadow: 0 0 14px rgba(255,111,181,.9), 0 2px 14px rgba(0,0,0,.9); }
-.c.cur { visibility: visible; color: transparent; text-shadow: none; background: #b6ff5c; box-shadow: 0 0 10px rgba(182,255,92,.8); }
+.c.acc { color: #fbfeff; -webkit-text-stroke: 6px #063040; text-shadow: 0 0 8px #9af8ff, 0 0 26px #5ef2ff, 0 0 60px rgba(94,242,255,.85), 0 0 110px rgba(94,242,255,.5); }
+.c.cur { visibility: visible; color: transparent; -webkit-text-stroke: 0; text-shadow: none; background: #fbfff6; box-shadow: 0 0 14px rgba(141,255,106,.9); }
+.c.fin { display: none; }
 `;
 
 function html(f) {
@@ -73,6 +86,7 @@ function html(f) {
   return `<!doctype html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=1920">
 <title>${esc(f.titre)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&display=block" rel="stylesheet">
 <script src="assets/gsap.min.js"></script><script src="assets/MotionPathPlugin.min.js"></script>
 <style>${CSS}</style></head>
 <body>

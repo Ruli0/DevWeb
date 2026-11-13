@@ -15,6 +15,7 @@ const RIGS = { cameleon: require('./rigs/cameleon.js'), mouche: require('./rigs/
 const DECORS = { branche: require('./decors/branche.js') };
 const MUSIQUES = { drift: { tempo: 145 } };
 const CADRAGES = { large: 1, 'plan-moyen': 1.55, 'gros-plan': 2.3 };
+const CY = require('./runtime.js').CY; // hauteur d'écran où la caméra place le sujet
 const POUSSEE = 1.05; // la caméra avance de 5 % pendant un plan
 const PARTIES = ['intro', 'creux', 'montee', 'plein'];
 // Bruitages déduits des gestes (fichiers de videos/sons).
@@ -34,10 +35,10 @@ const SON_CAMERA = { f: 'souffle.wav', v: 0.22 };
 const r = (n, d = 3) => +Number(n).toFixed(d);
 const borne = (v, a, b) => Math.min(Math.max(v, a), b);
 
-// Une vue de caméra : le point (x, y) du décor au 2/5 de l'écran, avec le zoom z.
+// Une vue de caméra : le point (x, y) du décor montré en (540, CY), avec le zoom z.
 function vueSur(points, cadrage) {
   const zMax = CADRAGES[cadrage];
-  if (zMax === 1 || !points.length) return { x: 540, y: 768, z: 1 };
+  if (zMax === 1 || !points.length) return { x: 540, y: CY, z: 1 };
   const cx = points.reduce((a, p) => a + p[0], 0) / points.length;
   const cy = points.reduce((a, p) => a + p[1], 0) / points.length;
   const dx = Math.max(...points.map((p) => Math.abs(p[0] - cx)));
@@ -50,9 +51,9 @@ function vueSur(points, cadrage) {
 // La vue ne sort jamais du décor dessiné (1080 × 1920 au cadrage large).
 function borner(v) {
   const z = v.z;
-  return { x: r(borne(v.x, 540 / z, 1080 - 540 / z), 2), y: r(borne(v.y, 768 / z, 1920 - 1152 / z), 2), z: r(z, 4) };
+  return { x: r(borne(v.x, 540 / z, 1080 - 540 / z), 2), y: r(borne(v.y, CY / z, 1920 - (1920 - CY) / z), 2), z: r(z, 4) };
 }
-const ecran = (v, p) => [r(540 + v.z * (p[0] - v.x), 1), r(768 + v.z * (p[1] - v.y), 1)];
+const ecran = (v, p) => [r(540 + v.z * (p[0] - v.x), 1), r(CY + v.z * (p[1] - v.y), 1)];
 
 function compiler(episode) {
   const erreurs = [];

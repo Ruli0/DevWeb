@@ -17,13 +17,14 @@
   'use strict';
 
   // Position d'un calque de profondeur f pour une vue { x, y, z } : le point (x, y) du décor
-  // est montré en (540, 768) (les 2/5 de la hauteur), avec le zoom z. Les calques lointains
+  // est montré en (540, CY), un peu sous le tiers haut (le texte occupe le haut), avec le zoom z. Les calques lointains
   // (f < 1) bougent et grossissent moins : c'est la parallaxe.
+  const CY = 860;
   function placement(v, f) {
     const s = 1 + (v.z - 1) * f;
     const cx = 540 + (v.x - 540) * f;
-    const cy = 768 + (v.y - 768) * f;
-    return `matrix(${s.toFixed(4)} 0 0 ${s.toFixed(4)} ${(540 - s * cx).toFixed(2)} ${(768 - s * cy).toFixed(2)})`;
+    const cy = CY + (v.y - CY) * f;
+    return `matrix(${s.toFixed(4)} 0 0 ${s.toFixed(4)} ${(540 - s * cx).toFixed(2)} ${(CY - s * cy).toFixed(2)})`;
   }
 
   function jouer(feuille, o) {
@@ -102,5 +103,5 @@
     return tl;
   }
 
-  return { jouer, placement };
+  return { jouer, placement, CY };
 });
