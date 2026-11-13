@@ -1,0 +1,149 @@
+{
+  "id": "dionee",
+  "chapitre": "capteurs",
+  "titre": "La dionée",
+  "concept": "Les hooks",
+  "serie": {
+    "nom": "Terrarium IA",
+    "episode": 2,
+    "total": 5
+  },
+  "duree": 21,
+  "decor": {},
+  "accroches": {
+    "b": [
+      "Comment empêcher une IA…"
+    ],
+    "c": [
+      "L'IA voulait tout *arracher*."
+    ]
+  },
+  "plans": [
+    {
+      "debut": 0,
+      "fin": 2,
+      "camera": {
+        "cible": "dionee",
+        "zoom": 2.6,
+        "duree": 0
+      },
+      "legende": [
+        "Ton IA va tout *casser*."
+      ],
+      "actions": [
+        {
+          "type": "scarabee.avancer",
+          "duree": 2
+        }
+      ]
+    },
+    {
+      "debut": 2,
+      "fin": 4,
+      "legende": [
+        "Sauf si…"
+      ],
+      "actions": [
+        {
+          "type": "dionee.fermer",
+          "a": 0.45
+        }
+      ]
+    },
+    {
+      "debut": 4,
+      "fin": 6.5,
+      "legende": [
+        "*Clac.* Bloquée",
+        "avant d'agir."
+      ]
+    },
+    {
+      "debut": 6.5,
+      "fin": 9.5,
+      "camera": {
+        "cible": "grenouille",
+        "zoom": 2.6,
+        "duree": 0.7
+      },
+      "legende": [
+        "Ça, c'est un *hook*",
+        "« avant »."
+      ]
+    },
+    {
+      "debut": 9.5,
+      "fin": 12.5,
+      "legende": [
+        "La grenouille *prévient*",
+        "après coup."
+      ],
+      "actions": [
+        {
+          "type": "grenouille.coasser",
+          "a": 0.2,
+          "fois": 3
+        }
+      ]
+    },
+    {
+      "debut": 12.5,
+      "fin": 15,
+      "legende": [
+        "Un hook « *après* »."
+      ]
+    },
+    {
+      "debut": 15,
+      "fin": 18.5,
+      "camera": {
+        "cible": [
+          392,
+          540
+        ],
+        "zoom": 1.2,
+        "duree": 0.9
+      },
+      "legende": [
+        "Une consigne *demande*.",
+        "Un hook *garantit*."
+      ],
+      "carte": {
+        "type": "phrase",
+        "titre": "En vrai",
+        "texte": "Un hook, c'est du code qui se déclenche *à coup sûr*, avant ou après chaque action."
+      }
+    },
+    {
+      "debut": 18.5,
+      "fin": 21,
+      "camera": {
+        "cible": "dionee",
+        "zoom": 2.6,
+        "duree": 0.9
+      },
+      "legende": [
+        "Ton IA est *protégée*."
+      ],
+      "actions": [
+        {
+          "type": "dionee.ouvrir",
+          "a": 0.3
+        }
+      ]
+    }
+  ],
+  "publication": {
+    "texte": "Comment empêcher une IA de faire une bêtise ? Pas avec une consigne : avec un hook. Épisode 2 du Terrarium IA.",
+    "hashtags": [
+      "#ia",
+      "#intelligenceartificielle",
+      "#agentia",
+      "#securite",
+      "#tech"
+    ],
+    "commentaire": "Quelle action tu interdirais en premier à ton IA ?",
+    "couverture": 2.5,
+    "titreCouverture": "Clac !"
+  }
+}

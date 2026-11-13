@@ -1,0 +1,16 @@
+{
+  "name": "gsap-app",
+  "version": "1.0.0",
+  "description": "Gestion d'adhérents animée avec GSAP, JavaScript et Node.js (Express)",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.3.0",
+    "gsap": "^3.15.1"
+  }
+}

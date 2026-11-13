@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Club — Adhérents</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="blobs" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  </div>
+
+  <header class="hero">
+    <h1 class="title" aria-label="Gestion des adhérents">
+      <span class="line">Gestion des</span>
+      <span class="line accent">adhérents</span>
+    </h1>
+    <p class="subtitle">Node.js · Express · GSAP</p>
+  </header>
+
+  <main>
+    <section class="stats">
+      <div class="stat"><span class="num" data-key="total">0</span><span>Adhérents</span></div>
+      <div class="stat"><span class="num" data-key="femmes">0</span><span>Femmes</span></div>
+      <div class="stat"><span class="num" data-key="hommes">0</span><span>Hommes</span></div>
+      <div class="stat"><span class="num" data-key="activites">0</span><span>Activités</span></div>
+    </section>
+
+    <section class="panel form-panel">
+      <h2 id="form-title">Nouvel adhérent</h2>
+      <form id="form" novalidate>
+        <input type="hidden" name="id">
+        <div class="field">
+          <label for="prenom">Prénom</label>
+          <input id="prenom" name="prenom" autocomplete="given-name">
+          <small class="error" data-for="prenom"></small>
+        </div>
+        <div class="field">
+          <label for="nom">Nom</label>
+          <input id="nom" name="nom" autocomplete="family-name">
+          <small class="error" data-for="nom"></small>
+        </div>
+        <div class="field">
+          <label for="sexe">Sexe</label>
+          <select id="sexe" name="sexe">
+            <option value="F">Féminin</option>
+            <option value="M">Masculin</option>
+            <option value="A">Autre</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="activite">Activité</label>
+          <input id="activite" name="activite" list="activites-list">
+          <datalist id="activites-list">
+            <option value="Football"><option value="Basket"><option value="Natation">
+            <option value="Escalade"><option value="Tennis"><option value="Danse">
+          </datalist>
+          <small class="error" data-for="activite"></small>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn primary" id="submit-btn">Ajouter</button>
+          <button type="button" class="btn ghost" id="cancel-btn" hidden>Annuler</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel list-panel">
+      <div class="list-head">
+        <h2>Liste</h2>
+        <input type="search" id="search" placeholder="Rechercher…" aria-label="Rechercher">
+      </div>
+      <ul id="cards" class="cards"></ul>
+      <p id="empty" class="empty" hidden>Aucun adhérent trouvé.</p>
+    </section>
+
+    <section class="panel chart-panel">
+      <h2>Répartition par activité</h2>
+      <div id="bars" class="bars"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="/vendor/gsap/gsap.min.js"></script>
+  <script src="/vendor/gsap/Flip.min.js"></script>
+  <script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
