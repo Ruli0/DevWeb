@@ -3,13 +3,42 @@
   "titre": "Démo du studio : la langue",
   "decor": "branche",
   "musique": "drift",
-  "roles": { "ia": "cameleon", "tache": "mouche" },
+  "roles": {
+    "ia": "cameleon",
+    "tache": "mouche"
+  },
   "temps": [
-    { "fort": "accroche", "texte": "mon IA *rate*." },
-    { "fort": "presenter", "qui": "tache", "texte": "voici sa *tâche*." },
-    { "fort": "rater", "texte": ["tir à l'*aveugle*…", "*raté*."] },
-    { "fort": "narguer", "texte": "la tâche se *moque*." },
-    { "fort": "reussir", "texte": ["il *vise*…", "*attrapée* !"] },
-    { "fort": "boucler", "texte": "et ça *recommence*…" }
-  ]
+    {
+      "fort": "accroche",
+      "texte": "mon IA *rate*."
+    },
+    {
+      "fort": "presenter",
+      "qui": "tache",
+      "texte": "voici sa *tâche*."
+    },
+    {
+      "fort": "rater",
+      "texte": [
+        "tir à l'*aveugle*…",
+        "*raté*."
+      ]
+    },
+    {
+      "fort": "narguer",
+      "texte": "la tâche se *moque*."
+    },
+    {
+      "fort": "reussir",
+      "texte": [
+        "il *vise*…",
+        "*attrapée* !"
+      ]
+    },
+    {
+      "fort": "boucler",
+      "texte": "et ça *recommence*…"
+    }
+  ],
+  "lecture": "rapide"
 }

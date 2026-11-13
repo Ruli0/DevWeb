@@ -74,7 +74,8 @@
     // la lettre suivante sert de curseur.
     feuille.textes.forEach((m, k) => {
       const lettres = qa('#ligne-' + k + ' .c');
-      const pas = Math.min(0.04, ((m.fin - m.debut) * 0.5) / Math.max(1, lettres.length));
+      // La frappe prend au plus 30 % du temps du morceau : le reste est du temps de lecture.
+      const pas = Math.min(0.03, ((m.fin - m.debut) * 0.3) / Math.max(1, lettres.length));
       lettres.forEach((el, j) => {
         const classe = el.getAttribute('class');
         tl.set(el, { attr: { class: classe + ' cur' } }, m.debut + Math.max(0, j - 1) * pas + (j ? 0.001 : 0));

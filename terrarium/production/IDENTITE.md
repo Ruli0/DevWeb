@@ -238,3 +238,16 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Montré** : `videos/studio/jugement/jugement.mp4`, 26,5 s, 60 images par seconde (30 Mo). Rendu plus rapide qu'avec Mousse (moins de masques de lumière).
 - **Contrôles** : 36 tests, lint à 0 erreur, silence de la musique sur le début de la partie « creux » (environ −22 dB).
 - **Ton retour** : en attente.
+
+### Version scientifique (13 nov.)
+
+- **Ton retour** : « Rends ça plus scientifique, sur des faits concrets ou des études. Il ne faut pas que le caméléon tremble trop quand il a peur. Et ça va trop vite, on n'a pas le temps de lire. »
+- **Le fait** : l'effet projecteur (Gilovich, Medvec & Savitsky, 2000, Cornell) : des étudiants portent un T-shirt gênant (Barry Manilow) ; ils estiment qu'environ la moitié des gens le remarqueront, mais seulement environ un quart le remarque vraiment. Chiffres arrondis à 50 % et 25 % (les sources secondaires donnent 46 % et 23 %). **À vérifier dans l'article original avant de publier** (Journal of Personality and Social Psychology, 78 (2), 211-222).
+- **Changé** :
+  - **l'étude à l'écran** : le caméléon enfile le T-shirt de l'étude, puis un panneau montre deux barres qui montent (« ce qu'ils croient : 50 % », « ce qui se passe vraiment : 25 % ») avec la source ; l'histoire dit ensuite « = l'effet projecteur » ;
+  - **le sondage** reste, avec deux voisins (la grenouille et l'escargot), qui pensent à eux ;
+  - **le conseil** s'appuie sur le chiffre : « la prochaine fois, pense à ce 25 % » ;
+  - **le tremblement** est un frisson discret (±0,5° au lieu de ±1,4°, deux fois plus lent) ;
+  - **la lecture** : 0,45 s par mot et 0,8 s par morceau (au lieu de 0,3 et 0,5), et la frappe ne prend plus qu'au plus 30 % du temps du morceau ; l'épisode dure donc 34,8 s (21 mesures).
+- **Montré** : la planche d'aperçu (12 images).
+- **Ton retour** : en attente.

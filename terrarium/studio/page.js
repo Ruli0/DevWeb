@@ -121,6 +121,7 @@ ${calques}
   </g>
   ${f.mousse === false ? '' : RIGS.mousse.dessin()}
   ${v && f.mousse !== false ? RIGS.pensees.dessinEcran() : ''}
+  ${f.jauges ? RIGS.jauges.dessin(esc(f.sourceEtude || '')) : ''}
   ${RIGS.schema.dessin()}
   <g id="etiquettes"></g>
   <rect width="1080" height="1920" fill="url(#vignette)"/>
@@ -142,6 +143,7 @@ ${lire('studio/rigs/lucioles.js')}
 ${lire('studio/rigs/pensees.js')}
 ${lire('studio/rigs/ambiance.js')}
 ${lire('studio/rigs/escargot.js')}
+${lire('studio/rigs/jauges.js')}
 ${lire(`studio/decors/${f.decor}.js`)}
 (function () {
   gsap.registerPlugin(MotionPathPlugin);

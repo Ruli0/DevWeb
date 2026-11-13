@@ -279,24 +279,24 @@ const TEMPS_FORTS = {
     },
   },
   sonder: {
-    mesures: 2,
+    mesures: 3,
     role: "Il demande à un voisin « qu'est-ce que tu penses de moi ? » (un « ? » au-dessus de sa tête, il se penche vers lui). Le voisin répond avec ce qui l'occupe vraiment : sa bulle de pensée.",
-    params: 'qui : grenouille, lucioles, escargot ou mousse ; texte (voisins : true)',
+    params: 'qui : grenouille, lucioles ou escargot ; texte (voisins : true)',
     jouer(ctx, p) {
       const qui = p.qui;
       const questionne = (angle) => {
-        ctx.geste('ia', 'pencher', ctx.b(0.5), { angle, duree: ctx.b(3.4) - ctx.b(0.5) });
-        ctx.pensee('cameleon', ctx.b(1), ctx.b(3.2) - ctx.b(1));
+        ctx.geste('ia', 'pencher', ctx.b(0.6), { angle, duree: ctx.b(4.6) - ctx.b(0.6) });
+        ctx.pensee('cameleon', ctx.b(0.8), ctx.b(4.4) - ctx.b(0.8));
       };
       if (qui === 'grenouille') {
         ctx.camera(0, 'plan-moyen', ['ia.tete', 'grenouille.oeil'], 0.4, 'power3.inOut');
         ctx.regarder(ctx.b(0.3), 'grenouille.oeil', 0.25);
         questionne(5);
         ctx.regarderVoisin('grenouille', 0, ctx.b(1.2), 'ia.oeil');
-        ctx.regarderVoisin('grenouille', 0, ctx.b(3.4), [850, 400], 0.3);
-        ctx.pensee('grenouille', ctx.b(3.6), ctx.b(7.8) - ctx.b(3.6));
-        ctx.geste('grenouille', 'coasser', ctx.b(6.4), { fois: 1 });
-        return { parties: ['plein', 'plein'] };
+        ctx.regarderVoisin('grenouille', 0, ctx.b(4.4), [830, 400], 0.3);
+        ctx.pensee('grenouille', ctx.b(4.7), ctx.b(11.7) - ctx.b(4.7));
+        ctx.geste('grenouille', 'coasser', ctx.b(9.5), { fois: 1 });
+        return { parties: ['plein', 'plein', 'plein'] };
       }
       if (qui === 'lucioles') {
         ctx.camera(0, 'plan-moyen', ['ia.tete', 'lucioles'], 0.4, 'power3.inOut');
@@ -304,10 +304,10 @@ const TEMPS_FORTS = {
         ctx.regarder(ctx.b(0.3), 'lucioles', 0.25);
         questionne(-3);
         [0, 1, 2].forEach((i) => ctx.regarderVoisin('lucioles', i, ctx.b(1.2 + 0.15 * i), 'ia.oeil'));
-        [0, 1, 2].forEach((i) => ctx.regarderVoisin('lucioles', i, ctx.b(3.4), `luciole.${(i + 1) % 3}`, 0.25));
-        ctx.pensee('lucioles', ctx.b(3.6), ctx.b(7.8) - ctx.b(3.6));
-        ctx.geste('lucioles', 'danser', ctx.b(4.6), { i: 1, duree: 1.2 });
-        return { parties: ['plein', 'plein'] };
+        [0, 1, 2].forEach((i) => ctx.regarderVoisin('lucioles', i, ctx.b(4.4), `luciole.${(i + 1) % 3}`, 0.25));
+        ctx.pensee('lucioles', ctx.b(4.7), ctx.b(11.7) - ctx.b(4.7));
+        ctx.geste('lucioles', 'danser', ctx.b(6), { i: 1, duree: 1.2 });
+        return { parties: ['plein', 'plein', 'plein'] };
       }
       if (qui === 'escargot') {
         // Il est lent : il met du temps à tourner les yeux, et il pense à sa salade.
@@ -315,67 +315,68 @@ const TEMPS_FORTS = {
         ctx.camera(0, 'plan-moyen', ['ia.tete', [400, 840]], 0.4, 'power3.inOut');
         ctx.regarder(ctx.b(0.3), 'escargot.oeil', 0.25);
         questionne(5);
-        ctx.regarderVoisin('escargot', 0, ctx.b(1.2), 'ia.oeil', 0.6);
-        ctx.regarderVoisin('escargot', 0, ctx.b(3.4), [650, 1040], 0.6);
-        ctx.pensee('escargot', ctx.b(3.8), ctx.b(7.8) - ctx.b(3.8));
-        return { parties: ['plein', 'creux'] };
+        ctx.regarderVoisin('escargot', 0, ctx.b(1.6), 'ia.oeil', 0.7);
+        ctx.regarderVoisin('escargot', 0, ctx.b(4.4), [650, 1040], 0.7);
+        ctx.pensee('escargot', ctx.b(4.7), ctx.b(11.7) - ctx.b(4.7));
+        return { parties: ['plein', 'plein', 'plein'] };
       }
-      if (qui === 'mousse') {
-        ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.4, 'power3.inOut');
-        ctx.regarder(ctx.b(0.3), [1000, 1450], 0.3);
-        questionne(5);
-        ctx.humeur(ctx.b(1.5), 'surpris');
-        ctx.humeur(ctx.b(3.5), 'content');
-        ctx.pensee('mousse', ctx.b(3.6), ctx.b(7.8) - ctx.b(3.6));
-        return { parties: ['plein', 'creux'] };
-      }
-      return ctx.erreur(`sonder : qui doit être grenouille, lucioles, escargot ou mousse (${qui})`);
+      return ctx.erreur(`sonder : qui doit être grenouille, lucioles ou escargot (${qui})`);
+    },
+  },
+  etude: {
+    mesures: 3,
+    role: "L'étude de Cornell (2000) : il enfile un T-shirt ridicule, au moment où le texte le dit. Le plan reste à hauteur de tête pour laisser le bas de l'écran aux jauges.",
+    params: 'texte (voisins : true)',
+    jouer(ctx) {
+      ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.5, 'power3.inOut');
+      ctx.geste('ia', 'cligner', ctx.b(0.8), { fois: 1 });
+      ctx.tshirt(ctx.b(5.3), true);
+      ctx.geste('ia', 'pencher', ctx.b(5.8), { angle: -3, duree: ctx.b(10) - ctx.b(5.8) });
+      ctx.regarderVoisin('grenouille', 0, ctx.b(6), 'ia.oeil');
+      return { parties: ['plein', 'plein', 'plein'] };
+    },
+  },
+  realite: {
+    mesures: 3,
+    role: "Les chiffres de l'étude : le panneau apparaît, la barre « ce qu'ils croient » monte à 50 %, puis « ce qui se passe vraiment » à 25 % au moment où le texte le dit. Le caméléon cligne des yeux, surpris.",
+    params: 'texte ; l\'épisode donne « source » (voisins : true)',
+    jouer(ctx) {
+      ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.5, 'power3.inOut');
+      ctx.jauge('apparaitre', ctx.b(0.2));
+      ctx.jauge('barre', ctx.b(0.6), { id: 'croit', vers: 50, duree: 1.3 });
+      ctx.jauge('barre', ctx.b(6.2), { id: 'reel', vers: 25, duree: 1.3 });
+      ctx.geste('ia', 'cligner', ctx.b(8), { fois: 2 });
+      return { parties: ['plein', 'creux', 'creux'] };
     },
   },
   nommer: {
     mesures: 2,
-    role: "Plan large : le projecteur réapparaît sur le caméléon, étiqueté « dans sa tête », puis s'éteint : il n'existait que dans son imagination.",
+    role: "Le nom de l'effet : le projecteur imaginaire s'allume sur le caméléon (étiquette « dans sa tête »), puis s'éteint. La source de l'étude s'affiche sur le panneau.",
     params: 'texte (voisins : true)',
     jouer(ctx) {
-      ctx.camera(0, 'plan-moyen', ['ia', 'lucioles'], 0.6);
-      ctx.projecteur(ctx.b(0.5), true);
-      ctx.etiquette(ctx.b(1), ctx.b(5) - ctx.b(1), 'ia.corps', 'dans sa tête', { dx: 220, dy: -110 });
-      ctx.projecteur(ctx.b(5.5), false);
-      ctx.humeur(ctx.b(6), 'neutre');
+      ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.5, 'power3.inOut');
+      ctx.jauge('source', ctx.b(0.5), { vers: true });
+      ctx.projecteur(ctx.b(0.6), true);
+      ctx.etiquette(ctx.b(1.2), ctx.b(6) - ctx.b(1.2), 'ia.corps', 'dans sa tête', { dx: 220, dy: -110 });
+      ctx.projecteur(ctx.b(6.2), false);
       return { parties: ['plein', 'plein'] };
-    },
-  },
-  oser: {
-    mesures: 2,
-    role: "La tâche revient, il réapparaît, tire et l'attrape (la basse revient). Les voisins ne réagissent pas : la grenouille cligne des yeux, les lucioles regardent ailleurs.",
-    params: 'texte (voisins : true)',
-    jouer(ctx) {
-      const depart = ctx.point('tache.depart');
-      ctx.camera(0, 'plan-moyen', ['ia', 'tache.depart'], 0.5);
-      ctx.mouche('descendre', ctx.b(0), { vers: depart, duree: ctx.b(2.5) - ctx.b(0) });
-      ctx.camoufler(ctx.b(1), false);
-      ctx.regarder(ctx.b(2), 'tache.depart', 0.25);
-      ctx.langue(ctx.b(4) - 0.1, { vers: 'tache' });
-      ctx.mouche('disparaitre', ctx.b(4));
-      ctx.humeur(ctx.b(4), 'content');
-      ctx.regarderVoisin('grenouille', 0, ctx.b(5), [150, 600], 0.4);
-      ctx.geste('grenouille', 'cligner', ctx.b(5.5), { fois: 1 });
-      [0, 1, 2].forEach((i) => ctx.regarderVoisin('lucioles', i, ctx.b(5.2 + 0.2 * i), [ctx.point(`luciole.${i}`)[0] + (i - 1) * 90, ctx.point(`luciole.${i}`)[1] - 160], 0.4));
-      ctx.geste('ia', 'avaler', ctx.b(4.8));
-      return { parties: ['montee', 'plein'] };
     },
   },
   conseil: {
-    mesures: 2,
-    role: 'Le conseil : il devient turquoise, Mousse saute de joie, la grenouille coasse et les lucioles dansent.',
+    mesures: 3,
+    role: 'Le conseil : le panneau disparaît, la tâche est toujours là. Quand le texte dit « pense à ce 25 % », il tire et l\'attrape (la basse revient), devient turquoise.',
     params: 'couleur (turquoise) ; texte (voisins : true)',
     jouer(ctx, p) {
-      ctx.camera(0, 'plan-moyen', ['ia', 'grenouille.oeil'], 0.6);
-      ctx.teinte(ctx.b(0.3), p.couleur || 'turquoise');
-      ctx.geste('mousse', 'sauter', ctx.b(0.5), { fois: 2, duree: ctx.b(4.5) - ctx.b(0.5) });
-      ctx.geste('grenouille', 'coasser', ctx.b(4.5), { fois: 2 });
-      [0, 2].forEach((i) => ctx.geste('lucioles', 'danser', ctx.b(4.8 + 0.3 * i), { i, duree: 1.2 }));
-      return { parties: ['plein', 'plein'] };
+      ctx.jauge('disparaitre', ctx.b(0));
+      ctx.camera(0, 'plan-moyen', ['ia', 'tache'], 0.5, 'power3.inOut');
+      ctx.regarder(ctx.b(1), 'tache', 0.25);
+      ctx.langue(ctx.b(5.4) - 0.1, { vers: 'tache' });
+      ctx.mouche('disparaitre', ctx.b(5.4));
+      ctx.teinte(ctx.b(5.8), p.couleur || 'turquoise');
+      ctx.geste('ia', 'avaler', ctx.b(6.4));
+      ctx.regarderVoisin('grenouille', 0, ctx.b(7), [830, 600], 0.4);
+      ctx.geste('grenouille', 'cligner', ctx.b(7.5), { fois: 1 });
+      return { parties: ['creux', 'montee', 'plein'] };
     },
   },
   boucler: {

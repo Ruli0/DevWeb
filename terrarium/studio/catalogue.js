@@ -4,8 +4,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { TEMPS_FORTS } = require('./temps-forts.js');
-const { RIGS, DECORS, CADRAGES, PARTIES } = require('./compiler.js');
-const { LECTURE } = require('../shared/scenarios.js');
+const { RIGS, DECORS, CADRAGES, PARTIES, LECTURE } = require('./compiler.js');
 
 function catalogue() {
   const l = [
@@ -24,7 +23,7 @@ function catalogue() {
     '```',
     '',
     '- Tout se compte en **mesures** de la musique (Drift : 145 BPM, une mesure = 1,655 s). La durée de la vidéo est la somme des mesures.',
-    `- **Texte** : une chaîne, ou une liste de morceaux affichés l'un après l'autre. Au plus ${LECTURE.caracteresMax} caractères par morceau ; il faut ${LECTURE.parMot} s par mot et ${LECTURE.parMorceau} s par morceau pour lire. \`*mot*\` met un mot en valeur (rose).`,
+    `- **Texte** : une chaîne, ou une liste de morceaux affichés l'un après l'autre. Au plus ${LECTURE.caracteresMax} caractères par morceau ; il faut ${String(LECTURE.parMot).replace('.', ',')} s par mot et ${String(LECTURE.parMorceau).replace('.', ',')} s par morceau pour lire (le champ \`"lecture": "rapide"\` de l'épisode revient aux anciennes règles). \`*mot*\` met un mot en valeur (rose).`,
     '- **La vidéo doit boucler** : la caméra, la tâche, la couleur de l\'IA et l\'humeur de Mousse reviennent à leur état du début. Le temps fort `boucler`, placé en dernier, s\'en charge.',
     '- Le compilateur refuse un épisode qui ne respecte pas ces règles, avec un message qui dit quoi changer.',
     '',

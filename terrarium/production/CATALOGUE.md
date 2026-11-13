@@ -13,7 +13,7 @@ Un fichier `videos/episodes/<id>.json`, puis `npm run video -- <id>` (planche d'
 ```
 
 - Tout se compte en **mesures** de la musique (Drift : 145 BPM, une mesure = 1,655 s). La durée de la vidéo est la somme des mesures.
-- **Texte** : une chaîne, ou une liste de morceaux affichés l'un après l'autre. Au plus 34 caractères par morceau ; il faut 0.3 s par mot et 0.5 s par morceau pour lire. `*mot*` met un mot en valeur (rose).
+- **Texte** : une chaîne, ou une liste de morceaux affichés l'un après l'autre. Au plus 34 caractères par morceau ; il faut 0,45 s par mot et 0,8 s par morceau pour lire (le champ `"lecture": "rapide"` de l'épisode revient aux anciennes règles). `*mot*` met un mot en valeur (rose).
 - **La vidéo doit boucler** : la caméra, la tâche, la couleur de l'IA et l'humeur de Mousse reviennent à leur état du début. Le temps fort `boucler`, placé en dernier, s'en charge.
 - Le compilateur refuse un épisode qui ne respecte pas ces règles, avec un message qui dit quoi changer.
 
@@ -34,10 +34,11 @@ Un fichier `videos/episodes/<id>.json`, puis `npm run video -- <id>` (planche d'
 | `formule` | 2 | La définition : plan large, étiquettes sur l'IA et sur ses outils, puis le schéma passe au centre et la comète fait un tour complet. | texte : un morceau par mesure |
 | `cout` | 2 | Le prix de la boucle : le schéma reste au centre, tout allumé, avec le temps et les tokens dépensés ; Mousse rit jaune. | texte |
 | `hesiter` | 2 | Ouvre sur l'hésitation : gros plan sur l'œil et la tâche, le caméléon veut tirer mais il tremble. | texte |
-| `sonder` | 2 | Il demande à un voisin « qu'est-ce que tu penses de moi ? » (un « ? » au-dessus de sa tête, il se penche vers lui). Le voisin répond avec ce qui l'occupe vraiment : sa bulle de pensée. | qui : grenouille, lucioles, escargot ou mousse ; texte (voisins : true) |
-| `nommer` | 2 | Plan large : le projecteur réapparaît sur le caméléon, étiqueté « dans sa tête », puis s'éteint : il n'existait que dans son imagination. | texte (voisins : true) |
-| `oser` | 2 | La tâche revient, il réapparaît, tire et l'attrape (la basse revient). Les voisins ne réagissent pas : la grenouille cligne des yeux, les lucioles regardent ailleurs. | texte (voisins : true) |
-| `conseil` | 2 | Le conseil : il devient turquoise, Mousse saute de joie, la grenouille coasse et les lucioles dansent. | couleur (turquoise) ; texte (voisins : true) |
+| `sonder` | 3 | Il demande à un voisin « qu'est-ce que tu penses de moi ? » (un « ? » au-dessus de sa tête, il se penche vers lui). Le voisin répond avec ce qui l'occupe vraiment : sa bulle de pensée. | qui : grenouille, lucioles ou escargot ; texte (voisins : true) |
+| `etude` | 3 | L'étude de Cornell (2000) : il enfile un T-shirt ridicule, au moment où le texte le dit. Le plan reste à hauteur de tête pour laisser le bas de l'écran aux jauges. | texte (voisins : true) |
+| `realite` | 3 | Les chiffres de l'étude : le panneau apparaît, la barre « ce qu'ils croient » monte à 50 %, puis « ce qui se passe vraiment » à 25 % au moment où le texte le dit. Le caméléon cligne des yeux, surpris. | texte ; l'épisode donne « source » (voisins : true) |
+| `nommer` | 2 | Le nom de l'effet : le projecteur imaginaire s'allume sur le caméléon (étiquette « dans sa tête »), puis s'éteint. La source de l'étude s'affiche sur le panneau. | texte (voisins : true) |
+| `conseil` | 3 | Le conseil : le panneau disparaît, la tâche est toujours là. Quand le texte dit « pense à ce 25 % », il tire et l'attrape (la basse revient), devient turquoise. | couleur (turquoise) ; texte (voisins : true) |
 | `boucler` | 2 | Plan large, la scène revient à son état de départ (la tâche, les outils, le schéma), et la caméra revient au cadrage du début : la vidéo boucle. | texte |
 
 `"mesures": n` dans un temps fort allonge sa durée (la mise en scène reste calée sur ses premières mesures).
@@ -59,7 +60,8 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 | `repondre` | Une bulle de réponse lumineuse sort de sa bouche. | duree |
 | `camoufler` | Il se camoufle : il devient presque invisible, ou réapparaît. | vers : vrai (presque invisible) ou faux |
 | `pencher` | Il se penche vers quelqu'un (ou se redresse), curieux ou méfiant. | angle (+ : vers l'avant) ; duree |
-| `trembler` | Il tremble de peur (petites secousses rapides). | duree |
+| `trembler` | Il a un petit frisson de peur (discret). | duree |
+| `tshirt` | Il porte un T-shirt ridicule (rose, à rayures) : celui de l'étude de Cornell. | vers : vrai (il enfile le T-shirt) ou faux |
 | `teinte` | Le contour et les taches changent de couleur. | de, vers : vert, turquoise, orange, rose ; duree |
 
 ### mouche (la mouche)
@@ -142,6 +144,15 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 | `regarder` | Ses pupilles suivent un point (lentement : c'est un escargot). | de, vers : décalages des pupilles ; duree |
 | `rentrer` | Il rentre ses yeux dans sa tête, gêné. | — |
 | `sortir` | Il ressort ses yeux. | — |
+
+### jauges (les jauges d'une étude)
+
+| Geste | Ce qu'il fait | Paramètres |
+|---|---|---|
+| `apparaitre` | Le panneau de l'étude apparaît en bas de l'écran. | — |
+| `disparaitre` | Le panneau disparaît. | — |
+| `barre` | Une barre se remplit jusqu'à son pourcentage. | id : croit ou reel ; de, vers : pourcentages ; duree |
+| `source` | La source de l'étude s'affiche en petit. | vers : vrai (la source apparaît) ou faux |
 
 ## Décors
 

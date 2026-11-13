@@ -51,7 +51,7 @@ test('deux gestes du même canal ne peuvent pas se chevaucher', () => {
 });
 
 test('le runtime et les rigs ne contiennent ni minuterie, ni hasard, ni répétition infinie', () => {
-  for (const f of ['studio/runtime.js', 'studio/rigs/cameleon.js', 'studio/rigs/mouche.js', 'studio/rigs/mousse.js', 'studio/rigs/outils.js', 'studio/rigs/schema.js', 'studio/rigs/grenouille.js', 'studio/rigs/lucioles.js', 'studio/rigs/pensees.js', 'studio/rigs/ambiance.js', 'studio/rigs/escargot.js', 'studio/decors/branche.js']) {
+  for (const f of ['studio/runtime.js', 'studio/rigs/cameleon.js', 'studio/rigs/mouche.js', 'studio/rigs/mousse.js', 'studio/rigs/outils.js', 'studio/rigs/schema.js', 'studio/rigs/grenouille.js', 'studio/rigs/lucioles.js', 'studio/rigs/pensees.js', 'studio/rigs/ambiance.js', 'studio/rigs/escargot.js', 'studio/rigs/jauges.js', 'studio/decors/branche.js']) {
     const s = fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
     assert.ok(!/setTimeout|setInterval|requestAnimationFrame|Math\.random|repeat:\s*-1/.test(s), f);
   }
@@ -84,7 +84,7 @@ test('nuit-1 : quatre tours de boucle comptés (tour, temps, tokens), puis le co
   assert.equal(feuille.depart.mouche.visible, false, 'la tâche (le bug) arrive plus tard');
 });
 
-test('jugement : le projecteur est éteint à la fin, et chaque voisin a sa bulle de pensée après la question « ? »', () => {
+test('jugement : le projecteur est éteint à la fin, chaque voisin a sa bulle après la question « ? », et les jauges montent à 50 % puis 25 %', () => {
   const j = episodes.find((x) => x.ep.id === 'jugement');
   const { feuille, erreurs } = compiler(j.ep);
   assert.deepEqual(erreurs, []);
@@ -92,7 +92,22 @@ test('jugement : le projecteur est éteint à la fin, et chaque voisin a sa bull
   assert.equal(projo[projo.length - 1], 'eteindre');
   assert.equal(projo.filter((e) => e === 'allumer').length, projo.filter((e) => e === 'eteindre').length, 'chaque projecteur allumé est éteint');
   const bulles = feuille.ordres.filter((o) => o.qui === 'pensees').map((o) => o.p.sur);
-  assert.deepEqual(bulles, ['cameleon', 'grenouille', 'cameleon', 'lucioles', 'cameleon', 'escargot']);
+  assert.deepEqual(bulles, ['cameleon', 'grenouille', 'cameleon', 'escargot']);
+  const barres = feuille.ordres.filter((o) => o.qui === 'jauges' && o.geste === 'barre').map((o) => [o.p.id, o.p.vers]);
+  assert.deepEqual(barres, [['croit', 50], ['reel', 25]]);
+  const jauges = feuille.ordres.filter((o) => o.qui === 'jauges' && (o.geste === 'apparaitre' || o.geste === 'disparaitre')).map((o) => o.geste);
+  assert.deepEqual(jauges, ['apparaitre', 'disparaitre'], 'le panneau apparaît puis disparaît (la vidéo boucle)');
+});
+
+test('lecture lente par défaut : 0,45 s par mot et 0,8 s par morceau, et les textes tapés laissent du temps pour lire', () => {
+  const j = episodes.find((x) => x.ep.id === 'jugement').ep;
+  const { feuille } = compiler(j);
+  feuille.textes.forEach((m) => {
+    const mots = m.texte.replace(/\*/g, '').trim().split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+    assert.ok(m.fin - m.debut >= 0.45 * mots + 0.8 - 0.02, `« ${m.texte} » : ${(m.fin - m.debut).toFixed(2)} s pour ${mots} mots`);
+  });
+  const rapide = compiler({ ...j, lecture: 'rapide' });
+  assert.deepEqual(rapide.erreurs, []);
 });
 
 test('un épisode sans « voisins » ne peut pas utiliser la grenouille, les lucioles ou le projecteur', () => {

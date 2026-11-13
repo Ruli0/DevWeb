@@ -65,6 +65,7 @@
     <path class="cameleon-bord" d="${G.corps}" fill="${NOIR}" stroke="${t.bord}" stroke-width="1.6"/>
     <path d="${G.ventre}" fill="#0d2a1a"/>
     ${G.taches.map(([x, y, r]) => `<circle class="cameleon-tache" cx="${x}" cy="${y}" r="${r}" fill="${t.tache}" filter="url(#lueur)"/>`).join('')}
+    <g id="cameleon-tshirt" opacity="0"><path d="M-66 -84 L-30 -104 L10 -98 L40 -104 L72 -84 L60 -62 L44 -70 L44 -26 L-48 -24 L-48 -70 L-60 -62 Z" fill="#ff5fa2" stroke="#ffc1dd" stroke-width="2"/><path d="M-47 -56 H43 M-47 -40 H43" stroke="#fff" stroke-width="7" opacity="0.9"/><circle cx="-2" cy="-80" r="12" fill="#ffe14d"/></g>
     <path d="${G.bouche}" stroke="#2c5a3c" stroke-width="2.4" fill="none" stroke-linecap="round"/>
     <circle class="cameleon-bord" cx="${ox}" cy="${oy}" r="24" fill="${NOIR}" stroke="${t.bord}" stroke-width="1.6"/>
     <g id="cameleon-sclere"><circle cx="${ox}" cy="${oy}" r="16" fill="#eafff0" filter="url(#lueur)"/>
@@ -94,7 +95,8 @@
     repondre: { canal: 'bulle', duree: (p) => p.duree || 1.4, params: 'duree', role: 'Une bulle de réponse lumineuse sort de sa bouche.' },
     camoufler: { canal: 'camouflage', duree: () => 0.7, params: 'vers : vrai (presque invisible) ou faux', role: 'Il se camoufle : il devient presque invisible, ou réapparaît.' },
     pencher: { canal: 'tremble', duree: (p) => p.duree || 1.2, params: 'angle (+ : vers l\'avant) ; duree', role: 'Il se penche vers quelqu\'un (ou se redresse), curieux ou méfiant.' },
-    trembler: { canal: 'tremble', duree: (p) => p.duree || 1, params: 'duree', role: 'Il tremble de peur (petites secousses rapides).' },
+    trembler: { canal: 'tremble', duree: (p) => (p.duree || 1) + 0.15, params: 'duree', role: 'Il a un petit frisson de peur (discret).' },
+    tshirt: { canal: 'habit', duree: () => 0.5, params: 'vers : vrai (il enfile le T-shirt) ou faux', role: 'Il porte un T-shirt ridicule (rose, à rayures) : celui de l\'étude de Cornell.' },
     teinte: { canal: 'couleur', duree: (p) => p.duree || 0.8, params: `de, vers : ${Object.keys(TEINTES).join(', ')} ; duree`, role: 'Le contour et les taches changent de couleur.' },
   };
 
@@ -112,6 +114,7 @@
     c.repos(c.q('#cameleon-langue-g'), { opacity: 0 });
     c.repos(c.qa('#cameleon-pense, #cameleon-goutte, #cameleon-bulle'), { opacity: 0 });
     c.repos(c.q('#cameleon'), { opacity: 1 });
+    c.repos(c.q('#cameleon-tshirt'), { opacity: 0 });
     c.repos(c.q('#cameleon-tremble'), { rotation: 0, svgOrigin: PIEDS });
   }
   const gestes = {
@@ -165,6 +168,10 @@
       c.ft(c.q('#cameleon-bulle-in'), { scale: 0.1, svgOrigin: '-40 50' }, { scale: 1, svgOrigin: '-40 50', duration: 0.35, ease: 'back.out(2.5)' }, t);
       c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.25 }, t + d - 0.25);
     },
+    tshirt(c, t, p) {
+      const [a, b] = p.vers ? [0, 1] : [1, 0];
+      c.ft(c.q('#cameleon-tshirt'), { opacity: a, scale: p.vers ? 0.6 : 1, svgOrigin: '0 -64' }, { opacity: b, scale: p.vers ? 1 : 0.6, svgOrigin: '0 -64', duration: 0.5, ease: p.vers ? 'back.out(2)' : 'power2.in' }, t);
+    },
     camoufler(c, t, p) {
       const [a, b] = p.vers ? [1, 0.22] : [0.22, 1];
       c.ft(c.q('#cameleon'), { opacity: a }, { opacity: b, duration: 0.7, ease: 'power2.inOut' }, t);
@@ -175,9 +182,10 @@
       c.ft(c.q('#cameleon-tremble'), { rotation: a, svgOrigin: PIEDS }, { rotation: 0, svgOrigin: PIEDS, duration: 0.45, ease: 'power2.inOut' }, t + d - 0.45);
     },
     trembler(c, t, p) {
-      const d = p.duree || 1; const n = Math.max(2, Math.round(d / 0.05));
-      c.ft(c.q('#cameleon-tremble'), { rotation: -1.4, svgOrigin: PIEDS }, { rotation: 1.4, svgOrigin: PIEDS, duration: 0.05, yoyo: true, repeat: n - 1, ease: 'none' }, t);
-      c.ft(c.q('#cameleon-tremble'), { rotation: n % 2 ? 1.4 : -1.4, svgOrigin: PIEDS }, { rotation: 0, svgOrigin: PIEDS, duration: 0.08 }, t + n * 0.05);
+      // Un frisson discret (13 nov. 2026 : « il ne faut pas qu'il tremble trop ») : ±0,5°, 5 fois par seconde.
+      const d = p.duree || 1; const n = Math.max(2, Math.round(d / 0.1));
+      c.ft(c.q('#cameleon-tremble'), { rotation: -0.5, svgOrigin: PIEDS }, { rotation: 0.5, svgOrigin: PIEDS, duration: 0.1, yoyo: true, repeat: n - 1, ease: 'sine.inOut' }, t);
+      c.ft(c.q('#cameleon-tremble'), { rotation: n % 2 ? 0.5 : -0.5, svgOrigin: PIEDS }, { rotation: 0, svgOrigin: PIEDS, duration: 0.15 }, t + n * 0.1);
     },
     teinte(c, t, p) {
       const de = TEINTES[p.de]; const vers = TEINTES[p.vers]; const d = p.duree || 0.8;

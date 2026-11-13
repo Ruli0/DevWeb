@@ -8,7 +8,24 @@
  * pour que chaque geste parte toujours de là où le précédent s'est arrêté.
  */
 'use strict';
-const { morceaux, LECTURE } = require('../shared/scenarios.js');
+// Temps de lecture du studio. « lente » (par défaut) : 0,45 s par mot et 0,8 s par morceau (13 nov. 2026 :
+// « ça va trop vite, on n'a pas le temps de lire »). « rapide » : les anciennes règles (0,3 s et 0,5 s).
+const LECTURES = { lente: { parMot: 0.45, parMorceau: 0.8, caracteresMax: 34 }, rapide: { parMot: 0.3, parMorceau: 0.5, caracteresMax: 34 } };
+const LECTURE = LECTURES.lente;
+const nbMots = (texte) => String(texte).replace(/\*/g, '').trim().split(/\s+/).filter((m) => /[\p{L}\p{N}]/u.test(m)).length;
+// Découpe la légende d'un plan en morceaux, chacun avec sa part du temps, proportionnelle au temps de lecture.
+function morceaux(plan, lecture = LECTURE) {
+  const liste = [].concat(plan.legende);
+  const besoin = liste.map((m) => lecture.parMot * nbMots(m) + lecture.parMorceau);
+  const total = besoin.reduce((a, b) => a + b, 0);
+  let t = plan.debut;
+  return liste.map((texte, i) => {
+    const d = ((plan.fin - plan.debut) * besoin[i]) / total;
+    const m = { texte, debut: +t.toFixed(3), fin: +(t + d).toFixed(3), besoin: +besoin[i].toFixed(2) };
+    t += d;
+    return m;
+  });
+}
 const { TEMPS_FORTS } = require('./temps-forts.js');
 
 const RIGS = {
@@ -16,6 +33,7 @@ const RIGS = {
   outils: require('./rigs/outils.js'), schema: require('./rigs/schema.js'),
   grenouille: require('./rigs/grenouille.js'), lucioles: require('./rigs/lucioles.js'),
   pensees: require('./rigs/pensees.js'), ambiance: require('./rigs/ambiance.js'), escargot: require('./rigs/escargot.js'),
+  jauges: require('./rigs/jauges.js'),
 };
 const DECORS = { branche: require('./decors/branche.js') };
 const MUSIQUES = { drift: { tempo: 145 } };
@@ -39,6 +57,9 @@ const SONS = {
   'cameleon.absorber': [{ f: 'carillon.wav', v: 0.3 }],
   'cameleon.repondre': [{ f: 'pop.wav', v: 0.6 }],
   'schema.apparaitre': [{ f: 'clic.wav', v: 0.5 }],
+  'jauges.apparaitre': [{ f: 'pop.wav', v: 0.5 }],
+  'jauges.barre': [{ f: 'carillon.wav', v: 0.35 }],
+  'cameleon.tshirt': [{ f: 'pop.wav', v: 0.5 }],
   'grenouille.coasser': [{ f: 'croa.wav', v: 0.6 }],
   'ambiance.projecteur': [{ f: 'souffle.wav', v: 0.4 }],
   'pensees.penser': [{ f: 'pop.wav', v: 0.5 }],
@@ -102,10 +123,14 @@ function compiler(episode) {
     outils: outilsDepart,
     schema: { visible: false, etape: 'aucune', angle: -90, centre: false, compteur: { tour: 0, s: 0, k: 0 } },
     camoufle: false, projecteur: false,
+    jauges: { visible: false, croit: 0, reel: 0, source: false },
     voisins: { grenouille: { regard: [0, 0], fixe: false }, lucioles: [0, 1, 2].map(() => ({ regard: [0, 0], fixe: false })), luciolesIci: false, escargot: { regard: [0, 0] } },
   };
   // « voisins » : la grenouille, les trois lucioles, les bulles de pensée et le projecteur sont dans la scène.
   const voisins = Boolean(ep.voisins);
+  let usesJauges = false;
+  const lecture = LECTURES[ep.lecture || 'lente'];
+  non(lecture, `lecture inconnue (${ep.lecture}) : « lente » ou « rapide »`);
   // Mousse (le gardien) est dans la scène sauf si l'épisode dit "mousse": false.
   const avecMousse = ep.mousse !== false;
   const etat = JSON.parse(JSON.stringify(depart));
@@ -186,6 +211,15 @@ function compiler(episode) {
       [0, 1, 2].forEach((i) => ctx.geste('lucioles', entrent ? 'entrer' : 'sortir', t + 0.14 * i, { i }));
       etat.voisins.luciolesIci = entrent;
     },
+    // Les jauges d'une étude : le panneau, les barres, la source.
+    jauge(nom, t, p = {}) {
+      const j = etat.jauges; usesJauges = true;
+      if (nom === 'apparaitre') { if (!j.visible) { ctx.geste('jauges', 'apparaitre', t); j.visible = true; } }
+      else if (nom === 'disparaitre') { if (j.visible) { ctx.geste('jauges', 'disparaitre', t); j.visible = false; j.source = false; } }
+      else if (nom === 'barre') { ctx.geste('jauges', 'barre', t, { id: p.id, de: j[p.id], vers: p.vers, duree: r(p.duree || 1, 3) }); j[p.id] = p.vers; }
+      else if (nom === 'source') { if (j.source !== Boolean(p.vers)) { ctx.geste('jauges', 'source', t, { vers: Boolean(p.vers) }); j.source = Boolean(p.vers); } }
+    },
+    tshirt(t, vers) { ctx.geste('ia', 'tshirt', t, { vers }); },
     // Le regard d'un voisin : ses pupilles vont vers un point (cible), de la même façon que celles du caméléon.
     regarderVoisin(qui, i, t, cible, duree = 0.3) {
       if (!ctx.exigerVoisins()) return;
@@ -217,6 +251,7 @@ function compiler(episode) {
       if (sc.compteur.tour || sc.compteur.s || sc.compteur.k) ctx.schema('compteur', t0 + 0.7, { vers: { tour: 0, s: 0, k: 0 }, duree: (t1 - t0) * 0.45 });
       if (sc.etape !== 'aucune') ctx.schema('etape', t0 + 0.7, { vers: 'aucune' });
       if (sc.visible && !depart.schema.visible) ctx.schema('disparaitre', t1 - 0.3);
+      if (etat.jauges.visible) ctx.jauge('disparaitre', t0);
       if (voisins) {
         ctx.camoufler(t0, false); ctx.projecteur(t0, false); ctx.lucioles(t1 - 1.4, false);
         ctx.fixerVoisin('grenouille', 0, t0 + 0.2, false);
@@ -297,11 +332,11 @@ function compiler(episode) {
       if (def.texteParMesure && !parMesure) erreurs.push(`temps ${i + 1} : ${tf.fort} attend un texte par mesure (${mesures})`);
       const plan = { debut: r(t0, 4), fin, legende: liste };
       const ms = parMesure
-        ? liste.map((texte, k) => ({ texte, debut: r(t0 + k * M, 4), fin: r(t0 + (k + 1) * M, 4), besoin: morceaux({ debut: 0, fin: 1, legende: [texte] })[0].besoin }))
-        : morceaux(plan);
+        ? liste.map((texte, k) => ({ texte, debut: r(t0 + k * M, 4), fin: r(t0 + (k + 1) * M, 4), besoin: morceaux({ debut: 0, fin: 1, legende: [texte] }, lecture)[0].besoin }))
+        : morceaux(plan, lecture);
       ms.forEach((m) => {
         const brut = m.texte.replace(/\*/g, '');
-        non(brut.length <= LECTURE.caracteresMax, `temps ${i + 1} : « ${brut} » dépasse ${LECTURE.caracteresMax} caractères`);
+        non(brut.length <= lecture.caracteresMax, `temps ${i + 1} : « ${brut} » dépasse ${lecture.caracteresMax} caractères`);
         non(m.fin - m.debut >= m.besoin - 1e-6, `temps ${i + 1} : « ${brut} » reste ${(m.fin - m.debut).toFixed(2)} s, il en faut ${m.besoin}`);
         textes.push({ debut: r(m.debut), fin: r(m.fin), texte: m.texte });
       });
@@ -348,6 +383,7 @@ function compiler(episode) {
   non(etat.camoufle === depart.camoufle && etat.projecteur === depart.projecteur, 'boucle : le caméléon est encore camouflé, ou le projecteur allumé');
   non(!etat.voisins.grenouille.fixe && etat.voisins.lucioles.every((l) => !l.fixe), 'boucle : un voisin fixe encore le caméléon');
   non(!etat.voisins.luciolesIci, 'boucle : les lucioles sont encore là à la fin (elles doivent ressortir)');
+  non(!etat.jauges.visible, 'boucle : le panneau de l\'étude est encore à l\'écran à la fin');
   const sc = etat.schema;
   non(sc.visible === depart.schema.visible && !sc.centre && sc.etape === 'aucune' && !sc.compteur.tour && !sc.compteur.s && !sc.compteur.k, 'boucle : le schéma n\'est pas revenu à son départ');
   parties.forEach((x) => non(PARTIES.includes(x), `partie de musique inconnue : ${x}`));
@@ -367,13 +403,14 @@ function compiler(episode) {
       depart: {
         cameleon: { regard: depart.regard }, mouche: { pos: depart.mouche.pos, visible: depart.mouche.visible }, ...(avecMousse ? { mousse: { humeur: depart.humeur } } : {}),
         outils: { items: depart.outils }, schema: {},
+        ...(usesJauges ? { jauges: {} } : {}),
         ...(voisins ? { escargot: { regard: depart.voisins.escargot.regard }, grenouille: { regard: depart.voisins.grenouille.regard }, lucioles: { regards: depart.voisins.lucioles.map((l) => l.regard), visibles: false }, pensees: {}, ambiance: {} } : {}),
       },
-      voisins, mousse: avecMousse,
+      voisins, mousse: avecMousse, jauges: usesJauges, sourceEtude: ep.source || '',
       camera: cam, ordres, textes, etiquettes, sons,
       arrangement: { parties, coupures },
     },
   };
 }
 
-module.exports = { compiler, vueSur, RIGS, DECORS, CADRAGES, PARTIES, SONS };
+module.exports = { LECTURE, compiler, vueSur, RIGS, DECORS, CADRAGES, PARTIES, SONS };

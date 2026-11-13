@@ -6,15 +6,16 @@
   "musique": "drift",
   "voisins": true,
   "mousse": false,
+  "source": "Gilovich, Medvec & Savitsky, 2000",
   "roles": { "ia": "cameleon", "tache": "mouche" },
   "temps": [
-    { "fort": "hesiter", "texte": "tu as peur qu'on te *juge* ?" },
+    { "fort": "hesiter", "texte": "tu crois qu'on te *juge* ?" },
     { "fort": "sonder", "qui": "grenouille", "texte": ["la *grenouille* ?", "elle pense à *sa mouche*."] },
-    { "fort": "sonder", "qui": "lucioles", "texte": ["les *lucioles* ?", "à *leur lumière*."] },
-    { "fort": "sonder", "qui": "escargot", "texte": ["et l'*escargot* ?", "à *sa salade*."] },
-    { "fort": "nommer", "texte": ["personne ne pense à *lui*.", "= l'effet *projecteur*."] },
-    { "fort": "oser", "texte": ["il *ose*.", "*personne* ne réagit."] },
-    { "fort": "conseil", "texte": ["ils pensent à *eux*.", "pas à *toi*."] },
+    { "fort": "sonder", "qui": "escargot", "texte": ["l'*escargot* ?", "il pense à *sa salade*."] },
+    { "fort": "etude", "texte": ["Cornell, *2000*.", "un T-shirt *ridicule*."] },
+    { "fort": "realite", "texte": ["ils croient : *50 %*.", "en vrai : *25 %*."] },
+    { "fort": "nommer", "texte": "= l'effet *projecteur*." },
+    { "fort": "conseil", "texte": ["la prochaine fois,", "pense à ce *25 %*."] },
     { "fort": "boucler", "texte": "alors… *ose*." }
   ]
 }
