@@ -34,7 +34,7 @@ Un fichier `videos/episodes/<id>.json`, puis `npm run video -- <id>` (planche d'
 | `formule` | 2 | La définition : plan large, étiquettes sur l'IA et sur ses outils, puis le schéma passe au centre et la comète fait un tour complet. | texte : un morceau par mesure |
 | `cout` | 2 | Le prix de la boucle : le schéma reste au centre, tout allumé, avec le temps et les tokens dépensés ; Mousse rit jaune. | texte |
 | `hesiter` | 2 | Ouvre sur l'hésitation : gros plan sur l'œil et la tâche, le caméléon veut tirer mais il tremble. | texte |
-| `sonder` | 2 | Il demande à un voisin « qu'est-ce que tu penses de moi ? » (un « ? » au-dessus de sa tête, il se penche vers lui). Le voisin répond avec ce qui l'occupe vraiment : sa bulle de pensée. | qui : grenouille, lucioles ou mousse ; texte (voisins : true) |
+| `sonder` | 2 | Il demande à un voisin « qu'est-ce que tu penses de moi ? » (un « ? » au-dessus de sa tête, il se penche vers lui). Le voisin répond avec ce qui l'occupe vraiment : sa bulle de pensée. | qui : grenouille, lucioles, escargot ou mousse ; texte (voisins : true) |
 | `nommer` | 2 | Plan large : le projecteur réapparaît sur le caméléon, étiqueté « dans sa tête », puis s'éteint : il n'existait que dans son imagination. | texte (voisins : true) |
 | `oser` | 2 | La tâche revient, il réapparaît, tire et l'attrape (la basse revient). Les voisins ne réagissent pas : la grenouille cligne des yeux, les lucioles regardent ailleurs. | texte (voisins : true) |
 | `conseil` | 2 | Le conseil : il devient turquoise, Mousse saute de joie, la grenouille coasse et les lucioles dansent. | couleur (turquoise) ; texte (voisins : true) |
@@ -127,7 +127,7 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 
 | Geste | Ce qu'il fait | Paramètres |
 |---|---|---|
-| `penser` | Une bulle de pensée apparaît au-dessus du personnage, avec ce qui l'occupe, puis disparaît. | sur : cameleon (un « ? »), grenouille, lucioles ou mousse ; duree |
+| `penser` | Une bulle de pensée apparaît au-dessus du personnage, avec ce qui l'occupe, puis disparaît. | sur : cameleon (un « ? »), grenouille, lucioles, escargot ou mousse ; duree |
 
 ### ambiance (l'ambiance (projecteur))
 
@@ -135,11 +135,19 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 |---|---|---|
 | `projecteur` | Le projecteur s'allume (la scène s'assombrit autour du caméléon) ou s'éteint. | etat : allumer ou eteindre |
 
+### escargot (l'escargot)
+
+| Geste | Ce qu'il fait | Paramètres |
+|---|---|---|
+| `regarder` | Ses pupilles suivent un point (lentement : c'est un escargot). | de, vers : décalages des pupilles ; duree |
+| `rentrer` | Il rentre ses yeux dans sa tête, gêné. | — |
+| `sortir` | Il ressort ses yeux. | — |
+
 ## Décors
 
 | Décor | Places |
 |---|---|
-| `branche` (la branche) | ia : [380,920] ; tache : [820,640] ; outils : [null,null] ; grenouille : [880,892] ; lucioles : [[540,500],[650,430],[770,510]] ; echelleLucioles : [null,null] |
+| `branche` (la branche) | ia : [380,920] ; tache : [820,640] ; outils : [null,null] ; grenouille : [880,892] ; lucioles : [[540,500],[650,430],[770,510]] ; echelleLucioles : [null,null] ; escargot : [300,1252] |
 
 ## Cadrages
 

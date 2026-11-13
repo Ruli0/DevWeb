@@ -225,3 +225,10 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - 26,5 s (16 mesures) au lieu de 29,8 s.
 - **Montré** : la planche d'aperçu (12 images).
 - **Ton retour** : en attente.
+
+### Sans Mousse : l'escargot (13 nov.)
+
+- **Ton retour** : « Enlève Mousse et fais un autre animal. »
+- **Fait** : dans l'épisode `jugement`, Mousse (et sa lanterne) disparaît (`"mousse": false`) ; l'escargot prend sa place de troisième voisin. Il est lent à tourner les yeux et pense à sa salade. Un nouveau rig `studio/rigs/escargot.js` (contour ambre, coquille en spirale, yeux sur pédoncules), posé sur la feuille sous le caméléon.
+- **Réversible** : Mousse et ses gestes restent dans le studio ; il suffit de retirer `"mousse": false` d'un épisode. Reste à décider si Mousse revient dans la série ou s'il est abandonné pour de bon (il était « l'âme du compte »).
+- **Ton retour** : en attente.

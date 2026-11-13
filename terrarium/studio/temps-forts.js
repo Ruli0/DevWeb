@@ -281,7 +281,7 @@ const TEMPS_FORTS = {
   sonder: {
     mesures: 2,
     role: "Il demande à un voisin « qu'est-ce que tu penses de moi ? » (un « ? » au-dessus de sa tête, il se penche vers lui). Le voisin répond avec ce qui l'occupe vraiment : sa bulle de pensée.",
-    params: 'qui : grenouille, lucioles ou mousse ; texte (voisins : true)',
+    params: 'qui : grenouille, lucioles, escargot ou mousse ; texte (voisins : true)',
     jouer(ctx, p) {
       const qui = p.qui;
       const questionne = (angle) => {
@@ -309,6 +309,17 @@ const TEMPS_FORTS = {
         ctx.geste('lucioles', 'danser', ctx.b(4.6), { i: 1, duree: 1.2 });
         return { parties: ['plein', 'plein'] };
       }
+      if (qui === 'escargot') {
+        // Il est lent : il met du temps à tourner les yeux, et il pense à sa salade.
+        // Le caméléon reste à la hauteur de la tête (pour que son « ? » passe sous le texte) ; l'escargot est en dessous.
+        ctx.camera(0, 'plan-moyen', ['ia.tete', [400, 840]], 0.4, 'power3.inOut');
+        ctx.regarder(ctx.b(0.3), 'escargot.oeil', 0.25);
+        questionne(5);
+        ctx.regarderVoisin('escargot', 0, ctx.b(1.2), 'ia.oeil', 0.6);
+        ctx.regarderVoisin('escargot', 0, ctx.b(3.4), [650, 1040], 0.6);
+        ctx.pensee('escargot', ctx.b(3.8), ctx.b(7.8) - ctx.b(3.8));
+        return { parties: ['plein', 'creux'] };
+      }
       if (qui === 'mousse') {
         ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.4, 'power3.inOut');
         ctx.regarder(ctx.b(0.3), [1000, 1450], 0.3);
@@ -318,7 +329,7 @@ const TEMPS_FORTS = {
         ctx.pensee('mousse', ctx.b(3.6), ctx.b(7.8) - ctx.b(3.6));
         return { parties: ['plein', 'creux'] };
       }
-      return ctx.erreur(`sonder : qui doit être grenouille, lucioles ou mousse (${qui})`);
+      return ctx.erreur(`sonder : qui doit être grenouille, lucioles, escargot ou mousse (${qui})`);
     },
   },
   nommer: {

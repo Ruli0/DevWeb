@@ -51,7 +51,7 @@ test('deux gestes du même canal ne peuvent pas se chevaucher', () => {
 });
 
 test('le runtime et les rigs ne contiennent ni minuterie, ni hasard, ni répétition infinie', () => {
-  for (const f of ['studio/runtime.js', 'studio/rigs/cameleon.js', 'studio/rigs/mouche.js', 'studio/rigs/mousse.js', 'studio/rigs/outils.js', 'studio/rigs/schema.js', 'studio/rigs/grenouille.js', 'studio/rigs/lucioles.js', 'studio/rigs/pensees.js', 'studio/rigs/ambiance.js', 'studio/decors/branche.js']) {
+  for (const f of ['studio/runtime.js', 'studio/rigs/cameleon.js', 'studio/rigs/mouche.js', 'studio/rigs/mousse.js', 'studio/rigs/outils.js', 'studio/rigs/schema.js', 'studio/rigs/grenouille.js', 'studio/rigs/lucioles.js', 'studio/rigs/pensees.js', 'studio/rigs/ambiance.js', 'studio/rigs/escargot.js', 'studio/decors/branche.js']) {
     const s = fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
     assert.ok(!/setTimeout|setInterval|requestAnimationFrame|Math\.random|repeat:\s*-1/.test(s), f);
   }
@@ -92,7 +92,7 @@ test('jugement : le projecteur est éteint à la fin, et chaque voisin a sa bull
   assert.equal(projo[projo.length - 1], 'eteindre');
   assert.equal(projo.filter((e) => e === 'allumer').length, projo.filter((e) => e === 'eteindre').length, 'chaque projecteur allumé est éteint');
   const bulles = feuille.ordres.filter((o) => o.qui === 'pensees').map((o) => o.p.sur);
-  assert.deepEqual(bulles, ['cameleon', 'grenouille', 'cameleon', 'lucioles', 'cameleon', 'mousse']);
+  assert.deepEqual(bulles, ['cameleon', 'grenouille', 'cameleon', 'lucioles', 'cameleon', 'escargot']);
 });
 
 test('un épisode sans « voisins » ne peut pas utiliser la grenouille, les lucioles ou le projecteur', () => {

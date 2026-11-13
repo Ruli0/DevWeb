@@ -15,7 +15,7 @@ const RIGS = {
   cameleon: require('./rigs/cameleon.js'), mouche: require('./rigs/mouche.js'), mousse: require('./rigs/mousse.js'),
   outils: require('./rigs/outils.js'), schema: require('./rigs/schema.js'),
   grenouille: require('./rigs/grenouille.js'), lucioles: require('./rigs/lucioles.js'),
-  pensees: require('./rigs/pensees.js'), ambiance: require('./rigs/ambiance.js'),
+  pensees: require('./rigs/pensees.js'), ambiance: require('./rigs/ambiance.js'), escargot: require('./rigs/escargot.js'),
 };
 const DECORS = { branche: require('./decors/branche.js') };
 const MUSIQUES = { drift: { tempo: 145 } };
@@ -102,10 +102,12 @@ function compiler(episode) {
     outils: outilsDepart,
     schema: { visible: false, etape: 'aucune', angle: -90, centre: false, compteur: { tour: 0, s: 0, k: 0 } },
     camoufle: false, projecteur: false,
-    voisins: { grenouille: { regard: [0, 0], fixe: false }, lucioles: [0, 1, 2].map(() => ({ regard: [0, 0], fixe: false })), luciolesIci: false },
+    voisins: { grenouille: { regard: [0, 0], fixe: false }, lucioles: [0, 1, 2].map(() => ({ regard: [0, 0], fixe: false })), luciolesIci: false, escargot: { regard: [0, 0] } },
   };
   // « voisins » : la grenouille, les trois lucioles, les bulles de pensée et le projecteur sont dans la scène.
   const voisins = Boolean(ep.voisins);
+  // Mousse (le gardien) est dans la scène sauf si l'épisode dit "mousse": false.
+  const avecMousse = ep.mousse !== false;
   const etat = JSON.parse(JSON.stringify(depart));
   const camera = []; const ordres = []; const textes = []; const etiquettes = []; const parties = []; const coupures = [];
   let vueCible = null;
@@ -118,6 +120,7 @@ function compiler(episode) {
     if (role === 'tache') return quoi === 'depart' ? place.tache.slice() : etat.mouche.pos.slice();
     if (role === 'outil' && etat.outils[quoi]) return etat.outils[quoi].pos.slice();
     if (role === 'grenouille') return RIGS.grenouille.ancre(place.grenouille, quoi || 'corps');
+    if (role === 'escargot') return RIGS.escargot.ancre(place.escargot, quoi || 'corps');
     if (role === 'luciole' && place.lucioles[Number(quoi)]) return place.lucioles[Number(quoi)].slice();
     if (role === 'lucioles') { const l = place.lucioles; return [r(l.reduce((a, p) => a + p[0], 0) / l.length, 1), r(l.reduce((a, p) => a + p[1], 0) / l.length, 1)]; }
     erreurs.push(`point inconnu : ${spec}`);
@@ -132,6 +135,7 @@ function compiler(episode) {
     decale: (spec, dx, dy) => { const p = point(spec); return [r(p[0] + dx, 1), r(p[1] + dy, 1)]; },
     erreur: (msg) => { erreurs.push(msg); return {}; },
     geste(qui, nom, t, p = {}) {
+      if (qui === 'mousse' && !avecMousse) return;
       const id = RIGS[qui] ? qui : roles[qui];
       if (!RIGS[id] || !RIGS[id].GESTES[nom]) { erreurs.push(`geste inconnu : ${qui}.${nom}`); return; }
       const params = Object.assign({}, p);
@@ -185,10 +189,11 @@ function compiler(episode) {
     // Le regard d'un voisin : ses pupilles vont vers un point (cible), de la même façon que celles du caméléon.
     regarderVoisin(qui, i, t, cible, duree = 0.3) {
       if (!ctx.exigerVoisins()) return;
-      const e = qui === 'grenouille' ? etat.voisins.grenouille : etat.voisins.lucioles[i];
-      const centre = qui === 'grenouille' ? RIGS.grenouille.centreOeil(place.grenouille) : RIGS.lucioles.centreOeil(place.lucioles[i], place.echelleLucioles);
-      const cb = point(cible); const dx = cb[0] - centre[0]; const dy = cb[1] - centre[1]; const d = Math.hypot(dx, dy) || 1;
-      const vers = [r((dx / d) * RIGS[qui].AMP, 2), r((dy / d) * RIGS[qui].AMP, 2)];
+      const e = qui === 'lucioles' ? etat.voisins.lucioles[i] : etat.voisins[qui];
+      const centre = qui === 'grenouille' ? RIGS.grenouille.centreOeil(place.grenouille) : qui === 'escargot' ? RIGS.escargot.centreOeil(place.escargot) : RIGS.lucioles.centreOeil(place.lucioles[i], place.echelleLucioles);
+      // cible null : les pupilles reviennent au centre (état de départ).
+      let vers = [0, 0];
+      if (cible !== null) { const cb = point(cible); const dx = cb[0] - centre[0]; const dy = cb[1] - centre[1]; const d = Math.hypot(dx, dy) || 1; vers = [r((dx / d) * RIGS[qui].AMP, 2), r((dy / d) * RIGS[qui].AMP, 2)]; }
       if (Math.abs(vers[0] - e.regard[0]) < 0.05 && Math.abs(vers[1] - e.regard[1]) < 0.05) return;
       ctx.geste(qui, 'regarder', t, Object.assign(qui === 'lucioles' ? { i } : {}, { de: e.regard.slice(), vers, duree: r(duree, 3) }));
       e.regard = vers;
@@ -215,8 +220,9 @@ function compiler(episode) {
       if (voisins) {
         ctx.camoufler(t0, false); ctx.projecteur(t0, false); ctx.lucioles(t1 - 1.4, false);
         ctx.fixerVoisin('grenouille', 0, t0 + 0.2, false);
-        [0, 1, 2].forEach((i) => { ctx.fixerVoisin('lucioles', i, t0 + 0.2, false); ctx.regarderVoisin('lucioles', i, t0 + 0.5, 'ia.corps', 0.5); });
-        ctx.regarderVoisin('grenouille', 0, t0 + 0.5, 'ia.corps', 0.5);
+        [0, 1, 2].forEach((i) => { ctx.fixerVoisin('lucioles', i, t0 + 0.2, false); ctx.regarderVoisin('lucioles', i, t0 + 0.5, null, 0.5); });
+        ctx.regarderVoisin('grenouille', 0, t0 + 0.5, null, 0.5);
+        ctx.regarderVoisin('escargot', 0, t0 + 0.5, null, 0.5);
       }
     },
     regarder(t, cible, duree, ease) {
@@ -359,11 +365,11 @@ function compiler(episode) {
     feuille: {
       id: ep.id, titre: ep.titre || ep.id, tempo, duree, decor: decor.id, musique,
       depart: {
-        cameleon: { regard: depart.regard }, mouche: { pos: depart.mouche.pos, visible: depart.mouche.visible }, mousse: { humeur: depart.humeur },
+        cameleon: { regard: depart.regard }, mouche: { pos: depart.mouche.pos, visible: depart.mouche.visible }, ...(avecMousse ? { mousse: { humeur: depart.humeur } } : {}),
         outils: { items: depart.outils }, schema: {},
-        ...(voisins ? { grenouille: { regard: depart.voisins.grenouille.regard }, lucioles: { regards: depart.voisins.lucioles.map((l) => l.regard), visibles: false }, pensees: {}, ambiance: {} } : {}),
+        ...(voisins ? { escargot: { regard: depart.voisins.escargot.regard }, grenouille: { regard: depart.voisins.grenouille.regard }, lucioles: { regards: depart.voisins.lucioles.map((l) => l.regard), visibles: false }, pensees: {}, ambiance: {} } : {}),
       },
-      voisins,
+      voisins, mousse: avecMousse,
       camera: cam, ordres, textes, etiquettes, sons,
       arrangement: { parties, coupures },
     },

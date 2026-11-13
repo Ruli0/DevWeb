@@ -86,7 +86,7 @@ function html(f) {
   const place = decor.PLACES;
   // Les acteurs, du fond vers l'avant : la grenouille, le caméléon, les outils, les lucioles, la tâche, les bulles.
   const v = f.voisins;
-  const acteurs = (v ? RIGS.grenouille.dessin(place.grenouille) : '') + RIGS.cameleon.dessin(place.ia) + lumiere.surCameleon() + RIGS.outils.dessin()
+  const acteurs = (v ? RIGS.escargot.dessin(place.escargot) + RIGS.grenouille.dessin(place.grenouille) : '') + RIGS.cameleon.dessin(place.ia) + lumiere.surCameleon() + RIGS.outils.dessin()
     + (v ? RIGS.lucioles.dessin(place.lucioles, place.echelleLucioles) : '') + RIGS.mouche.dessin() + (v ? RIGS.pensees.dessinDecor() : '');
   // Le projecteur et son voile passent derrière les acteurs : eux restent éclairés.
   const ambiance = v ? RIGS.ambiance.dessin(place.ia.x + 40) : '';
@@ -119,8 +119,8 @@ function html(f) {
   <g id="monde">
 ${calques}
   </g>
-  ${RIGS.mousse.dessin()}
-  ${v ? RIGS.pensees.dessinEcran() : ''}
+  ${f.mousse === false ? '' : RIGS.mousse.dessin()}
+  ${v && f.mousse !== false ? RIGS.pensees.dessinEcran() : ''}
   ${RIGS.schema.dessin()}
   <g id="etiquettes"></g>
   <rect width="1080" height="1920" fill="url(#vignette)"/>
@@ -141,6 +141,7 @@ ${lire('studio/rigs/grenouille.js')}
 ${lire('studio/rigs/lucioles.js')}
 ${lire('studio/rigs/pensees.js')}
 ${lire('studio/rigs/ambiance.js')}
+${lire('studio/rigs/escargot.js')}
 ${lire(`studio/decors/${f.decor}.js`)}
 (function () {
   gsap.registerPlugin(MotionPathPlugin);
