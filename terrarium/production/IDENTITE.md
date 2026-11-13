@@ -193,4 +193,11 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Montré d'abord** : le fond lui-même en violet (quatre variantes).
 - **Ton retour** : « Non, pas pour le fond, pour la pastille. » Le violet est donc pour la **pastille du mot clé** ; le fond reste translucide, comme le décor.
 - **Montré ensuite** (`maquettes.cjs violets`) : le fond bleu nuit translucide, et la pastille du mot clé en W1 lavande claire, W2 violet moyen (texte blanc), W3 violet translucide fondu dans le décor, W4 dégradé violet vers bleu.
-- **Ton retour** : en attente.
+- **Ton retour** : « Le 3 » (validé).
+
+## Identité visuelle de la série « psycho en métaphores » (décidée le 13 nov.)
+
+- **Décor** : S1 « ombres lumineuses », au dosage A (un peu plus clair), avec l'éclairage retravaillé : liserés chauds, ombres portées, projecteur à faisceau, flaques de lumière.
+- **Personnages** : caméléon, grenouille et lucioles en silhouettes lumineuses ; Mousse en couleurs claires (corps bleu, mousse verte, bottes brunes) avec la nouvelle lanterne en laiton.
+- **Texte** : Poppins ExtraBold, sans lueur. Un fond bleu nuit translucide et flou, fondu dans le décor. Le mot clé passe seul sur une pastille **violette translucide** (W3), en blanc.
+- **Musique** : phonk Drift (inchangée).
