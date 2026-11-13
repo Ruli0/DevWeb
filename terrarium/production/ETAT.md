@@ -4,7 +4,7 @@ _Dernière mise à jour : 13 novembre 2026 (soir)._
 
 ## Le studio (refonte, étape 2)
 
-La nouvelle chaîne, dans la direction artistique A2, vit dans `studio/`. Une vidéo s'écrit en temps forts, dans `videos/episodes/<id>.json` (la démo fait 22 lignes), et `npm run video -- <id> [--rendu]` fait le reste.
+La nouvelle chaîne, dans la direction artistique A2, vit dans `studio/`. Une vidéo s'écrit en temps forts, dans `videos/episodes/<id>.json` (la démo fait 15 lignes), et `npm run video -- <id> [--rendu]` fait le reste.
 
 | Brique | Fichier | État |
 |---|---|---|

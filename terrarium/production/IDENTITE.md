@@ -110,5 +110,5 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 ### Studio, démo (13 nov.)
 
-- **Montré** : `videos/episodes/demo.json` (22 lignes) et sa vidéo de 16,6 s (10 mesures), en 60 images par seconde. L'épisode enchaîne accroche, présentation de la tâche (étiquette « la tâche »), raté avec silence d'un temps, moquerie, réussite avec retour de la basse et saut de Mousse, puis la boucle.
+- **Montré** : `videos/episodes/demo.json` (15 lignes) et sa vidéo de 16,6 s (10 mesures), en 60 images par seconde. L'épisode enchaîne accroche, présentation de la tâche (étiquette « la tâche »), raté avec silence d'un temps, moquerie, réussite avec retour de la basse et saut de Mousse, puis la boucle.
 - **Ton retour** : en attente.
