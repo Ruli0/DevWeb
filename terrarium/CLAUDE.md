@@ -4,7 +4,9 @@ Le but du projet est de converger vers un **outil de production de vidéos TikTo
 
 ## Au début de chaque session
 
-Lire `production/ETAT.md` et `production/FEUILLE-DE-ROUTE.md` avant de proposer ou de modifier quoi que ce soit.
+Lire d'abord `production/GUIDE-EXECUTION.md` : il dit quoi lire selon la tâche, comment vérifier, et les pièges connus. Puis `production/ETAT.md` et `production/FEUILLE-DE-ROUTE.md`.
+
+Une refonte est en cours : le plan est dans `production/PLAN-REFONTE.md`, l'architecture cible dans `production/SPEC-STUDIO.md`. Avancer une étape à la fois, avec une seule question à l'utilisateur par étape.
 
 ## À la fin de chaque session (ou après un changement notable)
 

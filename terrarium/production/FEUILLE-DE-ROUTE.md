@@ -14,6 +14,10 @@ Statuts : **à faire**, **en cours**, **fait**, **abandonné**. Les priorités v
 | 4 | Après 48 h, relever les chiffres dans `videos/resultats.csv` | Toi | à faire |
 | 5 | Analyser, noter les apprentissages et réécrire les accroches | Claude | à faire |
 
+## Refonte en cours (13 nov. 2026)
+
+Le plan est dans `PLAN-REFONTE.md` : 7 étapes, de la publication du pilote actuel (étape 0) à la production en série (étape 6). Prochaine action : ta réponse à l'étape 0 (publier le pilote) et le lancement de l'étape 1 (test de direction artistique). Les lignes ci-dessous restent valables, mais passent après la refonte.
+
 ## P1 : qualité et rétention
 
 | # | Étape | Pourquoi | Statut |

@@ -20,6 +20,7 @@ Un scénario JSON donne une vidéo TikTok de 19 à 25 s, en 1080 × 1920, avec i
 | Rendre | `npx hyperframes render` | Environ 70 s par vidéo. Son AAC, niveau moyen d'environ -14,5 dB, sans saturation |
 | Thème de nuit | `public/js/art/nuit.js`, `public/js/art/gardien.js` | `"theme": "nuit"` : vivarium nocturne bioluminescent, Mousse et sa lanterne, légendes tapées dans son terminal, repère « Nuit n° X ». Actions `gardien.*` (lanterne, expression, gestes), `mouche.esquiver`, `mouche.narguer`, `scene.etiquette`, langue ratée ou partielle. Caméra qui cadre la mouche et avance pendant le plan (`poussee`) |
 | Suivre la musique | `tempo`, `arrangement` dans le scénario | Les plans doivent commencer sur un temps (validé). La piste Drift est fabriquée pour chaque vidéo : une partie par mesure (intro, creux, montée, plein) et des coupures d'un temps |
+| Aperçu sans rendu | `scripts/apercu.js` | Une planche d'images clés en 15 s environ, au lieu d'un rendu de plusieurs minutes |
 | Mesurer | `videos/resultats.csv` | Prêt, encore vide |
 
 Le site (`public/`) joue les mêmes scénarios en temps réel, avec cinq chapitres interactifs.
