@@ -15,10 +15,11 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 | Élément | Statut | Pistes |
 |---|---|---|
 | Style de nuit | **validé** (tour 2, dosage B) | — |
-| Le gardien | premier croquis | « Mousse » (nom provisoire) : petit robot rond, tête moussue, un œil cyan, lanterne au bout d'une perche |
+| Le gardien | intégré au pilote | « Mousse » (nom provisoire) : petit robot rond, tête moussue, un œil cyan, lanterne au bout d'une perche |
 | Musique | **validée** : Drift (145 BPM) | — |
 | Texte à l'écran | **validé** : T6, le terminal de Mousse | — |
-| Scénarios | tour 1 en cours | 6 pitchs (nuits 0 à 5), un gag par épisode, le caméléon comme personnage récurrent |
+| Scénarios | **validés** (« Go ») | 6 pitchs (nuits 0 à 5), un gag par épisode, le caméléon comme personnage récurrent |
+| Pilote Nuit 1 | **envoyé, en attente de ton avis** | `videos/scenarios/cameleon.json`, 25,2 s |
 | Nom du compte et bio | plus tard | `@les.nuits.du.terrarium`, `@mousse.terrarium` |
 
 ## Itérations
@@ -73,3 +74,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - **T8, cinéma** : EB Garamond en italique, avec des filets, en fondu lent.
 - **Contraintes** : tous dans la zone sûre. T7 utilise une police non fournie par HyperFrames : il faudra l'embarquer dans `assets/fonts/`.
 - **Ton retour** : « T6 ». Texte validé.
+
+### Pilote « Nuit 1 : la langue » (13 nov.)
+
+- **Montré** : la vidéo complète (25,2 s). Elle s'ouvre dans le noir, avec seulement l'œil cyan de Mousse ; la lanterne s'allume. Le caméléon tire la langue et rate : la mouche esquive puis le nargue, et Mousse est blasé. Au deuxième essai, il l'attrape, devient turquoise et en veut encore. Le terminal tape « réfléchir. agir. recommencer. = boucle d'outils », puis annonce la nuit suivante, et la lanterne s'éteint : la fin reboucle sur le début.
+- **Corrigé avant l'envoi** : l'esquive envoyait la mouche hors de l'écran. Au zoom 2,6, une unité du décor vaut environ 8 pixels, donc les déplacements de la mouche doivent rester petits.
+- **Ton retour** : en attente.

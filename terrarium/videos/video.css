@@ -58,3 +58,37 @@ html, body { margin: 0; background: #0f1b17; }
 .carte-in.bas { top: 760px; }
 .carte-titre { margin: 0 0 18px; font: 800 34px/1.2 "Inter", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #b9f29a; }
 .carte-texte { margin: 0; font: 800 66px/1.15 "Inter", sans-serif; text-wrap: balance; }
+
+/* --- Nuit : le vivarium nocturne et le terminal de Mousse (style B, texte T6) --- */
+#root.nuit { font-family: "Space Mono", monospace; background: #02040a; }
+#calque-lumiere { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+.serie.nuit {
+  background: rgba(3, 10, 8, 0.8); border: 2px solid rgba(182, 255, 92, 0.45);
+  font: 700 30px/1 "Space Mono", monospace; letter-spacing: 0.02em; color: rgba(233, 253, 255, 0.85);
+}
+.serie.nuit b { color: #b6ff5c; text-shadow: 0 0 10px rgba(182, 255, 92, 0.8); }
+.terminal {
+  position: absolute; left: 80px; width: 640px; top: 930px; height: 220px;
+  padding: 24px 28px 30px; border-radius: 18px;
+  background: rgba(3, 10, 8, 0.92);
+  border: 2px solid rgba(182, 255, 92, 0.6);
+  box-shadow: 0 0 28px rgba(182, 255, 92, 0.35);
+}
+.terminal::after {
+  content: ""; position: absolute; inset: 0; border-radius: 18px; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0 2px, transparent 2px 5px);
+}
+.term-prompt { margin: 0; font: 700 22px/1 "Space Mono", monospace; color: rgba(182, 255, 92, 0.6); }
+.term-fil { position: absolute; left: 0; top: 0; pointer-events: none; }
+.term-ligne { position: absolute; left: 108px; width: 584px; top: 990px; pointer-events: none; }
+.term-texte {
+  margin: 0; font: 700 46px/1.2 "Space Mono", monospace; color: #b6ff5c;
+  text-shadow: 0 0 12px rgba(182, 255, 92, 0.8);
+}
+.term-texte .invite { color: rgba(182, 255, 92, 0.55); }
+.term-texte .c { display: none; }
+.term-texte .c.acc { color: #5ef2ff; text-shadow: 0 0 14px rgba(94, 242, 255, 0.9); }
+.curseur {
+  display: inline-block; width: 0.55em; height: 0.95em; margin-left: 6px;
+  background: #b6ff5c; vertical-align: -0.12em; box-shadow: 0 0 10px rgba(182, 255, 92, 0.8);
+}

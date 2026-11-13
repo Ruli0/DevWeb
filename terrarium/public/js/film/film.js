@@ -130,7 +130,7 @@
     repos(qa('.cam-peau, .cam-oeil'), { fill: PEAU.vert[0] });
     repos(qa('.cam-trait'), { stroke: PEAU.vert[0] });
     repos(qa('.cam-trait2, .cam-raie, .cam-crete'), { stroke: PEAU.vert[1] });
-    repos(qa('.cam-ventre'), { fill: '#cfe9a0' });
+    repos(qa('.cam-ventre'), { fill: PEAU.ventre || '#cfe9a0' });
     repos(q('#cam-flip'), { scaleX: 1, svgOrigin: '0 0' });
     repos(q('#cam-pupille'), { rotation: 0, svgOrigin: '46 -36' });
 
@@ -140,6 +140,26 @@
       etat.place = decor.cameleon;
     }
     if (decor.mouche === 'cachee') repos(q('#mouche'), { opacity: 0, x: 560, y: 100 });
+
+    // Mousse et sa lanterne (calque d'écran, présent seulement dans les vidéos de nuit).
+    const rq = (s) => racine.querySelector(s);
+    const rqa = (s) => racine.querySelectorAll(s);
+    const gardien = rq('#mousse');
+    if (gardien) {
+      const eteinte = decor.lanterne === 'eteinte';
+      repos(rq('#noir'), { opacity: eteinte ? 1 : 0 });
+      repos(rq('#lumiere'), { opacity: eteinte ? 0 : 1 });
+      repos(rq('#lanterne-lueur'), { opacity: eteinte ? 0 : 1 });
+      repos(rqa('#mousse-oeil > g'), { opacity: 0 });
+      repos(rq('#oeil-neutre'), { opacity: 1 });
+      etat.humeur = 'neutre';
+    }
+    // Le voile d'obscurité suit la caméra : le sujet reste éclairé.
+    const voile = q('#nuit-trou');
+    const trou = (v) => {
+      const [x, y, w, h] = v.split(' ').map(Number);
+      return { cx: x + w / 2, cy: y + 0.4 * h, r: 0.33 * w };
+    };
 
     // --- Gestes du caméléon -----------------------------------------------------
     const oeil = () => versDessin(q('#cam-corps'), 46, -36);
@@ -226,23 +246,26 @@
         const local = versElement(q('#cam-corps'), etat.mouche);
         pupilleVers((Math.atan2(local.y + 36, local.x - 46) * 180) / Math.PI, t, p.duree || 0.6);
       },
-      'cameleon.langue'(t) {
+      'cameleon.langue'(t, p) {
         const local = versElement(q('#cam-corps'), etat.mouche);
+        etat.rate = Boolean(p.rate);
         tl.set(q('#cam-langue'), { opacity: 1 }, t);
         ft(q('#cam-langue-fil'), { attr: { x2: 64, y2: -28 } }, { attr: { x2: local.x, y2: local.y }, duration: 0.16, ease: 'power3.out' }, t);
         tl.set(q('#cam-langue-bout'), { attr: { r: 4.5 } }, t);
         ft(q('#cam-langue-bout'), { attr: { cx: 64, cy: -28 } }, { attr: { cx: local.x, cy: local.y }, duration: 0.16, ease: 'power3.out' }, t);
         ft(q('#cam-tete'), { x: 0 }, { x: 3, duration: 0.1, yoyo: true, repeat: 1 }, t);
-        tl.set(q('#mouche'), { opacity: 0 }, t + 0.16);
-        ft(q('#cam-langue-bout'), { attr: { r: 4.5 } }, { attr: { r: 7 }, duration: 0.15 }, t + 0.16);
+        if (!p.rate) {
+          tl.set(q('#mouche'), { opacity: 0 }, t + 0.16);
+          ft(q('#cam-langue-bout'), { attr: { r: 4.5 } }, { attr: { r: 7 }, duration: 0.15 }, t + 0.16);
+        }
         etat.langue = local;
       },
       'cameleon.ramener'(t) {
         const l = etat.langue;
         ft(q('#cam-langue-fil'), { attr: { x2: l.x, y2: l.y } }, { attr: { x2: 64, y2: -28 }, duration: 0.3, ease: 'power2.in' }, t);
-        ft(q('#cam-langue-bout'), { attr: { cx: l.x, cy: l.y, r: 7 } }, { attr: { cx: 64, cy: -28, r: 4.5 }, duration: 0.3, ease: 'power2.in' }, t);
+        ft(q('#cam-langue-bout'), { attr: { cx: l.x, cy: l.y, r: etat.rate ? 4.5 : 7 } }, { attr: { cx: 64, cy: -28, r: 4.5 }, duration: 0.3, ease: 'power2.in' }, t);
         tl.set(q('#cam-langue'), { opacity: 0 }, t + 0.3);
-        tl.set(q('#mouche'), { x: 560, y: 100 }, t + 0.3);
+        if (!etat.rate) tl.set(q('#mouche'), { x: 560, y: 100 }, t + 0.3);
       },
       'cameleon.avaler'(t) {
         ft(q('#cam-corps'), { scaleY: 1, svgOrigin: '0 0' }, { scaleY: 1.07, svgOrigin: '0 0', duration: 0.22, yoyo: true, repeat: 3, ease: 'sine.inOut' }, t);
@@ -341,6 +364,48 @@
         A['fourmiliere.agiter'](t);
       },
       'butin.cacher'(t) { ft(qa('#butin > *'), { opacity: 1 }, { opacity: 0, duration: 0.5 }, t); },
+
+      // Les gags de la mouche
+      'mouche.esquiver'(t, p) {
+        const de = etat.mouche;
+        const vers = { x: de.x + (p.dx ?? 60), y: de.y + (p.dy ?? -50) };
+        ft(q('#mouche'), { x: de.x, y: de.y }, { x: vers.x, y: vers.y, duration: p.duree || 0.18, ease: 'power3.out' }, t);
+        etat.mouche = vers;
+      },
+      'mouche.narguer'(t, p) {
+        // Deux petites boucles moqueuses au-dessus de sa place, puis retour.
+        const c = etat.mouche;
+        const r = p.rayon || 18;
+        const n = 16;
+        const d = (p.duree || 1.6) / n;
+        let prec = { x: c.x, y: c.y };
+        for (let k = 1; k <= n; k += 1) {
+          const a = (k / n) * Math.PI * 4;
+          const pt = k === n ? { x: c.x, y: c.y } : { x: c.x + r * Math.sin(a), y: c.y - r * (1 - Math.cos(a)) };
+          ft(q('#mouche'), { x: prec.x, y: prec.y }, { x: pt.x, y: pt.y, duration: d, ease: 'none' }, t + (k - 1) * d);
+          prec = pt;
+        }
+      },
+
+      // Mousse, le gardien
+      'gardien.lanterne'(t, p) {
+        if (!gardien) return;
+        const allumer = p.etat !== 'eteindre';
+        const [avant, apres] = allumer ? [0, 1] : [1, 0];
+        ft(rq('#lanterne-lueur'), { opacity: avant }, { opacity: apres, duration: 0.1 }, t);
+        ft(rq('#lumiere'), { opacity: avant }, { opacity: apres, duration: allumer ? 0.15 : 0.3 }, t + (allumer ? 0.05 : 0));
+        ft(rq('#noir'), { opacity: apres }, { opacity: avant, duration: allumer ? 0.12 : 0.3 }, t + (allumer ? 0.05 : 0));
+        if (allumer) ft(rq('#lanterne-flamme'), { scale: 0.3, transformOrigin: '50% 100%' }, { scale: 1, transformOrigin: '50% 100%', duration: 0.25, ease: 'back.out(3)' }, t);
+      },
+      'gardien.expression'(t, p) {
+        if (!gardien) return;
+        const humeur = p.humeur || 'neutre';
+        if (humeur === etat.humeur) return;
+        tl.set(rq('#oeil-' + etat.humeur), { opacity: 0 }, t);
+        tl.set(rq('#oeil-' + humeur), { opacity: 1 }, t);
+        ft(rq('#mousse-corps'), { y: 0 }, { y: -14, duration: 0.12, yoyo: true, repeat: 1, ease: 'power2.out' }, t);
+        etat.humeur = humeur;
+      },
     };
 
     // --- Ambiance (vidéo seulement : sur le site, le vivarium vit déjà) -----------
@@ -406,6 +471,13 @@
           }
         });
       }
+      if (gardien) {
+        boucle((s) => s.fromTo(rq('#mousse-corps'), { scaleY: 1, transformOrigin: '50% 100%' }, { scaleY: 1.025, transformOrigin: '50% 100%', duration: 1.4, yoyo: true, repeat: fois(1.4), ease: 'sine.inOut' }));
+        boucle((s) => s.fromTo(rq('#mousse-perche'), { rotation: -2, svgOrigin: '597.5 1395' }, { rotation: 2.5, svgOrigin: '597.5 1395', duration: 2.2, yoyo: true, repeat: fois(2.2), ease: 'sine.inOut' }));
+        boucle((s) => s.fromTo(rq('#mousse-oeil'), { scaleY: 1, transformOrigin: '50% 50%' }, { scaleY: 0.1, transformOrigin: '50% 50%', duration: 0.08, yoyo: true, repeat: fois(3.2), repeatDelay: 3 }), 1.5);
+        boucle((s) => s.fromTo(rq('#lanterne-flamme'), { scaleY: 0.92, transformOrigin: '50% 100%' }, { scaleY: 1.06, transformOrigin: '50% 100%', duration: 0.13, yoyo: true, repeat: fois(0.13), ease: 'sine.inOut' }));
+      }
+      if (rq('.curseur')) boucle((s) => s.fromTo(rqa('.curseur'), { opacity: 1 }, { opacity: 0, duration: 0.45, yoyo: true, repeat: fois(0.45), ease: 'steps(1)' }));
       // Sans rôle dans la scène, le caméléon se promène sur sa branche.
       if (decor.cameleon === undefined || decor.cameleon === 'promenade') {
         let t = 0;
@@ -462,6 +534,7 @@
     // Cadrage de départ : celui du premier plan (plein cadre en 9:16).
     let vue = o.cadre === '9:16' ? vueDe(sc.plans[0].camera || {}) : VUE_ENTIERE;
     repos(svg, { attr: { viewBox: vue } });
+    if (voile) repos(voile, { attr: trou(vue) });
 
     // Hauteur (0 en haut, 1 en bas) où le sujet du plan tombe à l'écran.
     let sujet = sc.plans[0].camera || { cible: 'ensemble' };
@@ -477,6 +550,7 @@
         const nouvelle = vueDe(plan.camera);
         if (nouvelle !== vue) {
           ft(svg, { attr: { viewBox: vue } }, { attr: { viewBox: nouvelle }, duration: plan.camera.duree ?? 0.9, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
+          if (voile) ft(voile, { attr: trou(vue) }, { attr: trou(nouvelle), duration: plan.camera.duree ?? 0.9, ease: plan.camera.ease || 'power2.inOut' }, plan.debut);
           vue = nouvelle;
         }
       }
@@ -490,6 +564,14 @@
       }
       // Vidéo : chaque morceau remplace le précédent, sans blanc entre deux plans.
       if (typeof o.legende !== 'function') morceauxDe(plan).forEach((m, k) => {
+        const terminal = racine.querySelector('#leg-' + i + '-' + k + ' .term-texte');
+        if (terminal) {
+          // Terminal de Mousse : 35 ms par lettre, jamais plus de la moitié du morceau.
+          const lettres = terminal.querySelectorAll('.c');
+          const pas = Math.min(0.035, ((m.fin - m.debut) * 0.5) / Math.max(1, lettres.length));
+          lettres.forEach((c, j) => tl.set(c, { display: 'inline' }, m.debut + j * pas));
+          return;
+        }
         const el = racine.querySelector('#leg-' + i + '-' + k + ' .leg-texte');
         if (!el) return;
         // Sujet dans la moitié basse : la légende passe en haut pour ne pas le cacher.

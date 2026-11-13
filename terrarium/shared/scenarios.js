@@ -15,7 +15,9 @@
  *     "carte": { "type": "phrase" | "code" | "etapes" | "barres", "titre": "…", ... }
  *   }],
  *   "serie": { "nom": "Terrarium IA", "episode": 1, "total": 5 },
- *   "musique": "phonk" | null,     (phonk par défaut ; null : sans musique)
+ *   "musique": "phonk" | "drift" | null,     (phonk par défaut ; null : sans musique)
+ *   "theme": "jour" | "nuit",        (nuit : vivarium nocturne, Mousse, terminal)
+ *   "decor": { ..., "lanterne": "eteinte" }   (la vidéo commence dans le noir)
  *   "accroches": { "b": ["Autre accroche"], "c": [...] },   variantes de la légende du premier plan
  *   "publication": { "texte": "…", "hashtags": ["#ia"], "commentaire": "…", "couverture": 1.2 }
  * }
@@ -38,7 +40,9 @@
     'goutte.apparaitre', 'goutte.couler', 'goutte.eclaircir', 'filtre.signaler', 'goutte.bassin',
     'fourmiliere.agiter', 'fourmis.ecarter', 'fourmis.revenir', 'eclaireuses.partir',
     'eclaireuses.fouiller', 'eclaireuses.revenir', 'butin.montrer', 'butin.cacher',
+    'mouche.esquiver', 'mouche.narguer', 'gardien.lanterne', 'gardien.expression',
   ];
+  const HUMEURS = ['neutre', 'content', 'surpris', 'blase'];
   const CIBLES = ['ensemble', 'branche', 'cascade', 'sable', 'mousse', 'galets', 'bassin', 'pousse',
     'dionee', 'grenouille', 'fourmiliere', 'sol', 'cameleon', 'cameleon-oeil'];
   const COULEURS = ['vert', 'turquoise', 'orange'];
@@ -79,7 +83,8 @@
     non(typeof sc.concept === 'string' && sc.concept, 'concept manquant');
     non(typeof sc.duree === 'number' && sc.duree > 0 && sc.duree <= 60, 'duree : entre 0 et 60 secondes');
     non(Array.isArray(sc.plans) && sc.plans.length > 0, 'plans : au moins un plan');
-    non(sc.musique === undefined || sc.musique === null || sc.musique === 'phonk', `musique inconnue (${sc.musique}) : « phonk » ou null`);
+    non(sc.musique === undefined || sc.musique === null || ['phonk', 'drift'].includes(sc.musique), `musique inconnue (${sc.musique}) : « phonk », « drift » ou null`);
+    non(sc.theme === undefined || ['jour', 'nuit'].includes(sc.theme), `thème inconnu (${sc.theme}) : « jour » ou « nuit »`);
     if (!Array.isArray(sc.plans)) return err;
 
     let attendu = 0;
@@ -107,6 +112,8 @@
         if (a.type === 'goutte.couler' || a.type === 'cameleon.marcher') {
           non(a.depuis >= 0 && a.depuis <= 1 && a.vers >= 0 && a.vers <= 1, `${ici} : ${a.type} attend depuis et vers entre 0 et 1`);
         }
+        if (a.type === 'gardien.expression') non(HUMEURS.includes(a.humeur), `${ici} : humeur inconnue (${a.humeur})`);
+        if (a.type === 'gardien.lanterne') non(['allumer', 'eteindre'].includes(a.etat), `${ici} : la lanterne s'allume ou s'éteint (${a.etat})`);
         if (a.type === 'filtre.signaler') non(['sable', 'mousse', 'galets'].includes(a.filtre), `${ici} : filtre inconnu (${a.filtre})`);
       });
       if (p.carte) {

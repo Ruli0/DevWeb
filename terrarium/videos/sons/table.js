@@ -21,7 +21,13 @@ const SONS_PAR_ACTION = {
   'eclaireuses.partir': [{ fichier: 'trotte.wav', volume: 0.55 }, { fichier: 'trotte.wav', decalage: 1.6, volume: 0.45 }],
   'eclaireuses.revenir': [{ fichier: 'trotte.wav', volume: 0.55 }, { fichier: 'trotte.wav', decalage: 1.6, volume: 0.45 }],
   'butin.montrer': [{ fichier: 'pop.wav', volume: 0.6 }],
+  'mouche.esquiver': [{ fichier: 'souffle.wav', volume: 0.3 }],
+  'mouche.narguer': [{ fichier: 'bzz.wav', volume: 0.45 }],
+  'gardien.lanterne': [{ fichier: 'clic.wav', volume: 0.9 }],
+  'gardien.expression': [{ fichier: 'bip.wav', volume: 0.5 }],
 };
+// Chaque ligne tapée sur le terminal de Mousse.
+const SON_TERMINAL = { fichier: 'clavier.wav', volume: 0.35 };
 
 const SON_CARTE = { fichier: 'pop.wav', volume: 0.8 };
 const SON_CAMERA = { fichier: 'souffle.wav', volume: 0.35 };
@@ -29,6 +35,9 @@ const SON_AMBIANCE = { fichier: 'ambiance.wav', volume: 0.35 };
 // Avec la musique, l'ambiance passe en fond.
 const SON_AMBIANCE_SOUS_MUSIQUE = 0.15;
 // Musiques originales, synthétisées par scripts/build-sons.js.
-const MUSIQUES = { phonk: { fichier: 'phonk.wav', volume: 0.5, fonduSortie: 0.4 } };
+const MUSIQUES = {
+  phonk: { fichier: 'phonk.wav', volume: 0.5, fonduSortie: 0.4 },
+  drift: { fichier: 'drift.wav', volume: 0.45, fonduSortie: 0.3 },
+};
 
-module.exports = { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE, SON_AMBIANCE_SOUS_MUSIQUE, MUSIQUES };
+module.exports = { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE, SON_AMBIANCE_SOUS_MUSIQUE, SON_TERMINAL, MUSIQUES };

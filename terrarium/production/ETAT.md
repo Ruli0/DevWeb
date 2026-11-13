@@ -1,6 +1,6 @@
 # État de l'outil
 
-_Dernière mise à jour : 12 novembre 2026._
+_Dernière mise à jour : 13 novembre 2026._
 
 ## En une phrase
 
@@ -18,6 +18,7 @@ Un scénario JSON donne une vidéo TikTok de 19 à 25 s, en 1080 × 1920, avec i
 | Composer | `scripts/build-video.js` | Une composition HyperFrames par accroche, plus un `publication.md` |
 | Vérifier | `scripts/verifier-videos.js`, `npx hyperframes lint` | Zone sûre et lignes : 15/15 conformes. Lint : 0 erreur |
 | Rendre | `npx hyperframes render` | Environ 70 s par vidéo. Son AAC, niveau moyen d'environ -14,5 dB, sans saturation |
+| Thème de nuit | `public/js/art/nuit.js`, `public/js/art/gardien.js` | `"theme": "nuit"` : vivarium nocturne bioluminescent, Mousse et sa lanterne, légendes tapées dans son terminal, repère « Nuit n° X ». Actions `gardien.*`, `mouche.esquiver`, `mouche.narguer`, langue ratée |
 | Mesurer | `videos/resultats.csv` | Prêt, encore vide |
 
 Le site (`public/`) joue les mêmes scénarios en temps réel, avec cinq chapitres interactifs.
@@ -34,6 +35,10 @@ Le site (`public/`) joue les mêmes scénarios en temps réel, avec cinq chapitr
 - **Déterminisme** : sur une image de la vidéo du caméléon, 18 pixels varient légèrement selon l'ordre des sauts dans la timeline. C'est sans effet visible.
 - **Avertissements HyperFrames restants** : fichiers trop gros, à découper en sous-compositions, et un faux positif sur un état caché.
 - **Les rendus se lancent à la main.** Il n'y a ni commande unique, ni rendu automatique à chaque modification.
+
+## Pilote de nuit (13 nov. 2026)
+
+« Nuit 1 : la langue » (`cameleon.json`) : 25,2 s, phonk Drift, rendu en environ 2 min 15 (le thème de nuit est plus lourd à rendre). Les 4 autres épisodes sont encore dans l'ancien style de jour.
 
 ## Dernières vidéos rendues (12 nov. 2026)
 

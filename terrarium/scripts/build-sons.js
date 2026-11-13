@@ -259,6 +259,83 @@ function phonk() {
 }
 SONS['phonk.wav'] = phonk;
 
+// --- Drift : la phonk validée pour « Les nuits du terrarium » (13 nov. 2026) ---------
+// 145 BPM, fa dièse mineur : cloche rapide et saturée, charleston en doubles croches,
+// 808 lourde qui glisse, claps sur 2 et 4, roulement en fin de phrase.
+const note = (n) => 440 * 2 ** ((n - 69) / 12);
+function drift() {
+  const DUREE = 45;
+  const DOUBLE = 60 / 145 / 4;
+  const b = tampon(DUREE);
+  const cloche = tampon(DUREE);
+  const basse = tampon(DUREE);
+  const MELODIE = [
+    [[0, 78], [2, 78], [3, 81], [6, 78], [8, 85], [10, 83], [11, 81], [12, 78], [14, 76]],
+    [[0, 76], [2, 76], [3, 78], [6, 81], [8, 83], [10, 81], [12, 78], [13, 76], [14, 73]],
+  ];
+  const BASSE = [[[0, 42], [6, 42], [10, 45]], [[0, 40], [6, 40], [11, 37]]];
+  const mesures = Math.ceil(DUREE / (16 * DOUBLE));
+  for (let m = 0; m < mesures; m += 1) {
+    const t0 = m * 16 * DOUBLE;
+    const phrase = m % 2;
+    MELODIE[phrase].forEach(([pas, n]) => {
+      const env = (x) => 0.6 * enveloppe(x, 0.001, 0.07);
+      sinus(cloche, () => note(n), env, t0 + pas * DOUBLE, 'carre', 0.5);
+      sinus(cloche, () => note(n) * 1.48, (x) => 0.6 * env(x), t0 + pas * DOUBLE, 'carre', 0.5);
+    });
+    BASSE[phrase].forEach(([pas, n], k, notes) => {
+      const debut = t0 + pas * DOUBLE;
+      const fin = k + 1 < notes.length ? t0 + notes[k + 1][0] * DOUBLE : t0 + 16 * DOUBLE;
+      const d = fin - debut;
+      sinus(basse, (x) => note(n) * (1 + 2.6 * Math.exp(-x * 40)), (x) => enveloppe(x, 0.003, 0.45) * Math.min(1, (d - x) / 0.02), debut, 'sin', d);
+    });
+    [4, 12].forEach((pas) => {
+      const debut = t0 + pas * DOUBLE;
+      [0, 0.011, 0.023].forEach((dt, k) => bruit(b, (x) => (k === 2 ? 0.55 : 0.35) * enveloppe(x, 0.001, k === 2 ? 0.07 : 0.01), { bas: 900, haut: 5500, debut: debut + dt, hasard: graine(100 + m * 10 + pas + k), duree: 0.4 }));
+    });
+    for (let pas = 0; pas < 16; pas += 1) {
+      bruit(b, (x) => 0.2 * (pas % 4 ? 0.65 : 1) * enveloppe(x, 0.0005, 0.018), { bas: 7000, haut: 16000, debut: t0 + pas * DOUBLE, hasard: graine(500 + m * 16 + pas), duree: 0.15 });
+    }
+    if (phrase === 1) {
+      for (let k = 0; k < 6; k += 1) bruit(b, (x) => (0.08 + 0.02 * k) * enveloppe(x, 0.0005, 0.012), { bas: 7000, haut: 16000, debut: t0 + 13 * DOUBLE + (k * DOUBLE) / 2, hasard: graine(900 + m * 8 + k), duree: 0.1 });
+    }
+  }
+  let bas = 0; let haut = 0; let precedent = 0;
+  for (let i = 0; i < b.length; i += 1) {
+    bas += 0.35 * (cloche[i] - bas); haut = 0.92 * (haut + bas - precedent); precedent = bas;
+    b[i] += 0.8 * haut + 0.7 * Math.tanh(3 * basse[i]);
+  }
+  for (let i = 0; i < b.length; i += 1) b[i] = Math.round(Math.tanh(1.5 * b[i]) * 4096) / 4096;
+  return b;
+}
+SONS['drift.wav'] = drift;
+
+// --- Les sons de Mousse ---------------------------------------------------------------
+// Le clic de la lanterne : un déclic sec et un petit « toc » métallique.
+SONS['clic.wav'] = () => {
+  const b = tampon(0.25);
+  bruit(b, (t) => enveloppe(t, 0.0005, 0.006), { bas: 2000, haut: 12000, hasard: graine(30) });
+  sinus(b, () => 1900, (t) => 0.35 * enveloppe(t, 0.001, 0.03), 0, 'sin', 0.15);
+  sinus(b, (t) => 260 * Math.exp(-t * 8), (t) => 0.4 * enveloppe(t, 0.002, 0.04), 0.01, 'sin', 0.2);
+  return b;
+};
+// Le « bip » de Mousse quand il réagit : deux notes de robot.
+SONS['bip.wav'] = () => {
+  const b = tampon(0.32);
+  sinus(b, () => 880, (t) => 0.5 * enveloppe(t, 0.004, 0.05), 0, 'carre', 0.12);
+  sinus(b, () => 1320, (t) => 0.5 * enveloppe(t, 0.004, 0.07), 0.11, 'carre', 0.2);
+  return b;
+};
+// Le terminal qui tape : une rafale de petits clics de clavier.
+SONS['clavier.wav'] = () => {
+  const b = tampon(0.6);
+  const h = graine(31);
+  for (let k = 0; k < 12; k += 1) {
+    bruit(b, (t) => (0.4 + 0.3 * h()) * enveloppe(t, 0.0005, 0.007), { bas: 1800, haut: 9000, debut: k * 0.035 + h() * 0.008, hasard: graine(40 + k), duree: 0.04 });
+  }
+  return b;
+};
+
 fs.mkdirSync(dossier, { recursive: true });
 for (const [nom, fabrique] of Object.entries(SONS)) {
   ecrireWav(nom, normaliser(fabrique(), { 'ambiance.wav': 0.5, 'phonk.wav': 0.8 }[nom] || 0.89));

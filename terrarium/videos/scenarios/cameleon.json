@@ -1,254 +1,261 @@
 {
   "id": "cameleon",
   "chapitre": "cycle",
-  "titre": "Le caméléon",
+  "titre": "Nuit 1 : la langue",
   "concept": "La boucle d'outils",
+  "theme": "nuit",
+  "musique": "drift",
   "serie": {
-    "nom": "Terrarium IA",
+    "nom": "Les nuits du terrarium",
     "episode": 1,
     "total": 5
   },
-  "duree": 24.5,
+  "duree": 25.2,
   "decor": {
     "cameleon": 0.3,
-    "mouche": "cachee"
+    "mouche": "cachee",
+    "lanterne": "eteinte"
   },
   "accroches": {
     "b": [
-      "Ton IA est un *caméléon*."
+      "ton IA rate souvent ?"
     ],
     "c": [
-      "Regarde sa *langue*."
+      "regarde mon IA chasser"
     ]
   },
   "plans": [
     {
       "debut": 0,
-      "fin": 2,
+      "fin": 2.2,
       "camera": {
         "cible": "cameleon-oeil",
         "zoom": 2.6,
         "duree": 0
       },
       "legende": [
-        "Ton IA ne répond pas."
+        "mon IA ne répond jamais"
       ],
       "actions": [
         {
+          "type": "gardien.lanterne",
+          "a": 0.15,
+          "etat": "allumer"
+        },
+        {
           "type": "mouche.venir",
-          "dx": 46,
-          "dy": -62,
-          "duree": 0.6,
-          "attente": 1.6,
-          "depuisX": 470,
-          "depuisY": 150
+          "a": 0.2,
+          "dx": 30,
+          "dy": -38,
+          "duree": 0.6
         },
         {
           "type": "cameleon.viser",
-          "a": 0.3,
+          "a": 0.6,
           "duree": 0.4
         }
       ]
     },
     {
-      "debut": 2,
-      "fin": 4.5,
+      "debut": 2.2,
+      "fin": 4.4,
       "legende": [
-        "Elle *chasse*."
+        "du *premier coup*."
       ],
       "actions": [
         {
           "type": "cameleon.langue",
-          "a": 0.3
+          "a": 0.4,
+          "rate": true
+        },
+        {
+          "type": "mouche.esquiver",
+          "a": 0.42,
+          "dx": -14,
+          "dy": -16,
+          "duree": 0.18
         },
         {
           "type": "cameleon.ramener",
-          "a": 1.0
+          "a": 0.75
         },
         {
-          "type": "cameleon.avaler",
-          "a": 1.5
+          "type": "gardien.expression",
+          "a": 1.0,
+          "humeur": "blase"
         }
       ]
     },
     {
-      "debut": 4.5,
+      "debut": 4.4,
       "fin": 7,
-      "camera": {
-        "cible": "cameleon",
-        "zoom": 1.6,
-        "duree": 0.8
-      },
-      "legende": [
-        "Viser :",
-        "elle *réfléchit*."
-      ],
-      "actions": [
-        {
-          "type": "mouche.venir",
-          "a": 0.2,
-          "dx": 58,
-          "dy": -70,
-          "duree": 0.8,
-          "attente": 1.8
-        },
-        {
-          "type": "cameleon.viser",
-          "a": 0.8
-        }
-      ]
-    },
-    {
-      "debut": 7,
-      "fin": 10,
-      "legende": [
-        "Tirer la langue :",
-        "un *appel d'outil*."
-      ],
-      "actions": [
-        {
-          "type": "cameleon.langue",
-          "a": 0.4
-        }
-      ]
-    },
-    {
-      "debut": 10,
-      "fin": 12.5,
-      "legende": [
-        "Avaler :",
-        "le *résultat*."
-      ],
-      "actions": [
-        {
-          "type": "cameleon.ramener",
-          "a": 0.1
-        },
-        {
-          "type": "cameleon.avaler",
-          "a": 0.5
-        }
-      ]
-    },
-    {
-      "debut": 12.5,
-      "fin": 15.5,
-      "legende": [
-        "Sa couleur change :",
-        "son *contexte* grandit."
-      ],
-      "actions": [
-        {
-          "type": "cameleon.teinte",
-          "couleur": "turquoise",
-          "a": 0.2
-        },
-        {
-          "type": "cameleon.repos",
-          "a": 0.2
-        }
-      ]
-    },
-    {
-      "debut": 15.5,
-      "fin": 19,
       "camera": {
         "cible": "cameleon",
         "zoom": 1.9,
         "duree": 0.6
       },
       "legende": [
-        "Et elle *recommence*.",
-        "Vise, tire, avale."
+        "raté.",
+        "la mouche se *moque*."
+      ],
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.2,
+          "humeur": "surpris"
+        },
+        {
+          "type": "mouche.narguer",
+          "a": 0.3,
+          "duree": 1.6,
+          "rayon": 10
+        }
+      ]
+    },
+    {
+      "debut": 7,
+      "fin": 9.8,
+      "legende": [
+        "2e essai :",
+        "il *vise*…"
+      ],
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.1,
+          "humeur": "neutre"
+        },
+        {
+          "type": "cameleon.viser",
+          "a": 0.3,
+          "duree": 0.5
+        }
+      ]
+    },
+    {
+      "debut": 9.8,
+      "fin": 12.3,
+      "legende": [
+        "*attrapée* !"
+      ],
+      "actions": [
+        {
+          "type": "cameleon.langue",
+          "a": 0.2
+        },
+        {
+          "type": "gardien.expression",
+          "a": 0.5,
+          "humeur": "content"
+        },
+        {
+          "type": "cameleon.ramener",
+          "a": 0.8
+        },
+        {
+          "type": "cameleon.avaler",
+          "a": 1.2
+        }
+      ]
+    },
+    {
+      "debut": 12.3,
+      "fin": 16,
+      "legende": [
+        "il change de *couleur*",
+        "il a appris un truc."
+      ],
+      "actions": [
+        {
+          "type": "cameleon.teinte",
+          "a": 0.2,
+          "couleur": "turquoise"
+        },
+        {
+          "type": "cameleon.repos",
+          "a": 0.2
+        }
+      ]
+    },
+    {
+      "debut": 16,
+      "fin": 18.8,
+      "legende": [
+        "et il en veut *encore*."
       ],
       "actions": [
         {
           "type": "mouche.venir",
           "a": 0.1,
-          "dx": 52,
-          "dy": -74,
-          "duree": 0.6,
-          "attente": 0.6
-        },
-        {
-          "type": "cameleon.viser",
-          "a": 0.4,
-          "duree": 0.3
-        },
-        {
-          "type": "cameleon.langue",
-          "a": 1.3
-        },
-        {
-          "type": "cameleon.ramener",
-          "a": 2.0
-        },
-        {
-          "type": "cameleon.avaler",
-          "a": 2.3
-        },
-        {
-          "type": "cameleon.teinte",
-          "couleur": "orange",
-          "a": 2.7,
+          "dx": 32,
+          "dy": -40,
           "duree": 0.7
         },
         {
-          "type": "cameleon.repos",
-          "a": 2.8
+          "type": "cameleon.viser",
+          "a": 0.6
         }
       ]
     },
     {
-      "debut": 19,
+      "debut": 18.8,
       "fin": 22,
       "camera": {
         "cible": "cameleon",
-        "zoom": 1,
-        "duree": 0.9
+        "zoom": 1.3,
+        "duree": 0.8
       },
       "legende": [
-        "C'est la boucle",
-        "*d'outils*."
+        "réfléchir. agir.",
+        "*recommencer*.",
+        "= boucle d'outils"
       ],
-      "carte": {
-        "type": "phrase",
-        "titre": "En vrai",
-        "texte": "Un agent IA tourne en *boucle* : réfléchir, utiliser un outil, recommencer."
-      }
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.3,
+          "humeur": "neutre"
+        }
+      ]
     },
     {
       "debut": 22,
-      "fin": 24.5,
+      "fin": 25.2,
       "camera": {
         "cible": "cameleon-oeil",
         "zoom": 2.6,
         "duree": 0.9
       },
       "legende": [
-        "Jusqu'à la *réponse*."
+        "demain : la plante",
+        "qui *mord* les IA."
       ],
       "actions": [
         {
           "type": "cameleon.teinte",
-          "couleur": "vert",
-          "a": 0.1,
-          "duree": 1
+          "a": 0.2,
+          "couleur": "vert"
+        },
+        {
+          "type": "gardien.lanterne",
+          "a": 2.8,
+          "etat": "eteindre"
         }
       ]
     }
   ],
   "publication": {
-    "texte": "Ton IA ne répond pas d'un coup : elle tourne en boucle, comme un caméléon qui chasse. Épisode 1 du Terrarium IA.",
+    "texte": "> nuit 1. mon caméléon rate, recommence, et finit par l'avoir. c'est exactement comme ça qu'un agent IA travaille : la boucle d'outils. — Mousse, gardien du terrarium",
     "hashtags": [
       "#ia",
       "#intelligenceartificielle",
       "#agentia",
       "#apprendresurtiktok",
+      "#phonk",
       "#tech"
     ],
-    "commentaire": "Quel concept d'IA tu veux voir dans le terrarium ensuite ?",
-    "couverture": 2.4,
-    "titreCouverture": "Ton IA chasse"
+    "commentaire": "> ton IA rate souvent aussi ?",
+    "couverture": 2.6,
+    "titreCouverture": "Nuit 1 : la langue"
   }
 }

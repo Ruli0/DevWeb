@@ -12,7 +12,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const scenarios = require('../shared/scenarios.js');
-const { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE, SON_AMBIANCE_SOUS_MUSIQUE, MUSIQUES } = require('../videos/sons/table.js');
+const { SONS_PAR_ACTION, SON_CARTE, SON_CAMERA, SON_AMBIANCE, SON_AMBIANCE_SOUS_MUSIQUE, SON_TERMINAL, MUSIQUES } = require('../videos/sons/table.js');
+const theme = require('../public/js/art/nuit.js');
+const gardien = require('../public/js/art/gardien.js');
 const SANS_MUSIQUE = process.argv.includes('--sans-musique');
 
 const racine = path.join(__dirname, '..');
@@ -59,6 +61,8 @@ function bruitages(sc) {
       });
     });
     if (plan.carte) ajouter(SON_CARTE.fichier, plan.debut, SON_CARTE.volume);
+    // Nuit : le terminal de Mousse tape chaque morceau de légende.
+    if (sc.theme === 'nuit') film.morceaux(plan).forEach((m) => ajouter(SON_TERMINAL.fichier, m.debut, SON_TERMINAL.volume));
   });
   sons.sort((a, b) => a.t - b.t);
   // Chaque son dure sa vraie longueur, et ceux qui se chevauchent vont sur des pistes différentes.
@@ -73,11 +77,30 @@ function bruitages(sc) {
   return sons;
 }
 
+// Le texte du terminal, lettre par lettre : le moteur fait apparaître chaque .c à son tour.
+// Les mots entre *étoiles* sont mis en valeur (.acc).
+function lettres(texte) {
+  let acc = false;
+  let html = '';
+  for (const ch of texte) {
+    if (ch === '*') { acc = !acc; continue; }
+    html += `<span class="c${acc ? ' acc' : ''}">${ch === ' ' ? ' ' : esc(ch)}</span>`;
+  }
+  return html;
+}
+
 function composition(sc) {
+  const nocturne = sc.theme === 'nuit';
   const pistes = [];
   sc.plans.forEach((p, i) => {
     // Chaque morceau de légende reste affiché jusqu'au suivant : jamais de blanc.
     film.morceaux(p).forEach((m, k) => {
+      if (nocturne) {
+        pistes.push(`    <div id="leg-${i}-${k}" class="clip term-ligne" data-start="${arrondi(m.debut)}" data-duration="${arrondi(m.fin - m.debut)}" data-track-index="2">
+      <p class="term-texte"><span class="invite">&gt;</span> ${lettres(m.texte)}<span class="curseur"></span></p>
+    </div>`);
+        return;
+      }
       pistes.push(`    <div id="leg-${i}-${k}" class="clip legende" data-start="${arrondi(m.debut)}" data-duration="${arrondi(m.fin - m.debut)}" data-track-index="2">
       <p class="leg-texte">${film.marquer(m.texte)}</p>
     </div>`);
@@ -89,7 +112,14 @@ function composition(sc) {
     }
   });
   const sons = bruitages(sc).map((s, i) => `    <audio id="son-${i}" class="clip" src="assets/sons/${s.fichier}" data-start="${s.t}" data-duration="${s.duree}" data-track-index="${s.piste}" data-volume="${s.volume}"${s.fondu ? ` data-fade-out="${s.fondu}"` : ''}></audio>`);
-  const serie = sc.serie ? `<div class="serie">${esc(sc.serie.nom)} · <b>${sc.serie.episode}/${sc.serie.total}</b></div>` : '';
+  const serie = !sc.serie ? '' : nocturne
+    ? `<div class="serie nuit">Nuit n° <b>${sc.serie.episode}</b></div>`
+    : `<div class="serie">${esc(sc.serie.nom)} · <b>${sc.serie.episode}/${sc.serie.total}</b></div>`;
+  const dessin = nocturne ? theme.nuit(art.svg()) : art.svg();
+  const peau = nocturne ? theme.PEAU : art.PEAU;
+  // Le terminal de Mousse : le cadre reste à l'écran, les lignes sont des clips.
+  const terminal = nocturne ? `    <div class="terminal"><p class="term-prompt">mousse@terrarium:~$</p><div class="term-lignes"></div></div>
+    <svg class="term-fil" width="1080" height="1920" aria-hidden="true"><path d="M640 1150 L700 1290" stroke="rgba(182,255,92,.6)" stroke-width="3" stroke-dasharray="6 8"/></svg>` : '';
 
   return `<!doctype html>
 <html lang="fr">
@@ -104,12 +134,13 @@ ${lire('videos/video.css')}
 </style>
 </head>
 <body>
-  <div id="root" data-composition-id="${sc.id}" data-start="0" data-duration="${sc.duree}" data-width="${LARGEUR}" data-height="${HAUTEUR}">
+  <div id="root"${nocturne ? ' class="nuit"' : ''} data-composition-id="${sc.id}" data-start="0" data-duration="${sc.duree}" data-width="${LARGEUR}" data-height="${HAUTEUR}">
     <div class="scene" data-layout-allow-overflow>
-${art.svg()}
+${dessin}
     </div>
-    <div class="voile"></div>
+${nocturne ? gardien.calque() : '    <div class="voile"></div>'}
     ${serie}
+${terminal}
 ${pistes.join('\n')}
 ${sons.join('\n')}
   </div>
@@ -117,7 +148,7 @@ ${sons.join('\n')}
   <script>
     // Le dessin est déjà dans la page : le moteur n'a besoin que des couleurs et du hasard reproductible.
     window.Terrarium = window.Terrarium || {};
-    window.Terrarium.art = { PEAU: ${JSON.stringify(art.PEAU)}, graine: ${art.graine.toString()} };
+    window.Terrarium.art = { PEAU: ${JSON.stringify(peau)}, graine: ${art.graine.toString()} };
   </script>
   <script>
 ${lire('shared/scenarios.js')}
@@ -179,7 +210,7 @@ function publication(sc, variantes) {
     '',
     '## Son',
     '',
-    'La vidéo contient une boucle phonk originale (libre de droits, utilisable aussi sur Reels et Shorts), les bruitages et l\'ambiance.',
+    `La vidéo contient une boucle phonk originale, « ${sc.musique || 'phonk'} » (libre de droits, utilisable aussi sur Reels et Shorts), les bruitages et l'ambiance.`,
     '',
     'Pour surfer sur un son phonk tendance de TikTok à la place : régénère sans musique (`node scripts/build-video.js --sans-musique`), refais le rendu, puis ajoute le son dans l\'appli. Un son tendance peut aider la diffusion.',
     '',

@@ -2,3 +2,4 @@ node_modules/
 data/
 demo/
 videos/hyperframes/*/assets/sons/
+videos/hyperframes/*/.hyperframes/
