@@ -4,6 +4,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 ## Ce qui est décidé
 
+- **Musique** : **Drift**, phonk à 145 BPM, cloche rapide et saturée, 808 lourde (validée le 13 nov.).
 - **Style** : **nuit bioluminescente à la lanterne, dosage B** (validé le 13 nov.). Palette du style 1 (vert acide, cyan, langue rose, fond bleu nuit), obscurité forte (0,75) autour de la zone éclairée, faisceau chaud de la lanterne, et ce qui est bioluminescent brille dans le noir.
 - **Âme du compte** : **le gardien du terrarium**, un personnage récurrent qui garde des IA dans son terrarium et commente avec humour.
 - **Ton** : divertissant avant tout. Chaque épisode a un gag, et l'apprentissage vient en bonus.
@@ -14,8 +15,8 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 |---|---|---|
 | Style de nuit | **validé** (tour 2, dosage B) | — |
 | Le gardien | premier croquis | « Mousse » (nom provisoire) : petit robot rond, tête moussue, un œil cyan, lanterne au bout d'une perche |
-| Musique | tour 1 en cours | drift phonk, phonk sombre, phonk joueuse |
-| Texte à l'écran | tour 1 en cours | T1 gros titre, T2 néon, T3 bulle de Mousse, T4 mot à mot |
+| Musique | **validée** : Drift (145 BPM) | — |
+| Texte à l'écran | tour 2 envoyé | T5 edit phonk, T6 terminal de Mousse, T7 annotations, T8 cinéma |
 | Scénarios | à venir (étape 3) | un pitch de 4 ou 5 lignes par épisode, avec un gag |
 | Nom du compte et bio | plus tard | `@les.nuits.du.terrarium`, `@mousse.terrarium` |
 
@@ -49,7 +50,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   2. **Sombre** : 96 BPM en demi-temps, cloche grave noyée de réverbération, nappe menaçante, 808 longue.
   3. **Joueuse** : 124 BPM avec du swing, cloche qui saute d'octave, 808 courte et rebondissante, claquements de doigts.
 - **Méthode** : script d'essai hors du dépôt, avec les outils de synthèse de `scripts/build-sons.js`.
-- **Ton retour** : _en attente_.
+- **Ton retour** : « Drift est parfait ». Musique validée.
 - **Envoi** : l'envoi de fichiers a d'abord échoué (erreur 503), puis a fonctionné. Les extraits sont aussi sur la page d'écoute « Atelier des nuits » (artifact privé), avec les sons intégrés.
 
 ### Texte à l'écran, tour 1 (13 nov.)
@@ -60,4 +61,14 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - **T2, néon** : le texte brille en vert et cyan, comme une enseigne.
   - **T3, bulle de Mousse** : c'est le gardien qui parle, dans une bulle bordée de cyan dont la queue pointe vers lui.
   - **T4, mot à mot** : trois ou quatre mots à la fois, le mot en cours surligné (deux instants montrés).
+- **Ton retour** : « Texte pas convaincu encore. »
+
+### Texte à l'écran, tour 2 (13 nov.)
+
+- **Hypothèse** : les 4 premiers styles se ressemblaient trop (du texte blanc gras, sous différentes formes). Ce tour propose des directions franches, chacune avec une personnalité.
+  - **T5, edit phonk** : League Gothic en capitales, penché, décalage rouge et bleu, qui claque sur le temps.
+  - **T6, terminal de Mousse** : Space Mono vert sur l'écran du robot, tapé lettre par lettre, avec un curseur.
+  - **T7, annotations** : Permanent Marker et flèches dessinées sur la scène (« ton IA », « un outil ! »).
+  - **T8, cinéma** : EB Garamond en italique, avec des filets, en fondu lent.
+- **Contraintes** : tous dans la zone sûre. T7 utilise une police non fournie par HyperFrames : il faudra l'embarquer dans `assets/fonts/`.
 - **Ton retour** : _en attente_.
