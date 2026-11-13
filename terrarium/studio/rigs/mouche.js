@@ -40,6 +40,7 @@
     esquiver: { canal: 'position', duree: () => 0.6, params: 'de, vers', role: "Tirée d'un coup par son fil, elle se balance." },
     yoyo: { canal: 'position', duree: (p, T) => (p.fois || 3) * T, params: 'de ; fois (3) ; amplitude en pixels (70)', role: 'Elle fait le yoyo sur son fil, un rebond par temps : elle se moque.' },
     revenir: { canal: 'position', duree: (p) => p.duree || 1, params: 'de, vers ; duree', role: 'Elle revient en arc de cercle.' },
+    remonter: { canal: 'position', duree: (p) => p.duree || 0.6, params: 'de ; duree', role: 'Elle remonte sur son fil et disparaît.' },
     disparaitre: { canal: 'position', duree: () => 0.05, params: '—', role: 'Attrapée : elle disparaît.' },
   };
 
@@ -72,6 +73,11 @@
     revenir(c, t, p) {
       const mi = { x: (p.de[0] + p.vers[0]) / 2 + 40, y: Math.min(p.de[1], p.vers[1]) - 90 };
       c.ft(c.q('#mouche'), { x: p.de[0], y: p.de[1] }, { motionPath: { path: [{ x: p.de[0], y: p.de[1] }, mi, { x: p.vers[0], y: p.vers[1] }], curviness: 1.3 }, duration: p.duree || 1, ease: 'sine.inOut' }, t);
+    },
+    remonter(c, t, p) {
+      const d = p.duree || 0.6;
+      c.ft(c.q('#mouche'), { y: p.de[1] }, { y: p.de[1] - 900, duration: d, ease: 'power2.in' }, t);
+      c.tl.set(c.q('#mouche'), { opacity: 0 }, t + d);
     },
     disparaitre(c, t) {
       c.tl.set(c.q('#mouche'), { opacity: 0 }, t);

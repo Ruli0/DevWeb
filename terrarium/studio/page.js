@@ -42,7 +42,8 @@ function lettres(texte) {
     else { if (dernier && dernier.groupe) dernier.ouvert = false; blocs.push(m); }
   });
   // Taille du groupe géant : sur une ligne s'il est court, sinon sur deux lignes, sans descendre sous 130 px.
-  const geant = (b) => Math.min(176, Math.floor(820 / ((b.n > 10 ? b.long : b.n) * 0.56)));
+  // Sur une ligne si la taille reste grande, sinon sur deux lignes (taille plafonnée, pour ne pas manger l'écran).
+  const geant = (b) => { const une = Math.floor(820 / (b.n * 0.56)); return une >= 120 ? Math.min(176, une) : Math.min(132, Math.floor(820 / (Math.max(b.long, Math.ceil(b.n / 2)) * 0.56))); };
   return `${blocs.map((b) => (b.groupe ? `<span class="mot acc" style="font-size:${geant(b)}px">${b.h}</span>` : b.espace ? b.h : `<span class="mot">${b.h}</span>`)).join('')}<span class="c fin">&nbsp;</span>`;
 }
 
@@ -51,7 +52,9 @@ const DEFS = `
   <filter id="lueur-forte" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
   <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0"/></filter>
   <radialGradient id="vignette" cx="540" cy="880" r="1150" gradientUnits="userSpaceOnUse"><stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.8"/></radialGradient>
-  <radialGradient id="halo-mouche"><stop offset="0" stop-color="#eaff7a" stop-opacity="0.55"/><stop offset="1" stop-color="#eaff7a" stop-opacity="0"/></radialGradient>`;
+  <radialGradient id="halo-mouche"><stop offset="0" stop-color="#eaff7a" stop-opacity="0.55"/><stop offset="1" stop-color="#eaff7a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="halo-outil"><stop offset="0" stop-color="#9af8ff" stop-opacity="0.4"/><stop offset="1" stop-color="#9af8ff" stop-opacity="0"/></radialGradient>
+  <filter id="flou-schema" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>`;
 
 const CSS = `
 * { box-sizing: border-box; } html, body { margin: 0; background: #000; }
@@ -71,7 +74,8 @@ const CSS = `
 .mot .m { display: inline-block; white-space: nowrap; }
 .c { visibility: hidden; } .c.vu { visibility: visible; }
 .c.acc { color: #fbfeff; -webkit-text-stroke: 6px #063040; text-shadow: 0 0 8px #9af8ff, 0 0 26px #5ef2ff, 0 0 60px rgba(94,242,255,.85), 0 0 110px rgba(94,242,255,.5); }
-.c.cur { visibility: visible; color: transparent; -webkit-text-stroke: 0; text-shadow: none; background: #fbfff6; box-shadow: 0 0 14px rgba(141,255,106,.9); }
+.c.cur { visibility: visible; color: transparent; -webkit-text-stroke: 0; text-shadow: none;
+  background: linear-gradient(#fbfff6, #fbfff6) left center / 0.09em 80% no-repeat; filter: drop-shadow(0 0 8px rgba(141,255,106,.9)); }
 .c.fin { display: none; }
 `;
 
@@ -79,7 +83,7 @@ function html(f) {
   const decor = DECORS[f.decor];
   const d = decor.dessin();
   const place = decor.PLACES;
-  const acteurs = RIGS.cameleon.dessin(place.ia) + RIGS.mouche.dessin();
+  const acteurs = RIGS.cameleon.dessin(place.ia) + RIGS.outils.dessin() + RIGS.mouche.dessin();
   const calques = d.calques.map((c) => `   <g class="calque" id="calque-${c.id}" data-f="${c.f}">${c.svg}${c.acteurs ? acteurs : ''}</g>`).join('\n');
   const textes = f.textes.map((m, k) => `  <div id="ligne-${k}" class="clip ligne-texte" data-start="${m.debut}" data-duration="${(m.fin - m.debut).toFixed(3)}" data-track-index="2"><p class="ligne"><span class="chevron">&gt;</span> ${lettres(m.texte)}</p></div>`).join('\n');
 
@@ -110,6 +114,7 @@ function html(f) {
 ${calques}
   </g>
   ${RIGS.mousse.dessin()}
+  ${RIGS.schema.dessin()}
   <g id="etiquettes"></g>
   <rect width="1080" height="1920" fill="url(#vignette)"/>
   <rect width="1080" height="1920" filter="url(#grain)" opacity="0.06"/>
@@ -123,6 +128,8 @@ ${lire('studio/runtime.js')}
 ${lire('studio/rigs/cameleon.js')}
 ${lire('studio/rigs/mouche.js')}
 ${lire('studio/rigs/mousse.js')}
+${lire('studio/rigs/outils.js')}
+${lire('studio/rigs/schema.js')}
 ${lire(`studio/decors/${f.decor}.js`)}
 (function () {
   gsap.registerPlugin(MotionPathPlugin);

@@ -27,6 +27,7 @@
   const PLACES = {
     ia: { x: 380, y: 920, s: 2.2 }, // le caméléon, sur la branche
     tache: [820, 640], // la mouche, devant la gueule
+    outils: { loupe: [905, 530], page: [745, 440] }, // les outils, suspendus à droite de la tête
   };
 
   function dessin() {

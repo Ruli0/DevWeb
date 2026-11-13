@@ -11,7 +11,10 @@
 const { morceaux, LECTURE } = require('../shared/scenarios.js');
 const { TEMPS_FORTS } = require('./temps-forts.js');
 
-const RIGS = { cameleon: require('./rigs/cameleon.js'), mouche: require('./rigs/mouche.js'), mousse: require('./rigs/mousse.js') };
+const RIGS = {
+  cameleon: require('./rigs/cameleon.js'), mouche: require('./rigs/mouche.js'), mousse: require('./rigs/mousse.js'),
+  outils: require('./rigs/outils.js'), schema: require('./rigs/schema.js'),
+};
 const DECORS = { branche: require('./decors/branche.js') };
 const MUSIQUES = { drift: { tempo: 145 } };
 const CADRAGES = { large: 1, 'plan-moyen': 1.55, 'gros-plan': 2.3 };
@@ -28,6 +31,12 @@ const SONS = {
   'mouche.revenir': [{ f: 'bzz.wav', v: 0.3 }],
   'mousse.expression': [{ f: 'bip.wav', v: 0.4 }],
   'mousse.sauter': [{ f: 'pop.wav', v: 0.55 }],
+  'mouche.remonter': [{ f: 'souffle.wav', v: 0.25 }],
+  'outils.descendre': [{ f: 'pop.wav', v: 0.35 }],
+  'outils.attrape': [{ f: 'gloup.wav', v: 0.6, d: 0.05 }],
+  'cameleon.absorber': [{ f: 'carillon.wav', v: 0.3 }],
+  'cameleon.repondre': [{ f: 'pop.wav', v: 0.6 }],
+  'schema.apparaitre': [{ f: 'clic.wav', v: 0.5 }],
 };
 const SON_TEXTE = { f: 'clavier.wav', v: 0.35 };
 const SON_CAMERA = { f: 'souffle.wav', v: 0.22 };
@@ -76,7 +85,15 @@ function compiler(episode) {
   const ia = RIGS[roles.ia];
 
   // L'état de la scène, suivi tout au long de l'épisode.
-  const depart = { regard: ia.angleVers(place.ia, place.tache), couleur: 'vert', humeur: 'neutre', mouche: { pos: place.tache.slice(), visible: true } };
+  // L'état de départ. « depart » de l'épisode : { "tache": "cachee" } pour commencer sans la tâche.
+  const outilsDepart = {};
+  Object.entries(place.outils || {}).forEach(([id, pos]) => { outilsDepart[id] = { pos: pos.slice(), visible: false }; });
+  const depart = {
+    regard: ia.angleVers(place.ia, place.tache), couleur: 'vert', humeur: 'neutre',
+    mouche: { pos: place.tache.slice(), visible: !(ep.depart && ep.depart.tache === 'cachee') },
+    outils: outilsDepart,
+    schema: { visible: false, etape: 'aucune', angle: -90, centre: false, compteur: { tour: 0, s: 0, k: 0 } },
+  };
   const etat = JSON.parse(JSON.stringify(depart));
   const camera = []; const ordres = []; const textes = []; const etiquettes = []; const parties = []; const coupures = [];
   let vueCible = null;
@@ -87,13 +104,14 @@ function compiler(episode) {
     if (role === 'ia' && quoi === 'langue') return (etat.langueBout || ia.ancre(place.ia, 'bouche')).slice();
     if (role === 'ia') return ia.ancre(place.ia, quoi || 'corps');
     if (role === 'tache') return quoi === 'depart' ? place.tache.slice() : etat.mouche.pos.slice();
+    if (role === 'outil' && etat.outils[quoi]) return etat.outils[quoi].pos.slice();
     erreurs.push(`point inconnu : ${spec}`);
     return [540, 768];
   };
 
   let t0 = 0;
   const ctx = {
-    T, M, depart,
+    T, M, depart, etat,
     b: (n) => r(t0 + n * T, 4),
     point,
     decale: (spec, dx, dy) => { const p = point(spec); return [r(p[0] + dx, 1), r(p[1] + dy, 1)]; },
@@ -104,6 +122,46 @@ function compiler(episode) {
       const params = Object.assign({}, p);
       if (id === 'cameleon' && nom === 'langue') params.place = place.ia;
       ordres.push({ t: r(t), qui: id, geste: nom, p: params });
+    },
+    // Les outils suspendus (loupe, page) : leur état est suivi pour la boucle.
+    outil(nom, t, p) {
+      const o = etat.outils[p.id];
+      if (!o) { erreurs.push(`outil inconnu : ${p.id}`); return; }
+      if (nom === 'descendre') { ordres.push({ t: r(t), qui: 'outils', geste: nom, p: Object.assign({ vers: o.pos.slice() }, p) }); o.visible = true; }
+      else if (nom === 'remonter') { ordres.push({ t: r(t), qui: 'outils', geste: nom, p: Object.assign({ de: o.pos.slice() }, p) }); o.visible = false; }
+      else if (nom === 'attrape') { ordres.push({ t: r(t), qui: 'outils', geste: nom, p }); o.visible = false; }
+    },
+    // Le schéma de la boucle et ses compteurs.
+    schema(nom, t, p = {}) {
+      const sc = etat.schema;
+      const push = (geste, params) => ordres.push({ t: r(t), qui: 'schema', geste, p: params });
+      if (nom === 'apparaitre' || nom === 'disparaitre') { if (sc.visible !== (nom === 'apparaitre')) { push(nom, {}); sc.visible = nom === 'apparaitre'; } }
+      else if (nom === 'etape') {
+        // La comète tourne toujours dans le même sens, jusqu'à l'étape demandée (« aucune » : retour en haut).
+        const ANG = RIGS.schema.ETAPES;
+        const cible = p.vers === 'aucune' ? -90 : ANG[p.vers];
+        const angle = cible === undefined ? sc.angle : sc.angle + ((((cible - sc.angle) % 360) + 360) % 360);
+        push('etape', { de: sc.etape, vers: p.vers, angleDe: sc.angle, angleVers: angle, erreur: p.erreur });
+        sc.etape = p.vers; sc.angle = angle;
+      } else if (nom === 'compteur') {
+        const vers = p.vers || { tour: sc.compteur.tour + (p.tour || 0), s: sc.compteur.s + (p.s || 0), k: sc.compteur.k + (p.k || 0) };
+        push('compteur', { de: Object.assign({}, sc.compteur), vers, duree: p.duree });
+        sc.compteur = vers;
+      } else if (nom === 'centrer') { if (sc.centre !== Boolean(p.vers)) { push('centrer', { vers: Boolean(p.vers) }); sc.centre = Boolean(p.vers); } }
+    },
+    reflechir(t, duree) { ctx.geste('ia', 'reflechir', t, { regard: etat.regard, duree: r(duree, 3) }); },
+    // Remet la scène dans son état de départ (la tâche, les outils, le schéma), entre t0 et t1 : la vidéo boucle.
+    restaurer(t0, t1) {
+      const m = etat.mouche; const dm = depart.mouche;
+      if (dm.visible && !m.visible) ctx.mouche('descendre', t0 + (t1 - t0) * 0.4, { vers: dm.pos, duree: (t1 - t0) * 0.5 });
+      else if (!dm.visible && m.visible) { ctx.geste('tache', 'remonter', t0, { de: m.pos.slice(), duree: 0.6 }); m.visible = false; m.pos = dm.pos.slice(); }
+      else if (m.visible && Math.hypot(m.pos[0] - dm.pos[0], m.pos[1] - dm.pos[1]) > 1) ctx.mouche('revenir', t0, { vers: dm.pos, duree: (t1 - t0) * 0.5 });
+      Object.entries(etat.outils).forEach(([id, o], k) => { if (o.visible) ctx.outil('remonter', t0 + 0.1 * (k + 1), { id }); });
+      const sc = etat.schema;
+      if (sc.centre) ctx.schema('centrer', t0, { vers: false });
+      if (sc.compteur.tour || sc.compteur.s || sc.compteur.k) ctx.schema('compteur', t0 + 0.7, { vers: { tour: 0, s: 0, k: 0 }, duree: (t1 - t0) * 0.45 });
+      if (sc.etape !== 'aucune') ctx.schema('etape', t0 + 0.7, { vers: 'aucune' });
+      if (sc.visible && !depart.schema.visible) ctx.schema('disparaitre', t1 - 0.3);
     },
     regarder(t, cible, duree, ease) {
       const vers = ia.angleVers(place.ia, point(cible));
@@ -150,11 +208,11 @@ function compiler(episode) {
       camera.push({ t: r(t, 4), duree, vers: camera[0].vers, ease: 'power2.inOut', poussee: false });
       vueCible = camera[0].vers;
     },
-    etiquette(t, duree, sur, texte) {
+    etiquette(t, duree, sur, texte, o = {}) {
       const a = ecran(vueCible, point(sur));
       const l = texte.length * 31 + 64;
-      const bx = borne(a[0] + (a[0] > 540 ? -190 : 190), 60 + l / 2, 940 - l / 2);
-      const by = borne(a[1] - 190, 450, 1300);
+      const bx = borne(a[0] + (o.dx !== undefined ? o.dx : a[0] > 540 ? -190 : 190), 60 + l / 2, 940 - l / 2);
+      const by = borne(a[1] + (o.dy !== undefined ? o.dy : -190), 450, 1300);
       etiquettes.push({ t: r(t), duree: r(duree), texte, ancre: a, bulle: [r(bx, 1), r(by, 1)] });
     },
   };
@@ -165,7 +223,7 @@ function compiler(episode) {
     if (!def) { erreurs.push(`temps ${i + 1} : temps fort inconnu (${tf.fort})`); return; }
     const mesures = tf.mesures || def.mesures;
     const res = def.jouer(ctx, tf) || {};
-    const p = res.parties || [];
+    const p = tf.parties || res.parties || [];
     for (let k = 0; k < mesures; k += 1) parties.push(p[k] || p[p.length - 1] || 'plein');
     (res.coupures || []).forEach((t) => coupures.push(r(t)));
     const fin = r(t0 + mesures * M, 4);
@@ -213,7 +271,7 @@ function compiler(episode) {
     const debut = o.t - (g.avant || 0);
     const fin = o.t + g.duree(o.p, T);
     non(debut >= -1e-6 && fin <= duree + 1e-6, `${o.qui}.${o.geste} à ${o.t} s : hors de la vidéo`);
-    const cle = `${o.qui}.${g.canal}`;
+    const cle = `${o.qui}.${g.canal}${o.p && o.p.id ? `.${o.p.id}` : ''}`;
     const prec = canaux[cle];
     non(!prec || debut >= prec.fin - 0.005, `${o.qui}.${o.geste} à ${o.t} s chevauche ${prec ? prec.nom : ''}`);
     canaux[cle] = { fin, nom: `${o.qui}.${o.geste} à ${o.t} s` };
@@ -222,7 +280,10 @@ function compiler(episode) {
   non(memeVue(courante, cam[0].vers), 'boucle : la caméra ne revient pas au cadrage du début');
   non(Math.abs(etat.regard - depart.regard) < 0.5, 'boucle : le regard ne revient pas à son départ');
   non(etat.couleur === depart.couleur && etat.humeur === depart.humeur, 'boucle : couleur ou humeur différente du début');
-  non(etat.mouche.visible && Math.hypot(etat.mouche.pos[0] - depart.mouche.pos[0], etat.mouche.pos[1] - depart.mouche.pos[1]) < 1, 'boucle : la tâche n\'est pas revenue à sa place');
+  non(etat.mouche.visible === depart.mouche.visible && (!etat.mouche.visible || Math.hypot(etat.mouche.pos[0] - depart.mouche.pos[0], etat.mouche.pos[1] - depart.mouche.pos[1]) < 1), 'boucle : la tâche n\'est pas revenue à son état de départ');
+  non(Object.values(etat.outils).every((o) => !o.visible), 'boucle : un outil est encore là à la fin');
+  const sc = etat.schema;
+  non(sc.visible === depart.schema.visible && !sc.centre && sc.etape === 'aucune' && !sc.compteur.tour && !sc.compteur.s && !sc.compteur.k, 'boucle : le schéma n\'est pas revenu à son départ');
   parties.forEach((x) => non(PARTIES.includes(x), `partie de musique inconnue : ${x}`));
   if (erreurs.length) return { erreurs };
 
@@ -237,7 +298,10 @@ function compiler(episode) {
     erreurs: [],
     feuille: {
       id: ep.id, titre: ep.titre || ep.id, tempo, duree, decor: decor.id, musique,
-      depart: { cameleon: { regard: depart.regard }, mouche: { pos: depart.mouche.pos, visible: true }, mousse: { humeur: depart.humeur } },
+      depart: {
+        cameleon: { regard: depart.regard }, mouche: { pos: depart.mouche.pos, visible: depart.mouche.visible }, mousse: { humeur: depart.humeur },
+        outils: { items: depart.outils }, schema: {},
+      },
       camera: cam, ordres, textes, etiquettes, sons,
       arrangement: { parties, coupures },
     },

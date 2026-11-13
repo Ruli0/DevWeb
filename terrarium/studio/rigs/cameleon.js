@@ -69,6 +69,12 @@
     <circle class="cameleon-bord" cx="${ox}" cy="${oy}" r="24" fill="${NOIR}" stroke="${t.bord}" stroke-width="1.6"/>
     <g id="cameleon-sclere"><circle cx="${ox}" cy="${oy}" r="16" fill="#eafff0" filter="url(#lueur)"/>
       <g id="cameleon-pupille"><circle cx="${ox + 7}" cy="${oy}" r="8" fill="${NOIR}"/><circle cx="${ox + 9.5}" cy="${oy - 2.5}" r="2.2" fill="#fff"/></g></g>
+    <g id="cameleon-pense" opacity="0">${[0, 1, 2].map((k) => `<circle class="cameleon-point" cx="${120 + k * 22}" cy="${-150 - k * 14}" r="${6 + k * 2}" fill="#d9ffb0" filter="url(#lueur)"/>`).join('')}</g>
+    <circle id="cameleon-goutte" cx="${bx}" cy="${by}" r="7" fill="#9af8ff" filter="url(#lueur)" opacity="0"/>
+    <g id="cameleon-bulle" opacity="0" transform="translate(190 -120) scale(0.6)"><g id="cameleon-bulle-in">
+      <path d="M-58 -38 H58 A20 20 0 0 1 78 -18 V18 A20 20 0 0 1 58 38 H-20 L-46 58 L-40 38 H-58 A20 20 0 0 1 -78 18 V-18 A20 20 0 0 1 -58 -38 Z" fill="#030a08" stroke="#9af8ff" stroke-width="4" filter="url(#lueur)"/>
+      <path d="M-50 -14 H50 M-50 4 H38 M-50 22 H20" stroke="#9af8ff" stroke-width="6" stroke-linecap="round"/>
+    </g></g>
     <g id="cameleon-langue-g" opacity="0"><line id="cameleon-langue" x1="${bx}" y1="${by}" x2="${bx}" y2="${by}" stroke="#ff6fb5" stroke-width="4.5" stroke-linecap="round" filter="url(#lueur)"/>
       <circle id="cameleon-langue-bout" cx="${bx}" cy="${by}" r="4" fill="#ff9fd0" filter="url(#lueur)"/></g>
    </g></g></g>
@@ -83,6 +89,9 @@
     langue: { canal: 'corps', avant: 0.32, duree: (p) => 0.75 + (p.tenir || 0), params: 'cible : point visé ; rate : vrai si la cible a bougé ; tenir : secondes langue sortie', role: 'Recul, élan, la langue part en 0,1 s et revient.' },
     cligner: { canal: 'paupiere', duree: (p) => (p.fois || 2) * 0.3, params: 'fois (2)', role: "Clignement d'incrédulité." },
     avaler: { canal: 'gorge', duree: () => 0.75, params: '—', role: 'Le corps gonfle trois fois : il avale.' },
+    reflechir: { canal: 'pupille', duree: (p) => p.duree || 1, params: 'duree', role: "Il réfléchit : l'œil fait un tour, trois points lumineux s'allument au-dessus de sa tête." },
+    absorber: { canal: 'gorge', duree: () => 0.7, params: '—', role: "Le résultat de l'outil : une goutte lumineuse remonte de la bouche à la tête, les taches flashent." },
+    repondre: { canal: 'bulle', duree: (p) => p.duree || 1.4, params: 'duree', role: 'Une bulle de réponse lumineuse sort de sa bouche.' },
     teinte: { canal: 'couleur', duree: (p) => p.duree || 0.8, params: `de, vers : ${Object.keys(TEINTES).join(', ')} ; duree`, role: 'Le contour et les taches changent de couleur.' },
   };
 
@@ -97,6 +106,7 @@
     c.repos(c.q('#cameleon-pupille'), { rotation: p.regard, svgOrigin: O });
     c.repos(c.q('#cameleon-corps'), { rotation: 0, svgOrigin: PIEDS });
     c.repos(c.q('#cameleon-langue-g'), { opacity: 0 });
+    c.repos(c.qa('#cameleon-pense, #cameleon-goutte, #cameleon-bulle'), { opacity: 0 });
   }
   const gestes = {
     regarder(c, t, p) {
@@ -127,6 +137,27 @@
     },
     avaler(c, t) {
       c.ft(c.q('#cameleon-avaler'), { scaleY: 1, scaleX: 1, svgOrigin: PIEDS }, { scaleY: 1.07, scaleX: 0.97, svgOrigin: PIEDS, duration: 0.12, yoyo: true, repeat: 5, ease: 'sine.inOut' }, t);
+    },
+    reflechir(c, t, p) {
+      const d = p.duree || 1;
+      c.ft(c.q('#cameleon-pupille'), { rotation: p.regard, svgOrigin: O }, { rotation: p.regard + 360, svgOrigin: O, duration: d, ease: 'power1.inOut' }, t);
+      const pense = c.q('#cameleon-pense'); const points = c.qa('.cameleon-point');
+      c.tl.set(pense, { opacity: 1 }, t);
+      points.forEach((el, k) => c.ft(el, { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1, transformOrigin: '50% 50%', duration: 0.18, ease: 'back.out(3)' }, t + k * (d / 4)));
+      c.ft(pense, { opacity: 1 }, { opacity: 0, duration: 0.2 }, t + d - 0.1);
+    },
+    absorber(c, t) {
+      const g = c.q('#cameleon-goutte'); const [bx, by] = ANCRES.bouche; const [tx, ty] = ANCRES.tete;
+      c.tl.set(g, { opacity: 1 }, t);
+      c.ft(g, { attr: { cx: bx, cy: by, r: 7 } }, { attr: { cx: tx, cy: ty, r: 4 }, duration: 0.35, ease: 'power2.in' }, t);
+      c.tl.set(g, { opacity: 0 }, t + 0.35);
+      c.ft(c.qa('.cameleon-tache'), { scale: 1, transformOrigin: '50% 50%' }, { scale: 1.6, transformOrigin: '50% 50%', duration: 0.12, yoyo: true, repeat: 1, stagger: 0.03 }, t + 0.35);
+    },
+    repondre(c, t, p) {
+      const d = p.duree || 1.4; const b = c.q('#cameleon-bulle');
+      c.tl.set(b, { opacity: 1 }, t);
+      c.ft(c.q('#cameleon-bulle-in'), { scale: 0.1, svgOrigin: '-40 50' }, { scale: 1, svgOrigin: '-40 50', duration: 0.35, ease: 'back.out(2.5)' }, t);
+      c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.25 }, t + d - 0.25);
     },
     teinte(c, t, p) {
       const de = TEINTES[p.de]; const vers = TEINTES[p.vers]; const d = p.duree || 0.8;

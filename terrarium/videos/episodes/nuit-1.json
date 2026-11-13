@@ -1,20 +1,21 @@
 {
   "id": "nuit-1",
-  "titre": "Nuit 1 : la langue",
-  "concept": "La boucle d'outils",
+  "titre": "Nuit 1 : comment marche un agent",
+  "concept": "La boucle d'outils d'un agent",
   "decor": "branche",
   "musique": "drift",
   "roles": { "ia": "cameleon", "tache": "mouche" },
+  "depart": { "tache": "cachee" },
   "temps": [
-    { "fort": "accroche", "texte": "mon IA *rate*." },
-    { "fort": "presenter", "qui": "ia", "texte": "voici mon *IA*." },
-    { "fort": "presenter", "qui": "tache", "texte": "et sa *tâche*." },
-    { "fort": "presenter", "qui": "outil", "texte": "et son *outil*." },
-    { "fort": "rater", "texte": ["tir à l'*aveugle*…", "*raté*."] },
-    { "fort": "rater", "facon": "court", "texte": ["il *réessaie*…", "trop *court* !"] },
-    { "fort": "narguer", "texte": "la tâche se *moque*." },
-    { "fort": "etapes", "texte": ["1. *observer*", "2. *agir*", "3. *vérifier*"] },
-    { "fort": "reveler", "texte": ["observer, agir, vérifier.", "= *boucle d'outils*", "comme ton *IA*."] },
-    { "fort": "boucler", "texte": "et ça *recommence*…" }
+    { "fort": "accroche", "mesures": 2, "texte": "ton IA met *2 minutes* ?" },
+    { "fort": "outils", "texte": "voici sa *boucle*." },
+    { "fort": "tour", "outil": "loupe", "texte": "1. elle *cherche*" },
+    { "fort": "tour", "outil": "page", "texte": "2. elle *lit*" },
+    { "fort": "tour", "outil": "tache", "rate": true, "texte": ["3. elle *code*…", "*bug* !"] },
+    { "fort": "tour", "outil": "tache", "etiquette": "corriger", "parties": ["montee", "plein"], "texte": "4. elle *corrige*" },
+    { "fort": "reponse", "texte": "enfin, la *réponse* !" },
+    { "fort": "formule", "texte": ["agent = *IA*", "+ *outils + boucle*"] },
+    { "fort": "cout", "texte": ["4 tours = *2 min*", "et des *tokens*."] },
+    { "fort": "boucler", "texte": "à chaque *question*…" }
   ]
 }

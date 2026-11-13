@@ -62,13 +62,24 @@ test('production/CATALOGUE.md est à jour (node studio/catalogue.js)', () => {
 });
 
 test('texte par mesure : chaque morceau occupe exactement sa mesure, et le nombre de morceaux est vérifié', () => {
-  const nuit = episodes.find((x) => x.ep.id === 'nuit-1');
-  if (!nuit) return;
-  const { feuille } = compiler(nuit.ep);
+  const ep = { ...demo, temps: [{ fort: 'accroche', texte: 'mon IA *rate*.' }, { fort: 'etapes', texte: ['1. *observer*', '2. *agir*', '3. *vérifier*'] }, { fort: 'boucler' }] };
+  const { erreurs, feuille } = compiler(ep);
+  assert.deepEqual(erreurs, []);
   const M = (4 * 60) / feuille.tempo;
-  const etapes = feuille.textes.filter((m) => /observer\*$|agir\*$|vérifier\*$/.test(m.texte) && /^\d\./.test(m.texte));
+  const etapes = feuille.textes.filter((m) => /^\d\./.test(m.texte));
   assert.equal(etapes.length, 3);
-  etapes.forEach((m) => assert.ok(Math.abs(m.fin - m.debut - M) < 0.01, `${m.texte} dure une mesure`));
-  const { erreurs } = compiler({ ...nuit.ep, temps: [{ fort: 'etapes', texte: ['1. observer', '2. agir'] }, { fort: 'boucler' }] });
-  assert.ok(erreurs.some((e) => e.includes('un texte par mesure')));
+  etapes.forEach((m, k) => { assert.ok(Math.abs(m.fin - m.debut - M) < 0.01); assert.ok(Math.abs(m.debut - (1 + k) * M) < 0.01); });
+  const mauvais = compiler({ ...ep, temps: [{ fort: 'accroche' }, { fort: 'etapes', texte: ['1. observer', '2. agir'] }, { fort: 'boucler' }] });
+  assert.ok(mauvais.erreurs.some((e) => e.includes('un texte par mesure')));
+});
+
+test('nuit-1 : quatre tours de boucle comptés (tour, temps, tokens), puis le compteur revient à zéro', () => {
+  const nuit = episodes.find((x) => x.ep.id === 'nuit-1');
+  const { feuille } = compiler(nuit.ep);
+  const compteurs = feuille.ordres.filter((o) => o.qui === 'schema' && o.geste === 'compteur');
+  assert.deepEqual(compteurs.map((o) => o.p.vers.tour), [1, 2, 3, 4, 0]);
+  assert.equal(compteurs[3].p.vers.s, 120, '4 tours = 2 minutes');
+  const outils = feuille.ordres.filter((o) => o.qui === 'outils');
+  assert.ok(outils.some((o) => o.geste === 'attrape' && o.p.id === 'loupe') && outils.some((o) => o.geste === 'attrape' && o.p.id === 'page'));
+  assert.equal(feuille.depart.mouche.visible, false, 'la tâche (le bug) arrive plus tard');
 });
