@@ -14,13 +14,18 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 const dureeSon = (f) => (fs.statSync(path.join(RACINE, 'videos/sons', f)).size - 44) / 88200;
 
 // Le texte de Mousse : toutes les lettres dans la page dès le début, invisibles.
+// Chaque mot est regroupé (.mot, insécable) : un mot n'est jamais coupé entre deux lignes,
+// et un mot en valeur (*mot*) porte la classe .acc, pour le styler en entier.
 function lettres(texte) {
-  let acc = false; let h = '';
+  let acc = false; const mots = []; let mot = { acc: false, h: '' };
   for (const ch of texte) {
     if (ch === '*') { acc = !acc; continue; }
-    h += `<span class="c${acc ? ' acc' : ''}">${ch === ' ' ? ' ' : esc(ch)}</span>`;
+    if (ch === ' ') { if (mot.h) mots.push(mot); mots.push(null); mot = { acc: false, h: '' }; continue; }
+    if (!mot.h) mot.acc = acc;
+    mot.h += `<span class="c${acc ? ' acc' : ''}">${esc(ch)}</span>`;
   }
-  return `${h}<span class="c fin">&nbsp;</span>`;
+  if (mot.h) mots.push(mot);
+  return `${mots.map((m) => (m ? `<span class="mot${m.acc ? ' acc' : ''}">${m.h}</span>` : '<span class="c"> </span>')).join('')}<span class="c fin">&nbsp;</span>`;
 }
 
 const DEFS = `
@@ -39,6 +44,7 @@ const CSS = `
 .ligne-texte { position: absolute; left: 80px; width: 760px; top: 206px; pointer-events: none; }
 .ligne { margin: 0; font: 700 54px/1.2 "Space Mono", monospace; color: #b6ff5c; text-shadow: 0 0 12px rgba(182,255,92,.8), 0 2px 14px rgba(0,0,0,.9); }
 .ligne .chevron { opacity: .55; }
+.mot { display: inline-block; white-space: nowrap; }
 .c { visibility: hidden; } .c.vu { visibility: visible; }
 .c.acc { color: #ff6fb5; text-shadow: 0 0 14px rgba(255,111,181,.9), 0 2px 14px rgba(0,0,0,.9); }
 .c.cur { visibility: visible; color: transparent; text-shadow: none; background: #b6ff5c; box-shadow: 0 0 10px rgba(182,255,92,.8); }

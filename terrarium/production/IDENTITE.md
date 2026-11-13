@@ -120,4 +120,14 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - **B. Titre phonk** : Rubik extra-gras italique, en majuscules, ombre portée dure, mot clé en vert.
   - **C. Écran de Mousse XXL** : la police terminal, en grand, dans un cadre sombre bordé de la couleur ambre de la lanterne.
   - **D. Lettres lumineuses** : Baloo extra-gras, en vert qui brille comme le caméléon, mot clé en cyan.
+- **Ton retour** : « D mais pas convaincue encore ».
+
+### Texte, tour 4 (13 nov.)
+
+- **Montré** : quatre variantes franches de D (`essais/textes/tour4.cjs`).
+  - **D1. Mot clé géant** : le mot clé seul sur sa ligne, deux fois plus gros, en cyan.
+  - **D2. Néon** : cœur blanc, large halo vert (mot clé : halo cyan).
+  - **D3. Sur bandeau** : D sur un bandeau sombre aux bords flous, qui le détache toujours de l'image.
+  - **D4. Autocollant** : le mot clé en noir sur une pastille cyan penchée.
+- **Changé dans le studio** : les mots ne sont plus jamais coupés entre deux lignes (chaque mot est regroupé), et un mot en valeur peut être stylé en entier.
 - **Ton retour** : en attente.
