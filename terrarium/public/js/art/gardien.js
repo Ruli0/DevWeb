@@ -22,7 +22,7 @@
     oeil: '#5ef2ff', ecran: '#0a1020', lumiere: '#ffc65c', botte: '#3b2a24',
   };
   // Mousse est dessiné dans son repère, puis placé en miroir en bas à droite de l'écran.
-  const POSE = { x: 905, y: 1180, echelle: 1.25 };
+  const POSE = { x: 905, y: 1130, echelle: 1.45 };
   const ecran = (x, y) => [POSE.x - POSE.echelle * x, POSE.y + POSE.echelle * y];
   // Points utiles, en coordonnées d'écran.
   const FLAMME = ecran(346, 62); // le cœur de la lanterne
@@ -112,5 +112,5 @@
   const PIEDS = [135, 336];
   const EPAULE = [35, 210];
   const MAIN = [246, 172];
-  return { calque, mousse, FLAMME, OEIL, SUJET, PIEDS, EPAULE, MAIN, DEFS_LANTERNE, couleurs: C };
+  return { calque, mousse, FLAMME, OEIL, SUJET, PIEDS, EPAULE, MAIN, POSE, DEFS_LANTERNE, couleurs: C };
 });

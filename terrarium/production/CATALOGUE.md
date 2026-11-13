@@ -34,9 +34,7 @@ Un fichier `videos/episodes/<id>.json`, puis `npm run video -- <id>` (planche d'
 | `formule` | 2 | La définition : plan large, étiquettes sur l'IA et sur ses outils, puis le schéma passe au centre et la comète fait un tour complet. | texte : un morceau par mesure |
 | `cout` | 2 | Le prix de la boucle : le schéma reste au centre, tout allumé, avec le temps et les tokens dépensés ; Mousse rit jaune. | texte |
 | `hesiter` | 2 | Ouvre sur l'hésitation : gros plan sur l'œil et la tâche, le caméléon veut tirer mais il tremble. | texte |
-| `imaginer` | 3 | Ce qu'il imagine : un projecteur se braque sur lui, la scène s'assombrit, la grenouille et les lucioles le fixent avec de grands yeux. La musique se creuse. | texte (voisins : true) |
-| `cacher` | 2 | Il se camoufle (presque invisible) pour échapper aux regards ; la tâche en profite et remonte sur son fil. Mousse est dépité. | texte (voisins : true) |
-| `penser` | 3 | Ce qui occupe vraiment les autres : une mesure par personnage (la grenouille, les lucioles, Mousse), avec sa bulle de pensée. Personne ne pense au caméléon. | texte : un morceau par mesure (voisins : true) |
+| `sonder` | 2 | Il demande à un voisin « qu'est-ce que tu penses de moi ? » (un « ? » au-dessus de sa tête, il se penche vers lui). Le voisin répond avec ce qui l'occupe vraiment : sa bulle de pensée. | qui : grenouille, lucioles ou mousse ; texte (voisins : true) |
 | `nommer` | 2 | Plan large : le projecteur réapparaît sur le caméléon, étiqueté « dans sa tête », puis s'éteint : il n'existait que dans son imagination. | texte (voisins : true) |
 | `oser` | 2 | La tâche revient, il réapparaît, tire et l'attrape (la basse revient). Les voisins ne réagissent pas : la grenouille cligne des yeux, les lucioles regardent ailleurs. | texte (voisins : true) |
 | `conseil` | 2 | Le conseil : il devient turquoise, Mousse saute de joie, la grenouille coasse et les lucioles dansent. | couleur (turquoise) ; texte (voisins : true) |
@@ -60,6 +58,7 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 | `absorber` | Le résultat de l'outil : une goutte lumineuse remonte de la bouche à la tête, les taches flashent. | — |
 | `repondre` | Une bulle de réponse lumineuse sort de sa bouche. | duree |
 | `camoufler` | Il se camoufle : il devient presque invisible, ou réapparaît. | vers : vrai (presque invisible) ou faux |
+| `pencher` | Il se penche vers quelqu'un (ou se redresse), curieux ou méfiant. | angle (+ : vers l'avant) ; duree |
 | `trembler` | Il tremble de peur (petites secousses rapides). | duree |
 | `teinte` | Le contour et les taches changent de couleur. | de, vers : vert, turquoise, orange, rose ; duree |
 
@@ -120,13 +119,15 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 | `regarder` | Les pupilles de la luciole i suivent un point. | i ; de, vers : décalages des pupilles ; duree |
 | `fixer` | La luciole i fixe : ses yeux grossissent. | i |
 | `relacher` | La luciole i relâche son regard. | i |
+| `entrer` | La luciole i entre en volant par le haut (elle rebondit à l'arrivée). | i |
+| `sortir` | La luciole i remonte et sort de l'écran. | i |
 | `danser` | La luciole i fait une petite pirouette de joie. | i ; duree |
 
 ### pensees (les bulles de pensée)
 
 | Geste | Ce qu'il fait | Paramètres |
 |---|---|---|
-| `penser` | Une bulle de pensée apparaît au-dessus du personnage, avec ce qui l'occupe, puis disparaît. | sur : grenouille, lucioles ou mousse ; duree |
+| `penser` | Une bulle de pensée apparaît au-dessus du personnage, avec ce qui l'occupe, puis disparaît. | sur : cameleon (un « ? »), grenouille, lucioles ou mousse ; duree |
 
 ### ambiance (l'ambiance (projecteur))
 
@@ -138,7 +139,7 @@ Les temps forts appellent ces gestes. Un épisode ne les appelle pas directement
 
 | Décor | Places |
 |---|---|
-| `branche` (la branche) | ia : [380,920] ; tache : [820,640] ; outils : [null,null] ; grenouille : [150,1262] ; lucioles : [[120,610],[230,545],[335,625]] |
+| `branche` (la branche) | ia : [380,920] ; tache : [820,640] ; outils : [null,null] ; grenouille : [880,892] ; lucioles : [[540,500],[650,430],[770,510]] ; echelleLucioles : [null,null] |
 
 ## Cadrages
 

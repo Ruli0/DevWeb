@@ -8,6 +8,8 @@
 const gardien = require('../public/js/art/gardien.js');
 
 const [FX, FY] = gardien.FLAMME;
+// Les pieds de Mousse, à l'écran (pour sa flaque de lumière et son ombre portée).
+const SOL = [gardien.POSE.x - gardien.POSE.echelle * 135, gardien.POSE.y + gardien.POSE.echelle * 340];
 // Le caméléon vit dans le décor : sa lumière est calculée en coordonnées du décor.
 const LUMIERE_CAM = { x: 380, y: 1250 };
 
@@ -24,21 +26,21 @@ const DEFS = `
   <radialGradient id="chaud-rim-cam" cx="${LUMIERE_CAM.x}" cy="${LUMIERE_CAM.y}" r="620" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffe2a0" stop-opacity="1"/><stop offset="0.5" stop-color="#ffb347" stop-opacity="0.75"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0.15"/></radialGradient>
   <linearGradient id="rim-haut" x1="0" y1="620" x2="0" y2="900" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff6dc" stop-opacity="1"/><stop offset="1" stop-color="#fff6dc" stop-opacity="0.2"/></linearGradient>
   <linearGradient id="ombre-droite" x1="${FX + 40}" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#050a1c" stop-opacity="0"/><stop offset="1" stop-color="#050a1c" stop-opacity="0.3"/></linearGradient>
-  <linearGradient id="ombre-bas" x1="0" y1="1380" x2="0" y2="1610" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#050a1c" stop-opacity="0"/><stop offset="1" stop-color="#050a1c" stop-opacity="0.18"/></linearGradient>
+  <linearGradient id="ombre-bas" x1="0" y1="${SOL[1] - 260}" x2="0" y2="${SOL[1]}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#050a1c" stop-opacity="0"/><stop offset="1" stop-color="#050a1c" stop-opacity="0.18"/></linearGradient>
   <linearGradient id="cone-spot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d8" stop-opacity="0.85"/><stop offset="0.6" stop-color="#fff0c0" stop-opacity="0.32"/><stop offset="1" stop-color="#fff0c0" stop-opacity="0.12"/></linearGradient>
   <radialGradient id="flaque"><stop offset="0" stop-color="#fff2c8" stop-opacity="0.85"/><stop offset="0.6" stop-color="#ffe29a" stop-opacity="0.3"/><stop offset="1" stop-color="#ffe29a" stop-opacity="0"/></radialGradient>
   <radialGradient id="flaque-chaude"><stop offset="0" stop-color="#ffc65c" stop-opacity="0.8"/><stop offset="0.6" stop-color="#ff9a3c" stop-opacity="0.3"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
   <radialGradient id="halo-luciole"><stop offset="0" stop-color="#eaff7a" stop-opacity="0.5"/><stop offset="1" stop-color="#eaff7a" stop-opacity="0"/></radialGradient>
   <mask id="mk-mousse" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><use href="#mousse" filter="url(#blanc)"/></mask>
   <mask id="rim-mousse" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920"><use href="#mousse" filter="url(#blanc)"/><use href="#mousse" transform="translate(20 12)" filter="url(#noir)"/></mask>
-  <mask id="rim-cam-bas" maskUnits="userSpaceOnUse" x="-1500" y="-1500" width="4000" height="5000"><use href="#cameleon" filter="url(#blanc)"/><use href="#cameleon" transform="translate(0 -7)" filter="url(#noir)"/></mask>
-  <mask id="rim-cam-haut" maskUnits="userSpaceOnUse" x="-1500" y="-1500" width="4000" height="5000"><use href="#cameleon" filter="url(#blanc)"/><use href="#cameleon" transform="translate(0 8)" filter="url(#noir)"/></mask>`;
+  <mask id="rim-cam-bas" maskUnits="userSpaceOnUse" x="-1500" y="-1500" width="4000" height="5000"><use href="#cameleon-pos" filter="url(#blanc)"/><use href="#cameleon-pos" transform="translate(0 -7)" filter="url(#noir)"/></mask>
+  <mask id="rim-cam-haut" maskUnits="userSpaceOnUse" x="-1500" y="-1500" width="4000" height="5000"><use href="#cameleon-pos" filter="url(#blanc)"/><use href="#cameleon-pos" transform="translate(0 8)" filter="url(#noir)"/></mask>`;
 
 // Sous Mousse : la flaque de lumière chaude sur le sol, et son ombre portée (loin de la lanterne).
 const sousMousse = () => `
-  <ellipse cx="${FX + 120}" cy="1604" rx="330" ry="34" fill="url(#flaque-chaude)" style="mix-blend-mode:screen"/>
-  <ellipse cx="900" cy="1610" rx="230" ry="17" fill="#02050a" opacity="0.5" filter="url(#flou8)"/>
-  <path d="M770 1600 L1010 1618 L990 1636 L760 1618Z" fill="#02050a" opacity="0.32" filter="url(#flou8)"/>`;
+  <ellipse cx="${SOL[0] - 90}" cy="${SOL[1]}" rx="360" ry="36" fill="url(#flaque-chaude)" style="mix-blend-mode:screen"/>
+  <ellipse cx="${SOL[0] + 150}" cy="${SOL[1] + 8}" rx="250" ry="18" fill="#02050a" opacity="0.5" filter="url(#flou8)"/>
+  <path d="M${SOL[0] + 30} ${SOL[1] - 4} L${SOL[0] + 290} ${SOL[1] + 16} L${SOL[0] + 270} ${SOL[1] + 36} L${SOL[0] + 20} ${SOL[1] + 18}Z" fill="#02050a" opacity="0.32" filter="url(#flou8)"/>`;
 
 // Sur Mousse : léger éclaircissement, liseré chaud côté lanterne, ombre de l'autre côté, lueur sur la scène.
 const surMousse = () => `

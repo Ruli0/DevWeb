@@ -13,27 +13,30 @@
   'use strict';
 
   const NOIR = '#050b12';
-  const ECHELLE = 2.3;
+  const ECHELLE = 2.3; // échelle par défaut ; le décor peut la changer (echelleLucioles)
   const AMP = 2.6;
-  const centreOeil = (pos) => [pos[0], pos[1] - 2 * ECHELLE];
+  const centreOeil = (pos, e) => [pos[0], pos[1] - 2 * (e || ECHELLE)];
   const ancre = (pos) => [pos[0], pos[1]];
 
-  function dessin(positions) {
+  function dessin(positions, echelle) {
+    const E = echelle || ECHELLE;
     return positions.map(([x, y], i) => `
-  <g id="luciole-${i}" class="luciole" transform="translate(${x} ${y})"><g class="luciole-flotte"><g transform="scale(${ECHELLE})"><g class="luciole-corps">
+  <g id="luciole-${i}" class="luciole" transform="translate(${x} ${y})"><g class="luciole-entree"><g class="luciole-flotte"><g transform="scale(${E})"><g class="luciole-corps">
     <circle r="34" fill="url(#halo-luciole)"/>
     <ellipse class="luciole-aile" cx="-9" cy="-12" rx="8" ry="11" fill="#d8f6ff" opacity="0.7" transform="rotate(-25 -9 -12)"/><ellipse class="luciole-aile" cx="9" cy="-12" rx="8" ry="11" fill="#d8f6ff" opacity="0.7" transform="rotate(25 9 -12)"/>
     <circle cy="11" r="11" fill="#eaff7a" filter="url(#lueur)"/>
     <circle r="10" fill="${NOIR}" stroke="#c9ff8a" stroke-width="1.2"/>
     <g class="luciole-yeux"><circle class="luciole-sclere" cx="-4" cy="-2" r="5" fill="#fff"/><circle class="luciole-sclere" cx="4" cy="-2" r="5" fill="#fff"/>
     <g class="luciole-pupille"><circle cx="-4" cy="-2" r="2.4" fill="#111"/><circle cx="4" cy="-2" r="2.4" fill="#111"/></g></g>
-  </g></g></g></g>`).join('');
+  </g></g></g></g></g>`).join('');
   }
 
   const GESTES = {
     regarder: { canal: 'regard', duree: (p) => p.duree || 0.3, params: 'i ; de, vers : décalages des pupilles ; duree', role: 'Les pupilles de la luciole i suivent un point.' },
     fixer: { canal: 'oeil', duree: () => 0.3, params: 'i', role: 'La luciole i fixe : ses yeux grossissent.' },
     relacher: { canal: 'oeil', duree: () => 0.3, params: 'i', role: 'La luciole i relâche son regard.' },
+    entrer: { canal: 'presence', duree: () => 0.8, params: 'i', role: 'La luciole i entre en volant par le haut (elle rebondit à l\'arrivée).' },
+    sortir: { canal: 'presence', duree: () => 0.6, params: 'i', role: 'La luciole i remonte et sort de l\'écran.' },
     danser: { canal: 'danse', duree: (p) => p.duree || 1.2, params: 'i ; duree', role: 'La luciole i fait une petite pirouette de joie.' },
   };
 
@@ -43,6 +46,7 @@
     c.qa('.luciole').forEach((el, i) => c.cycle(el.querySelector('circle'), { opacity: 1 }, { opacity: 0.55 }, c.T * (1 + (i % 2) * 0.5)));
   }
   function repos(c, p) {
+    c.qa('.luciole-entree').forEach((el) => c.repos(el, { y: p.visibles ? 0 : -900 }));
     c.qa('.luciole-pupille').forEach((el, i) => { const v = (p.regards && p.regards[i]) || [0, 0]; c.repos(el, { x: v[0], y: v[1] }); });
   }
   const pupille = (c, i) => c.qa('.luciole-pupille')[i];
@@ -56,6 +60,12 @@
     },
     relacher(c, t, p) {
       c.ft(yeux(c, p.i), { attr: { r: 7 } }, { attr: { r: 5 }, duration: 0.3 }, t);
+    },
+    entrer(c, t, p) {
+      c.ft(c.qa('.luciole-entree')[p.i], { y: -900 }, { y: 0, duration: 0.8, ease: 'bounce.out' }, t);
+    },
+    sortir(c, t, p) {
+      c.ft(c.qa('.luciole-entree')[p.i], { y: 0 }, { y: -900, duration: 0.6, ease: 'power2.in' }, t);
     },
     danser(c, t, p) {
       const corps = c.qa('.luciole-corps')[p.i]; const d = p.duree || 1.2;

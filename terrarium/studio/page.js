@@ -87,7 +87,7 @@ function html(f) {
   // Les acteurs, du fond vers l'avant : la grenouille, le caméléon, les outils, les lucioles, la tâche, les bulles.
   const v = f.voisins;
   const acteurs = (v ? RIGS.grenouille.dessin(place.grenouille) : '') + RIGS.cameleon.dessin(place.ia) + lumiere.surCameleon() + RIGS.outils.dessin()
-    + (v ? RIGS.lucioles.dessin(place.lucioles) : '') + RIGS.mouche.dessin() + (v ? RIGS.pensees.dessinDecor() : '');
+    + (v ? RIGS.lucioles.dessin(place.lucioles, place.echelleLucioles) : '') + RIGS.mouche.dessin() + (v ? RIGS.pensees.dessinDecor() : '');
   // Le projecteur et son voile passent derrière les acteurs : eux restent éclairés.
   const ambiance = v ? RIGS.ambiance.dessin(place.ia.x + 40) : '';
   const calques = d.calques.map((c) => `   <g class="calque" id="calque-${c.id}" data-f="${c.f}">${c.svg}${c.acteurs ? ambiance + acteurs : ''}</g>`).join('\n');

@@ -214,3 +214,14 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Montré** : `videos/studio/jugement/jugement.mp4`, 29,8 s, 60 images par seconde (33 Mo). Rendu en environ 10 minutes : les masques de lumière coûtent cher.
 - **Contrôles** : 36 tests, lint à 0 erreur. Les silences sur la musique sont bien là (environ −21 dB juste avant « il ose »).
 - **Ton retour** : en attente.
+
+### Épisode 1 refait : « Le sondage » (13 nov.)
+
+- **Ton retour sur la première vidéo** : « Refais en mieux, c'est pas terrible. » Après question : l'histoire et le message, trop statique, personnages trop petits.
+- **Histoire choisie** (parmi trois) : **le sondage**. Le caméléon fait le tour des voisins pour demander ce qu'ils pensent de lui (un « ? » au-dessus de sa tête, il se penche vers eux) ; chacun répond avec ce qui l'occupe vraiment : la grenouille sa mouche, les lucioles leur lumière, Mousse sa plante. Puis « personne ne pense à lui = l'effet projecteur », il ose, et le conseil.
+- **Changé** :
+  - personnages bien plus gros : plans plus serrés, grenouille et lucioles agrandies et rapprochées, Mousse agrandi (échelle 1,45) ;
+  - plus de mouvement : tout rebondit sur le temps (caméléon, grenouille, Mousse), le caméléon se penche vers chaque voisin, les lucioles entrent en volant, la caméra change de voisin à chaque question ;
+  - 26,5 s (16 mesures) au lieu de 29,8 s.
+- **Montré** : la planche d'aperçu (12 images).
+- **Ton retour** : en attente.

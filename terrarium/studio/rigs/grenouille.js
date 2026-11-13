@@ -25,7 +25,7 @@
       <circle class="gren-sclere" cx="${dx}" cy="${OEIL_Y}" r="17" fill="#eafff0" filter="url(#lueur)"/>
       <g class="gren-pupille"><circle class="gren-pupille-rond" cx="${dx}" cy="${OEIL_Y}" r="9" fill="${NOIR}"/></g></g>`;
     return `
-  <g id="grenouille" transform="translate(${place.x} ${place.y}) scale(${place.s})"><g id="grenouille-corps">
+  <g id="grenouille" transform="translate(${place.x} ${place.y}) scale(${place.s})"><g id="grenouille-rebond"><g id="grenouille-corps">
     <ellipse cx="0" cy="-48" rx="74" ry="52" fill="none" stroke="#5ef2ff" stroke-width="5" filter="url(#lueur-forte)"/>
     <ellipse cx="-56" cy="-14" rx="32" ry="18" fill="${NOIR}"/><ellipse cx="56" cy="-14" rx="32" ry="18" fill="${NOIR}"/>
     <ellipse cx="0" cy="-48" rx="70" ry="50" fill="${NOIR}" stroke="#9af8ff" stroke-width="1.6"/>
@@ -34,7 +34,7 @@
     <path d="M-40 -52 Q0 -30 40 -52" stroke="#2c6a7a" stroke-width="3" fill="none" stroke-linecap="round"/>
     <ellipse cx="-22" cy="-3" rx="16" ry="7" fill="${NOIR}"/><ellipse cx="22" cy="-3" rx="16" ry="7" fill="${NOIR}"/>
     ${oeil(-28)}${oeil(28)}
-  </g></g>`;
+  </g></g></g>`;
   }
 
   const GESTES = {
@@ -47,6 +47,7 @@
 
   function ambiance(c) {
     c.cycle(c.q('#grenouille-corps'), { scaleY: 1, svgOrigin: '0 0' }, { scaleY: 1.03, svgOrigin: '0 0' }, 2 * c.T);
+    c.cycle(c.q('#grenouille-rebond'), { y: 0 }, { y: -5 }, c.T, 'power1.inOut'); // elle rebondit sur le temps
     c.cycle(c.q('#grenouille-gorge'), { scaleY: 1, scaleX: 1, svgOrigin: '0 -30' }, { scaleY: 1.12, scaleX: 1.04, svgOrigin: '0 -30' }, 4 * c.T);
   }
   function repos(c, p) {

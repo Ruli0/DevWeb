@@ -28,8 +28,9 @@
     ia: { x: 380, y: 920, s: 2.2 }, // le caméléon, sur la branche
     tache: [820, 640], // la mouche, devant la gueule
     outils: { loupe: [905, 530], page: [745, 440] }, // les outils, suspendus à droite de la tête
-    grenouille: { x: 150, y: 1262, s: 1.55 }, // sur la feuille, sous la queue du caméléon
-    lucioles: [[120, 610], [230, 545], [335, 625]], // en haut à gauche, au-dessus du dos du caméléon
+    grenouille: { x: 880, y: 892, s: 1.7 }, // sur la branche, devant le museau du caméléon
+    lucioles: [[540, 500], [650, 430], [770, 510]], // au-dessus du dos du caméléon, grosses
+    echelleLucioles: 3.1,
   };
 
   function dessin() {

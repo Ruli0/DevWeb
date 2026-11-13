@@ -84,16 +84,15 @@ test('nuit-1 : quatre tours de boucle comptés (tour, temps, tokens), puis le co
   assert.equal(feuille.depart.mouche.visible, false, 'la tâche (le bug) arrive plus tard');
 });
 
-test('jugement : le projecteur et le camouflage reviennent à leur état de départ, et chaque voisin a sa bulle de pensée', () => {
+test('jugement : le projecteur est éteint à la fin, et chaque voisin a sa bulle de pensée après la question « ? »', () => {
   const j = episodes.find((x) => x.ep.id === 'jugement');
   const { feuille, erreurs } = compiler(j.ep);
   assert.deepEqual(erreurs, []);
   const projo = feuille.ordres.filter((o) => o.qui === 'ambiance').map((o) => o.p.etat);
   assert.equal(projo[projo.length - 1], 'eteindre');
   assert.equal(projo.filter((e) => e === 'allumer').length, projo.filter((e) => e === 'eteindre').length, 'chaque projecteur allumé est éteint');
-  const camo = feuille.ordres.filter((o) => o.geste === 'camoufler').map((o) => o.p.vers);
-  assert.equal(camo[camo.length - 1], false);
-  assert.deepEqual(feuille.ordres.filter((o) => o.qui === 'pensees').map((o) => o.p.sur), ['grenouille', 'lucioles', 'mousse']);
+  const bulles = feuille.ordres.filter((o) => o.qui === 'pensees').map((o) => o.p.sur);
+  assert.deepEqual(bulles, ['cameleon', 'grenouille', 'cameleon', 'lucioles', 'cameleon', 'mousse']);
 });
 
 test('un épisode sans « voisins » ne peut pas utiliser la grenouille, les lucioles ou le projecteur', () => {

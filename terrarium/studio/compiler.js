@@ -43,6 +43,7 @@ const SONS = {
   'ambiance.projecteur': [{ f: 'souffle.wav', v: 0.4 }],
   'pensees.penser': [{ f: 'pop.wav', v: 0.5 }],
   'lucioles.danser': [{ f: 'bzz.wav', v: 0.25 }],
+  'lucioles.entrer': [{ f: 'bzz.wav', v: 0.3 }],
   'cameleon.camoufler': [{ f: 'souffle.wav', v: 0.3 }],
 };
 const SON_TEXTE = { f: 'clavier.wav', v: 0.35 };
@@ -101,7 +102,7 @@ function compiler(episode) {
     outils: outilsDepart,
     schema: { visible: false, etape: 'aucune', angle: -90, centre: false, compteur: { tour: 0, s: 0, k: 0 } },
     camoufle: false, projecteur: false,
-    voisins: { grenouille: { regard: [0, 0], fixe: false }, lucioles: [0, 1, 2].map(() => ({ regard: [0, 0], fixe: false })) },
+    voisins: { grenouille: { regard: [0, 0], fixe: false }, lucioles: [0, 1, 2].map(() => ({ regard: [0, 0], fixe: false })), luciolesIci: false },
   };
   // « voisins » : la grenouille, les trois lucioles, les bulles de pensée et le projecteur sont dans la scène.
   const voisins = Boolean(ep.voisins);
@@ -175,11 +176,17 @@ function compiler(episode) {
       ctx.geste('ambiance', 'projecteur', t, { etat: allumer ? 'allumer' : 'eteindre' }); etat.projecteur = allumer;
     },
     pensee(sur, t, duree) { if (ctx.exigerVoisins()) ctx.geste('pensees', 'penser', t, { sur, duree: r(duree, 3) }); },
+    // Les lucioles entrent en volant par le haut (une à une), ou ressortent.
+    lucioles(t, entrent) {
+      if (!ctx.exigerVoisins() || etat.voisins.luciolesIci === entrent) return;
+      [0, 1, 2].forEach((i) => ctx.geste('lucioles', entrent ? 'entrer' : 'sortir', t + 0.14 * i, { i }));
+      etat.voisins.luciolesIci = entrent;
+    },
     // Le regard d'un voisin : ses pupilles vont vers un point (cible), de la même façon que celles du caméléon.
     regarderVoisin(qui, i, t, cible, duree = 0.3) {
       if (!ctx.exigerVoisins()) return;
       const e = qui === 'grenouille' ? etat.voisins.grenouille : etat.voisins.lucioles[i];
-      const centre = qui === 'grenouille' ? RIGS.grenouille.centreOeil(place.grenouille) : RIGS.lucioles.centreOeil(place.lucioles[i]);
+      const centre = qui === 'grenouille' ? RIGS.grenouille.centreOeil(place.grenouille) : RIGS.lucioles.centreOeil(place.lucioles[i], place.echelleLucioles);
       const cb = point(cible); const dx = cb[0] - centre[0]; const dy = cb[1] - centre[1]; const d = Math.hypot(dx, dy) || 1;
       const vers = [r((dx / d) * RIGS[qui].AMP, 2), r((dy / d) * RIGS[qui].AMP, 2)];
       if (Math.abs(vers[0] - e.regard[0]) < 0.05 && Math.abs(vers[1] - e.regard[1]) < 0.05) return;
@@ -206,7 +213,7 @@ function compiler(episode) {
       if (sc.etape !== 'aucune') ctx.schema('etape', t0 + 0.7, { vers: 'aucune' });
       if (sc.visible && !depart.schema.visible) ctx.schema('disparaitre', t1 - 0.3);
       if (voisins) {
-        ctx.camoufler(t0, false); ctx.projecteur(t0, false);
+        ctx.camoufler(t0, false); ctx.projecteur(t0, false); ctx.lucioles(t1 - 1.4, false);
         ctx.fixerVoisin('grenouille', 0, t0 + 0.2, false);
         [0, 1, 2].forEach((i) => { ctx.fixerVoisin('lucioles', i, t0 + 0.2, false); ctx.regarderVoisin('lucioles', i, t0 + 0.5, 'ia.corps', 0.5); });
         ctx.regarderVoisin('grenouille', 0, t0 + 0.5, 'ia.corps', 0.5);
@@ -334,6 +341,7 @@ function compiler(episode) {
   non(Object.values(etat.outils).every((o) => !o.visible), 'boucle : un outil est encore là à la fin');
   non(etat.camoufle === depart.camoufle && etat.projecteur === depart.projecteur, 'boucle : le caméléon est encore camouflé, ou le projecteur allumé');
   non(!etat.voisins.grenouille.fixe && etat.voisins.lucioles.every((l) => !l.fixe), 'boucle : un voisin fixe encore le caméléon');
+  non(!etat.voisins.luciolesIci, 'boucle : les lucioles sont encore là à la fin (elles doivent ressortir)');
   const sc = etat.schema;
   non(sc.visible === depart.schema.visible && !sc.centre && sc.etape === 'aucune' && !sc.compteur.tour && !sc.compteur.s && !sc.compteur.k, 'boucle : le schéma n\'est pas revenu à son départ');
   parties.forEach((x) => non(PARTIES.includes(x), `partie de musique inconnue : ${x}`));
@@ -353,7 +361,7 @@ function compiler(episode) {
       depart: {
         cameleon: { regard: depart.regard }, mouche: { pos: depart.mouche.pos, visible: depart.mouche.visible }, mousse: { humeur: depart.humeur },
         outils: { items: depart.outils }, schema: {},
-        ...(voisins ? { grenouille: { regard: depart.voisins.grenouille.regard }, lucioles: { regards: depart.voisins.lucioles.map((l) => l.regard) }, pensees: {}, ambiance: {} } : {}),
+        ...(voisins ? { grenouille: { regard: depart.voisins.grenouille.regard }, lucioles: { regards: depart.voisins.lucioles.map((l) => l.regard), visibles: false }, pensees: {}, ambiance: {} } : {}),
       },
       voisins,
       camera: cam, ordres, textes, etiquettes, sons,

@@ -55,7 +55,7 @@
       <path d="${G.patteAv}" stroke="${coul}" stroke-width="${larg}" fill="none" stroke-linecap="round" stroke-linejoin="round" ${extra}/>
       <path d="${G.patteAr}" stroke="${coul}" stroke-width="${larg}" fill="none" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
     return `
-  <g id="cameleon" transform="translate(${place.x} ${place.y}) scale(${place.s})">
+  <g id="cameleon-pos"><g id="cameleon" transform="translate(${place.x} ${place.y}) scale(${place.s})">
    <g id="cameleon-tremble"><g id="cameleon-corps"><g id="cameleon-respire"><g id="cameleon-avaler">
     <g filter="url(#lueur-forte)" opacity="0.9">
       ${membres(t.lueur, 16, 'class="cameleon-lueur"')}
@@ -78,7 +78,7 @@
     <g id="cameleon-langue-g" opacity="0"><line id="cameleon-langue" x1="${bx}" y1="${by}" x2="${bx}" y2="${by}" stroke="#ff6fb5" stroke-width="4.5" stroke-linecap="round" filter="url(#lueur)"/>
       <circle id="cameleon-langue-bout" cx="${bx}" cy="${by}" r="4" fill="#ff9fd0" filter="url(#lueur)"/></g>
    </g></g></g></g>
-  </g>`;
+  </g></g>`;
   }
 
   // --- Catalogue des gestes (lu par le compilateur et par catalogue.js) ---------------
@@ -93,6 +93,7 @@
     absorber: { canal: 'gorge', duree: () => 0.7, params: '—', role: "Le résultat de l'outil : une goutte lumineuse remonte de la bouche à la tête, les taches flashent." },
     repondre: { canal: 'bulle', duree: (p) => p.duree || 1.4, params: 'duree', role: 'Une bulle de réponse lumineuse sort de sa bouche.' },
     camoufler: { canal: 'camouflage', duree: () => 0.7, params: 'vers : vrai (presque invisible) ou faux', role: 'Il se camoufle : il devient presque invisible, ou réapparaît.' },
+    pencher: { canal: 'tremble', duree: (p) => p.duree || 1.2, params: 'angle (+ : vers l\'avant) ; duree', role: 'Il se penche vers quelqu\'un (ou se redresse), curieux ou méfiant.' },
     trembler: { canal: 'tremble', duree: (p) => p.duree || 1, params: 'duree', role: 'Il tremble de peur (petites secousses rapides).' },
     teinte: { canal: 'couleur', duree: (p) => p.duree || 0.8, params: `de, vers : ${Object.keys(TEINTES).join(', ')} ; duree`, role: 'Le contour et les taches changent de couleur.' },
   };
@@ -103,6 +104,7 @@
   function ambiance(c) {
     c.cycle(c.q('#cameleon-respire'), { scaleY: 1, svgOrigin: PIEDS }, { scaleY: 1.025, svgOrigin: PIEDS }, 2 * c.T);
     c.qa('.cameleon-tache').forEach((el) => c.cycle(el, { opacity: 0.55 }, { opacity: 1 }, c.T));
+    c.cycle(c.q('#cameleon-pos'), { y: 0 }, { y: -4 }, c.T, 'power1.inOut'); // il rebondit sur le temps
   }
   function repos(c, p) {
     c.repos(c.q('#cameleon-pupille'), { rotation: p.regard, svgOrigin: O });
@@ -166,6 +168,11 @@
     camoufler(c, t, p) {
       const [a, b] = p.vers ? [1, 0.22] : [0.22, 1];
       c.ft(c.q('#cameleon'), { opacity: a }, { opacity: b, duration: 0.7, ease: 'power2.inOut' }, t);
+    },
+    pencher(c, t, p) {
+      const d = p.duree || 1.2; const a = p.angle || 5;
+      c.ft(c.q('#cameleon-tremble'), { rotation: 0, svgOrigin: PIEDS }, { rotation: a, svgOrigin: PIEDS, duration: 0.4, ease: 'back.out(1.8)' }, t);
+      c.ft(c.q('#cameleon-tremble'), { rotation: a, svgOrigin: PIEDS }, { rotation: 0, svgOrigin: PIEDS, duration: 0.45, ease: 'power2.inOut' }, t + d - 0.45);
     },
     trembler(c, t, p) {
       const d = p.duree || 1; const n = Math.max(2, Math.round(d / 0.05));
