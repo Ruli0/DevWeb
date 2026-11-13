@@ -59,7 +59,7 @@
     centrer: { canal: 'place', duree: () => 0.6, params: 'vers : vrai (au centre, en grand) ou faux', role: "Le schéma passe au centre de l'écran pour l'explication, ou revient." },
   };
 
-  const temps = (s) => `⏱ ${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+  const temps = (s) => { const n = Math.round(s); return `⏱ ${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`; };
   const tokens = (k) => `${String(Math.round(k / 100) * 100).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} tokens`;
 
   function ambiance(c) {
