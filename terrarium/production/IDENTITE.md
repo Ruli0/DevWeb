@@ -162,4 +162,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Montré** : six styles, sans texte, au moment « il croit que tout le monde le regarde » : S1 à S4, plus S5 pâte à modeler (volumes doux, flou d'arrière-plan) et S6 aplats géométriques (sarcelle et orange, triangles).
 - **Ensuite** : les propositions de texte, une fois le style choisi.
+- **Ton retour** : « S1 en décor mais un peu moins sombre, avec les polices du S2. On arrête les polices en surbrillance. Et il faut qu'on voie mieux Mousse, et que sa lanterne soit mieux aussi. »
+
+### Styles, tour 3 (13 nov.)
+
+- **Montré** : S1 éclairci en deux dosages (A un peu, B nettement), avec le texte de S2 (lettres rondes blanches, pastille rose, sans lueur). Mousse a des couleurs plus claires (bleu, mousse verte, bottes brunes), et sa lanterne est redessinée : plus grande, cadre en laiton, vitres, flamme, rayons et halo chaud (`essais/psycho-styles/maquettes.cjs tour3`).
 - **Ton retour** : en attente.

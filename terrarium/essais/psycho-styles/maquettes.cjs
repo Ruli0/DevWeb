@@ -94,10 +94,29 @@ function mouche(st) {
       <path d="M-3.5 5 q3.5 3 7 0" stroke="#111" stroke-width="1.6" fill="none" stroke-linecap="round"/>
     </g></g>`;
 }
+// Une lanterne plus grande et plus détaillée (cadre en laiton, vitres, flamme, rayons), à la place de l'ancienne.
+function lanterne() {
+  const [x, y] = gardien.FLAMME;
+  const rayons = Array.from({ length: 10 }, (_, k) => { const a = (k / 10) * Math.PI * 2; return `<line x1="${(46 * Math.cos(a)).toFixed(1)}" y1="${(46 * Math.sin(a)).toFixed(1)}" x2="${(78 * Math.cos(a)).toFixed(1)}" y2="${(78 * Math.sin(a)).toFixed(1)}" stroke="#ffd98a" stroke-width="3" stroke-linecap="round" opacity="0.45"/>`; }).join('');
+  return `<g transform="translate(${x} ${y - 6}) scale(1.55)">
+    <circle r="150" fill="url(#lanterne-halo)" style="mix-blend-mode:screen"/>
+    ${rayons}
+    <path d="M0 -62 L0 -48" stroke="#c8913a" stroke-width="3"/><circle cy="-66" r="7" fill="none" stroke="#c8913a" stroke-width="3.5"/>
+    <path d="M-28 -30 Q0 -54 28 -30 Z" fill="#4a3220" stroke="#e0a94a" stroke-width="2.5"/>
+    <rect x="-23" y="-30" width="46" height="60" rx="7" fill="#ffd27a" opacity="0.75"/>
+    <rect x="-23" y="-30" width="46" height="60" rx="7" fill="url(#lanterne-verre)"/>
+    <path d="M0 -14 C10 0 11 9 6 18 A7 7 0 0 1 -6 18 C-11 9 -10 0 0 -14Z" fill="#fff8e0"/><path d="M0 0 C5 7 5 12 2 17 A3 3 0 0 1 -2 17 C-5 12 -5 7 0 0Z" fill="#ffb347"/>
+    <rect x="-23" y="-30" width="46" height="60" rx="7" fill="none" stroke="#e0a94a" stroke-width="4"/>
+    <path d="M-8 -30 V30 M8 -30 V30" stroke="#c8913a" stroke-width="2.5" opacity="0.8"/>
+    <rect x="-28" y="29" width="56" height="9" rx="4" fill="#4a3220" stroke="#e0a94a" stroke-width="2.5"/>
+  </g>`;
+}
+const DEFS_LANTERNE = '<radialGradient id="lanterne-halo"><stop offset="0" stop-color="#ffc65c" stop-opacity="0.75"/><stop offset="0.45" stop-color="#ffc65c" stop-opacity="0.28"/><stop offset="1" stop-color="#ffc65c" stop-opacity="0"/></radialGradient><linearGradient id="lanterne-verre" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.5"/><stop offset="0.4" stop-color="#fff" stop-opacity="0"/></linearGradient>';
 function mousse(st, m) {
   let s = recolorer(gardien.mousse(), st.mousse);
+  if (st.lanterne) s = s.replace('<g id="lanterne" ', '<g id="lanterne" style="display:none" ');
   if (m === 'imaginer') s = s.replace(/<g id="oeil-neutre">/, '<g id="oeil-neutre" opacity="0">').replace(/<g id="oeil-surpris" opacity="0">/, '<g id="oeil-surpris">');
-  return `<g ${st.mousseFiltre ? `filter="url(#${st.mousseFiltre})"` : ''}>${s}</g>`;
+  return `<g ${st.mousseFiltre ? `filter="url(#${st.mousseFiltre})"` : ''}>${s}</g>${st.lanterne ? lanterne() : ''}`;
 }
 // La bulle de pensée de la grenouille (moment 2), avec une mouche dedans.
 function pensee(st) {
@@ -280,6 +299,21 @@ const STYLES = {
   },
 };
 
+const TEXTE_S2 = `.texte { font: 600 84px/1.1 "Fredoka"; color: #fff; display: inline-block; padding: 26px 46px 30px; border-radius: 60px; background: rgba(110,95,200,.62); box-shadow: 0 12px 40px rgba(20,10,60,.4); }
+  .texte b { display: block; font-weight: 700; font-size: 132px; line-height: 1; color: #fff; background: #ff9fc0; border-radius: 40px; padding: 4px 28px 10px; margin-top: 12px; box-shadow: 0 6px 0 #e77fa6; }`;
+const MOUSSE_VISIBLE = { '#2a3550': '#5a6fae', '#151c2e': '#34407a', '#3fa34d': '#5fc46a', '#3b2a24': '#7a5236', '#0a1020': '#0a1020' };
+const s1clair = (nom, voile, ciel) => Object.assign({}, STYLES.s1, {
+  nom,
+  defs: STYLES.s1.defs + DEFS_LANTERNE + `<linearGradient id="eclaircir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${ciel[0]}"/><stop offset="1" stop-color="${ciel[1]}"/></linearGradient>`,
+  fond: STYLES.s1.fond + `<rect width="1080" height="1920" fill="url(#eclaircir)" opacity="${voile}" style="mix-blend-mode:screen"/>`,
+  mousse: MOUSSE_VISIBLE, lanterne: true,
+  imaginer: '<rect width="1080" height="1920" fill="#000" opacity="0.38"/><polygon points="430,0 650,0 900,1080 300,1080" fill="url(#spot)"/><rect width="1080" height="1920" fill="url(#spot)"/>',
+  apres: '<rect width="1080" height="1920" fill="url(#vignette)" opacity="0.55"/>',
+  police: 'Fredoka:wght@600;700', css: TEXTE_S2,
+});
+STYLES.s1a = s1clair('S1 clair · dosage A', 0.22, ['#3f7a9a', '#2a4a5a']);
+STYLES.s1b = s1clair('S1 clair · dosage B', 0.7, ['#6aa8c8', '#3d6a7a']);
+
 function page(st, m, avecTexte = true) {
   const texte = m === 'imaginer' ? 'il croit que tout le monde le <b>regarde</b>' : 'la grenouille pense à <b>sa mouche</b>';
   return `<!doctype html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=${st.police}&display=block" rel="stylesheet">
@@ -306,8 +340,9 @@ function page(st, m, avecTexte = true) {
   const images = [];
   // « styles » : décor et personnages seuls (sans texte), au moment « tout le monde le regarde ».
   const seulStyle = process.argv.includes('styles');
+  const tour3 = process.argv.includes('tour3'); // S1 plus clair, Mousse et sa lanterne revus, texte S2
   for (const [id, st] of Object.entries(STYLES)) {
-    if (!seulStyle && (id === 's5' || id === 's6')) continue;
+    if (tour3 ? !['s1a', 's1b'].includes(id) : id === 's1a' || id === 's1b' || (!seulStyle && (id === 's5' || id === 's6'))) continue;
     for (const m of seulStyle ? ['imaginer'] : ['imaginer', 'penser']) {
       const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
       await p.setContent(page(st, m, !seulStyle));
@@ -321,7 +356,7 @@ function page(st, m, avecTexte = true) {
   }
   await b.close();
   const n = images.length; const col = seulStyle ? 3 : 4;
-  const sortie = path.join(__dirname, seulStyle ? 'planche-styles.png' : 'planche.png');
+  const sortie = path.join(__dirname, tour3 ? 'planche-tour3.png' : seulStyle ? 'planche-styles.png' : 'planche.png');
   execSync(`ffmpeg -v error -y ${images.map((f) => `-i ${f}`).join(' ')} -filter_complex "${images.map((_, i) => `[${i}:v]scale=432:768[v${i}]`).join(';')};${images.map((_, i) => `[v${i}]`).join('')}xstack=inputs=${n}:layout=${images.map((_, i) => `${(i % col) * 432}_${Math.floor(i / col) * 768}`).join('|')}" ${sortie}`);
   console.log(`Planche écrite : ${path.relative(path.join(__dirname, '../..'), sortie)}`);
 })();
