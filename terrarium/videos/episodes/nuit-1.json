@@ -1,0 +1,20 @@
+{
+  "id": "nuit-1",
+  "titre": "Nuit 1 : la langue",
+  "concept": "La boucle d'outils",
+  "decor": "branche",
+  "musique": "drift",
+  "roles": { "ia": "cameleon", "tache": "mouche" },
+  "temps": [
+    { "fort": "accroche", "texte": "mon IA *rate*." },
+    { "fort": "presenter", "qui": "ia", "texte": "voici mon *IA*." },
+    { "fort": "presenter", "qui": "tache", "texte": "et sa *tâche*." },
+    { "fort": "presenter", "qui": "outil", "texte": "et son *outil*." },
+    { "fort": "rater", "texte": ["tir à l'*aveugle*…", "*raté*."] },
+    { "fort": "rater", "facon": "court", "texte": ["il *réessaie*…", "trop *court* !"] },
+    { "fort": "narguer", "texte": "la tâche se *moque*." },
+    { "fort": "etapes", "texte": ["1. *observer*", "2. *agir*", "3. *vérifier*"] },
+    { "fort": "reveler", "texte": ["observer, agir, vérifier.", "= *boucle d'outils*", "comme ton *IA*."] },
+    { "fort": "boucler", "texte": "et ça *recommence*…" }
+  ]
+}

@@ -137,4 +137,11 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Montré** : la démo refaite avec le mélange. Les grandes lettres rondes (Baloo 2) sont en néon (cœur blanc, halo vert), le mot clé passe seul sur sa ligne en géant (halo cyan, taille adaptée à sa longueur), le tout sur un bandeau sombre aux bords flous, centré en haut. La ponctuation (« ! », « … ») reste collée au mot.
 - **Changé aussi** : la caméra cadre le sujet un peu plus bas (y = 860 au lieu de 768), pour que la mouche ne passe plus sous le texte.
+- **Ton retour** : « Oui » (validé).
+
+### Pilote « Nuit 1 », fait avec le studio (13 nov.)
+
+- **Montré** : `videos/episodes/nuit-1.json` (environ 20 lignes, 10 temps forts) et sa vidéo de 29,8 s (18 mesures), en 60 images par seconde.
+- **L'histoire** : l'accroche, puis la présentation de l'IA, de la tâche et de l'outil (la langue à mi-portée), chacune avec son étiquette. Viennent deux ratés, à l'aveugle puis trop court, avec un silence après chacun. La tâche se moque. La boucle est montrée une mesure par étape (observer, agir, vérifier), la basse revenant sur l'attrape. Puis la révélation « = boucle d'outils », « comme ton IA. », et le retour au début.
+- **Ajouté au studio** : la langue à portée partielle, le raté « trop court », le rire de Mousse, les temps forts `etapes` et `reveler`, le texte par mesure, les expressions mises en valeur sur plusieurs mots (groupées), et des étiquettes plus grandes.
 - **Ton retour** : en attente.

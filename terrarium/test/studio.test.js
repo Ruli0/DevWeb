@@ -60,3 +60,15 @@ test('le runtime et les rigs ne contiennent ni minuterie, ni hasard, ni répéti
 test('production/CATALOGUE.md est à jour (node studio/catalogue.js)', () => {
   assert.equal(fs.readFileSync(path.join(__dirname, '../production/CATALOGUE.md'), 'utf8'), catalogue());
 });
+
+test('texte par mesure : chaque morceau occupe exactement sa mesure, et le nombre de morceaux est vérifié', () => {
+  const nuit = episodes.find((x) => x.ep.id === 'nuit-1');
+  if (!nuit) return;
+  const { feuille } = compiler(nuit.ep);
+  const M = (4 * 60) / feuille.tempo;
+  const etapes = feuille.textes.filter((m) => /observer\*$|agir\*$|vérifier\*$/.test(m.texte) && /^\d\./.test(m.texte));
+  assert.equal(etapes.length, 3);
+  etapes.forEach((m) => assert.ok(Math.abs(m.fin - m.debut - M) < 0.01, `${m.texte} dure une mesure`));
+  const { erreurs } = compiler({ ...nuit.ep, temps: [{ fort: 'etapes', texte: ['1. observer', '2. agir'] }, { fort: 'boucler' }] });
+  assert.ok(erreurs.some((e) => e.includes('un texte par mesure')));
+});

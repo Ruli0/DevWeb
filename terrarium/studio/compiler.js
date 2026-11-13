@@ -84,6 +84,7 @@ function compiler(episode) {
   const point = (spec) => {
     if (Array.isArray(spec)) return spec;
     const [role, quoi] = String(spec).split('.');
+    if (role === 'ia' && quoi === 'langue') return (etat.langueBout || ia.ancre(place.ia, 'bouche')).slice();
     if (role === 'ia') return ia.ancre(place.ia, quoi || 'corps');
     if (role === 'tache') return quoi === 'depart' ? place.tache.slice() : etat.mouche.pos.slice();
     erreurs.push(`point inconnu : ${spec}`);
@@ -118,6 +119,16 @@ function compiler(episode) {
       else if (nom === 'disparaitre') { ctx.geste('tache', nom, t, p); m.visible = false; }
       else ctx.geste('tache', nom, t, p);
     },
+    // La langue : vers la tâche, ou seulement une partie du chemin (portee entre 0 et 1).
+    langue(t, p = {}) {
+      const b = ia.ancre(place.ia, 'bouche');
+      const vise = point(p.vers || 'tache');
+      const k = p.portee || 1;
+      const cible = [r(b[0] + (vise[0] - b[0]) * k, 1), r(b[1] + (vise[1] - b[1]) * k, 1)];
+      etat.langueBout = cible;
+      ctx.geste('ia', 'langue', t, { cible, rate: Boolean(p.rate || k < 1), tenir: p.tenir });
+      return cible;
+    },
     humeur(t, h) {
       if (h === etat.humeur) return;
       ctx.geste('mousse', 'expression', t, { de: etat.humeur, vers: h });
@@ -141,7 +152,7 @@ function compiler(episode) {
     },
     etiquette(t, duree, sur, texte) {
       const a = ecran(vueCible, point(sur));
-      const l = texte.length * 25 + 48;
+      const l = texte.length * 31 + 64;
       const bx = borne(a[0] + (a[0] > 540 ? -190 : 190), 60 + l / 2, 940 - l / 2);
       const by = borne(a[1] - 190, 450, 1300);
       etiquettes.push({ t: r(t), duree: r(duree), texte, ancre: a, bulle: [r(bx, 1), r(by, 1)] });
@@ -159,8 +170,15 @@ function compiler(episode) {
     (res.coupures || []).forEach((t) => coupures.push(r(t)));
     const fin = r(t0 + mesures * M, 4);
     if (tf.texte) {
-      const plan = { debut: r(t0, 4), fin, legende: [].concat(tf.texte) };
-      morceaux(plan).forEach((m) => {
+      const liste = [].concat(tf.texte);
+      // Texte par mesure : le morceau k s'affiche exactement pendant la mesure k.
+      const parMesure = def.texteParMesure && liste.length === mesures;
+      if (def.texteParMesure && !parMesure) erreurs.push(`temps ${i + 1} : ${tf.fort} attend un texte par mesure (${mesures})`);
+      const plan = { debut: r(t0, 4), fin, legende: liste };
+      const ms = parMesure
+        ? liste.map((texte, k) => ({ texte, debut: r(t0 + k * M, 4), fin: r(t0 + (k + 1) * M, 4), besoin: morceaux({ debut: 0, fin: 1, legende: [texte] })[0].besoin }))
+        : morceaux(plan);
+      ms.forEach((m) => {
         const brut = m.texte.replace(/\*/g, '');
         non(brut.length <= LECTURE.caracteresMax, `temps ${i + 1} : « ${brut} » dépasse ${LECTURE.caracteresMax} caractères`);
         non(m.fin - m.debut >= m.besoin - 1e-6, `temps ${i + 1} : « ${brut} » reste ${(m.fin - m.debut).toFixed(2)} s, il en faut ${m.besoin}`);

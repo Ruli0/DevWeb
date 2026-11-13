@@ -8,7 +8,7 @@
  */
 'use strict';
 
-const ETIQUETTES = { ia: "l'IA", tache: 'la tâche' };
+const ETIQUETTES = { ia: "l'IA", tache: 'la tâche', outil: "l'outil" };
 
 const TEMPS_FORTS = {
   accroche: {
@@ -28,13 +28,20 @@ const TEMPS_FORTS = {
   presenter: {
     mesures: 1,
     role: 'Gros plan sur un rôle, avec son étiquette ; Mousse le désigne avec sa lanterne.',
-    params: 'qui (ia ou tache) ; etiquette ; texte',
+    params: 'qui (ia, tache ou outil) ; etiquette ; texte',
     jouer(ctx, p) {
       const qui = p.qui || 'ia';
-      if (!ETIQUETTES[qui]) return ctx.erreur(`presenter : qui doit être ${Object.keys(ETIQUETTES).join(' ou ')} (${qui})`);
-      ctx.camera(0, 'gros-plan', [qui === 'ia' ? 'ia.tete' : 'tache'], 0.45, 'power3.inOut', false);
+      if (!ETIQUETTES[qui]) return ctx.erreur(`presenter : qui doit être ${Object.keys(ETIQUETTES).join(', ')} (${qui})`);
+      const sur = { ia: ['ia.tete'], tache: ['tache'], outil: ['ia.bouche', 'tache'] }[qui];
+      ctx.camera(0, 'gros-plan', sur, 0.45, 'power3.inOut', false);
       ctx.geste('mousse', 'pointer', ctx.b(0), { duree: ctx.b(3.6) - ctx.b(0) });
-      ctx.etiquette(ctx.b(1), ctx.b(3.9) - ctx.b(1), qui === 'ia' ? 'ia.tete' : 'tache', p.etiquette || ETIQUETTES[qui]);
+      if (qui === 'outil') {
+        // La langue sort à mi-chemin et reste dehors le temps de la montrer.
+        ctx.langue(ctx.b(0.5), { portee: 0.5, tenir: ctx.b(3) - ctx.b(0.5) });
+        ctx.etiquette(ctx.b(1), ctx.b(3.2) - ctx.b(1), 'ia.langue', p.etiquette || ETIQUETTES.outil);
+        return { parties: ['plein'] };
+      }
+      ctx.etiquette(ctx.b(1), ctx.b(3.9) - ctx.b(1), sur[0], p.etiquette || ETIQUETTES[qui]);
       if (qui === 'tache') ctx.mouche('yoyo', ctx.b(1.5), { fois: 1, amplitude: 40 });
       else ctx.geste('ia', 'cligner', ctx.b(1.5), { fois: 2 });
       return { parties: ['plein'] };
@@ -42,12 +49,19 @@ const TEMPS_FORTS = {
   },
   rater: {
     mesures: 2,
-    role: "L'IA agit sans viser et rate : la tâche esquive, la musique se tait un temps, Mousse se cache l'œil.",
-    params: 'texte',
-    jouer(ctx) {
+    role: "L'IA agit et rate : à l'aveugle (la tâche esquive) ou trop court (la langue s'arrête avant, la tâche rit). La musique se tait un temps, Mousse se cache l'œil.",
+    params: 'facon (aveugle ou court) ; texte',
+    jouer(ctx, p) {
       ctx.camera(0, 'plan-moyen', ['ia', 'tache'], 0.5);
-      const cible = ctx.point('tache');
-      ctx.geste('ia', 'langue', ctx.b(3), { cible, rate: true });
+      if (p.facon === 'court') {
+        ctx.langue(ctx.b(3), { portee: 0.62, tenir: 0.25 });
+        ctx.mouche('yoyo', ctx.b(4), { fois: 2, amplitude: 30 });
+        ctx.humeur(ctx.b(4), 'blase');
+        ctx.geste('mousse', 'depit', ctx.b(4), { duree: ctx.b(7.5) - ctx.b(4) });
+        ctx.geste('ia', 'cligner', ctx.b(6), { fois: 2 });
+        return { parties: ['plein', 'creux'], coupures: [ctx.b(4)] };
+      }
+      ctx.langue(ctx.b(3), { rate: true });
       ctx.mouche('esquiver', ctx.b(3) + 0.02, { vers: ctx.decale('tache', -120, -100) });
       ctx.regarder(ctx.b(3) + 0.16, 'tache', 0.15);
       ctx.humeur(ctx.b(4), 'blase');
@@ -91,6 +105,49 @@ const TEMPS_FORTS = {
       ctx.teinte(ctx.b(5), p.couleur || 'turquoise');
       ctx.regarder(ctx.b(5.5), ctx.decale('ia.oeil', 200, 0), 0.25);
       return { parties: ['montee', 'plein'] };
+    },
+  },
+  etapes: {
+    mesures: 3,
+    texteParMesure: true,
+    role: "La boucle d'outils, une mesure par étape : observer (l'œil suit la tâche qui revient), agir (la langue l'attrape sur le premier temps, la basse revient), vérifier (il avale, change de couleur, Mousse saute).",
+    params: 'couleur (turquoise) ; texte : un morceau par mesure',
+    jouer(ctx, p) {
+      const depart = ctx.point('tache.depart');
+      // 1. Observer.
+      ctx.camera(0, 'gros-plan', ['ia.oeil', 'tache'], 0.4);
+      ctx.humeur(ctx.b(0), 'neutre');
+      ctx.geste('mousse', 'pencher', ctx.b(0.3), { duree: ctx.b(3.4) - ctx.b(0.3) });
+      ctx.mouche('revenir', ctx.b(0.5), { vers: depart, duree: ctx.b(3) - ctx.b(0.5) });
+      ctx.regarder(ctx.b(1.2), ctx.decale('tache.depart', -40, -90), 0.3);
+      ctx.regarder(ctx.b(2.2), ctx.decale('tache.depart', 50, -60), 0.3);
+      ctx.regarder(ctx.b(3), depart, 0.25);
+      // 2. Agir : la langue arrive sur le premier temps de la mesure.
+      ctx.camera(3.4, 'plan-moyen', ['ia', 'tache.depart'], 0.5);
+      ctx.langue(ctx.b(4) - 0.1, { vers: depart });
+      ctx.mouche('disparaitre', ctx.b(4));
+      ctx.humeur(ctx.b(4), 'surpris');
+      // 3. Vérifier.
+      ctx.camera(8, 'gros-plan', ['ia.tete'], 0.4);
+      ctx.geste('ia', 'avaler', ctx.b(8));
+      ctx.humeur(ctx.b(8), 'content');
+      ctx.geste('mousse', 'sauter', ctx.b(8.2), { fois: 2, duree: ctx.b(11.6) - ctx.b(8.2) });
+      ctx.teinte(ctx.b(8.6), p.couleur || 'turquoise');
+      ctx.regarder(ctx.b(9.5), ctx.decale('ia.oeil', 200, 0), 0.25);
+      return { parties: ['montee', 'plein', 'plein'] };
+    },
+  },
+  reveler: {
+    mesures: 3,
+    texteParMesure: true,
+    role: 'Plan large, la phrase qui révèle le concept, une mesure par morceau ; Mousse désigne la scène, puis rit.',
+    params: 'texte : un morceau par mesure',
+    jouer(ctx) {
+      ctx.camera(0, 'large', [], 0.8);
+      ctx.geste('mousse', 'pointer', ctx.b(0.5), { duree: ctx.b(4) - ctx.b(0.5) });
+      ctx.geste('ia', 'cligner', ctx.b(4.5), { fois: 2 });
+      ctx.geste('mousse', 'rire', ctx.b(8.5), { duree: ctx.b(11) - ctx.b(8.5) });
+      return { parties: ['plein', 'plein', 'plein'] };
     },
   },
   boucler: {

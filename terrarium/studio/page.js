@@ -26,13 +26,24 @@ function lettres(texte) {
   chars.forEach((ch, i) => {
     if (ch === '*') { acc = !acc; return; }
     if (ch === ' ' && COLLEE.includes(chars[i + 1] || '')) { mot.h += car('\u00a0'); mot.n += 1; return; }
-    if (ch === ' ') { if (mot.h) mots.push(mot); mots.push(null); mot = { acc: false, h: '', n: 0 }; return; }
+    if (ch === ' ') { if (mot.h) mots.push(mot); mots.push({ espace: true, h: car(' ') }); mot = { acc: false, h: '', n: 0 }; return; }
     if (acc) mot.acc = true;
     mot.h += car(ch); mot.n += 1;
   });
   if (mot.h) mots.push(mot);
-  const geant = (n) => Math.min(176, Math.floor(820 / (n * 0.56)));
-  return `${mots.map((m) => (!m ? '<span class="c"> </span>' : m.acc ? `<span class="mot acc" style="font-size:${geant(m.n)}px">${m.h}</span>` : `<span class="mot">${m.h}</span>`)).join('')}<span class="c fin">&nbsp;</span>`;
+  // Les mots en valeur qui se suivent forment un seul groupe géant (« boucle d'outils »).
+  const blocs = [];
+  mots.forEach((m, i) => {
+    const dernier = blocs[blocs.length - 1];
+    const suivantAcc = mots[i + 1] && mots[i + 1].acc;
+    if (m.acc && dernier && dernier.groupe && dernier.ouvert) { dernier.h += `<span class="m">${m.h}</span>`; dernier.n += m.n; dernier.long = Math.max(dernier.long, m.n); }
+    else if (m.acc) blocs.push({ groupe: true, ouvert: true, h: `<span class="m">${m.h}</span>`, n: m.n, long: m.n });
+    else if (m.espace && dernier && dernier.groupe && dernier.ouvert && suivantAcc) { dernier.h += m.h; dernier.n += 1; }
+    else { if (dernier && dernier.groupe) dernier.ouvert = false; blocs.push(m); }
+  });
+  // Taille du groupe géant : sur une ligne s'il est court, sinon sur deux lignes, sans descendre sous 130 px.
+  const geant = (b) => Math.min(176, Math.floor(820 / ((b.n > 10 ? b.long : b.n) * 0.56)));
+  return `${blocs.map((b) => (b.groupe ? `<span class="mot acc" style="font-size:${geant(b)}px">${b.h}</span>` : b.espace ? b.h : `<span class="mot">${b.h}</span>`)).join('')}<span class="c fin">&nbsp;</span>`;
 }
 
 const DEFS = `
@@ -56,7 +67,8 @@ const CSS = `
   text-shadow: 0 0 8px #b6ff5c, 0 0 26px #8dff6a, 0 0 60px rgba(141,255,106,.8), 0 0 110px rgba(141,255,106,.5); }
 .chevron { display: none; }
 .mot { display: inline-block; white-space: nowrap; }
-.mot.acc { display: block; line-height: 0.95; }
+.mot.acc { display: block; line-height: 0.95; white-space: normal; }
+.mot .m { display: inline-block; white-space: nowrap; }
 .c { visibility: hidden; } .c.vu { visibility: visible; }
 .c.acc { color: #fbfeff; -webkit-text-stroke: 6px #063040; text-shadow: 0 0 8px #9af8ff, 0 0 26px #5ef2ff, 0 0 60px rgba(94,242,255,.85), 0 0 110px rgba(94,242,255,.5); }
 .c.cur { visibility: visible; color: transparent; -webkit-text-stroke: 0; text-shadow: none; background: #fbfff6; box-shadow: 0 0 14px rgba(141,255,106,.9); }

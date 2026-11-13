@@ -9,13 +9,14 @@ La nouvelle chaîne, dans la direction artistique A2, vit dans `studio/`. Une vi
 | Brique | Fichier | État |
 |---|---|---|
 | Compilateur (épisode → feuille de route) | `studio/compiler.js` | Fonction pure. Suit l'état de la scène, vérifie la lecture des textes, les chevauchements de gestes et la boucle |
-| Temps forts | `studio/temps-forts.js` | `accroche`, `presenter`, `rater`, `narguer`, `reussir`, `boucler` |
-| Personnages | `studio/rigs/` | caméléon (5 gestes), mouche au fil (5), Mousse (5) |
+| Temps forts | `studio/temps-forts.js` | `accroche`, `presenter` (ia, tache, outil), `rater` (aveugle, court), `narguer`, `etapes`, `reussir`, `reveler`, `boucler` |
+| Personnages | `studio/rigs/` | caméléon (5 gestes), mouche au fil (5), Mousse (6) |
 | Décor | `studio/decors/branche.js` | 4 calques de profondeur, parallaxe pendant les zooms |
 | Lecteur | `studio/runtime.js` | Code fixe : caméra, gestes, texte tapé, étiquettes |
 | Page et musique | `studio/page.js` | Composition HyperFrames, Drift arrangée par mesure |
 | Catalogue | `studio/catalogue.js` → `production/CATALOGUE.md` | Tout ce qu'il faut lire pour écrire un épisode |
-| Tests | `test/studio.test.js` | 7 tests (30 au total avec l'ancienne chaîne) |
+| Tests | `test/studio.test.js` | 9 tests (32 au total avec l'ancienne chaîne) |
+| Épisodes | `videos/episodes/` | `demo` (16,6 s), `nuit-1` (le pilote, 29,8 s) |
 
 Limites : un seul décor, un seul couple de rôles (caméléon et mouche), six temps forts. La sortie (`videos/studio/`) n'est pas versionnée : elle se régénère à l'identique.
 

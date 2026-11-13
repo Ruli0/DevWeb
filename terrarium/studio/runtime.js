@@ -88,12 +88,12 @@
     const couche = q('#etiquettes');
     (feuille.etiquettes || []).forEach((e) => {
       const g = document.createElementNS(NS, 'g');
-      const l = e.texte.length * 25 + 48;
+      const l = e.texte.length * 31 + 64;
       const [ax, ay] = e.ancre; const [bx, by] = e.bulle;
       g.innerHTML = '<line x1="' + ax + '" y1="' + ay + '" x2="' + bx + '" y2="' + by + '" stroke="#b6ff5c" stroke-width="3" stroke-dasharray="7 8" opacity="0.85"/>'
         + '<circle cx="' + ax + '" cy="' + ay + '" r="10" fill="none" stroke="#b6ff5c" stroke-width="3"/>'
-        + '<rect x="' + (bx - l / 2) + '" y="' + (by - 34) + '" width="' + l + '" height="68" rx="14" fill="#030a08" fill-opacity="0.92" stroke="#b6ff5c" stroke-width="2.5"/>'
-        + '<text x="' + bx + '" y="' + by + '" text-anchor="middle" dominant-baseline="central" font-family="Space Mono, monospace" font-weight="700" font-size="40" fill="#b6ff5c"></text>';
+        + '<rect x="' + (bx - l / 2) + '" y="' + (by - 42) + '" width="' + l + '" height="84" rx="42" fill="#030a08" fill-opacity="0.9" stroke="#b6ff5c" stroke-width="3"/>'
+        + '<text x="' + bx + '" y="' + by + '" text-anchor="middle" dominant-baseline="central" font-family="&quot;Baloo 2&quot;, sans-serif" font-weight="800" font-size="56" fill="#fbfff6" style="paint-order:stroke fill" stroke="#0a3a16" stroke-width="4" filter="url(#lueur)"></text>';
       g.querySelector('text').textContent = e.texte;
       couche.appendChild(g);
       repos(g, { opacity: 0 });

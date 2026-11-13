@@ -80,7 +80,7 @@
   // duree(p, T) : durée occupée, en secondes ; avant : temps occupé avant l'instant donné.
   const GESTES = {
     regarder: { canal: 'pupille', duree: (p) => p.duree || 0.25, params: 'de, vers : angles (calculés par le compilateur) ; duree', role: "L'œil se tourne vers un point." },
-    langue: { canal: 'corps', avant: 0.32, duree: () => 0.75, params: 'cible : point visé ; rate : vrai si la cible a bougé', role: 'Recul, élan, la langue part en 0,1 s et revient.' },
+    langue: { canal: 'corps', avant: 0.32, duree: (p) => 0.75 + (p.tenir || 0), params: 'cible : point visé ; rate : vrai si la cible a bougé ; tenir : secondes langue sortie', role: 'Recul, élan, la langue part en 0,1 s et revient.' },
     cligner: { canal: 'paupiere', duree: (p) => (p.fois || 2) * 0.3, params: 'fois (2)', role: "Clignement d'incrédulité." },
     avaler: { canal: 'gorge', duree: () => 0.75, params: '—', role: 'Le corps gonfle trois fois : il avale.' },
     teinte: { canal: 'couleur', duree: (p) => p.duree || 0.8, params: `de, vers : ${Object.keys(TEINTES).join(', ')} ; duree`, role: 'Le contour et les taches changent de couleur.' },
@@ -114,9 +114,11 @@
       c.tl.set(g, { opacity: 1 }, t);
       c.ft(ligne, { attr: { x2: bx, y2: by } }, { attr: { x2: l[0], y2: l[1] }, duration: 0.1, ease: 'power3.out' }, t);
       c.ft(bout, { attr: { cx: bx, cy: by, r: 4 } }, { attr: { cx: l[0], cy: l[1], r: p.rate ? 6 : 9 }, duration: 0.1, ease: 'power3.out' }, t);
-      c.ft(ligne, { attr: { x2: l[0], y2: l[1] } }, { attr: { x2: bx, y2: by }, duration: 0.22, ease: 'power2.in' }, t + 0.2);
-      c.ft(bout, { attr: { cx: l[0], cy: l[1], r: p.rate ? 6 : 9 } }, { attr: { cx: bx, cy: by, r: 4 }, duration: 0.22, ease: 'power2.in' }, t + 0.2);
-      c.tl.set(g, { opacity: 0 }, t + 0.42);
+      const retour = t + 0.2 + (p.tenir || 0);
+      if (p.tenir) c.ft(bout, { attr: { r: p.rate ? 6 : 9 } }, { attr: { r: (p.rate ? 6 : 9) * 1.3 }, duration: 0.25, yoyo: true, repeat: Math.max(1, 2 * Math.floor(p.tenir / 0.5)) - 1, ease: 'sine.inOut' }, t + 0.12);
+      c.ft(ligne, { attr: { x2: l[0], y2: l[1] } }, { attr: { x2: bx, y2: by }, duration: 0.22, ease: 'power2.in' }, retour);
+      c.ft(bout, { attr: { cx: l[0], cy: l[1], r: p.rate ? 6 : 9 } }, { attr: { cx: bx, cy: by, r: 4 }, duration: 0.22, ease: 'power2.in' }, retour);
+      c.tl.set(g, { opacity: 0 }, retour + 0.22);
     },
     cligner(c, t, p) {
       for (let k = 0; k < (p.fois || 2); k += 1) {

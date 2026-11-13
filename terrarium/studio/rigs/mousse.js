@@ -33,6 +33,7 @@
     depit: { canal: 'posture', duree: (p) => p.duree || 1.6, params: 'duree', role: "Il s'affaisse et se cache l'œil." },
     pointer: { canal: 'posture', duree: (p) => p.duree || 1.6, params: 'duree', role: 'Il tend sa lanterne vers la scène.' },
     pencher: { canal: 'posture', duree: (p) => p.duree || 1.6, params: 'duree', role: 'Il se penche, curieux.' },
+    rire: { canal: 'saut', duree: (p) => p.duree || 1.2, params: 'duree', role: 'Il est secoué de rire, deux secousses par temps.' },
     sauter: { canal: 'saut', duree: (p) => p.duree || 1.6, params: 'fois (2) ; duree', role: 'Il saute de joie.' },
   };
 
@@ -76,6 +77,11 @@
       const d = p.duree || 1.6; const g = c.q('#mousse-geste');
       aller(c, g, { rotation: 0, svgOrigin: PIEDS }, { rotation: -9, svgOrigin: PIEDS }, t, 0.4, 'back.out(1.8)');
       aller(c, g, { rotation: -9, svgOrigin: PIEDS }, { rotation: 0, svgOrigin: PIEDS }, t + d - 0.45, 0.45, 'power2.inOut');
+    },
+    rire(c, t, p) {
+      const d = p.duree || 1.2; const n = Math.max(1, Math.round(d / (c.T / 2)));
+      c.ft(c.q('#mousse-saut'), { y: 0 }, { y: -12, duration: d / n / 2, yoyo: true, repeat: 2 * n - 1, ease: 'sine.inOut' }, t);
+      c.ft(c.q('#mousse-pousse'), { rotation: 0, transformOrigin: '0% 100%' }, { rotation: 18, transformOrigin: '0% 100%', duration: d / n / 2, yoyo: true, repeat: 2 * n - 1 }, t);
     },
     sauter(c, t, p) {
       const n = p.fois || 2; const un = (p.duree || 1.6) / n; const s = c.q('#mousse-saut'); const h = p.hauteur || 80;
