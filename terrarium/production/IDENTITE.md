@@ -15,6 +15,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 | Style de nuit | **validé** (tour 2, dosage B) | — |
 | Le gardien | premier croquis | « Mousse » (nom provisoire) : petit robot rond, tête moussue, un œil cyan, lanterne au bout d'une perche |
 | Musique | tour 1 en cours | drift phonk, phonk sombre, phonk joueuse |
+| Texte à l'écran | tour 1 en cours | T1 gros titre, T2 néon, T3 bulle de Mousse, T4 mot à mot |
 | Scénarios | à venir (étape 3) | un pitch de 4 ou 5 lignes par épisode, avec un gag |
 | Nom du compte et bio | plus tard | `@les.nuits.du.terrarium`, `@mousse.terrarium` |
 
@@ -48,4 +49,15 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   2. **Sombre** : 96 BPM en demi-temps, cloche grave noyée de réverbération, nappe menaçante, 808 longue.
   3. **Joueuse** : 124 BPM avec du swing, cloche qui saute d'octave, 808 courte et rebondissante, claquements de doigts.
 - **Méthode** : script d'essai hors du dépôt, avec les outils de synthèse de `scripts/build-sons.js`.
+- **Ton retour** : _en attente_.
+- **Envoi** : l'envoi de fichiers a d'abord échoué (erreur 503), puis a fonctionné. Les extraits sont aussi sur la page d'écoute « Atelier des nuits » (artifact privé), avec les sons intégrés.
+
+### Texte à l'écran, tour 1 (13 nov.)
+
+- **Demandé par toi** : valider aussi comment le texte s'affiche sur la vidéo.
+- **Montré** : sur l'image du style B, le morceau « Jamais du premier coup. » dans 4 styles. Tous sont dans la zone sûre, sur 2 lignes au plus.
+  - **T1, gros titre** : blanc détouré de noir, mot clé en vert, en haut.
+  - **T2, néon** : le texte brille en vert et cyan, comme une enseigne.
+  - **T3, bulle de Mousse** : c'est le gardien qui parle, dans une bulle bordée de cyan dont la queue pointe vers lui.
+  - **T4, mot à mot** : trois ou quatre mots à la fois, le mot en cours surligné (deux instants montrés).
 - **Ton retour** : _en attente_.
