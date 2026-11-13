@@ -208,3 +208,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **L'histoire** : le caméléon veut attraper la mouche mais il tremble (« tu as peur qu'on te juge ? »). Il s'imagine sous un projecteur, la scène s'assombrit, la grenouille et les lucioles le fixent. Il se camoufle et rate sa mouche. Puis on voit ce que pensent vraiment les autres (bulles de pensée : la grenouille pense à sa mouche, les lucioles à leur lumière, Mousse à sa plante). Le nom : « l'effet projecteur », qui n'existait que dans sa tête. Il ose, attrape la mouche, et personne ne réagit. Le conseil : « ils pensent à eux, pas à toi ». Fin qui reboucle.
 - **Ajouté au studio** : les rigs grenouille, lucioles, bulles de pensée et projecteur ; le camouflage et le tremblement du caméléon ; `studio/lumiere.js` (liserés chauds, ombres portées, flaques de lumière) ; Mousse en couleurs claires avec la nouvelle lanterne ; le texte Poppins sur fond translucide avec la pastille violette ; sept temps forts (`hesiter`, `imaginer`, `cacher`, `penser`, `nommer`, `oser`, `conseil`).
 - **Ton retour** : en attente.
+
+### Épisode 1 « La peur du jugement » : vidéo rendue (13 nov.)
+
+- **Montré** : `videos/studio/jugement/jugement.mp4`, 29,8 s, 60 images par seconde (33 Mo). Rendu en environ 10 minutes : les masques de lumière coûtent cher.
+- **Contrôles** : 36 tests, lint à 0 erreur. Les silences sur la musique sont bien là (environ −21 dB juste avant « il ose »).
+- **Ton retour** : en attente.
