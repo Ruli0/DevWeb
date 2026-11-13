@@ -7,6 +7,7 @@ La même scène, dans trois pistes : le caméléon tire la langue, rate la mouch
 | `a.cjs` | A. Théâtre d'ombres lumineuses : silhouettes sur plusieurs plans, contours et yeux lumineux, parallaxe |
 | `b.cjs` | B. L'écran de Mousse : pixel art vert phosphore (grille de 54 × 96 cases), mouvements case par case, bug d'écran sur le raté |
 | `c.cjs` | C. Diorama en papier découpé : bords irréguliers, ombres portées, attaches parisiennes, mouche au bout d'un fil |
+| `a2.cjs` | **Le mélange retenu** : A, avec le texte sans cadre de B et la mouche au fil de C |
 | `vecteur.cjs` | Le caméléon et la mise en scène communs à A et C |
 | `commun.cjs` | Le gabarit de la page HyperFrames, le terminal, la musique (Drift, 4 mesures) |
 

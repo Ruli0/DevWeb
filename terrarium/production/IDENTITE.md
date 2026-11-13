@@ -4,6 +4,8 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 ## Ce qui est décidé
 
+- **Direction artistique (refonte)** : piste A, « ombres lumineuses », avec le texte sans cadre de B et la mouche au fil de C (choisi le 13 nov., mélange A2 en validation).
+
 - **Texte** : **le terminal de Mousse** (T6, validé le 13 nov.). C'est l'écran du robot qui raconte : texte vert en Space Mono, tapé lettre par lettre, avec un curseur et l'invite `mousse@terrarium:~$`.
 - **Musique** : **Drift**, phonk à 145 BPM, cloche rapide et saturée, 808 lourde (validée le 13 nov.).
 - **Style** : **nuit bioluminescente à la lanterne, dosage B** (validé le 13 nov.). Palette du style 1 (vert acide, cyan, langue rose, fond bleu nuit), obscurité forte (0,75) autour de la zone éclairée, faisceau chaud de la lanterne, et ce qui est bioluminescent brille dans le noir.
@@ -99,4 +101,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - **B. L'écran de Mousse** : pixel art vert phosphore, mouvements case par case, balayage cathodique, bug d'écran magenta au moment du raté.
   - **C. Papier découpé** : calques de papier aux bords irréguliers, ombres portées, attaches dorées aux articulations, mouche suspendue à un fil qui fait le yoyo devant la lune.
 - **Fabrication** : `essais/direction-artistique/` (reproductible, hors du moteur).
+- **Ton retour** : « A avec le texte de B et la mouche filée de C. »
+
+### Direction artistique, refonte, tour 2 (13 nov.)
+
+- **Montré** : le mélange A2 (`essais/direction-artistique/a2.cjs`). Il garde les ombres lumineuses de A. Le texte du terminal s'affiche directement sur l'image, sans cadre, comme en B. La mouche-luciole pend à un fil de soie lumineux et fait le yoyo, comme en C.
 - **Ton retour** : en attente.
