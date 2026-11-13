@@ -4,7 +4,7 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 ## Ce qui est décidé
 
-- **Ambiance** : un vivarium **de nuit** (tu as choisi cette direction le 12 nov.). Les 4 variantes de nuit sont à départager.
+- **Style** : **nuit bioluminescente à la lanterne, dosage B** (validé le 13 nov.). Palette du style 1 (vert acide, cyan, langue rose, fond bleu nuit), obscurité forte (0,75) autour de la zone éclairée, faisceau chaud de la lanterne, et ce qui est bioluminescent brille dans le noir.
 - **Âme du compte** : **le gardien du terrarium**, un personnage récurrent qui garde des IA dans son terrarium et commente avec humour.
 - **Ton** : divertissant avant tout. Chaque épisode a un gag, et l'apprentissage vient en bonus.
 
@@ -12,9 +12,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 | Élément | Statut | Pistes |
 |---|---|---|
-| Style de nuit | tour 2 envoyé | couleurs du 1 + nuit du 2, en 3 dosages (A, B, C) |
+| Style de nuit | **validé** (tour 2, dosage B) | — |
 | Le gardien | premier croquis | « Mousse » (nom provisoire) : petit robot rond, tête moussue, un œil cyan, lanterne au bout d'une perche |
-| Musique | à venir (étape 2) | drift phonk, phonk sombre, phonk joueuse |
+| Musique | tour 1 en cours | drift phonk, phonk sombre, phonk joueuse |
 | Scénarios | à venir (étape 3) | un pitch de 4 ou 5 lignes par épisode, avec un gag |
 | Nom du compte et bio | plus tard | `@les.nuits.du.terrarium`, `@mousse.terrarium` |
 
@@ -39,4 +39,13 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - C : 0,85.
 - **Nouveau** : les éléments bioluminescents gardent leur propre lueur par-dessus l'obscurité. On les voit dans le noir, sans que la lanterne les éclaire.
 - **Corrigé avant l'envoi** : lueurs trop grosses, dosages trop proches, faisceau invisible.
+- **Ton retour** : « B ». Style validé.
+
+### Musique, tour 1 (13 nov.)
+
+- **Montré** : 3 extraits phonk originaux de 10 s, sur l'image du style B, au même volume (normalisés à -14 LUFS, pour ne pas favoriser le plus fort).
+  1. **Drift** : 145 BPM, cloche rapide et saturée, charleston en doubles croches, 808 lourde qui glisse.
+  2. **Sombre** : 96 BPM en demi-temps, cloche grave noyée de réverbération, nappe menaçante, 808 longue.
+  3. **Joueuse** : 124 BPM avec du swing, cloche qui saute d'octave, 808 courte et rebondissante, claquements de doigts.
+- **Méthode** : script d'essai hors du dépôt, avec les outils de synthèse de `scripts/build-sons.js`.
 - **Ton retour** : _en attente_.
