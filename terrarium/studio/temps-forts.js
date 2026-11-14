@@ -328,7 +328,10 @@ const TEMPS_FORTS = {
     role: "L'étude de Cornell (2000) : il enfile un T-shirt ridicule, au moment où le texte le dit. Le plan reste à hauteur de tête pour laisser le bas de l'écran aux jauges.",
     params: 'texte (voisins : true)',
     jouer(ctx) {
-      ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.5, 'power3.inOut');
+      // Les quatre « observateurs » de l'étude : la grenouille et les trois lucioles, qui arrivent.
+      ctx.camera(0, 'plan-moyen', ['ia.tete', 'lucioles'], 0.5, 'power3.inOut', true, 95);
+      ctx.lucioles(ctx.b(1), true);
+      [0, 1, 2].forEach((i) => ctx.regarderVoisin('lucioles', i, ctx.b(3 + 0.2 * i), 'ia.oeil'));
       ctx.geste('ia', 'cligner', ctx.b(0.8), { fois: 1 });
       ctx.tshirt(ctx.b(5.3), true);
       ctx.geste('ia', 'pencher', ctx.b(5.8), { angle: -3, duree: ctx.b(10) - ctx.b(5.8) });
@@ -341,10 +344,19 @@ const TEMPS_FORTS = {
     role: "Les chiffres de l'étude : le panneau apparaît, la barre « ce qu'ils croient » monte à 50 %, puis « ce qui se passe vraiment » à 25 % au moment où le texte le dit. Le caméléon cligne des yeux, surpris.",
     params: 'texte ; l\'épisode donne « source » (voisins : true)',
     jouer(ctx) {
-      ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.5, 'power3.inOut');
+      ctx.camera(0, 'plan-moyen', ['ia.tete', 'lucioles'], 0.5, 'power3.inOut', true, 95);
       ctx.jauge('apparaitre', ctx.b(0.2));
       ctx.jauge('barre', ctx.b(0.6), { id: 'croit', vers: 50, duree: 1.3 });
+      // Ce qu'il croit : 2 observateurs sur 4 le fixent (50 %). Les deux autres se regardent.
+      ctx.fixerVoisin('grenouille', 0, ctx.b(0.8), true);
+      ctx.fixerVoisin('lucioles', 0, ctx.b(1.1), true);
+      ctx.regarderVoisin('lucioles', 1, ctx.b(1), 'luciole.2');
+      ctx.regarderVoisin('lucioles', 2, ctx.b(1), 'luciole.1');
+      ctx.trembler(ctx.b(1.5), ctx.b(5) - ctx.b(1.5));
+      // En vrai : la grenouille retourne à sa mouche. Il n'en reste qu'un sur 4 (25 %).
       ctx.jauge('barre', ctx.b(6.2), { id: 'reel', vers: 25, duree: 1.3 });
+      ctx.fixerVoisin('grenouille', 0, ctx.b(6.2), false);
+      ctx.regarderVoisin('grenouille', 0, ctx.b(6.4), 'tache', 0.4);
       ctx.geste('ia', 'cligner', ctx.b(8), { fois: 2 });
       return { parties: ['plein', 'creux', 'creux'] };
     },
@@ -354,8 +366,9 @@ const TEMPS_FORTS = {
     role: "Le nom de l'effet : le projecteur imaginaire s'allume sur le caméléon (étiquette « dans sa tête »), puis s'éteint. La source de l'étude s'affiche sur le panneau.",
     params: 'texte (voisins : true)',
     jouer(ctx) {
-      ctx.camera(0, 'plan-moyen', ['ia.tete'], 0.5, 'power3.inOut');
+      ctx.camera(0, 'plan-moyen', ['ia.tete', 'lucioles'], 0.5, 'power3.inOut', true, 95);
       ctx.jauge('source', ctx.b(0.5), { vers: true });
+      ctx.fixerVoisin('lucioles', 0, ctx.b(6.2), false);
       ctx.projecteur(ctx.b(0.6), true);
       ctx.etiquette(ctx.b(1.2), ctx.b(6) - ctx.b(1.2), 'ia.corps', 'dans sa tête', { dx: 220, dy: -110 });
       ctx.projecteur(ctx.b(6.2), false);

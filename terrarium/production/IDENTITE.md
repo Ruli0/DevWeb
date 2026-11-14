@@ -251,3 +251,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - **la lecture** : 0,45 s par mot et 0,8 s par morceau (au lieu de 0,3 et 0,5), et la frappe ne prend plus qu'au plus 30 % du temps du morceau ; l'épisode dure donc 34,8 s (21 mesures).
 - **Montré** : la planche d'aperçu (12 images).
 - **Ton retour** : en attente.
+
+### Version scientifique améliorée (14 nov.)
+
+- **Ton retour** : « Améliore », puis « Go ».
+- **Changé** : dans l'étude, les observateurs prennent vie. Quand la barre « ce qu'ils croient » monte à 50 %, la grenouille et une luciole fixent le caméléon (deux sur quatre) ; au moment « en vrai : 25 % », la grenouille retourne à sa mouche et seule une luciole le fixe encore. La vue est décalée pour que le caméléon reste au-dessus du panneau des jauges.
+- **Ton retour** : en attente (rendu en cours).

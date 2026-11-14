@@ -296,9 +296,11 @@ function compiler(episode) {
       etat.couleur = couleur;
     },
     // n : en temps, depuis le début du temps fort.
-    camera(n, cadrage, sur, duree, ease, poussee) {
+    // dy : décale la vue (en unités du décor) ; positif = les sujets montent à l'écran.
+    camera(n, cadrage, sur, duree, ease, poussee, dy = 0) {
       if (!CADRAGES[cadrage]) { erreurs.push(`cadrage inconnu : ${cadrage}`); return; }
-      const vers = vueSur(sur.map(point), cadrage);
+      let vers = vueSur(sur.map(point), cadrage);
+      if (dy) vers = borner({ x: vers.x, y: vers.y + dy, z: vers.z });
       camera.push({ t: ctx.b(n), duree: camera.length ? duree : 0, vers, ease, poussee: poussee !== false });
       vueCible = vers;
     },
