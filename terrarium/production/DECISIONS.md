@@ -76,3 +76,11 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : ton jugement : l'IA n'est pas un sujet assez viral sur les réseaux, et les épisodes n'apprenaient rien d'utilisable. La psychologie du quotidien est un sujet très partagé, et le caractère des animaux sert la métaphore.
 - **Gardé** : l'univers (terrarium, Mousse), le studio, la phonk, la méthode pas à pas. Le style est remis en jeu avec les maquettes S1 à S4.
 - **Écarté** : faits d'animaux, mini-série comique, boucles apaisantes.
+
+## 13. V3 : « éditorial scientifique », pour adultes (14 nov. 2026)
+
+- **Décision** : le compte parle du cerveau et de la santé (procrastination, peur du jugement, etc.) à des adultes, en 30 à 60 s, avec un mécanisme, une étude vérifiée et un geste concret. L'univers du terrarium (animaux, Mousse) est archivé. La direction artistique devient typographique et graphique : fond sombre et chaud, un accent de couleur par épisode, schémas au trait, données animées, mouvement lent et net (`DA-V3.md`).
+- **Pourquoi** : ton retour : les vidéos étaient trop enfantines et les visuels ne te plaisaient pas ; tu veux pousser l'outil au maximum pour un public adulte.
+- **Gardé** : la chaîne du studio (épisode JSON, compilateur, lecteur fixe, aperçu, rendu déterministe), les règles de lecture, la synthèse sonore, la méthode pas à pas.
+- **Ajouté** : la règle des sources (`SOURCES.md`) : aucun chiffre à l'écran sans fiche vérifiée, rendu final refusé sinon. Des skills de projet (`.claude/skills/`) pour que Claude Code produise une vidéo en lisant et en dépensant le moins possible.
+- **Écarté** : réécrire le rendu en React (React seulement pour une interface d'aperçu, plus tard) ; garder des mascottes « en plus sobre ».

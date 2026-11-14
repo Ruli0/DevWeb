@@ -18,6 +18,10 @@ Statuts : **à faire**, **en cours**, **fait**, **abandonné**. Les priorités v
 
 Le plan est dans `PLAN-REFONTE.md` : 7 étapes, de la publication du pilote actuel (étape 0) à la production en série (étape 6). Étape 1 faite : direction artistique A2 (ombres lumineuses, texte sans cadre, mouche au fil). Étape 2 faite : le socle du studio (`studio/`), avec l'épisode de démonstration `videos/episodes/demo.json`. Le texte est validé (néon, mot clé géant, bandeau). Le pilote complet `nuit-1` (29,8 s) est fait avec le studio. Prochaine action : ton avis sur le pilote, puis le kit de publication du studio (accroches de rechange, `publication.md`), la publication (étape 0) et l'épisode 2 avec d'autres personnages (étape 5). Les lignes ci-dessous restent valables, mais passent après la refonte.
 
+## V3 : cerveau et santé pour adultes (14 nov. 2026)
+
+Le plan est dans `PLAN-V3.md` : 6 étapes, des maquettes de style à la série mesurée. Prochaine action : l'étape 1 (maquettes des trois variantes de style, sur les scènes « chiffre » et « cerveau »). Tout ce qui suit dans ce fichier date d'avant la V3 et ne sert que d'historique.
+
 ## Série « psycho en métaphores » (13 nov. 2026)
 
 L'IA est abandonnée (voir `DECISIONS.md`, n° 12). L'identité visuelle est décidée (`IDENTITE.md`). L'épisode 1 « La peur du jugement » existe en planche d'aperçu ; prochaine action : ton avis, puis le rendu. Épisodes suivants : la procrastination, le perfectionnisme, le syndrome de l'imposteur.

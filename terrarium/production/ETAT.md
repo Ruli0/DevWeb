@@ -2,6 +2,10 @@
 
 _Dernière mise à jour : 13 novembre 2026 (soir)._
 
+## Cap V3 (14 nov. 2026)
+
+Le projet devient un générateur de vidéos « cerveau et santé » pour adultes (30 à 60 s, études à l'appui). Les documents de passation sont écrits : `BRIEF-V3.md`, `DA-V3.md`, `PLAN-V3.md`, `SOURCES.md`, et six skills dans `.claude/skills/`. **Aucun code de la V3 n'existe encore** : prochaine action, l'étape 1 de `PLAN-V3.md` (maquettes de style). Le studio décrit ci-dessous est la base technique à garder ; ses personnages et son décor sont archivés.
+
 ## Le studio (refonte, étape 2)
 
 La nouvelle chaîne, dans la direction artistique A2, vit dans `studio/`. Une vidéo s'écrit en temps forts, dans `videos/episodes/<id>.json` (la démo fait 15 lignes), et `npm run video -- <id> [--rendu]` fait le reste.

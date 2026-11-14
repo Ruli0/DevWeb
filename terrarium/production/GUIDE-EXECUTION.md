@@ -2,6 +2,8 @@
 
 _Écrit le 13 novembre 2026. À lire au début de chaque session, avant `ETAT.md`. Il dit quoi lire, quoi ne pas lire, comment vérifier, et les pièges déjà rencontrés._
 
+> **V3 (14 nov. 2026)** : le cap est donné par `BRIEF-V3.md`, `DA-V3.md`, `PLAN-V3.md` et `SOURCES.md`. Ce guide reste valable pour les commandes (section 4), le rendu déterministe (section 5) et les pièges (section 6). Les tableaux des sections 1 et 2 datent de l'univers du terrarium : pour savoir quoi lire, suivre `BRIEF-V3.md` et les skills de `.claude/skills/`.
+
 ## 1. Quoi lire, selon la tâche
 
 Lire le moins possible : c'est le premier poste de dépense.

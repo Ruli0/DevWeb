@@ -257,3 +257,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Ton retour** : « Améliore », puis « Go ».
 - **Changé** : dans l'étude, les observateurs prennent vie. Quand la barre « ce qu'ils croient » monte à 50 %, la grenouille et une luciole fixent le caméléon (deux sur quatre) ; au moment « en vrai : 25 % », la grenouille retourne à sa mouche et seule une luciole le fixe encore. La vue est décalée pour que le caméléon reste au-dessus du panneau des jauges.
 - **Ton retour** : en attente (rendu en cours).
+
+### Recadrage V3 (14 nov.)
+
+- **Ton retour** : « Ce que m'a fait Claude est un peu trop enfantin et je n'aime pas vraiment les visuels. J'aimerais pousser la puissance de l'outil à son maximum. » Public : adultes de tout horizon ; 30 s à 1 min ; santé et cerveau, expliqués par des études. Puis : utiliser des skills pour dépenser moins de tokens ; le but final est un générateur piloté par Claude Code, peu coûteux ; « pour l'instant, créons. Sois ambitieux. »
+- **Fait** : les documents de passation (`BRIEF-V3.md`, `DA-V3.md`, `PLAN-V3.md`, `SOURCES.md`) et six skills (`episode`, `sources`, `apercu`, `rendu`, `scene`, `style`).
+- **L'identité visuelle « psycho en métaphores » ci-dessus est remplacée** par `DA-V3.md`, à valider par les maquettes de l'étape 1.
