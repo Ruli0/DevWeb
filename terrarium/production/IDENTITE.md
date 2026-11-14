@@ -291,3 +291,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Ton retour avant** : « Continue mais un peu plus lent » : mouvement ralenti d'environ 25 %.
 - **Montré** : la planche des 9 scènes (`videos/episodes/essai-scenes.json`, 79 s, plus long qu'un vrai épisode car il les enchaîne toutes) et un rendu brouillon de contrôle.
 - **Question** : la bibliothèque convient-elle, que manque-t-il ?
+- **Ton retour** : « C'est pas mal mais il y a déjà trop de vidéo comme ça sur TikTok. » Puis ton choix de concept : « Cerveau vivant génératif ».
+
+### Cerveau vivant, tour 1 : trois rendus du réseau (14 nov.)
+
+- **Montré** : un réseau de 3 780 neurones et 4 900 liaisons, généré avec une graine fixe dans la silhouette du cerveau (`studio/reseau/modele.js`), dessiné sur un canvas (`studio/reseau/dessin.js`), dans l'état « alarme » (amygdale en accent chaud, décharges). Trois rendus : R1 Constellation, R2 Bioluminescent, R3 Données. Temps de dessin : de 33 à 54 ms par image.
+- **Question** : lequel ?
