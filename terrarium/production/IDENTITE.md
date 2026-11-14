@@ -269,3 +269,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Montré** : une planche de 6 images (`essais/style-v3/maquettes.cjs`) : les variantes V1 « Encre et ambre », V2 « Papier de nuit » et V3 « Laboratoire » de `DA-V3.md`, chacune sur la scène « chiffre » et la scène « cerveau » (profil au trait, cortex préfrontal qui s'allume, amygdale en alarme).
 - **Le chiffre** (« jusqu'à 95 % », Steel 2007) est un exemple de maquette, pas encore vérifié dans l'article.
 - **Question** : quelle variante, ou quel mélange ?
+- **Ton choix** : « 3 », donc la variante V3 « Laboratoire » (bleu-noir, grille de points, accent bleu glacier, Space Grotesk et JetBrains Mono).
+
+### V3, étape 1, tour 2 : test de mouvement (14 nov.)
+
+- **Montré** : 6,4 s en 60 i/s (`essais/style-v3/mouvement.cjs`, rendu image par image avec Playwright). Le chiffre compte de 0 à 95 et les lignes montent dans des masques (SplitText) ; le texte sort par lignes ; le filet d'accent se transforme en contour du cerveau (MorphSVG) ; les sillons se dessinent (DrawSVG) ; l'amygdale pulse et un signal monte vers le cortex préfrontal, qui s'allume ; les étiquettes entrent.
+- **Question** : le mouvement convient-il ?

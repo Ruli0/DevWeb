@@ -163,7 +163,8 @@ function page(v, scene) {
   <div class="marque">maquette ${v.nom.toLowerCase()} — chiffre à vérifier</div></body></html>`;
 }
 
-(async () => {
+module.exports = { VARIANTES, FONTES, CERVEAU, grain };
+if (require.main === module) (async () => {
   const nav = await chromium.launch();
   const p = await nav.newPage({ viewport: { width: 1080, height: 1920 } });
   const images = [];
