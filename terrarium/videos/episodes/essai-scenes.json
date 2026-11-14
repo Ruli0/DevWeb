@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "essai": true,
+  "id": "essai-scenes",
+  "titre": "Essai des 9 scènes : la procrastination",
+  "sujet": "Procrastination",
+  "numero": 1,
+  "theme": "attention",
+  "scenes": [
+    { "scene": "accroche", "texte": "Tu repousses encore ? Ce n'est pas de la *paresse*." },
+    { "scene": "chiffre", "avant": "jusqu'à", "valeur": 95, "unite": "%", "legende": "des étudiants disent *repousser* leurs tâches.", "source": "c1" },
+    { "scene": "cerveau", "transition": "forme", "phrase": "C'est une *alarme* qui sonne.", "zones": ["amygdale", "pfc"], "etiquettes": { "amygdale": "l'alarme", "pfc": "le frein" }, "lien": true },
+    { "scene": "mecanisme", "titre": "Le cercle de l'*évitement*", "etapes": ["Une tâche pénible", "Un *malaise*", "On remet à plus tard", "Un soulagement… bref"], "boucle": true },
+    { "scene": "graphique", "titre": "Chez les étudiants :", "barres": [{ "label": "se disent procrastinateurs", "valeur": 75 }, { "label": "le font de façon problématique", "valeur": 50 }], "source": "c2" },
+    { "scene": "comparaison", "gauche": { "titre": "ce qu'on croit", "texte": "un manque de volonté" }, "droite": { "titre": "ce qui se passe", "texte": "on *fuit* une émotion" }, "source": "c3" },
+    { "scene": "citation", "nature": "titre de l'article", "texte": "Procrastination and the priority of short-term *mood* regulation", "source": "c4" },
+    { "scene": "geste", "texte": "Rends le début *ridiculement* petit.", "points": ["Choisis la première étape", "Lance 2 minutes", "Tu as le droit d'arrêter"] },
+    { "scene": "boucle", "texte": "Ce n'est pas de la *paresse*.", "suite": "n° 02 : la peur du jugement" }
+  ]
+}

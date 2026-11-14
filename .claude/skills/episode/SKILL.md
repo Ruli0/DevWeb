@@ -5,7 +5,7 @@ description: Écrit un nouvel épisode vidéo (30 à 60 s, cerveau et santé) po
 
 # Écrire un épisode
 
-**À lire, et rien d'autre** : `terrarium/production/CATALOGUE.md` (les scènes et leurs paramètres) et un épisode existant de `terrarium/videos/episodes/` comme modèle. Ne pas lire `studio/compiler.js`, `studio/runtime.js` ni les scènes.
+**À lire, et rien d'autre** : la section « V3 : les scènes » de `terrarium/production/CATALOGUE.md` et le modèle `terrarium/videos/episodes/essai-scenes.json` (avec sa fiche `essai-scenes.sources.json`). L'épisode commence par `"version": 3`. Ne pas lire `studio/compiler.js`, `studio/runtime.js` ni les scènes.
 
 ## Étapes
 
@@ -18,7 +18,7 @@ description: Écrit un nouvel épisode vidéo (30 à 60 s, cerveau et santé) po
    4. `geste` (5 à 10 s) : une action concrète et réaliste ;
    5. `boucle`.
 4. **Écrire** `terrarium/videos/episodes/<id>.json`. Viser moins de 60 lignes.
-5. **Le texte** : phrases courtes, vocabulaire d'adulte, au plus 34 caractères par morceau, un mot clé par morceau (`*mot*`). Typographie française. Le texte affiché d'un fait doit correspondre au `texte_ecran` de la fiche.
+5. **Le texte** : phrases courtes, vocabulaire d'adulte, au plus 70 caractères par texte, un mot clé (`*mot*`). Viser 6 ou 7 scènes pour 40 à 55 s : le montage calcule les durées (lecture lente) et refuse hors de 30 à 60 s. Typographie française. Le texte affiché d'un fait doit correspondre au `texte_ecran` de la fiche.
 6. **Compiler et regarder** : skill `apercu`. Corriger d'après les messages du compilateur (ils disent quoi changer) et d'après la planche.
 7. **Montrer la planche** à l'utilisateur avec une seule question, puis le skill `rendu` après son accord.
 

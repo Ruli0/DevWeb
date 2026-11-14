@@ -1,0 +1,12 @@
+{
+  "episode": "essai-scenes",
+  "statut": "a-verifier",
+  "verifie_le": null,
+  "note": "Épisode d'essai du moteur de scènes. Chiffres tirés du résumé de Steel (2007) de mémoire : à vérifier dans le résumé officiel avant toute publication.",
+  "affirmations": [
+    { "id": "c1", "texte_ecran": "des étudiants disent repousser leurs tâches.", "type": "chiffre", "valeur": "80 à 95 %", "reference": "Steel, P. (2007). The nature of procrastination: A meta-analytic and theoretical review of quintessential self-regulatory failure. Psychological Bulletin, 133(1), 65–94.", "doi": "10.1037/0033-2909.133.1.65", "citation_origine": "à recopier depuis le résumé", "lu_dans": "secondaire", "population": "étudiants (estimations reprises par la méta-analyse)", "limites": "estimation, pas une mesure unique ; « jusqu'à » obligatoire", "affichage_source": "Steel, 2007 · Psychological Bulletin" },
+    { "id": "c2", "texte_ecran": "Chez les étudiants :", "type": "chiffre", "valeur": "environ 75 % se considèrent procrastinateurs ; près de 50 % de façon constante et problématique", "reference": "Steel, P. (2007). Psychological Bulletin, 133(1), 65–94.", "doi": "10.1037/0033-2909.133.1.65", "citation_origine": "à recopier depuis le résumé", "lu_dans": "secondaire", "population": "étudiants", "limites": "auto-déclaration", "affichage_source": "Steel, 2007 · Psychological Bulletin" },
+    { "id": "c3", "texte_ecran": "on fuit une émotion", "type": "mecanisme", "valeur": "la procrastination comme régulation de l'humeur à court terme", "reference": "Sirois, F., & Pychyl, T. (2013). Procrastination and the priority of short-term mood regulation: Consequences for future self. Social and Personality Psychology Compass, 7(2), 115–127.", "doi": "10.1111/spc3.12011", "citation_origine": "à recopier", "lu_dans": "secondaire", "population": "revue de littérature", "limites": "modèle théorique appuyé par des études corrélationnelles", "affichage_source": "Sirois & Pychyl, 2013" },
+    { "id": "c4", "texte_ecran": "Procrastination and the priority of short-term mood regulation", "type": "mecanisme", "valeur": "titre de l'article", "reference": "Sirois & Pychyl (2013), voir c3", "doi": "10.1111/spc3.12011", "citation_origine": "titre", "lu_dans": "secondaire", "population": "—", "limites": "—", "affichage_source": "Sirois & Pychyl, 2013 · SPPC" }
+  ]
+}

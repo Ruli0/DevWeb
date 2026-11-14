@@ -11,7 +11,7 @@ Depuis `terrarium/` :
 npm run video -- <id>
 ```
 
-Cela compile `videos/episodes/<id>.json`, écrit la composition dans `videos/studio/<id>/` et la planche `videos/studio/<id>/apercu.png` (une image par plan).
+Cela monte `videos/episodes/<id>.json` (chaîne V3 si `"version": 3` : `studio/montage.js`, `studio/page-v3.js`), écrit la composition dans `videos/studio/<id>/` et la planche `videos/studio/<id>/apercu.png` (une image par scène, à 70 % de sa durée).
 
 Pour des instants précis :
 

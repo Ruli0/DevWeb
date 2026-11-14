@@ -13,7 +13,7 @@ Depuis `terrarium/` :
 
 ```bash
 npm test                                   # tout doit passer
-npm run video -- <id> --sans-apercu        # recompile la composition
+npm run video -- <id> --sans-apercu        # recompile la composition (refuse une fiche « a-verifier » avec --rendu)
 ```
 
 - La fiche `videos/episodes/<id>.sources.json` a le statut `verifie`. Sinon, s'arrêter et le dire à l'utilisateur.

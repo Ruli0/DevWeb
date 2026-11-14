@@ -16,15 +16,26 @@ const option = (o) => process.argv.includes(o);
 if (!id) { console.error('Usage : npm run video -- <id> [--rendu | --brouillon] [--sans-apercu]'); process.exit(1); }
 
 const source = path.join(RACINE, 'videos/episodes', `${id}.json`);
-const { erreurs, feuille } = compiler(JSON.parse(fs.readFileSync(source, 'utf8')));
+const episode = JSON.parse(fs.readFileSync(source, 'utf8'));
+const V3 = episode.version === 3;
+let erreurs; let feuille;
+if (V3) {
+  // Chaîne V3 : scènes, fiche de sources obligatoire.
+  const ficheChemin = path.join(RACINE, 'videos/episodes', `${id}.sources.json`);
+  const fiche = fs.existsSync(ficheChemin) ? JSON.parse(fs.readFileSync(ficheChemin, 'utf8')) : null;
+  ({ erreurs, feuille } = require('../studio/montage.js').montage(episode, fiche));
+  if (!erreurs.length && (option('--rendu')) && feuille.statutSources !== 'verifie') erreurs.push(`la fiche de sources a le statut « ${feuille.statutSources} » : le rendu final demande « verifie » (voir production/SOURCES.md). Pour un essai : --brouillon`);
+} else ({ erreurs, feuille } = compiler(episode));
 if (erreurs.length) { console.error(`${id}.json :\n  - ${erreurs.join('\n  - ')}`); process.exit(1); }
 const dossier = path.join(RACINE, 'videos/studio', id);
-page.ecrire(feuille, dossier);
-console.log(`Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.ordres.length} gestes, ${feuille.sons.length} sons)`);
+if (V3) require('../studio/page-v3.js').ecrire(feuille, dossier); else page.ecrire(feuille, dossier);
+console.log(V3 ? `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.scenes.length} scènes, ${feuille.sons.length} sons, sources : ${feuille.statutSources})`
+  : `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.ordres.length} gestes, ${feuille.sons.length} sons)`);
 
 if (!option('--sans-apercu')) {
-  // Une image par plan de caméra, quand la caméra est arrivée.
-  const instants = feuille.camera.filter((k) => k.ease !== 'none').map((k) => +Math.min(feuille.duree - 0.05, k.t + k.duree + 0.5).toFixed(2));
+  // V3 : une image par scène, à 70 % de sa durée. Ancienne chaîne : une image par plan de caméra.
+  const instants = V3 ? feuille.scenes.map((s) => +(s.t0 + 0.7 * s.d).toFixed(2))
+    : feuille.camera.filter((k) => k.ease !== 'none').map((k) => +Math.min(feuille.duree - 0.05, k.t + k.duree + 0.5).toFixed(2));
   const globaux = execSync('npm root -g').toString().trim();
   const r = spawnSync('node', [path.join(RACINE, 'scripts/apercu.js'), path.join(dossier, 'index.html'), path.join(dossier, 'apercu.png'), ...instants.map(String)], { stdio: 'inherit', env: { ...process.env, NODE_PATH: globaux } });
   if (r.status) process.exit(r.status);

@@ -91,3 +91,14 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : ton choix (« 3 »), puis « C'est bien comme ça » sur le test de mouvement.
 - **Où** : `studio/style.js`, `studio/dessins/cerveau.js`, `studio/polices/`.
 - **Écarté** : V1 « Encre et ambre » et V2 « Papier de nuit ». Leurs couleurs restent possibles comme accents de thème.
+
+## 15. Musique « Labo » et rythme plus lent (14 nov. 2026)
+
+- **Décision** : la musique A « Labo » (90 BPM, nappe froide, pulsation sourde, tics de pendule), arrangée automatiquement par le montage. Le mouvement est ralenti d'environ 25 % (`studio/style.js`).
+- **Pourquoi** : tes réponses « À » et « Continue mais un peu plus lent ».
+
+## 16. Une chaîne V3 à côté de l'ancienne (14 nov. 2026)
+
+- **Décision** : la V3 a ses propres fichiers (`studio/montage.js`, `studio/lecteur.js`, `studio/page-v3.js`, `studio/scenes/`). `npm run video` choisit la chaîne avec `"version": 3`.
+- **Pourquoi** : l'ancien compilateur est bâti autour des personnages ; un hybride aurait été plus fragile qu'une chaîne neuve et courte.
+- **Reporté** : le déplacement de l'ancienne chaîne dans `archive/terrarium/`, à la fin de l'étape 4, pour ne pas casser ses tests pendant la construction.

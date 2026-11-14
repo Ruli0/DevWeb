@@ -284,3 +284,10 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
   - B « Synapse » (96 BPM) : arpège doux, basse ronde, kick feutré ;
   - C « Respiration » (80 BPM) : nappe qui respire, piano électrique épars.
 - **Question** : laquelle ?
+- **Ton choix** : « À » (A, « Labo »).
+
+### V3, étape 3, tour 1 : les 9 scènes (14 nov.)
+
+- **Ton retour avant** : « Continue mais un peu plus lent » : mouvement ralenti d'environ 25 %.
+- **Montré** : la planche des 9 scènes (`videos/episodes/essai-scenes.json`, 79 s, plus long qu'un vrai épisode car il les enchaîne toutes) et un rendu brouillon de contrôle.
+- **Question** : la bibliothèque convient-elle, que manque-t-il ?

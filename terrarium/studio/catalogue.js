@@ -49,6 +49,15 @@ function catalogue() {
   for (const d of Object.values(DECORS)) l.push(`| \`${d.id}\` (${d.nom}) | ${Object.entries(d.PLACES).map(([k, v]) => `${k} : ${JSON.stringify(Array.isArray(v) ? v : [v.x, v.y])}`).join(' ; ')} |`);
   l.push('', '## Cadrages', '', `${Object.entries(CADRAGES).map(([k, z]) => `\`${k}\` (zoom ${String(z).replace('.', ',')})`).join(', ')}. Le sujet est cadré un peu sous le tiers haut (le texte occupe le haut) ; avec plusieurs sujets, le zoom diminue pour les garder tous à l'écran. Entre deux mouvements, la caméra avance doucement.`);
   l.push('', '## Musique', '', `Une partie par mesure, choisie par les temps forts : ${PARTIES.map((p) => `\`${p}\``).join(', ')}. Une « coupure » fait taire la musique pendant un temps (sur le raté).`, '');
+  // La chaîne V3 (scènes) passe en premier : c'est elle qu'on utilise. Le reste est l'ancienne chaîne (archivée).
+  const { SCENES } = require('./montage.js');
+  const v3 = ['## V3 : les scènes (chaîne actuelle)', '',
+    'Un épisode V3 : `{ "version": 3, "id", "titre", "sujet", "numero", "theme", "scenes": [ { "scene": "<nom>", …paramètres } ] }`, avec sa fiche `<id>.sources.json` (voir `SOURCES.md`). Thèmes (accent) : ' + Object.keys(require('./style.js').accents).map((k) => `\`${k}\``).join(', ') + '. Modèle : `videos/episodes/essai-scenes.json`.', '',
+    'Chaque scène dure le temps de lire son texte (0,45 s par mot, 0,8 s par morceau, plus 1,35 s d’entrée et de sortie), au moins son minimum, arrondie au temps (90 BPM). Total entre 30 et 60 s. Première scène : `accroche` ; dernière : `boucle`. `*mot*` = mot clé en couleur d’accent. Au plus 70 caractères par texte.', '',
+    '| Scène | Rôle | Paramètres | Source | Minimum |', '|---|---|---|---|---|'];
+  for (const sc of Object.values(SCENES)) v3.push(`| \`${sc.id}\` | ${sc.description} | ${Object.entries(sc.params).map(([k, v]) => `\`${k}\` : ${v}`).join(' ; ')} | ${sc.source ? 'obligatoire' : '—'} | ${String(sc.min).replace('.', ',')} s |`);
+  v3.push('', 'Musique : `labo` (90 BPM), arrangée automatiquement (intro sur l’accroche, montée et coupure avant la première étude). Bruitages déduits des scènes : `souffle`, `impact`, `tic`, `montee`.', '', '---', '', '_Ancienne chaîne (terrarium, archivée) :_', '');
+  l.splice(4, 0, ...v3);
   return l.join('\n');
 }
 

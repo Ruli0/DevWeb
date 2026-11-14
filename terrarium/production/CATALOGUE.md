@@ -2,6 +2,30 @@
 
 _Généré par `node studio/catalogue.js` : ne pas modifier à la main. Avec `GUIDE-EXECUTION.md`, c'est tout ce qu'il faut lire pour écrire un épisode._
 
+## V3 : les scènes (chaîne actuelle)
+
+Un épisode V3 : `{ "version": 3, "id", "titre", "sujet", "numero", "theme", "scenes": [ { "scene": "<nom>", …paramètres } ] }`, avec sa fiche `<id>.sources.json` (voir `SOURCES.md`). Thèmes (accent) : `attention`, `motivation`, `stress`, `sommeil`, `emotions`. Modèle : `videos/episodes/essai-scenes.json`.
+
+Chaque scène dure le temps de lire son texte (0,45 s par mot, 0,8 s par morceau, plus 1,35 s d’entrée et de sortie), au moins son minimum, arrondie au temps (90 BPM). Total entre 30 et 60 s. Première scène : `accroche` ; dernière : `boucle`. `*mot*` = mot clé en couleur d’accent. Au plus 70 caractères par texte.
+
+| Scène | Rôle | Paramètres | Source | Minimum |
+|---|---|---|---|---|
+| `accroche` | Ouvre la vidéo : une question ou une phrase qui touche, en grand, centrée. | `texte` : la phrase (au plus 60 caractères), *mot* pour le mot clé | — | 3,4 s |
+| `chiffre` | Le chiffre d'une étude : compteur géant, légende, source. | `avant` : petit chapeau (« jusqu’à », « près de »), facultatif ; `valeur` : nombre affiché ; `unite` : « % » ou rien ; `decimales` : 0 par défaut ; `legende` : ce que le chiffre mesure, *mot* clé ; `source` : identifiant de la fiche de sources (c1…) | obligatoire | 5,4 s |
+| `cerveau` | Le mécanisme dans le cerveau : zones qui s’allument, signal, étiquettes. | `phrase` : la phrase du haut, *mot* clé ; `zones` : liste parmi pfc, amygdale, striatum (la première est la source du signal) ; `etiquettes` : { zone: « rôle en 2 ou 3 mots » } ; `lien` : true : un signal va de l’amygdale au cortex préfrontal ; `transition` : « forme » : le trait du chiffre précédent devient le cerveau | — | 6,4 s |
+| `mecanisme` | Un enchaînement : déclencheur, réaction, conséquence. Option boucle. | `titre` : phrase du haut, *mot* clé ; `etapes` : 2 à 4 étapes courtes (au plus 26 caractères) ; `boucle` : true : une flèche ramène de la dernière étape à la première | — | 6 s |
+| `graphique` | Les données d’une étude : 2 à 5 barres horizontales, valeurs en compteur, source. | `titre` : ce que montrent les barres, *mot* clé ; `barres` : [{ label, valeur }] (2 à 5) ; `unite` : « % » par défaut ; `max` : valeur de la barre pleine (100 par défaut) ; `accent` : index de la barre en accent (0 par défaut) ; `source` : identifiant de la fiche de sources | obligatoire | 6 s |
+| `comparaison` | Deux états côte à côte : croyance et réalité, avant et après. | `gauche` : { titre, texte } ; `droite` : { titre, texte } (la réponse, en accent) ; `source` : identifiant de la fiche de sources | obligatoire | 6 s |
+| `citation` | Une phrase exacte d’un article (ou son titre), avec la référence. | `texte` : la phrase exacte, *mot* clé ; `nature` : « titre de l’article » ou « extrait », affiché au-dessus ; `source` : identifiant de la fiche de sources | obligatoire | 5,4 s |
+| `geste` | Le geste concret à essayer : une phrase, puis 2 ou 3 points cochés. | `texte` : l’action en une phrase, *mot* clé ; `points` : 2 ou 3 points courts | — | 6 s |
+| `boucle` | La fin : reprend l’accroche (la vidéo boucle), avec la mention « information, pas un avis médical ». | `texte` : phrase qui relance (souvent celle de l’accroche), *mot* clé ; `suite` : invitation, par exemple « n° 02 : la peur du jugement » | — | 4 s |
+
+Musique : `labo` (90 BPM), arrangée automatiquement (intro sur l’accroche, montée et coupure avant la première étude). Bruitages déduits des scènes : `souffle`, `impact`, `tic`, `montee`.
+
+---
+
+_Ancienne chaîne (terrarium, archivée) :_
+
 ## Écrire un épisode
 
 Un fichier `videos/episodes/<id>.json`, puis `npm run video -- <id>` (planche d'aperçu) et `npm run video -- <id> --rendu` (MP4, 60 images par seconde). Modèle : `videos/episodes/demo.json`.
