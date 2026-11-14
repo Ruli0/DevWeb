@@ -303,3 +303,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Montré** : 8 s en 60 i/s avec la musique « Labo » (`essais/cerveau-vivant/mouvement.cjs`). Le réseau au repos frémit ; la caméra plonge vers l'amygdale ; une coupure, puis un impact, et l'amygdale s'embrase avec des décharges ; on recule, le cortex préfrontal s'allume en bleu et l'alarme baisse ; retour au large.
 - **Question** : le mouvement est-il bon ?
+- **Ton retour** : « J'aime mieux les visuels mais là le problème c'est que les gens ne participent pas. Je veux plus de dynamisme. »
+
+### Cerveau vivant, tour 3 : participation et dynamisme (14 nov.)
+
+- **Montré** : 12 s (`essais/cerveau-vivant/interactif.cjs`). « TEST. 3 secondes. » claque ; une question et deux cartes A ou B ; un compte à rebours 3, 2, 1 sur les temps (l'amygdale s'agite à chaque tic) ; temps écoulé, la carte B s'allume ; une coupure, puis un flash et un zoom rapide dans l'amygdale qui s'embrase ; le cortex préfrontal arrive « trop tard » ; enfin « Et toi ? A ou B ? Dis-le en commentaire » avec une flèche vers les commentaires. Coupes et entrées sur le temps, petit coup de zoom à chaque coupe, cerveau qui bat sur chaque temps, barre de progression en haut, musique pleine dès le début.
+- **Question** : ce format te plaît-il ?
