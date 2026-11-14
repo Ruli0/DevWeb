@@ -84,3 +84,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Gardé** : la chaîne du studio (épisode JSON, compilateur, lecteur fixe, aperçu, rendu déterministe), les règles de lecture, la synthèse sonore, la méthode pas à pas.
 - **Ajouté** : la règle des sources (`SOURCES.md`) : aucun chiffre à l'écran sans fiche vérifiée, rendu final refusé sinon. Des skills de projet (`.claude/skills/`) pour que Claude Code produise une vidéo en lisant et en dépensant le moins possible.
 - **Écarté** : réécrire le rendu en React (React seulement pour une interface d'aperçu, plus tard) ; garder des mascottes « en plus sobre ».
+
+## 14. Style V3 « Laboratoire » (14 nov. 2026)
+
+- **Décision** : la variante V3 de `DA-V3.md` (bleu-noir, grille de points, accent bleu glacier, Space Grotesk seule avec JetBrains Mono). Le mouvement validé : lignes qui montent dans des masques, compteur, trait d'accent qui se transforme en cerveau, sillons qui se dessinent, amygdale qui pulse et signal vers le cortex préfrontal.
+- **Pourquoi** : ton choix (« 3 »), puis « C'est bien comme ça » sur le test de mouvement.
+- **Où** : `studio/style.js`, `studio/dessins/cerveau.js`, `studio/polices/`.
+- **Écarté** : V1 « Encre et ambre » et V2 « Papier de nuit ». Leurs couleurs restent possibles comme accents de thème.

@@ -7,6 +7,8 @@ description: Rappel court de la direction artistique V3 (« éditorial scientifi
 
 Référence complète : `terrarium/production/DA-V3.md`. Les valeurs validées sont dans `terrarium/studio/style.js` dès qu'il existe : elles priment sur ce rappel.
 
+**Variante validée : « Laboratoire »** : fond bleu-noir `#0d1117` avec grille de points, texte `#e9eef3`, accent bleu glacier `#7fb6d9` (ou l'accent du thème, voir `accents` dans `studio/style.js`). Police unique Space Grotesk (500, 700), JetBrains Mono pour sources et sous-étiquettes. Modèle de référence du mouvement : `terrarium/essais/style-v3/mouvement.cjs`.
+
 **Intention** : un article scientifique mis en mouvement par un studio de design. Sobre, précis, vivant. Public adulte.
 
 **Test** : cette image pourrait-elle illustrer un livre pour enfants ? Si oui, la refaire.

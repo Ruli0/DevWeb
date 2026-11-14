@@ -139,6 +139,8 @@ Précisions :
 
 ## 9. Les trois variantes à maquetter (étape 1 du plan)
 
+> **Retenue le 14 nov. 2026 : V3 « Laboratoire »**, et son test de mouvement est validé. Les valeurs exactes sont dans `studio/style.js` (couleurs, tailles, courbes, durées) ; le cerveau est dans `studio/dessins/cerveau.js` ; les polices dans `studio/polices/`. Police unique : Space Grotesk (500 et 700), JetBrains Mono pour les sources et les étiquettes secondaires. Les valeurs « de départ » des sections 2 à 5 sont remplacées par celles de `studio/style.js`.
+
 Elles suivent toutes les règles ci-dessus. Elles diffèrent par la palette et la typographie.
 
 | Variante | Fond et accent | Typographie | Caractère |

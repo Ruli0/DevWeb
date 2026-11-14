@@ -20,7 +20,7 @@ Le plan est dans `PLAN-REFONTE.md` : 7 étapes, de la publication du pilote actu
 
 ## V3 : cerveau et santé pour adultes (14 nov. 2026)
 
-Le plan est dans `PLAN-V3.md` : 6 étapes, des maquettes de style à la série mesurée. Prochaine action : l'étape 1 (maquettes des trois variantes de style, sur les scènes « chiffre » et « cerveau »). Tout ce qui suit dans ce fichier date d'avant la V3 et ne sert que d'historique.
+Le plan est dans `PLAN-V3.md` : 6 étapes, des maquettes de style à la série mesurée. Étape 1 faite (style « Laboratoire »). Étape 2 en cours : choisir l'ambiance musicale. Ensuite, l'étape 3 (moteur de scènes). Tout ce qui suit dans ce fichier date d'avant la V3 et ne sert que d'historique.
 
 ## Série « psycho en métaphores » (13 nov. 2026)
 

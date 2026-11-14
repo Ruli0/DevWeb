@@ -368,4 +368,6 @@ if (require.main === module) {
     ecrireWav(nom, normaliser(fabrique(), { 'ambiance.wav': 0.5, 'phonk.wav': 0.8 }[nom] || 0.89));
   }
 }
-module.exports = { ecrireMusique, MUSIQUES_ARRANGEES };
+module.exports = { ecrireMusique, MUSIQUES_ARRANGEES, outils: { FREQ, graine, tampon, enveloppe, sinus, bruit, normaliser, ecrireWav, note } };
+// Musiques de la V3 (sobres) : elles s'ajoutent aux musiques arrangeables.
+Object.assign(MUSIQUES_ARRANGEES, require('./sons-v3.js').MUSIQUES);

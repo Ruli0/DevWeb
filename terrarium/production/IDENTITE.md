@@ -275,3 +275,12 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Montré** : 6,4 s en 60 i/s (`essais/style-v3/mouvement.cjs`, rendu image par image avec Playwright). Le chiffre compte de 0 à 95 et les lignes montent dans des masques (SplitText) ; le texte sort par lignes ; le filet d'accent se transforme en contour du cerveau (MorphSVG) ; les sillons se dessinent (DrawSVG) ; l'amygdale pulse et un signal monte vers le cortex préfrontal, qui s'allume ; les étiquettes entrent.
 - **Question** : le mouvement convient-il ?
+- **Ton retour** : « C'est bien comme ça. » Le style est inscrit dans `studio/style.js`.
+
+### V3, étape 2, tour 1 : trois ambiances (14 nov.)
+
+- **Montré** : le test de mouvement avec trois musiques (`scripts/sons-v3.js`, test dans `essais/style-v3/ecoute.cjs`) et les bruitages calés (impact sur le chiffre, souffles sur les lignes, montée avant la transformation, tics sur les tracés, coupure de 0,45 s puis impact sur l'amygdale).
+  - A « Labo » (90 BPM) : nappe froide, pulsation sourde, tics de pendule ;
+  - B « Synapse » (96 BPM) : arpège doux, basse ronde, kick feutré ;
+  - C « Respiration » (80 BPM) : nappe qui respire, piano électrique épars.
+- **Question** : laquelle ?
