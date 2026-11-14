@@ -96,7 +96,7 @@
       } else {
         ctx.fillStyle = css(c, Math.min(1, b));
         ctx.beginPath(); ctx.arc(X[i], Y[i], 0.9 + r * 1.1, 0, 6.283); ctx.fill();
-        if (v > 0.5) { ctx.fillStyle = css(c, 0.12 * v); ctx.beginPath(); ctx.arc(X[i], Y[i], 6 + r * 4, 0, 6.283); ctx.fill(); }
+        if (v > 0.5) { ctx.fillStyle = css(c, 0.07 * v); ctx.beginPath(); ctx.arc(X[i], Y[i], 3 + r * 2.5, 0, 6.283); ctx.fill(); }
       }
     }
     ctx.globalAlpha = 1;

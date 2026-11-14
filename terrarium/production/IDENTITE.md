@@ -297,3 +297,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Montré** : un réseau de 3 780 neurones et 4 900 liaisons, généré avec une graine fixe dans la silhouette du cerveau (`studio/reseau/modele.js`), dessiné sur un canvas (`studio/reseau/dessin.js`), dans l'état « alarme » (amygdale en accent chaud, décharges). Trois rendus : R1 Constellation, R2 Bioluminescent, R3 Données. Temps de dessin : de 33 à 54 ms par image.
 - **Question** : lequel ?
+- **Ton choix** : « La 1 », R1 « Constellation ».
+
+### Cerveau vivant, tour 2 : test de mouvement (14 nov.)
+
+- **Montré** : 8 s en 60 i/s avec la musique « Labo » (`essais/cerveau-vivant/mouvement.cjs`). Le réseau au repos frémit ; la caméra plonge vers l'amygdale ; une coupure, puis un impact, et l'amygdale s'embrase avec des décharges ; on recule, le cortex préfrontal s'allume en bleu et l'alarme baisse ; retour au large.
+- **Question** : le mouvement est-il bon ?
