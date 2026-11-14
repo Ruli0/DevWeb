@@ -263,3 +263,9 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 - **Ton retour** : « Ce que m'a fait Claude est un peu trop enfantin et je n'aime pas vraiment les visuels. J'aimerais pousser la puissance de l'outil à son maximum. » Public : adultes de tout horizon ; 30 s à 1 min ; santé et cerveau, expliqués par des études. Puis : utiliser des skills pour dépenser moins de tokens ; le but final est un générateur piloté par Claude Code, peu coûteux ; « pour l'instant, créons. Sois ambitieux. »
 - **Fait** : les documents de passation (`BRIEF-V3.md`, `DA-V3.md`, `PLAN-V3.md`, `SOURCES.md`) et six skills (`episode`, `sources`, `apercu`, `rendu`, `scene`, `style`).
 - **L'identité visuelle « psycho en métaphores » ci-dessus est remplacée** par `DA-V3.md`, à valider par les maquettes de l'étape 1.
+
+### V3, étape 1, tour 1 : trois variantes de style (14 nov.)
+
+- **Montré** : une planche de 6 images (`essais/style-v3/maquettes.cjs`) : les variantes V1 « Encre et ambre », V2 « Papier de nuit » et V3 « Laboratoire » de `DA-V3.md`, chacune sur la scène « chiffre » et la scène « cerveau » (profil au trait, cortex préfrontal qui s'allume, amygdale en alarme).
+- **Le chiffre** (« jusqu'à 95 % », Steel 2007) est un exemple de maquette, pas encore vérifié dans l'article.
+- **Question** : quelle variante, ou quel mélange ?
