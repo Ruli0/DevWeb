@@ -309,3 +309,10 @@ _En construction, pas à pas : chaque élément est proposé, puis validé par t
 
 - **Montré** : 12 s (`essais/cerveau-vivant/interactif.cjs`). « TEST. 3 secondes. » claque ; une question et deux cartes A ou B ; un compte à rebours 3, 2, 1 sur les temps (l'amygdale s'agite à chaque tic) ; temps écoulé, la carte B s'allume ; une coupure, puis un flash et un zoom rapide dans l'amygdale qui s'embrase ; le cortex préfrontal arrive « trop tard » ; enfin « Et toi ? A ou B ? Dis-le en commentaire » avec une flèche vers les commentaires. Coupes et entrées sur le temps, petit coup de zoom à chaque coupe, cerveau qui bat sur chaque temps, barre de progression en haut, musique pleine dès le début.
 - **Question** : ce format te plaît-il ?
+- **Ton retour** : « Oui ».
+
+### Pilote « La procrastination », tour 1 (14 nov.)
+
+- **Montré** : la planche et la vidéo de 41 s au format « test » (`videos/episodes/procrastination.json`) : test, question A ou B (ranger son bureau), révélation « tu fuis un malaise » (amygdale), chiffre « jusqu'à 95 % » (Steel, 2007), révélation « ranger soulage tout de suite » (cortex préfrontal), question du plus petit premier pas, appel à commenter.
+- **Limite** : fiche de sources « à vérifier » (articles non lus, réseau bloqué). Pas de publication avant lecture.
+- **Question** : l'histoire passe-t-elle ?

@@ -1,0 +1,10 @@
+{
+  "episode": "procrastination",
+  "statut": "a-verifier",
+  "verifie_le": null,
+  "note": "14 nov. 2026 : références confirmées par recherche, mais le texte des articles n'a pas pu être lu (PubMed, White Rose et les copies PDF sont bloqués par le réseau de la session). À lire avant publication : l'introduction de Steel (2007) pour le chiffre, le résumé de Sirois & Pychyl (2013).",
+  "affirmations": [
+    { "id": "c1", "texte_ecran": "des étudiants repoussent leurs tâches.", "type": "chiffre", "valeur": "80 à 95 % des étudiants (estimation, affichée « jusqu'à 95 % »)", "reference": "Steel, P. (2007). The nature of procrastination: A meta-analytic and theoretical review of quintessential self-regulatory failure. Psychological Bulletin, 133(1), 65–94.", "doi": "10.1037/0033-2909.133.1.65", "citation_origine": "Dans l'introduction (pas le résumé), Steel cite des estimations de 80 % à 95 % d'étudiants qui procrastinent, d'après Ellis & Knaus (1977) et O'Brien (2002). À recopier mot pour mot depuis l'article.", "lu_dans": "secondaire", "population": "étudiants (estimations antérieures reprises par Steel)", "limites": "estimation citée, pas une mesure de la méta-analyse ; auto-déclaration ; « jusqu'à » obligatoire", "affichage_source": "Steel, 2007 · Psychological Bulletin" },
+    { "id": "c2", "texte_ecran": "Ranger soulage tout de suite. Le dossier, lui, attend.", "type": "mecanisme", "valeur": "la procrastination comme priorité donnée à la réparation de l'humeur à court terme, au détriment du soi futur", "reference": "Sirois, F., & Pychyl, T. (2013). Procrastination and the priority of short-term mood regulation: Consequences for future self. Social and Personality Psychology Compass, 7(2), 115–127.", "doi": "10.1111/spc3.12011", "citation_origine": "à recopier depuis le résumé", "lu_dans": "secondaire", "population": "revue de la littérature", "limites": "modèle théorique, appuyé surtout par des études corrélationnelles", "affichage_source": "Sirois & Pychyl, 2013" }
+  ]
+}

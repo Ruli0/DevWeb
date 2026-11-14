@@ -18,6 +18,7 @@
     description: "Le chiffre d'une étude : compteur géant, légende, source.",
     params: { avant: 'petit chapeau (« jusqu’à », « près de »), facultatif', valeur: 'nombre affiché', unite: '« % » ou rien', decimales: '0 par défaut', legende: 'ce que le chiffre mesure, *mot* clé', source: 'identifiant de la fiche de sources (c1…)' },
     source: true,
+    assombrir: true,
     FILET,
     min: 5.4,
     texteSource: (p) => p.legende,

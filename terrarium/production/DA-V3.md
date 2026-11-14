@@ -137,6 +137,15 @@ Précisions :
 | Un vocabulaire d'adulte, direct | Un ton de comptine, des points d'exclamation en série |
 | Du vide | De la décoration |
 
+## 0. Le format du compte (14 nov. 2026) : « test » sur le cerveau vivant
+
+Cette section prime sur les sections 1 à 8 pour les vidéos publiées.
+
+- **Le cerveau vivant** : un réseau d'environ 3 800 neurones lumineux, généré par graine fixe dans la silhouette du cerveau (`studio/reseau/modele.js`), dessiné en rendu « Constellation » (`studio/reseau/dessin.js`). Les zones s'allument : orange chaud `#ff7a4d` pour l'alarme (amygdale, insula), bleu `#8fc4ea` pour le frein (cortex préfrontal). Il bat sur chaque temps.
+- **La participation** : « TEST. » qui claque, une question du quotidien, deux cartes A et B, un compte à rebours 3, 2, 1 sur les temps, la carte piège s'allume, puis la révélation dans le cerveau, et « A ou B ? Dis-le en commentaire » avec une flèche.
+- **Le dynamisme** : chaque coupe tombe sur un temps (90 BPM) avec un petit coup de zoom, une barre de progression en haut, un flash et un zoom rapide sur chaque révélation, une coupure de musique juste avant.
+- **Les inserts** (chiffre, source) s'affichent sur le cerveau assombri.
+
 ## 9. Les trois variantes à maquetter (étape 1 du plan)
 
 > **Retenue le 14 nov. 2026 : V3 « Laboratoire »**, et son test de mouvement est validé. Les valeurs exactes sont dans `studio/style.js` (couleurs, tailles, courbes, durées) ; le cerveau est dans `studio/dessins/cerveau.js` ; les polices dans `studio/polices/`. Police unique : Space Grotesk (500 et 700), JetBrains Mono pour les sources et les étiquettes secondaires. Les valeurs « de départ » des sections 2 à 5 sont remplacées par celles de `studio/style.js`.

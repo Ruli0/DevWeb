@@ -102,3 +102,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Décision** : la V3 a ses propres fichiers (`studio/montage.js`, `studio/lecteur.js`, `studio/page-v3.js`, `studio/scenes/`). `npm run video` choisit la chaîne avec `"version": 3`.
 - **Pourquoi** : l'ancien compilateur est bâti autour des personnages ; un hybride aurait été plus fragile qu'une chaîne neuve et courte.
 - **Reporté** : le déplacement de l'ancienne chaîne dans `archive/terrarium/`, à la fin de l'étape 4, pour ne pas casser ses tests pendant la construction.
+
+## 17. Le format « test » sur le cerveau vivant (14 nov. 2026)
+
+- **Décision** : chaque vidéo est un mini-test participatif (question, A ou B, compte à rebours, révélation, appel à commenter) sur un cerveau vivant génératif (réseau de neurones, rendu « Constellation »), monté sur les temps de la musique.
+- **Pourquoi** : tes retours : « il y a déjà trop de vidéo comme ça sur TikTok » (sur l'infographie), puis « les gens ne participent pas, je veux plus de dynamisme », enfin « Oui » sur le test de 12 s.
+- **Écarté** : l'infographie seule (trop commune), le dossier d'enquête et la typographie cinétique (non choisis).
+- **Où** : scènes `test`, `question`, `revelation`, `appel` ; `studio/reseau/` ; `"format": "test"` dans `studio/montage.js`.

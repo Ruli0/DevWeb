@@ -7,6 +7,10 @@ description: Écrit un nouvel épisode vidéo (30 à 60 s, cerveau et santé) po
 
 **À lire, et rien d'autre** : la section « V3 : les scènes » de `terrarium/production/CATALOGUE.md` et le modèle `terrarium/videos/episodes/essai-scenes.json` (avec sa fiche `essai-scenes.sources.json`). L'épisode commence par `"version": 3`. Ne pas lire `studio/compiler.js`, `studio/runtime.js` ni les scènes.
 
+## Le format du compte : « test »
+
+Depuis le 14 nov. 2026, chaque vidéo suit le format « test » (`"format": "test"`) : le cerveau vivant en fond, un mini-test A ou B avec compte à rebours, la révélation dans le cerveau, puis l'appel à répondre en commentaire. Modèle : `terrarium/videos/episodes/procrastination.json` (7 scènes, 41 s). La question doit être une vraie situation du quotidien ; la réponse « piège » est celle que la science explique.
+
 ## Étapes
 
 1. **Les sources d'abord** : lancer le skill `sources` pour le sujet. Sans fiche, pas d'épisode.
