@@ -8,6 +8,7 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const S = require('./style.js');
 const PLANS = require('./plans.js');
+const ILLUS = require('./illustrations.js');
 
 const RACINE = path.join(__dirname, '../..');
 const lire = (f) => fs.readFileSync(path.join(RACINE, f), 'utf8');
@@ -25,46 +26,64 @@ function css(f) {
   return `${fontes}
 * { box-sizing: border-box; margin: 0; padding: 0; } html, body { background: ${c.fond}; }
 #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: ${c.texte}; font-family: '${P.titre}'; background: ${c.fond}; }
-#halo { position: absolute; left: -200px; top: -100px; width: 1480px; height: 1500px; background: radial-gradient(closest-side, ${acc}38, ${acc}00); }
-.grain { position: absolute; inset: 0; mix-blend-mode: overlay; pointer-events: none; }
-.barre { position: absolute; top: 120px; left: 70px; width: 940px; height: 4px; background: ${c.texte}22; }
-.barre i { position: absolute; inset: 0; background: ${acc}; transform-origin: 0 50%; }
-.tete { position: absolute; top: 158px; left: 70px; right: 70px; display: flex; justify-content: space-between; align-items: center; font: 400 28px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; }
-.tete b { font-weight: 400; color: ${acc}; display: flex; align-items: center; gap: 14px; }
-.tete b::before { content: ''; width: 16px; height: 16px; border-radius: 50%; background: ${acc}; }
-.tete span { opacity: .5; }
-.plan, .cadre { position: absolute; inset: 0; }
-.cadre { padding: 300px 70px 0 70px; display: flex; flex-direction: column; gap: 34px; width: 1010px; }
-em { font: italic 400 1.1em/0.9 '${P.fort}'; color: ${acc}; letter-spacing: 0; }
+/* En-tête : lisible sur tous les fonds. */
+.barre { position: absolute; z-index: 90; top: 112px; left: 70px; width: 940px; height: 10px; border-radius: 5px; background: ${c.fond}; overflow: hidden; border: 2px solid ${c.fond}; }
+.barre i { position: absolute; inset: 0; background: ${c.texte}; transform-origin: 0 50%; border-radius: 3px; }
+.tete { position: absolute; z-index: 90; top: 146px; left: 70px; right: 70px; display: flex; justify-content: space-between; align-items: center; font: 400 26px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; }
+.tete b, .tete span { background: ${c.fond}; color: ${c.texte}; padding: 10px 20px; border-radius: 30px; font-weight: 400; display: flex; align-items: center; gap: 12px; }
+.tete b::before { content: ''; width: 14px; height: 14px; border-radius: 50%; background: ${acc}; }
+/* Les trois fonds : nuit, papier, accent. */
+.plan { position: absolute; inset: 0; overflow: hidden; background: var(--bg); color: var(--fg); }
+.plan.nuit { --bg: ${c.fond}; --fg: ${c.texte}; --ac: ${acc}; }
+.plan.papier { --bg: ${c.texte}; --fg: ${c.fond}; --ac: ${acc}; }
+.plan.accent { --bg: ${acc}; --fg: ${c.fond}; --ac: #ffffff; }
+.deco, .deco i { position: absolute; display: block; }
+.deco { inset: 0; }
+.nuit .deco .a { left: -200px; top: -100px; width: 1480px; height: 1500px; background: radial-gradient(closest-side, ${acc}55, ${acc}00); }
+.nuit .deco .b { left: 560px; top: 760px; width: 900px; height: 900px; border-radius: 50%; border: 3px solid ${acc}44; }
+.papier .deco { background-image: linear-gradient(${c.fond}12 2px, transparent 2px), linear-gradient(90deg, ${c.fond}12 2px, transparent 2px); background-size: 90px 90px; }
+.papier .deco .a { left: 520px; top: -260px; width: 820px; height: 820px; border-radius: 50%; background: ${acc}2e; }
+.papier .deco .b { left: -260px; top: 1180px; width: 640px; height: 640px; border-radius: 80px; border: 5px solid ${acc}66; }
+.accent .deco .a { left: -340px; top: 300px; width: 1760px; height: 1760px; border-radius: 50%; border: 130px solid #ffffff1f; }
+.accent .deco .b { left: 600px; top: -200px; width: 700px; height: 700px; border-radius: 120px; background: ${c.fond}1f; }
+.contenu { position: absolute; inset: 0; transform-origin: 540px 800px; }
+.illu { position: absolute; left: 70px; top: 700px; width: 940px; height: 400px; overflow: visible; }
+.cadre { position: absolute; inset: 0; padding: 270px 70px 0 70px; display: flex; flex-direction: column; gap: 34px; width: 1010px; }
+em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0; }
 .ligne { overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
-.kicker { font: 400 30px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; color: ${acc}; }
+.kicker { font: 400 30px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); opacity: .7; }
 .grand { font: 700 108px/1.02 '${P.titre}'; letter-spacing: -.025em; }
 .grand.geant { font-size: 168px; line-height: .98; letter-spacing: -.035em; }
 .moyen { font: 700 76px/1.05 '${P.titre}'; letter-spacing: -.02em; }
 .moyen.bas { font-weight: 500; opacity: .85; }
-.filet { display: block; width: 180px; height: 8px; background: ${acc}; transform-origin: 0 50%; margin-top: 10px; }
+.filet { display: block; width: 180px; height: 8px; background: var(--ac); transform-origin: 0 50%; margin-top: 10px; }
 .items { list-style: none; display: flex; flex-direction: column; gap: 22px; margin-top: 8px; }
-.items li { font: 700 92px/1.05 '${P.titre}'; letter-spacing: -.02em; display: flex; align-items: center; gap: 26px; }
-.items li::before { content: ''; flex: none; width: 22px; height: 22px; border-radius: 50%; background: ${acc}; }
+.items li { font: 700 84px/1.05 '${P.titre}'; letter-spacing: -.02em; display: flex; align-items: center; gap: 26px; }
+.items li::before { content: ''; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--ac); }
 .items li span { position: relative; }
-.rature { position: absolute; left: -8px; right: -8px; top: 54%; height: 8px; background: ${acc}; transform-origin: 0 50%; }
+.rature { position: absolute; left: -8px; right: -8px; top: 54%; height: 9px; background: var(--ac); transform-origin: 0 50%; }
 .conclusion { font: 500 62px/1.1 '${P.titre}'; margin-top: 14px; }
-.jauge { display: flex; flex-direction: column; gap: 20px; margin-top: 26px; }
-.jauge p { font: 700 84px/1 '${P.titre}'; letter-spacing: -.02em; }
-.jauge .rail { height: 30px; border-radius: 15px; background: ${c.texte}1c; overflow: hidden; width: 940px; }
-.jauge i { display: block; height: 100%; border-radius: 15px; background: ${c.texte}; transform-origin: 0 50%; }
-.jauge.d p { color: ${acc}; } .jauge.d i { background: ${acc}; }
+.jauge { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; }
+.jauge p { font: 700 72px/1 '${P.titre}'; letter-spacing: -.02em; }
+.jauge .rail { height: 30px; border-radius: 15px; background: color-mix(in srgb, var(--fg) 14%, transparent); overflow: hidden; width: 940px; }
+.jauge i { display: block; height: 100%; border-radius: 15px; background: var(--fg); transform-origin: 0 50%; }
+.jauge.d p { color: var(--ac); } .jauge.d i { background: var(--ac); }
 .jauge span { font: 400 32px '${P.mono}'; opacity: .7; letter-spacing: .04em; }
-.fleche { position: absolute; left: 0; top: 0; color: ${acc}; }
-#st { position: absolute; left: 60px; width: 890px; top: 1130px; height: 220px; }
-.st { position: absolute; left: 0; right: 0; top: 0; text-align: center; font: 700 86px/1.08 '${P.titre}'; letter-spacing: -.02em; text-shadow: 0 4px 30px ${c.fond}; }
-.st span { display: inline-block; margin: 0 .11em; }
-.st .fort { color: ${acc}; }`;
+.fleche { position: absolute; left: 0; top: 0; color: var(--fg); }
+/* Sous-titres : dans une étiquette sombre, lisibles sur tous les fonds. */
+#st { position: absolute; z-index: 95; left: 50px; width: 910px; top: 1150px; height: 220px; }
+.st { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
+.st div { display: inline-block; background: ${c.fond}; color: ${c.texte}; padding: 16px 30px 22px; border-radius: 28px; font: 700 80px/1.05 '${P.titre}'; letter-spacing: -.02em; box-shadow: 0 12px 40px #00000055; white-space: nowrap; }
+.st div { border: 2px solid #ffffff24; }
+.geant + .filet { display: none; }
+.st span { display: inline-block; margin: 0 .1em; }
+.st .fort { color: ${acc}; }
+.grain { z-index: 99; }`;
 }
 
 function html(f) {
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip" data-start="${pl.t0}" data-duration="${pl.d}" data-track-index="1"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div></div>`).join('\n');
-  const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}">${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div>`).join('\n   ');
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco"><i class="a"></i><i class="b"></i></div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
   return `<!doctype html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=1920">
@@ -73,11 +92,10 @@ ${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}
 <style>${css(f)}</style></head>
 <body>
 <div id="root" data-composition-id="${f.id}" data-start="0" data-duration="${f.duree}" data-width="1080" data-height="1920" data-fps="60">
- <div id="halo"></div>
  <div class="barre"><i id="prog"></i></div>
  <div class="tete"><b>${esc(f.rubrique)}</b><span>Avis · N° ${String(f.numero).padStart(2, '0')}</span></div>
 ${plans}
- <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="2">
+ <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="3">
    ${st}
  </div>
  ${GRAIN}
@@ -86,6 +104,7 @@ ${plans}
 </div>
 <script>
 ${lire('studio/avis/plans.js')}
+${lire('studio/avis/illustrations.js')}
 ${lire('studio/avis/lecteur.js')}
 (function () {
   gsap.registerPlugin(SplitText, DrawSVGPlugin);
@@ -99,12 +118,15 @@ ${lire('studio/avis/lecteur.js')}
 }
 
 // La chaîne de traitement de la voix (après le débruitage fait par scripts/voix.py).
+// Chaque passage gardé reçoit un fondu de 12 ms à ses deux bouts : aucun clic aux raccords.
 function filtreVoix(v) {
-  const garde = v.garde.map(([a, b]) => `between(t,${a},${b})`).join('+');
-  return [`aselect='${garde}'`, 'asetpts=N/SR/TB', 'highpass=f=85',
-    'equalizer=f=170:t=q:w=1:g=1.5', 'equalizer=f=320:t=q:w=1.2:g=-2', 'equalizer=f=4200:t=q:w=1:g=2.5', 'deesser=i=0.35',
-    'acompressor=threshold=-22dB:ratio=3:attack=8:release=140:makeup=3', `atempo=${v.vitesse}`,
-    'loudnorm=I=-15:TP=-1.5:LRA=7', 'aresample=48000'].join(',');
+  const F = 0.012;
+  const bouts = v.garde.map(([a, b], i) => `[0:a]atrim=${a}:${b},asetpts=PTS-STARTPTS,afade=t=in:d=${F},afade=t=out:st=${Math.max(0, b - a - F).toFixed(3)}:d=${F}[s${i}]`);
+  const chaine = ['highpass=f=90', 'equalizer=f=160:t=q:w=1:g=2', 'equalizer=f=300:t=q:w=1.2:g=-2.5', 'equalizer=f=4500:t=q:w=1:g=3',
+    'highshelf=f=9000:g=2.5', 'deesser=i=0.4',
+    'acompressor=threshold=-24dB:ratio=3:attack=6:release=120:makeup=4', 'acompressor=threshold=-12dB:ratio=6:attack=2:release=80',
+    `atempo=${v.vitesse}`, 'loudnorm=I=-14:TP=-1.5:LRA=6', 'aresample=48000'].join(',');
+  return `${bouts.join(';')};${v.garde.map((_, i) => `[s${i}]`).join('')}concat=n=${v.garde.length}:v=0:a=1,${chaine}[out]`;
 }
 
 function ecrire(f, dossier) {
@@ -114,7 +136,7 @@ function ecrire(f, dossier) {
   fs.writeFileSync(path.join(dossier, 'feuille.json'), `${JSON.stringify(f, null, 1)}\n`);
   for (const g of PLUGINS) fs.copyFileSync(path.join(RACINE, 'node_modules/gsap/dist', g), path.join(dossier, 'assets', g));
   for (const poids of Object.values(S.polices.fichiers)) for (const p of Object.values(poids)) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));
-  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-af', filtreVoix(f.voix), '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
+  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
   const { MUSIQUES_ARRANGEES, outils } = require('../../scripts/build-sons.js');
   const mesures = Math.ceil(f.duree / (4 * 60 / 90)) + 1;
   const m = outils.normaliser(MUSIQUES_ARRANGEES[f.musique.nom]({ duree: f.duree + 0.3, parties: Array.from({ length: mesures }, () => 'plein'), coupures: [] }), 0.8);

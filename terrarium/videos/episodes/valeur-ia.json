@@ -10,23 +10,23 @@
   "corrections": { "12": "Quelle", "42": "", "43": "ChatGPT,"},
   "forts": ["valeur ajoutée", "clarté", "théâtre d'improvisation", "différencier"],
   "plans": [
-    { "plan": "titre", "kicker": "Développeur · ingénieur", "texte": "C'est quoi, notre *valeur ajoutée* ?" },
-    { "plan": "liste", "a": "pour quelqu'un dont", "kicker": "À l'ère de l'IA", "titre": "Si ton métier, c'est :", "items": [
+    { "plan": "titre", "fond": "nuit", "illu": "question", "kicker": "Développeur · ingénieur", "texte": "C'est quoi, notre *valeur ajoutée* ?" },
+    { "plan": "liste", "a": "pour quelqu'un dont", "fond": "papier", "illu": "code", "kicker": "Si ton métier, c'est", "items": [
       { "texte": "Programmeur", "a": "programmeur" }, { "texte": "Développeur", "a": "développeur" }, { "texte": "Ingénieur", "a": "ingénieur" } ] },
-    { "plan": "liste", "a": "J'ai posé", "kicker": "J'ai demandé aux IA", "items": [
+    { "plan": "liste", "a": "J'ai posé", "fond": "accent", "illu": "chat", "kicker": "J'ai demandé aux IA", "items": [
       { "texte": "Claude", "a": "Claude" }, { "texte": "ChatGPT", "a": "Tchad" } ],
       "rayer": { "a": "j'ai pas eu" }, "conclusion": "Aucune réponse ne m'a *convaincu*." },
-    { "plan": "titre", "a": "Et du coup", "kicker": "Mon hypothèse", "texte": "Notre valeur n'est *plus* là où on croit." },
-    { "plan": "bascule", "a": "ne serait peut-être", "kicker": "Ce qui compte", "gauche": { "texte": "Savoir technique" },
+    { "plan": "titre", "a": "Et du coup", "fond": "nuit", "illu": "deplacement", "kicker": "Mon hypothèse", "texte": "Notre valeur n'est *plus* là où on croit." },
+    { "plan": "bascule", "a": "ne serait peut-être", "fond": "papier", "illu": "balance", "kicker": "Ce qui compte", "gauche": { "texte": "Savoir technique" },
       "droite": { "texte": "Mise en forme", "a": "mais plus dans" } },
-    { "plan": "liste", "a": "comment on les", "kicker": "La clarté", "items": [
+    { "plan": "liste", "a": "comment on les", "fond": "accent", "illu": "presentation", "kicker": "La clarté", "items": [
       { "texte": "Présenter", "a": "présente" }, { "texte": "Expliquer", "a": "expliquer" } ] },
-    { "plan": "titre", "a": "Et donc je me", "kicker": "Ma réponse", "texte": "Sortir de la *technique*." },
-    { "plan": "titre", "a": "théâtre", "kicker": "Mon pari", "texte": "Théâtre *d'impro*", "taille": "geant" },
-    { "plan": "liste", "a": "développer ses", "kicker": "Ce qu'on y travaille", "items": [
+    { "plan": "titre", "a": "Et donc je me", "fond": "nuit", "illu": "sortie", "kicker": "Ma réponse", "texte": "Sortir de la *technique*." },
+    { "plan": "titre", "a": "théâtre", "fond": "papier", "illu": "theatre", "kicker": "Mon pari", "texte": "Théâtre *d'impro*", "taille": "geant" },
+    { "plan": "liste", "a": "développer ses", "fond": "nuit", "illu": "micro", "kicker": "Ce qu'on y travaille", "items": [
       { "texte": "Soft skills", "a": "soft" }, { "texte": "Présentation", "a": "présentation" }, { "texte": "Aisance à l'oral", "a": "d'être" } ] },
-    { "plan": "titre", "a": "Et je pense", "kicker": "Mon avis", "texte": "C'est ça qui nous *différencie*." },
-    { "plan": "fin", "apres": 3.2, "texte": "Et *toi* ?", "sous": "Tu mises sur quoi ? Dis-le en commentaire." }
+    { "plan": "titre", "a": "Et je pense", "fond": "accent", "illu": "duo", "kicker": "Mon avis", "texte": "C'est ça qui nous *différencie*." },
+    { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3.2, "texte": "Et *toi* ?", "sous": "Tu mises sur quoi ? Dis-le en commentaire." }
   ],
   "publication": {
     "texte": "Développeur à l'ère de l'IA : et si notre valeur n'était plus dans la technique, mais dans la clarté ? Mon pari : le théâtre d'improvisation. Et toi, tu mises sur quoi ?",

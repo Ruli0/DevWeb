@@ -13,6 +13,9 @@ L'auteur parle librement d'un sujet (travail, escalade, relations…) et enregis
 - Inter Tight 700 pour les titres et les sous-titres, Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
 - En haut : barre de progression, nom de la rubrique, numéro. Plans entre y 300 et 1040, sous-titres vers y 1130, rien sous y 1440 (interface de TikTok).
 - Quatre plans : `titre`, `liste`, `bascule`, `fin`. La fin pose toujours une question au spectateur.
+- **Trois fonds** qui alternent (`nuit`, `papier`, `accent`) : deux plans voisins n'ont jamais le même. **Quatre transitions** (`cercle`, `volet`, `biseau`, `rideau`).
+- **Une illustration animée par plan** (`"illu"`), au trait, entre le texte et les sous-titres : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire` (`studio/avis/illustrations.js`).
+- Sous-titres et en-tête dans des étiquettes sombres, lisibles sur les trois fonds.
 
 ## Fabriquer une vidéo
 
@@ -31,4 +34,5 @@ Dans l'épisode : `retirer` (passages coupés, par leurs premiers et derniers mo
 - Personne n'a écouté le résultat avant l'auteur : le modèle ne peut pas entendre. Niveaux mesurés seulement.
 - Le ton et les intonations ne sont pas modifiés : seuls le bruit, l'égalisation, le niveau, les blancs et la vitesse (+5 %) le sont.
 - La musique est « Labo », à bas volume ; une signature sonore propre au compte reste à faire.
-- Les plans sont typographiques ; pas encore de schémas dessinés (voie d'escalade, ligne de temps).
+- Retour du 15 nov. sur la première version : « on s'ennuie un peu », d'où les fonds, transitions et illustrations de la version 2.
+- Les illustrations couvrent le sujet « travail » ; l'escalade et les relations demanderont les leurs.

@@ -23,7 +23,6 @@
         c.monter(q(el, '.kicker'), t0);
         c.lignes(q(el, '.grand'), t0 + 0.08);
         c.ft(q(el, '.filet'), { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: 'power3.out' }, t0 + 0.35);
-        c.sortie(el, t0 + d);
       },
     },
     // Une liste dont chaque élément arrive sur son mot. "rayer" : l'ancre où tout est barré ; "conclusion" : la phrase qui suit.
@@ -47,7 +46,6 @@
           c.ft(lis, { opacity: 1 }, { opacity: 0.45, duration: 0.3 }, tr + 0.1);
           if (q(el, '.conclusion')) c.monter(q(el, '.conclusion'), tr + 0.35);
         } else if (q(el, '.conclusion')) c.monter(q(el, '.conclusion'), t0 + d * 0.6);
-        c.sortie(el, t0 + d);
       },
     },
     // Deux jauges : celle de gauche se vide, celle de droite se remplit sur son ancre.
@@ -70,7 +68,6 @@
         c.ft(g, { opacity: 1 }, { opacity: 0.45, duration: 0.6 }, tb);
         c.ft(dr, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, tb);
         c.ft(q(dr, 'i'), { scaleX: 0.05 }, { scaleX: 1, duration: 1.1, ease: 'power3.out' }, tb + 0.15);
-        c.sortie(el, t0 + d);
       },
     },
     // La fin, après la voix : la question au spectateur et la flèche vers les commentaires.

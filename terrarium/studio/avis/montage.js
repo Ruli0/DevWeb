@@ -8,6 +8,10 @@
 'use strict';
 const S = require('./style.js');
 const PLANS = require('./plans.js');
+const ILLUS = require('./illustrations.js');
+const FONDS = ['nuit', 'papier', 'accent'];
+const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
+const RECOUVREMENT = 0.6;   // un plan reste affiché sous le suivant pendant sa transition
 
 const arrondi = (x) => +x.toFixed(3);
 const cle = (m) => String(m).toLowerCase().replace(/[’']/g, "'").replace(/[.,;:!?«»"()]/g, '').trim();
@@ -131,7 +135,10 @@ function montage(ep, voix) {
     const def = PLANS[pl.plan];
     const ou = `plan ${n + 1} (${pl.plan})`;
     if (!def) { erreurs.push(`${ou} : inconnu. Plans possibles : ${Object.keys(PLANS).join(', ')}`); return; }
-    const p = JSON.parse(JSON.stringify(pl)); delete p.plan; delete p.a; delete p.apres;
+    const p = JSON.parse(JSON.stringify(pl)); delete p.plan; delete p.a; delete p.apres; delete p.fond; delete p.transition;
+    if (p.illu && !ILLUS[p.illu]) erreurs.push(`${ou} : illustration « ${p.illu} » inconnue. Possibles : ${Object.keys(ILLUS).join(', ')}`);
+    if (pl.fond && !FONDS.includes(pl.fond)) erreurs.push(`${ou} : "fond" : un parmi ${FONDS.join(', ')}`);
+    if (pl.transition && !TRANSITIONS.includes(pl.transition)) erreurs.push(`${ou} : "transition" : une parmi ${TRANSITIONS.join(', ')}`);
     let t0;
     if (pl.apres) { t0 = dureeVoix + apres; apres += pl.apres; p._duree = pl.apres; } else if (n === 0) t0 = 0;
     else { const r = instant(pl.a || '', curseur, ou); curseur = r.i; t0 = Math.max(0, r.t - 0.12); }
@@ -141,10 +148,12 @@ function montage(ep, voix) {
       objet.t = arrondi(Math.max(0, instant(objet[champ], curseur, ou).t - t0 - 0.1));
     });
     def.textes(p).forEach((x) => { const nu = String(x || '').replace(/\*/g, ''); if (nu.length > def.max) erreurs.push(`${ou} : « ${nu} » fait ${nu.length} caractères (au plus ${def.max})`); });
-    plans.push({ id: pl.plan, t0: arrondi(t0), p });
+    // Sans consigne, les fonds et les transitions alternent : deux plans voisins n'ont jamais le même fond.
+    plans.push({ id: pl.plan, t0: arrondi(t0), p, fond: pl.fond || FONDS[n % FONDS.length], transition: pl.transition || TRANSITIONS[n % TRANSITIONS.length] });
   });
   const duree = arrondi(dureeVoix + apres);
-  plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
+  plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); x.dClip = arrondi(plans[i + 1] ? Math.min(x.d + RECOUVREMENT, duree - x.t0) : x.d); if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
+  plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond) erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
   if (!plans.length) erreurs.push('aucun plan');
   if (!ep.essai && (duree < 15 || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre 15 et 75 s`);
 
@@ -158,4 +167,4 @@ function montage(ep, voix) {
   return { erreurs, feuille };
 }
 
-module.exports = { montage, chercher, garder, horloge, sousTitres, reunir };
+module.exports = { FONDS, TRANSITIONS, montage, chercher, garder, horloge, sousTitres, reunir };
