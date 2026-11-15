@@ -1,0 +1,161 @@
+/*
+ * Le montage « avis » : épisode ("version": 4) + voix préparée (videos/voix/<id>/mots.json) → feuille de route.
+ * Fonction pure : montage(episode, voix) → { erreurs, feuille }.
+ *   1. on retire les silences (il en reste une respiration) et les passages listés dans "retirer" ;
+ *   2. chaque mot reçoit son instant dans la voix montée ; les sous-titres en découlent ;
+ *   3. chaque plan visuel commence sur le mot donné par son ancre "a".
+ */
+'use strict';
+const S = require('./style.js');
+const PLANS = require('./plans.js');
+
+const arrondi = (x) => +x.toFixed(3);
+const cle = (m) => String(m).toLowerCase().replace(/[’']/g, "'").replace(/[.,;:!?«»"()]/g, '').trim();
+
+// Cherche une suite de mots (« ancre ») dans la transcription, à partir de l'indice `depuis`. Renvoie l'indice du premier mot, ou -1.
+function chercher(mots, ancre, depuis = 0) {
+  const a = cle(ancre).split(/\s+/).filter(Boolean);
+  for (let i = depuis; i + a.length <= mots.length; i += 1) if (a.every((x, k) => cle(mots[i + k].m) === x)) return i;
+  return -1;
+}
+
+// Réunit des intervalles qui se touchent ou se chevauchent.
+function reunir(liste) {
+  const tri = liste.filter(([a, b]) => b > a).sort((x, y) => x[0] - y[0]);
+  const out = [];
+  tri.forEach(([a, b]) => { const d = out[out.length - 1]; if (d && a <= d[1] + 1e-6) d[1] = Math.max(d[1], b); else out.push([a, b]); });
+  return out;
+}
+
+// Les passages de la voix d'origine que l'on garde, d'après les silences et les passages à retirer.
+function garder(voix, retraits, reglages) {
+  const { respiration, marge } = reglages;
+  const sil = voix.silences;
+  const coupes = [];
+  sil.forEach(([a, b]) => {
+    if (a <= 0.01) coupes.push([0, b - marge]);                       // silence de début
+    else if (b >= voix.duree - 0.01) coupes.push([a + 0.25, voix.duree]); // silence de fin : on garde la retombée
+    else if (b - a > respiration) coupes.push([a + respiration / 2, b - respiration / 2]);
+  });
+  // Un passage retiré va du silence qui précède son premier mot au silence qui précède le mot suivant.
+  const bord = (t) => { const s = sil.find(([a, b]) => t >= a - 0.3 && t <= b + 0.3); return s || null; };
+  retraits.forEach(([i, j]) => {
+    const s0 = bord(voix.mots[i].d), suivant = voix.mots[j + 1];
+    const s1 = suivant ? bord(suivant.d) : null;
+    const debut = s0 ? (s0[0] <= 0.01 ? 0 : s0[0] + respiration / 2) : voix.mots[i].d;
+    const fin = suivant ? (s1 ? s1[1] - respiration / 2 : suivant.d) : voix.duree;
+    coupes.push([debut, fin]);
+  });
+  const c = reunir(coupes);
+  const garde = [];
+  let t = 0;
+  c.forEach(([a, b]) => { if (a > t) garde.push([arrondi(t), arrondi(a)]); t = b; });
+  if (t < voix.duree) garde.push([arrondi(t), arrondi(voix.duree)]);
+  return garde;
+}
+
+// Instant d'origine → instant dans la voix montée (accélérée de `vitesse`).
+function horloge(garde, vitesse) {
+  return (t) => {
+    let passe = 0;
+    for (const [a, b] of garde) { if (t <= a) break; passe += Math.min(t, b) - a; }
+    return arrondi(passe / vitesse);
+  };
+}
+
+function sousTitres(mots, r) {
+  const groupes = [];
+  let g = null;
+  mots.forEach((m, i) => {
+    const precedent = mots[i - 1];
+    const long = g ? g.mots.reduce((n, x) => n + x.m.length + 1, 0) + m.m.length : 0;
+    const coupe = !g || g.mots.length >= r.motsMax || long > r.carMax || /[.,;:!?]$/.test(precedent.m) || m.t - precedent.f > r.pause;
+    if (coupe) { g = { t0: m.t, mots: [] }; groupes.push(g); }
+    g.mots.push(m);
+  });
+  groupes.forEach((x, i) => {
+    const fin = x.mots[x.mots.length - 1].f;
+    x.t1 = arrondi(groupes[i + 1] ? Math.min(groupes[i + 1].t0, fin + r.tenue) : fin + r.tenue);
+  });
+  return groupes;
+}
+
+function montage(ep, voix) {
+  const erreurs = [];
+  if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
+  const rub = S.rubriques[ep.rubrique];
+  if (!rub) erreurs.push(`"rubrique" : une parmi ${Object.keys(S.rubriques).join(', ')}`);
+  if (!voix) { erreurs.push(`la voix manque : python3 scripts/voix.py <enregistrement> ${ep.voix || ep.id}`); return { erreurs, feuille: null }; }
+  const reglages = Object.assign({}, S.voix, ep.reglages || {});
+
+  // 1. Les passages retirés, donnés par leurs premiers et derniers mots.
+  const retraits = [];
+  (ep.retirer || []).forEach(([de, a]) => {
+    const i = chercher(voix.mots, de), j0 = chercher(voix.mots, a, Math.max(0, i));
+    if (i < 0 || j0 < 0) { erreurs.push(`"retirer" : « ${i < 0 ? de : a} » introuvable dans la voix`); return; }
+    retraits.push([i, j0 + cle(a).split(/\s+/).length - 1]);
+  });
+  const garde = garder(voix, retraits, reglages);
+  const h = horloge(garde, reglages.vitesse);
+  const dureeVoix = h(voix.duree);
+
+  // 2. Les mots affichés : sans les passages retirés, avec les corrections d'orthographe et les mots forts.
+  const retire = (k) => retraits.some(([i, j]) => k >= i && k <= j);
+  const forts = new Set();
+  (ep.forts || []).forEach((f) => {
+    const n = cle(f).split(/\s+/).length;
+    let i = chercher(voix.mots, f);
+    if (i < 0) erreurs.push(`"forts" : « ${f} » introuvable dans la voix`);
+    while (i >= 0) { for (let k = 0; k < n; k += 1) forts.add(i + k); i = chercher(voix.mots, f, i + 1); }
+  });
+  const corrections = ep.corrections || {};
+  const mots = [];
+  voix.mots.forEach((m, k) => {
+    if (retire(k)) return;
+    const texte = Object.prototype.hasOwnProperty.call(corrections, k) ? corrections[k] : m.m;
+    if (!texte) return;
+    mots.push({ m: texte, t: h(m.d), f: Math.max(h(m.f), h(m.d) + 0.05), fort: forts.has(k) || undefined });
+  });
+  const groupes = sousTitres(mots, S.sousTitres);
+
+  // 3. Les plans : chacun commence sur son ancre, et dure jusqu'au suivant.
+  const instant = (ancre, depuis, ou) => {
+    const i = chercher(voix.mots, ancre, depuis);
+    if (i < 0) { erreurs.push(`${ou} : l’ancre « ${ancre} » est introuvable dans la voix (après le mot ${depuis})`); return { i: depuis, t: 0 }; }
+    if (retire(i)) erreurs.push(`${ou} : l’ancre « ${ancre} » tombe dans un passage retiré`);
+    return { i, t: h(voix.mots[i].d) };
+  };
+  const plans = [];
+  let curseur = 0, apres = 0;
+  (ep.plans || []).forEach((pl, n) => {
+    const def = PLANS[pl.plan];
+    const ou = `plan ${n + 1} (${pl.plan})`;
+    if (!def) { erreurs.push(`${ou} : inconnu. Plans possibles : ${Object.keys(PLANS).join(', ')}`); return; }
+    const p = JSON.parse(JSON.stringify(pl)); delete p.plan; delete p.a; delete p.apres;
+    let t0;
+    if (pl.apres) { t0 = dureeVoix + apres; apres += pl.apres; p._duree = pl.apres; } else if (n === 0) t0 = 0;
+    else { const r = instant(pl.a || '', curseur, ou); curseur = r.i; t0 = Math.max(0, r.t - 0.12); }
+    // Les ancres internes (éléments d'une liste, bascule…) deviennent des instants relatifs au plan.
+    def.ancres(p).forEach(([objet, champ]) => {
+      if (!objet || !objet[champ]) return;
+      objet.t = arrondi(Math.max(0, instant(objet[champ], curseur, ou).t - t0 - 0.1));
+    });
+    def.textes(p).forEach((x) => { const nu = String(x || '').replace(/\*/g, ''); if (nu.length > def.max) erreurs.push(`${ou} : « ${nu} » fait ${nu.length} caractères (au plus ${def.max})`); });
+    plans.push({ id: pl.plan, t0: arrondi(t0), p });
+  });
+  const duree = arrondi(dureeVoix + apres);
+  plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
+  if (!plans.length) erreurs.push('aucun plan');
+  if (!ep.essai && (duree < 15 || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre 15 et 75 s`);
+
+  const feuille = {
+    version: 4, format: 'avis', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
+    rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff',
+    duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, vitesse: reglages.vitesse, volume: reglages.volume },
+    musique: { nom: ep.musique || 'labo', volume: reglages.musique },
+    mots: mots.length, groupes, plans, publication: ep.publication || null,
+  };
+  return { erreurs, feuille };
+}
+
+module.exports = { montage, chercher, garder, horloge, sousTitres, reunir };

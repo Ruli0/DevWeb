@@ -8,6 +8,8 @@ Un épisode V3 : `{ "version": 3, "id", "titre", "sujet", "numero", "theme", "sc
 
 Chaque scène dure le temps de lire son texte (0,45 s par mot, 0,8 s par morceau, plus 1,35 s d’entrée et de sortie), au moins son minimum, arrondie au temps (90 BPM). Total entre 30 et 60 s. Première scène : `accroche` ; dernière : `boucle`. `*mot*` = mot clé en couleur d’accent. Au plus 70 caractères par texte.
 
+**Format « test » (le format du compte, validé le 14 nov. 2026)** : ajoute `"format": "test"`. Le cerveau vivant est en fond, les scènes commencent sur les temps. Ordre type : `test`, `question`, `revelation`, (`chiffre`), `revelation`, (`question`), `appel`. Toute scène peut fixer `"cerveau": { "camera": "large" | zone, "zones": { "amygdale": 0..1, "pfc": … }, "decharges": 0..1 }`. Modèle : `videos/episodes/procrastination.json`.
+
 | Scène | Rôle | Paramètres | Source | Minimum |
 |---|---|---|---|---|
 | `accroche` | Ouvre la vidéo : une question ou une phrase qui touche, en grand, centrée. | `texte` : la phrase (au plus 60 caractères), *mot* pour le mot clé | — | 3,4 s |

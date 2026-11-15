@@ -18,8 +18,14 @@ if (!id) { console.error('Usage : npm run video -- <id> [--rendu | --brouillon] 
 const source = path.join(RACINE, 'videos/episodes', `${id}.json`);
 const episode = JSON.parse(fs.readFileSync(source, 'utf8'));
 const V3 = episode.version === 3;
+const AVIS = episode.version === 4;
 let erreurs; let feuille;
-if (V3) {
+if (AVIS) {
+  // Chaîne « avis » : la voix d'abord (videos/voix/<id>/, préparée par scripts/voix.py).
+  const voixChemin = path.join(RACINE, 'videos/voix', episode.voix || id, 'mots.json');
+  const voix = fs.existsSync(voixChemin) ? JSON.parse(fs.readFileSync(voixChemin, 'utf8')) : null;
+  ({ erreurs, feuille } = require('../studio/avis/montage.js').montage(episode, voix));
+} else if (V3) {
   // Chaîne V3 : scènes, fiche de sources obligatoire.
   const ficheChemin = path.join(RACINE, 'videos/episodes', `${id}.sources.json`);
   const fiche = fs.existsSync(ficheChemin) ? JSON.parse(fs.readFileSync(ficheChemin, 'utf8')) : null;
@@ -28,13 +34,13 @@ if (V3) {
 } else ({ erreurs, feuille } = compiler(episode));
 if (erreurs.length) { console.error(`${id}.json :\n  - ${erreurs.join('\n  - ')}`); process.exit(1); }
 const dossier = path.join(RACINE, 'videos/studio', id);
-if (V3) require('../studio/page-v3.js').ecrire(feuille, dossier); else page.ecrire(feuille, dossier);
-console.log(V3 ? `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.scenes.length} scènes, ${feuille.sons.length} sons, sources : ${feuille.statutSources})`
+if (AVIS) require('../studio/avis/page.js').ecrire(feuille, dossier); else if (V3) require('../studio/page-v3.js').ecrire(feuille, dossier); else page.ecrire(feuille, dossier);
+console.log(AVIS ? `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.plans.length} plans, ${feuille.groupes.length} sous-titres)` : V3 ? `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.scenes.length} scènes, ${feuille.sons.length} sons, sources : ${feuille.statutSources})`
   : `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.ordres.length} gestes, ${feuille.sons.length} sons)`);
 
 if (!option('--sans-apercu')) {
   // V3 : une image par scène, à 70 % de sa durée. Ancienne chaîne : une image par plan de caméra.
-  const instants = V3 ? feuille.scenes.map((s) => +(s.t0 + 0.7 * s.d).toFixed(2))
+  const instants = AVIS ? feuille.plans.map((s) => +(s.t0 + 0.8 * s.d).toFixed(2)) : V3 ? feuille.scenes.map((s) => +(s.t0 + 0.7 * s.d).toFixed(2))
     : feuille.camera.filter((k) => k.ease !== 'none').map((k) => +Math.min(feuille.duree - 0.05, k.t + k.duree + 0.5).toFixed(2));
   const globaux = execSync('npm root -g').toString().trim();
   const r = spawnSync('node', [path.join(RACINE, 'scripts/apercu.js'), path.join(dossier, 'index.html'), path.join(dossier, 'apercu.png'), ...instants.map(String)], { stdio: 'inherit', env: { ...process.env, NODE_PATH: globaux } });

@@ -1,6 +1,10 @@
 # État de l'outil
 
-_Dernière mise à jour : 13 novembre 2026 (soir)._
+_Dernière mise à jour : 15 novembre 2026._
+
+## Chaîne « avis » (15 nov. 2026)
+
+Nouvelle direction à côté de la V3 : la voix de l'auteur d'abord (`production/DA-AVIS.md`). `scripts/voix.py` débruite et transcrit un enregistrement ; `npm run video -- <id>` monte la voix (blancs retirés), les sous-titres et les plans (`studio/avis/`). Premier épisode `valeur-ia` (57 s) rendu en 30 images par seconde et envoyé ; en attente du retour de l'auteur sur la voix et le visuel. 7 tests dans `test/avis.test.js`.
 
 ## Cap V3 (14 nov. 2026)
 

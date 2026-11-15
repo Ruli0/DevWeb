@@ -109,3 +109,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes retours : « il y a déjà trop de vidéo comme ça sur TikTok » (sur l'infographie), puis « les gens ne participent pas, je veux plus de dynamisme », enfin « Oui » sur le test de 12 s.
 - **Écarté** : l'infographie seule (trop commune), le dossier d'enquête et la typographie cinétique (non choisis).
 - **Où** : scènes `test`, `question`, `revelation`, `appel` ; `studio/reseau/` ; `"format": "test"` dans `studio/montage.js`.
+
+## 18. Une chaîne « avis », la voix d'abord (15 nov. 2026)
+
+- **Décision** : une nouvelle direction, à côté de la V3 : l'auteur parle librement (travail, escalade, relations), l'outil nettoie sa voix, retire les blancs et cale sous-titres et plans sur ses mots. Un seul système graphique, une couleur par rubrique. `"version": 4` dans l'épisode.
+- **Pourquoi** : tes mots : « je vais parler librement d'un sujet », avec des visuels « cohérents entre eux » mais « variés ». La valeur ajoutée est ton propos et ta voix, pas le visuel.
+- **Écarté** : une voix de synthèse ou clonée (ce ne serait plus toi) ; changer le ton ou les intonations (hors de portée sans service externe).
+- **Où** : `scripts/voix.py`, `studio/avis/`, `videos/voix/`, `production/DA-AVIS.md`. Premier épisode : `valeur-ia` (57 s).

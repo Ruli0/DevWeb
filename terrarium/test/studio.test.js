@@ -8,7 +8,7 @@ const page = require('../studio/page.js');
 const { catalogue } = require('../studio/catalogue.js');
 
 const dossier = path.join(__dirname, '../videos/episodes');
-const episodes = fs.readdirSync(dossier).filter((f) => f.endsWith('.json')).filter((f) => !f.endsWith('.sources.json')).map((f) => ({ f, ep: JSON.parse(fs.readFileSync(path.join(dossier, f), 'utf8')) })).filter((x) => x.ep.version !== 3);
+const episodes = fs.readdirSync(dossier).filter((f) => f.endsWith('.json')).filter((f) => !f.endsWith('.sources.json')).map((f) => ({ f, ep: JSON.parse(fs.readFileSync(path.join(dossier, f), 'utf8')) })).filter((x) => ![3, 4].includes(x.ep.version));
 const demo = episodes.find((x) => x.ep.id === 'demo').ep;
 
 for (const { f, ep } of episodes) {
