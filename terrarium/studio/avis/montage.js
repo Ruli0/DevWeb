@@ -16,7 +16,7 @@ const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
 const RECOUVREMENT = 0.6;   // un plan reste affiché sous le suivant pendant sa transition
 
 const arrondi = (x) => +x.toFixed(3);
-const cle = (m) => String(m).toLowerCase().replace(/[’']/g, "'").replace(/[.,;:!?«»"()]/g, '').trim();
+const cle = (m) => String(m).toLowerCase().replace(/[’']/g, "'").replace(/[.,;:!?«»"()\u00a0]/g, '').trim();
 
 // Cherche une suite de mots (« ancre ») dans la transcription, à partir de l'indice `depuis`. Renvoie l'indice du premier mot, ou -1.
 function chercher(mots, ancre, depuis = 0) {

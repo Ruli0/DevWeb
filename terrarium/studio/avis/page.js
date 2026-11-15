@@ -59,6 +59,7 @@ ${Object.entries(DECORS).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n}
 /* Plan sans texte : l'illustration prend la place, plus grande ; le décor n'est pas assombri. */
 .sans-texte .illu { left: 30px; top: 520px; width: 1020px; height: 434px; }
 .sans-texte .voile { display: none; }
+.kicker.repere { font-size: 34px; opacity: 1; padding: 12px 28px; background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .cadre { position: absolute; inset: 0; padding: 270px 70px 0 70px; display: flex; flex-direction: column; gap: 34px; width: 1010px; }
 em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0; }
 /* Le trait de surligneur sous le mot fort : il se trace après l'arrivée du texte. */

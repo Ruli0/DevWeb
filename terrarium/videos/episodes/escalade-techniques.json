@@ -1,0 +1,24 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "escalade-techniques",
+  "titre": "Escalade : 3 techniques de mains, 3 techniques de pieds",
+  "rubrique": "escalade",
+  "numero": 2,
+  "voix": "escalade-techniques",
+  "forts": ["réglette", "pince", "l'aplat", "carre", "l'adhérence", "crochet talon"],
+  "plans": [
+    { "plan": "titre", "fond": "mur", "texte": "Tu grimpes avec les *bras* ?" },
+    { "plan": "visuel", "a": "Un : la réglette", "fond": "papier", "illu": "reglette", "repere": "Mains 1/3", "moment": { "a": "tendus" } },
+    { "plan": "visuel", "a": "Deux : la pince", "fond": "nuit", "illu": "pince", "repere": "Mains 2/3" },
+    { "plan": "visuel", "a": "Trois : l'aplat", "fond": "papier", "illu": "aplat", "repere": "Mains 3/3" },
+    { "plan": "visuel", "a": "Un : la carre", "fond": "nuit", "illu": "carre", "repere": "Pieds 1/3" },
+    { "plan": "visuel", "a": "Deux : l'adhérence", "fond": "papier", "illu": "adherence", "repere": "Pieds 2/3", "moment": { "a": "talon bas" } },
+    { "plan": "visuel", "a": "Trois : le crochet", "fond": "nuit", "illu": "talon", "repere": "Pieds 3/3" },
+    { "plan": "fin", "a": "Laquelle", "fond": "mur", "texte": "Et *toi* ?", "sous": "Laquelle tu maîtrises le moins ?" }
+  ],
+  "publication": {
+    "texte": "3 techniques de mains, 3 techniques de pieds : réglette, pince, aplat, carre, adhérence, crochet talon. Laquelle tu maîtrises le moins ?",
+    "hashtags": ["#escalade", "#climbing", "#bloc", "#grimpe", "#technique"]
+  }
+}

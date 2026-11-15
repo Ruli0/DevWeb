@@ -19,7 +19,8 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 3 | Vidéo v2 : fonds alternés, transitions, illustrations au trait | « c'est beaucoup mieux » (sur le script réécrit) ; « Améliore comment le texte s'affiche » ; « les visuels font trop IA encore. Peux-tu mettre des fonds différents ? Du style cave avec pc pour métier développeur, robot pour l'IA et pour le théâtre une scène avec des éléments tels que masque et micro » |
 | 4 | Vidéo v3 : décors illustrés (cave, robot, scène), texte mot par mot, mot en cours en pastille | « Met le texte un peu plus bas pour ne pas gêner les visuels » (sous-titres descendus à y 1300) |
 | 5 | Vidéo v4 : sous-titres plus bas | « met moins d'éléments visuels genre texte autre que celui que je dis. Ça peut être trop d'infos pour le spectateur » |
-| 6 | Vidéo v5 : plans sans texte (`visuel`), trois textes seulement (accroche, « Théâtre d'impro », question de fin) | en attente |
+| 6 | Vidéo v5 : plans sans texte (`visuel`), trois textes seulement (accroche, « Théâtre d'impro », question de fin) | « Fais un script d'escalade où tu parles de 3 techniques de mains et de pied et fais le visuel […] Je ferai la voix demain » |
+| 7 | Script d'escalade et maquette muette `escalade-techniques` (37 s) : décor `mur`, six dessins de gestes | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -35,7 +36,7 @@ HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # →
 # 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
-npm test                         # 51 tests, tous verts
+npm test                         # 52 tests, tous verts
 # 4. Le rendu (CLI HyperFrames installé hors du dépôt : npm i hyperframes dans le dossier temporaire)
 cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
   <dossier-temporaire>/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
@@ -45,6 +46,18 @@ cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_head
 - Un rendu de 57 s en 30 images par seconde prend environ 3 minutes. Le rendu final se fera en 60 (`--fps 60`), une fois le montage validé.
 - Envoyer le MP4 à l'auteur comme fichier. Les MP4 et `videos/studio/` ne vont pas dans le dépôt ; `videos/voix/<id>/` y va (c'est la source).
 - Lint : `hyperframes lint --json <chemin de la composition>` : 0 erreur attendue ; les avertissements « sub-composition » et « track too dense » sont connus et sans effet.
+
+### Préparer les visuels avant la voix (maquette)
+
+```bash
+# écrire videos/voix/<id>/script.txt, puis :
+node scripts/maquette-voix.js <id>      # mots.json aux instants estimés (2,7 mots par seconde) et propre.flac muet
+npm run video -- <id>
+```
+
+`mots.json` porte alors `"maquette": true`. Quand la vraie voix arrive, `python3 scripts/voix.py <enregistrement> <id>` remplace les deux fichiers. Si l'auteur dit les mêmes mots, les ancres de l'épisode restent valables ; sinon le montage dit lesquelles refaire. Relire ensuite les `"corrections"` et les instants des plans sur la planche.
+
+**Deux épisodes attendent une voix** : `valeur-ia` (script resserré, section 7) et `escalade-techniques` (script dans `videos/voix/escalade-techniques/script.txt`, 3 techniques de mains et 3 de pieds).
 
 ## 4. L'épisode (`videos/episodes/<id>.json`)
 
@@ -62,10 +75,10 @@ cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_head
 
 Un plan : `"plan"` (`visuel`, `titre`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). Le dernier plan est `fin` avec `"apres": 3.2` (il vient après la voix).
 
-- **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`. **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
+- **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`, `mur` (salle d'escalade). **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
 - Deux plans voisins ne peuvent pas avoir le même fond (le montage le refuse). Sans `"fond"`, les fonds unis alternent.
 - **Transitions** : `cercle`, `volet`, `biseau`, `rideau` (elles alternent si rien n'est précisé).
-- **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit. Dans un plan `visuel`, `"moment": { "a": "mots" }` déclenche le temps fort de l'illustration (la balance bascule, la croix se trace).
+- **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire` ; pour l'escalade : `reglette`, `pince`, `aplat`, `carre`, `adherence`, `talon`. Sur le fond `accent` orange, la couleur de peau des dessins d'escalade se lit mal : les mettre sur `nuit` ou `papier`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit. Dans un plan `visuel`, `"moment": { "a": "mots" }` déclenche le temps fort de l'illustration (la balance bascule, la croix se trace).
 - Le montage refuse l'épisode avec un message qui dit quoi changer (ancre introuvable, texte trop long, plan de moins de 1,2 s, fond répété).
 
 ## 5. Le code (`studio/avis/`), fichier par fichier
@@ -76,11 +89,12 @@ Un plan : `"plan"` (`visuel`, `titre`, `liste`, `bascule`, `fin`), `"fond"`, `"i
 | `montage.js` | Fonction pure : épisode + `mots.json` → feuille de route (coupes de la voix, instants des mots, sous-titres, plans) | Node |
 | `style.js` | Couleurs, rubriques, polices, réglages des sous-titres et de la voix | Node |
 | `plans.js` | Les 5 plans (`visuel` d'abord) : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
-| `illustrations.js` | Les 11 illustrations au trait : `svg`, `jouer` | Node et page |
-| `decors.js` | Les 3 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
+| `illustrations.js` | Les 17 illustrations : `svg`, `jouer` | Node et page |
+| `decors.js` | Les 4 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg) et la musique | Node |
-| `test/avis.test.js` | 7 tests du montage | Node |
+| `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
+| `test/avis.test.js` | 8 tests du montage | Node |
 
 `scripts/video.js` aiguille : `"version": 4` → chaîne « avis », `3` → V3, sinon l'ancienne.
 
@@ -93,7 +107,8 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - Les identifiants de dégradés s'écrivent `xx-nom` (deux mots en minuscules) : `page.js` leur ajoute le numéro du plan, sinon un décor utilisé deux fois perd ses dégradés.
 - Pas de filtre SVG (le flou ralentit beaucoup le rendu) : faire les halos avec des dégradés radiaux.
 - Animer avec `c.ft(cible, de, vers, t)` uniquement, et des répétitions **finies** (`fois(d, periode)`). Ni minuterie, ni hasard, ni `repeat: -1` : le rendu image par image doit être reproductible.
-- Prochains décors utiles : un mur d'escalade (prises colorées, corde, grimpeur), un salon ou un café pour les relations, un open space.
+- Prochains décors utiles : un salon ou un café pour les relations, un open space, une falaise en extérieur.
+- Les dessins des gestes d'escalade sont schématiques (profil, mur à droite). Un grimpeur les jugera : demander à l'auteur s'ils sont justes, il pratique.
 
 ## 6. Pièges rencontrés (à ne pas redécouvrir)
 
@@ -129,6 +144,6 @@ RNNoise (débruitage), Whisper par faster-whisper (transcription), ffmpeg (coupe
 
 1. Monter la nouvelle prise de voix (section 7), obtenir l'accord de l'auteur, rendre en 60 images par seconde.
 2. **Photos et vidéos de l'auteur** comme fonds (escalade surtout) : c'est le meilleur remède au reproche « ça fait trop IA ». Le fond `photo` existe ; il n'a été essayé que sur une image de test, jamais sur une vraie photo. La vidéo en fond reste à faire.
-3. Décors pour les rubriques « escalade » et « relations ».
+3. Décors pour la rubrique « relations » ; faire relire les dessins d'escalade par l'auteur.
 4. Une signature sonore propre au compte (la musique est encore « Labo », de la V3) et quelques bruitages sur les transitions.
 5. Publier, puis relever les chiffres dans `videos/resultats.csv` : sans mesure, on règle à l'aveugle.

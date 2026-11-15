@@ -131,6 +131,44 @@
         c.ft(qa(el, '.led'), { opacity: 1 }, { opacity: 0.25, duration: 0.4, ease: 'steps(1)', yoyo: true, repeat: aller(fois(d, 0.8)), stagger: 0.27 }, t0);
       },
     },
+    // Le mur d'escalade : panneaux, prises de couleur, corde, une grimpeuse ou un grimpeur de dos.
+    mur: {
+      description: 'La salle d’escalade : panneaux, prises de couleur, corde, quelqu’un de dos sur le mur.',
+      accent: '#ff8a3d',
+      svg: () => `<defs>
+          <linearGradient id="mu-fond" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#252a36"/><stop offset="1" stop-color="#414a5c"/></linearGradient>
+          <radialGradient id="mu-craie"><stop offset="0" stop-color="#ffffff" stop-opacity=".8"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="1080" height="1920" fill="url(#mu-fond)"/>
+        <g class="loin">
+          <path d="M-60 0 L420 0 L300 1920 L-60 1920 Z" fill="#000000" opacity=".14"/><path d="M760 0 L1140 0 L1140 1920 L880 1920 Z" fill="#ffffff" opacity=".05"/>
+          <g stroke="#000000" stroke-opacity=".28" stroke-width="5"><path d="M420 0 L300 1920"/><path d="M760 0 L880 1920"/><path d="M-60 640 H1140"/><path d="M-60 1280 H1140"/></g>
+          ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].flatMap((j) => [0, 1, 2, 3, 4, 5].map((i) => `<circle cx="${90 + i * 180 + (j % 2) * 90}" cy="${80 + j * 160}" r="6" fill="#000000" opacity=".3"/>`)).join('')}
+        </g>
+        <g class="milieu">
+          <path d="M106 720 C106 680 163 672 194 707 C203 746 159 764 128 755 C110 746 106 733 106 720 Z" fill="#ff8a3d"/><circle cx="150" cy="720" r="7" fill="#00000055"/><path d="M342 770 C342 736 391 728 418 759 C426 793 388 808 361 800 C346 793 342 781 342 770 Z" fill="#f2c14e"/><circle cx="380" cy="770" r="7" fill="#00000055"/><path d="M660 850 C660 814 712 806 740 838 C748 874 708 890 680 882 C664 874 660 862 660 850 Z" fill="#3fae7c"/><circle cx="700" cy="850" r="7" fill="#00000055"/><path d="M854 760 C854 719 914 709 946 746 C955 788 909 806 877 797 C859 788 854 774 854 760 Z" fill="#e0564a"/><circle cx="900" cy="760" r="7" fill="#00000055"/><path d="M190 1010 C190 974 242 966 270 998 C278 1034 238 1050 210 1042 C194 1034 190 1022 190 1010 Z" fill="#5b8cff"/><circle cx="230" cy="1010" r="7" fill="#00000055"/><path d="M816 1090 C816 1050 873 1042 904 1077 C913 1116 869 1134 838 1125 C820 1116 816 1103 816 1090 Z" fill="#f2c14e"/><circle cx="860" cy="1090" r="7" fill="#00000055"/><path d="M74 1300 C74 1259 134 1249 166 1286 C175 1328 129 1346 97 1337 C79 1328 74 1314 74 1300 Z" fill="#3fae7c"/><circle cx="120" cy="1300" r="7" fill="#00000055"/><path d="M390 1500 C390 1464 442 1456 470 1488 C478 1524 438 1540 410 1532 C394 1524 390 1512 390 1500 Z" fill="#ff8a3d"/><circle cx="430" cy="1500" r="7" fill="#00000055"/><path d="M608 1570 C608 1532 663 1524 692 1557 C700 1595 658 1612 629 1604 C612 1595 608 1583 608 1570 Z" fill="#e0564a"/><circle cx="650" cy="1570" r="7" fill="#00000055"/><path d="M886 1420 C886 1380 943 1372 974 1407 C983 1446 939 1464 908 1455 C890 1446 886 1433 886 1420 Z" fill="#5b8cff"/><circle cx="930" cy="1420" r="7" fill="#00000055"/><path d="M232 1700 C232 1657 294 1647 328 1686 C338 1729 290 1748 256 1738 C237 1729 232 1714 232 1700 Z" fill="#f2c14e"/><circle cx="280" cy="1700" r="7" fill="#00000055"/><path d="M774 1760 C774 1719 834 1709 866 1746 C875 1788 829 1806 797 1797 C779 1788 774 1774 774 1760 Z" fill="#ff8a3d"/><circle cx="820" cy="1760" r="7" fill="#00000055"/><path d="M524 420 C524 388 571 380 596 409 C603 442 567 456 542 449 C528 442 524 431 524 420 Z" fill="#5b8cff"/><circle cx="560" cy="420" r="7" fill="#00000055"/><path d="M846 360 C846 329 890 323 914 350 C921 380 887 394 863 387 C849 380 846 370 846 360 Z" fill="#3fae7c"/><circle cx="880" cy="360" r="7" fill="#00000055"/><path d="M166 330 C166 299 210 293 234 320 C241 350 207 364 183 357 C169 350 166 340 166 330 Z" fill="#e0564a"/><circle cx="200" cy="330" r="7" fill="#00000055"/>
+          <path class="corde" d="M560 -20 C590 400 520 800 540 1230" fill="none" stroke="#e9eef3" stroke-width="9" stroke-linecap="round"/><path class="corde" d="M560 -20 C590 400 520 800 540 1230" fill="none" stroke="#ff8a3d" stroke-width="9" stroke-linecap="round" stroke-dasharray="18 30"/>
+        </g>
+        <g class="pres"><g class="corps">
+          <path d="M500 1270 L410 1390 L428 1492" fill="none" stroke="#2e5a66" stroke-width="62" stroke-linecap="round" stroke-linejoin="round"/><path d="M580 1270 L662 1420 L650 1560" fill="none" stroke="#2e5a66" stroke-width="62" stroke-linecap="round" stroke-linejoin="round"/>
+          <ellipse cx="428" cy="1500" rx="40" ry="26" fill="#f2c14e"/><ellipse cx="650" cy="1568" rx="40" ry="26" fill="#f2c14e"/>
+          <path d="M590 1030 L690 962 L700 866" fill="none" stroke="#f3c6a0" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+          <g class="bras"><path d="M490 1030 L402 910 L382 782" fill="none" stroke="#f3c6a0" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <rect x="462" y="990" width="156" height="260" rx="56" fill="#ff8a3d"/><rect x="462" y="1200" width="156" height="96" rx="36" fill="#2e5a66"/>
+          <path d="M462 1226 H618" stroke="#1b1b1f" stroke-width="14"/><ellipse cx="600" cy="1296" rx="34" ry="42" fill="#e0564a"/>
+          <circle cx="540" cy="930" r="58" fill="#3a2a22"/><path d="M500 968 C520 990 560 990 580 968" fill="none" stroke="#f3c6a0" stroke-width="26" stroke-linecap="round"/>
+        </g>
+          <circle class="craie" cx="382" cy="770" r="70" fill="url(#mu-craie)"/><circle class="craie" cx="700" cy="856" r="60" fill="url(#mu-craie)"/>
+        </g>`,
+      jouer(c, el, t0, d) {
+        profondeur(c, el, t0, d, -1);
+        c.ft(qa(el, '.corps'), { y: 0 }, { y: -18, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 2.4)) }, t0);
+        c.ft(qa(el, '.bras'), { rotation: 0 }, { rotation: 7, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 2.4)), svgOrigin: '490 1030' }, t0);
+        c.ft(qa(el, '.corde'), { x: -10 }, { x: 10, duration: 1.8, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 3.6)) }, t0);
+        const cr = qa(el, '.craie'); gsap.set(cr, { opacity: 0, transformOrigin: '50% 50%' });
+        c.ft(cr, { scale: 0.4, opacity: 0.9 }, { scale: 1.6, opacity: 0, duration: 1.1, ease: 'power2.out', stagger: 0.6, repeat: fois(d, 2.2) - 1, repeatDelay: 1.1, transformOrigin: '50% 50%' }, t0 + 0.4);
+      },
+    },
     // La scène de théâtre : rideaux rouges qui s'ouvrent, projecteurs, micro sur pied, masques de comédie et de tragédie.
     scene: {
       description: 'Le théâtre : rideaux rouges qui s’ouvrent, projecteurs, plancher, micro sur pied, masques de comédie et de tragédie.',

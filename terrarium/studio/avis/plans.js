@@ -15,12 +15,13 @@
     // Aucun texte : seulement le fond (décor ou fond uni) et, si on veut, une illustration. C'est le plan par défaut :
     // le spectateur lit déjà les sous-titres, il ne faut pas lui donner un second texte à lire.
     visuel: {
-      description: 'Aucun texte : le fond et, si on veut, une illustration. "moment": { "a": ancre } déclenche le temps fort de l’illustration.',
-      max: 0,
+      description: 'Aucun texte : le fond et, si on veut, une illustration. "moment": { "a": ancre } déclenche le temps fort de l’illustration ; "repere" : un compteur court (« Mains 1/3 »).',
+      max: 14,
       ancres: (p) => [[p.moment, 'a']],
-      textes: () => [],
-      dessin: () => '',
-      jouer() {},
+      textes: (p) => [p.repere],
+      // "repere" : un compteur très court (« Mains 1/3 ») pour les vidéos en liste. Ce n'est pas une phrase.
+      dessin: (p, u) => (p.repere ? `<div class="kicker repere">${u.esc(p.repere)}</div>` : ''),
+      jouer(c, el, p, t0) { c.monter(q(el, '.repere'), t0); },
     },
     // Une phrase forte, en grand. "taille": "geant" pour deux ou trois mots.
     titre: {

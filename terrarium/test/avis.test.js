@@ -73,3 +73,15 @@ test('l’épisode valeur-ia se monte sans erreur', () => {
   assert.deepStrictEqual(erreurs, []);
   assert.ok(feuille.duree < 60);
 });
+
+test('maquette de voix : un script donne des mots horodatés, et l’épisode d’escalade se monte dessus', () => {
+  const { estimer } = require('../scripts/maquette-voix.js');
+  const v = estimer('Un : la réglette. Doigts tendus ?');
+  assert.deepStrictEqual(v.mots.map((m) => m.m), ['Un :', 'la', 'réglette.', 'Doigts', 'tendus ?']);
+  v.mots.forEach((m, i) => { assert.ok(m.f > m.d); if (i) assert.ok(m.d >= v.mots[i - 1].f); });
+  assert.strictEqual(chercher(v.mots, 'Un : la réglette'), 0);
+  const racine = path.join(__dirname, '..');
+  const ep = JSON.parse(fs.readFileSync(path.join(racine, 'videos/episodes/escalade-techniques.json'), 'utf8'));
+  const voixEsc = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix/escalade-techniques/mots.json'), 'utf8'));
+  assert.deepStrictEqual(montage(ep, voixEsc).erreurs, []);
+});

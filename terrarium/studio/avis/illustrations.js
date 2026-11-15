@@ -17,7 +17,88 @@
   const tracer = (c, els, t, duree, decalage) => { if (!els.length) return; gsap.set(els, { drawSVG: '0%' }); c.ft(els, { drawSVG: '0%' }, { drawSVG: '100%', duration: duree || 0.5, ease: 'power2.out', stagger: decalage == null ? 0.08 : decalage }, t); };
   const surgir = (c, els, t, decalage) => { if (!els.length) return; gsap.set(els, { scale: 0, transformOrigin: '50% 50%' }); c.ft(els, { scale: 0 }, { scale: 1, duration: 0.45, ease: 'back.out(2)', stagger: decalage == null ? 0.08 : decalage, transformOrigin: '50% 50%' }, t); };
 
+  // --- Escalade : mains et pieds vus de profil, le mur à droite. ---
+  const PEAU = '#f3c6a0';
+  const membre = (d, w) => `<path d="${d}" fill="none" stroke="${PEAU}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const MUR = '<rect x="640" y="-60" width="360" height="520" fill="var(--fg)" opacity=".14"/><path d="M640 -60 V460" stroke="var(--fg)" stroke-width="6" opacity=".5"/>' + [[720, 40], [860, 150], [740, 300], [880, 380]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="var(--fg)" opacity=".3"/>`).join('');
+  // Un chausson : talon à l'origine, pointe en (240, 0), semelle sur y = 0.
+  const CHAUSSON = '<path d="M8 0 C-14 0 -18 -44 4 -68 C28 -94 80 -88 120 -66 L232 -28 C256 -18 262 0 240 0 Z" fill="#f2c14e"/><path d="M20 -62 C60 -40 110 -36 150 -56" fill="none" stroke="#1b1b1f" stroke-width="7" opacity=".55"/><path d="M-2 0 H244" stroke="#1b1b1f" stroke-width="16" stroke-linecap="round"/><path d="M-2 -2 H244" stroke="#e0564a" stroke-width="5" stroke-linecap="round"/>';
+  const pastille = (cls, x, y, bon) => `<g class="${cls}"><circle cx="${x}" cy="${y}" r="40" fill="${bon ? '#3fae7c' : '#e0564a'}"/><path d="${bon ? `M${x - 18} ${y + 2} L${x - 5} ${y + 16} L${x + 20} ${y - 14}` : `M${x - 15} ${y - 15} L${x + 15} ${y + 15} M${x + 15} ${y - 15} L${x - 15} ${y + 15}`}" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  const fleche = (cls, d) => `<path class="${cls}" d="${d}" fill="none" stroke="var(--ac)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const battre = (c, els, t, d, v) => c.ft(els, { x: 0, y: 0 }, Object.assign({ duration: 0.45, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(d, 0.9) - 1 }, v), t);
+
   return {
+    // Réglette : doigts arqués (à éviter), puis doigts tendus.
+    reglette: {
+      svg: () => `${MUR}<rect x="566" y="200" width="84" height="34" rx="10" fill="var(--ac)"/>
+        ${membre('M210 440 L410 300', 66)}${membre('M410 300 L498 244', 58)}
+        <g class="arque">${membre('M498 244 L548 150 L600 190', 36)}${pastille('pa', 430, 110, false)}</g>
+        <g class="tendu">${membre('M498 244 L560 196 L612 188', 36)}${pastille('pt', 430, 110, true)}</g>`,
+      jouer(c, el, p, t0, d) {
+        const m = p.moment; const tb = t0 + (m && m.t != null ? Math.max(1, m.t - 0.2) : d * 0.5);
+        gsap.set(qa(el, '.tendu'), { opacity: 0 });
+        surgir(c, qa(el, '.pa'), t0 + 0.5);
+        c.ft(qa(el, '.arque'), { opacity: 1 }, { opacity: 0, duration: 0.25 }, tb);
+        c.ft(qa(el, '.tendu'), { opacity: 0 }, { opacity: 1, duration: 0.25 }, tb);
+        surgir(c, qa(el, '.pt'), tb + 0.1);
+      },
+    },
+    // Pince : le pouce d'un côté, les doigts de l'autre, vus de face.
+    pince: {
+      svg: () => `<rect x="150" y="-60" width="640" height="520" rx="30" fill="var(--fg)" opacity=".1"/>
+        <path d="M372 440 L372 330 C372 290 588 290 588 330 L588 440 Z" fill="${PEAU}"/>
+        <rect x="425" y="40" width="100" height="270" rx="46" fill="var(--ac)"/>
+        ${membre('M400 330 C372 270 380 210 414 170', 44)}
+        ${[90, 140, 190, 240].map((y) => membre(`M600 ${y + 46} C612 ${y + 20} 580 ${y} 536 ${y + 4}`, 36)).join('')}
+        ${fleche('fg1', 'M200 200 H330 M290 160 L332 200 L290 240')}${fleche('fd1', 'M740 200 H640 M680 160 L638 200 L680 240')}`,
+      jouer(c, el, p, t0, d) {
+        surgir(c, qa(el, '.fg1, .fd1'), t0 + 0.4);
+        battre(c, qa(el, '.fg1'), t0 + 0.9, d, { x: 26 }); battre(c, qa(el, '.fd1'), t0 + 0.9, d, { x: -26 });
+      },
+    },
+    // Aplat : la main posée à plat sur une prise ronde, le corps bas.
+    aplat: {
+      svg: () => `${MUR}<path d="M642 50 C480 50 450 350 642 350 Z" fill="var(--ac)"/>
+        ${membre('M400 460 L470 270', 66)}${membre('M470 270 C482 150 540 86 618 74', 50)}
+        ${fleche('bas', 'M250 120 V330 M206 288 L250 334 L294 288')}
+        <path class="frot" d="M520 60 l-22 -22 M560 40 l-16 -26 M604 30 l-8 -30" fill="none" stroke="var(--fg)" stroke-width="8" stroke-linecap="round"/>`,
+      jouer(c, el, p, t0, d) {
+        tracer(c, qa(el, '.bas'), t0 + 0.5, 0.5, 0); battre(c, qa(el, '.bas'), t0 + 1.1, d, { y: 24 });
+        c.ft(qa(el, '.frot'), { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(d, 0.6) - 1 }, t0 + 0.8);
+      },
+    },
+    // Carre : le bord du chausson posé sur une petite prise.
+    carre: {
+      svg: () => `${MUR}<rect x="586" y="262" width="64" height="30" rx="9" fill="var(--ac)"/>
+        ${membre('M392 196 L330 -40', 64)}<g transform="translate(352 262)">${CHAUSSON}</g>
+        <circle class="point" cx="586" cy="250" r="34" fill="none" stroke="var(--ac)" stroke-width="10"/>`,
+      jouer(c, el, p, t0, d) {
+        const o = qa(el, '.point'); gsap.set(o, { scale: 0, transformOrigin: '50% 50%' });
+        c.ft(o, { scale: 0.6, opacity: 1 }, { scale: 1.7, opacity: 0, duration: 0.8, ease: 'power2.out', repeat: fois(d, 0.8) - 1, transformOrigin: '50% 50%' }, t0 + 0.6);
+      },
+    },
+    // Adhérence : pas de prise, la semelle à plat sur le mur incliné, le talon bas.
+    adherence: {
+      svg: () => `<path d="M520 460 L874 -40 H1000 V460 Z" fill="var(--fg)" opacity=".14"/><path d="M520 460 L874 -40" stroke="var(--fg)" stroke-width="6" opacity=".5"/>
+        ${membre('M534 290 L400 30', 64)}<g transform="translate(566 372) rotate(-54.7)">${CHAUSSON}</g>
+        ${fleche('pousse', 'M450 150 L548 220 M500 228 L550 221 L540 172')}
+        ${fleche('talon', 'M420 330 V420 M388 390 L420 424 L452 390')}`,
+      jouer(c, el, p, t0, d) {
+        tracer(c, qa(el, '.pousse'), t0 + 0.5, 0.4, 0); battre(c, qa(el, '.pousse'), t0 + 1.0, d, { x: 20, y: 14 });
+        const m = p.moment; gsap.set(qa(el, '.talon'), { drawSVG: '0%' });
+        const tt = t0 + (m && m.t != null ? Math.max(1, m.t - 0.2) : d * 0.6);
+        c.ft(qa(el, '.talon'), { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.4, ease: 'power2.out' }, tt);
+      },
+    },
+    // Crochet talon : le talon posé sur la prise, la jambe tire vers soi.
+    talon: {
+      svg: () => `${MUR}<rect x="556" y="210" width="94" height="36" rx="10" fill="var(--ac)"/>
+        ${membre('M532 150 L360 260 L290 460', 64)}<g transform="translate(588 208) rotate(-75)">${CHAUSSON}</g>
+        ${fleche('tire', 'M520 330 C470 370 420 380 370 372 M408 338 L368 372 L410 400')}`,
+      jouer(c, el, p, t0, d) {
+        tracer(c, qa(el, '.tire'), t0 + 0.6, 0.5, 0); battre(c, qa(el, '.tire'), t0 + 1.2, d, { x: -22, y: 8 });
+      },
+    },
     question: {
       svg: () => `<circle class="s o1" cx="170" cy="140" r="56" ${T}/><rect class="s o2" x="700" y="190" width="110" height="110" rx="18" ${T}/>
         <path class="t" d="M395 140 C395 40 545 40 545 140 C545 205 470 205 470 275" ${A} stroke-width="30"/><circle class="s" cx="470" cy="345" r="20" fill="var(--ac)"/>

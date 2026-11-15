@@ -8,10 +8,11 @@ _Dernière mise à jour : 15 novembre 2026._
 |---|---|---|---|
 | A1 | Chaîne voix : débruitage, transcription, montage, sous-titres | Claude | fait |
 | A2 | Fonds, transitions, illustrations, décors illustrés (cave, robot, scène) | Claude | fait |
-| A3 | Réenregistrer la voix sur le script resserré | Toi | à faire |
+| A3 | Enregistrer deux voix : `valeur-ia` (script resserré) et `escalade-techniques` | Toi | à faire |
 | A4 | Monter la nouvelle prise, rendu final en 60 images par seconde | Claude | à faire |
 | A5 | Photos et vidéos de l'auteur comme fonds (escalade) | Toi puis Claude | à faire |
-| A6 | Décors « escalade » et « relations », signature sonore | Claude | à faire |
+| A6 | Décor « escalade » et six gestes dessinés | Claude | fait (maquette) |
+| A6b | Décor « relations », signature sonore | Claude | à faire |
 | A7 | Publier, relever les chiffres | Toi | à faire |
 
 Tout ce qui suit date d'avant et ne sert que d'historique.

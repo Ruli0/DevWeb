@@ -17,11 +17,11 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 ## Peu de texte
 
-Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop d'informations (retour de l'auteur, 15 nov.). La plupart des plans sont donc sans texte (`visuel`). Au plus trois textes par vidéo : l'accroche, un mot fort au moment clé, la question de fin. L'en-tête ne garde que la rubrique.
+Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop d'informations (retour de l'auteur, 15 nov.). La plupart des plans sont donc sans texte (`visuel`). Au plus trois textes par vidéo : l'accroche, un mot fort au moment clé, la question de fin. L'en-tête ne garde que la rubrique. Dans une vidéo en liste, un compteur très court est permis (`"repere": "Mains 1/3"`).
 
 ## Ce qui varie (pour ne pas lasser)
 
-- **Les fonds**, jamais deux fois le même à la suite : trois fonds unis (`nuit`, `papier`, `accent`) et des **décors illustrés** plein écran, avec leurs propres couleurs : `cave` (le développeur de dos devant ses écrans), `robot` (l'IA), `scene` (théâtre : rideaux, projecteurs, micro, masques). Le fond `photo` affiche une photo de l'auteur.
+- **Les fonds**, jamais deux fois le même à la suite : trois fonds unis (`nuit`, `papier`, `accent`) et des **décors illustrés** plein écran, avec leurs propres couleurs : `cave` (le développeur de dos devant ses écrans), `robot` (l'IA), `scene` (théâtre : rideaux, projecteurs, micro, masques), `mur` (salle d'escalade : prises de couleur, corde, quelqu'un de dos). Le fond `photo` affiche une photo de l'auteur.
 - **Les transitions** : cercle, volet, biseau, rideau.
 - **Les illustrations au trait**, sur les fonds unis seulement.
 - **Le mouvement** : chaque plan arrive avec un léger zoom, son texte monte mot par mot, le mot fort est souligné d'un trait ; les décors vivent (code qui s'écrit, yeux qui clignent, masques qui flottent) et leurs calques glissent à des vitesses différentes.
