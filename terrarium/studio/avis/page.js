@@ -28,9 +28,7 @@ function css(f) {
 * { box-sizing: border-box; margin: 0; padding: 0; } html, body { background: ${c.fond}; }
 #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: ${c.texte}; font-family: '${P.titre}'; background: ${c.fond}; }
 /* En-tête : lisible sur tous les fonds. */
-.barre { position: absolute; z-index: 90; top: 112px; left: 70px; width: 940px; height: 10px; border-radius: 5px; background: ${c.fond}; overflow: hidden; border: 2px solid ${c.fond}; }
-.barre i { position: absolute; inset: 0; background: ${c.texte}; transform-origin: 0 50%; border-radius: 3px; }
-.tete { position: absolute; z-index: 90; top: 146px; left: 70px; right: 70px; display: flex; justify-content: space-between; align-items: center; font: 400 26px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; }
+.tete { position: absolute; z-index: 90; top: 120px; left: 70px; right: 70px; display: flex; justify-content: space-between; align-items: center; font: 400 26px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; }
 .tete b, .tete span { background: ${c.fond}; color: ${c.texte}; padding: 10px 20px; border-radius: 30px; font-weight: 400; display: flex; align-items: center; gap: 12px; }
 .tete b::before { content: ''; width: 14px; height: 14px; border-radius: 50%; background: ${acc}; }
 /* Les trois fonds : nuit, papier, accent. */
@@ -114,7 +112,6 @@ ${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}
 <style>${css(f)}</style></head>
 <body>
 <div id="root" data-composition-id="${f.id}" data-start="0" data-duration="${f.duree}" data-width="1080" data-height="1920" data-fps="60">
- <div class="barre"><i id="prog"></i></div>
  <div class="tete"><b>${esc(f.rubrique)}</b></div>
 ${plans}
  <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="3">

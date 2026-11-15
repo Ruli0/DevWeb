@@ -8,7 +8,7 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 ## Ce qui ne change jamais (l'identité du compte)
 
-- **En-tête** : barre de progression et pastille de la rubrique.
+- **En-tête** : la pastille de la rubrique, seule. **Pas de barre de progression** : l'auteur n'en veut pas (« je n'aime pas », 15 nov.).
 - **Typographie** : Inter Tight 700 (titres, sous-titres), Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
 - **Sous-titres** : une étiquette sombre vers y 1300, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
 - **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`.
@@ -30,7 +30,7 @@ Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop
 
 | Zone | y | Contenu |
 |---|---|---|
-| En-tête | 112 à 190 | barre, rubrique, numéro |
+| En-tête | 120 à 170 | rubrique |
 | Plan | 270 à 700 | étiquette, titre ou liste |
 | Illustration | 700 à 1280 | dessin au trait (fonds unis) ou sujet du décor |
 | Sous-titres | 1300 à 1430 | la voix, mot par mot |

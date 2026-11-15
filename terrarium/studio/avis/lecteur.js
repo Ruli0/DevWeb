@@ -83,7 +83,6 @@
         });
         tl.set(el, { opacity: 0 }, fin);
       });
-      c.ft('#prog', { scaleX: 0 }, { scaleX: 1, duration: f.duree, ease: 'none' }, 0);
       tl.set({}, {}, f.duree);
       tl.seek(0.001); tl.seek(0);
       return tl;

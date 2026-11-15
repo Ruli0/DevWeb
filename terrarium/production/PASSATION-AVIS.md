@@ -24,7 +24,7 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
-Ce qu'il ne faut pas reproposer : une voix de synthèse ou clonée ; le terrarium ; l'infographie sobre seule.
+Ce qu'il ne faut pas reproposer : une voix de synthèse ou clonée ; le terrarium ; l'infographie sobre seule ; **une barre de progression** (« pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas », retirée le 15 nov.) ; du texte à l'écran en plus des sous-titres.
 
 ## 3. Fabriquer une vidéo, de bout en bout
 
