@@ -1,0 +1,9 @@
+node_modules/
+data/
+demo/
+videos/hyperframes/*/assets/sons/
+videos/hyperframes/*/.hyperframes/
+essais/*/sortie/
+videos/studio/
+essais/textes/*.png
+essais/psycho-styles/*.png

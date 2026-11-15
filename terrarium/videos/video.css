@@ -1,0 +1,96 @@
+/* Vidéos TikTok 9:16 : le vivarium remplit tout l'écran (1080 × 1920).
+   Tout ce qui se lit reste dans la zone sûre (x 60 à 940, y 150 à 1440),
+   hors des icônes de droite et du texte du bas de l'appli.
+   Police fournie par HyperFrames : Inter. */
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #0f1b17; }
+#root {
+  position: relative;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  color: #ffffff;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.scene { position: absolute; inset: 0; }
+#vivarium { display: block; width: 1080px; height: 1920px; }
+
+/* Un voile sombre en bas, pour que l'interface TikTok et nos légendes restent lisibles. */
+.voile {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 900px; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(8, 18, 14, 0) 0%, rgba(8, 18, 14, 0.5) 55%, rgba(8, 18, 14, 0.78) 100%);
+}
+
+/* Marque de série, discrète, en haut à gauche de la zone sûre. */
+.serie {
+  position: absolute; left: 60px; top: 150px;
+  padding: 12px 22px; border-radius: 999px;
+  background: rgba(8, 18, 14, 0.62);
+  font: 700 30px/1 "Inter", sans-serif; letter-spacing: 0.04em;
+}
+.serie b { color: #b9f29a; }
+
+/* Légendes : un clip par morceau, gros texte blanc détouré, dans la zone sûre. */
+.legende { position: absolute; inset: 0; pointer-events: none; }
+.leg-texte {
+  position: absolute; left: 90px; width: 810px; top: 1150px;
+  margin: 0; text-align: center;
+  font: 800 80px/1.12 "Inter", sans-serif; letter-spacing: -0.01em;
+  text-wrap: balance;
+  text-shadow:
+    0 0 2px #06100c, 4px 0 0 #06100c, -4px 0 0 #06100c, 0 4px 0 #06100c, 0 -4px 0 #06100c,
+    3px 3px 0 #06100c, -3px 3px 0 #06100c, 3px -3px 0 #06100c, -3px -3px 0 #06100c,
+    0 10px 30px rgba(0, 0, 0, 0.55);
+}
+.leg-texte em, .carte-texte em { font-style: normal; color: #b9f29a; }
+/* Quand le sujet est en bas de l'écran, la légende monte en haut de la zone sûre. */
+.leg-texte.haut { top: 300px; }
+
+/* Révélation : une phrase forte, au milieu de la zone sûre. */
+.carte { position: absolute; inset: 0; pointer-events: none; }
+.carte-in {
+  position: absolute; left: 90px; width: 810px; top: 520px;
+  padding: 48px 50px 54px; border-radius: 40px;
+  background: rgba(8, 18, 14, 0.92);
+  border: 3px solid rgba(185, 242, 154, 0.55);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+.carte-in.bas { top: 760px; }
+.carte-titre { margin: 0 0 18px; font: 800 34px/1.2 "Inter", sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #b9f29a; }
+.carte-texte { margin: 0; font: 800 66px/1.15 "Inter", sans-serif; text-wrap: balance; }
+
+/* --- Nuit : le vivarium nocturne et le terminal de Mousse (style B, texte T6) --- */
+#root.nuit { font-family: "Space Mono", monospace; background: #02040a; }
+#calque-lumiere { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+.serie.nuit {
+  background: rgba(3, 10, 8, 0.8); border: 2px solid rgba(182, 255, 92, 0.45);
+  font: 700 30px/1 "Space Mono", monospace; letter-spacing: 0.02em; color: rgba(233, 253, 255, 0.85);
+}
+.serie.nuit b { color: #b6ff5c; text-shadow: 0 0 10px rgba(182, 255, 92, 0.8); }
+.terminal {
+  position: absolute; left: 80px; width: 640px; top: 930px; height: 220px;
+  padding: 24px 28px 30px; border-radius: 18px;
+  background: rgba(3, 10, 8, 0.92);
+  border: 2px solid rgba(182, 255, 92, 0.6);
+  box-shadow: 0 0 28px rgba(182, 255, 92, 0.35);
+}
+.terminal::after {
+  content: ""; position: absolute; inset: 0; border-radius: 18px; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0 2px, transparent 2px 5px);
+}
+.term-prompt { margin: 0; font: 700 22px/1 "Space Mono", monospace; color: rgba(182, 255, 92, 0.6); }
+.term-fil { position: absolute; left: 0; top: 0; pointer-events: none; }
+.term-ligne { position: absolute; left: 108px; width: 584px; top: 990px; pointer-events: none; }
+.term-texte {
+  margin: 0; font: 700 46px/1.2 "Space Mono", monospace; color: #b6ff5c;
+  text-shadow: 0 0 12px rgba(182, 255, 92, 0.8);
+}
+.term-texte .invite { color: rgba(182, 255, 92, 0.55); }
+/* Toutes les lettres occupent déjà leur place : rien ne se décale pendant la frappe. */
+.term-texte .c { visibility: hidden; }
+.term-texte .c.vu { visibility: visible; }
+.term-texte .c.acc { color: #5ef2ff; text-shadow: 0 0 14px rgba(94, 242, 255, 0.9); }
+.term-texte .c.cur {
+  visibility: visible; color: transparent; text-shadow: none;
+  background: #b6ff5c; box-shadow: 0 0 10px rgba(182, 255, 92, 0.8);
+}

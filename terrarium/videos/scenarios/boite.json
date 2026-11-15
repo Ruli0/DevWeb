@@ -1,0 +1,66 @@
+{
+  "id": "boite",
+  "chapitre": "bocal",
+  "titre": "La boîte en verre",
+  "concept": "La fenêtre de contexte",
+  "serie": { "nom": "Terrarium IA", "episode": 5, "total": 5 },
+  "duree": 22,
+  "decor": {},
+  "accroches": {
+    "b": ["Ton IA a la *mémoire courte*."],
+    "c": ["Pourquoi ChatGPT *oublie*"]
+  },
+  "plans": [
+    {
+      "debut": 0, "fin": 2.8,
+      "camera": { "cible": "ensemble", "zoom": 1.15, "duree": 0 },
+      "legende": ["Pourquoi ton IA", "*oublie* tout ?"],
+      "actions": [{ "type": "plantes.grandir", "duree": 2.6 }]
+    },
+    {
+      "debut": 2.8, "fin": 5.3,
+      "camera": { "cible": "ensemble", "zoom": 1, "duree": 0.8 },
+      "legende": ["Sa mémoire est une *boîte*."],
+      "actions": [{ "type": "cadre.lueur", "a": 0.2, "fois": 1 }]
+    },
+    {
+      "debut": 5.3, "fin": 8,
+      "legende": ["Trop remplie :", "ça *déborde*."],
+      "actions": [{ "type": "cadre.alerte" }]
+    },
+    {
+      "debut": 8, "fin": 10.5,
+      "camera": { "cible": [300, 200], "zoom": 1.5, "duree": 0.9 },
+      "legende": ["Le début", "est *perdu*."]
+    },
+    {
+      "debut": 10.5, "fin": 13.5,
+      "camera": { "cible": "ensemble", "zoom": 1, "duree": 0.9 },
+      "legende": ["La solution :", "*résumer* l'ancien."],
+      "actions": [{ "type": "plantes.tailler", "a": 0.1 }]
+    },
+    {
+      "debut": 13.5, "fin": 16,
+      "legende": ["Tout *tient* à nouveau."],
+      "actions": [{ "type": "cadre.apaiser" }]
+    },
+    {
+      "debut": 16, "fin": 19.5,
+      "legende": ["C'est sa fenêtre", "de *contexte*."],
+      "carte": { "type": "phrase", "titre": "En vrai", "texte": "Une IA ne voit que sa *fenêtre de contexte*. Ce qui déborde, elle l'oublie." }
+    },
+    {
+      "debut": 19.5, "fin": 22,
+      "camera": { "cible": "ensemble", "zoom": 1.15, "duree": 0.9 },
+      "legende": ["Et ça recommence…"],
+      "actions": [{ "type": "plantes.grandir", "a": 0.3, "duree": 2.2 }]
+    }
+  ],
+  "publication": {
+    "texte": "Pourquoi ton IA oublie le début de la conversation ? Sa mémoire est une boîte, et ce qui déborde disparaît. Épisode 5 du Terrarium IA.",
+    "hashtags": ["#ia", "#chatgpt", "#intelligenceartificielle", "#astuce", "#tech"],
+    "commentaire": "Ton IA t'a déjà oublié en pleine conversation ?",
+    "couverture": 6,
+    "titreCouverture": "Ton IA oublie tout"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "version": 3,
+  "format": "test",
+  "id": "procrastination",
+  "titre": "Test : pourquoi tu repousses",
+  "sujet": "Procrastination",
+  "numero": 1,
+  "scenes": [
+    { "scene": "test", "texte": "3 secondes." },
+    { "scene": "question", "question": "Dossier à rendre demain. Tu fais *quoi* ?", "a": "Je m'y mets maintenant.", "b": "Je range d'abord mon bureau.", "piege": "b" },
+    { "scene": "revelation", "texte": "Si tu as choisi B : tu fuis un *malaise*, pas le travail.", "zone": "amygdale", "etat": "alarme", "role": "l'alarme" },
+    { "scene": "chiffre", "avant": "jusqu'à", "valeur": 95, "unite": "%", "legende": "des étudiants *repoussent* leurs tâches.", "source": "c1" },
+    { "scene": "revelation", "texte": "Ranger soulage *tout de suite*. Le dossier, lui, attend.", "zone": "pfc", "etat": "frein", "role": "le frein", "source": "c2" },
+    { "scene": "question", "question": "Le plus petit premier pas, c'est *quoi* ?", "a": "Ouvrir le fichier, 2 minutes.", "b": "Tout planifier avant.", "piege": "b", "secondes": 3, "cerveau": { "camera": "large", "zones": { "pfc": 0.3, "amygdale": 0.2 } } },
+    { "scene": "appel", "texte": "Et toi ? *A* ou *B* ? Dis-le en commentaire." }
+  ],
+  "publication": {
+    "texte": "Tu repousses ? Ce n'est souvent pas de la paresse : on fuit le malaise que la tâche provoque, et le soulagement immédiat gagne (Sirois & Pychyl, 2013). Jusqu'à 95 % des étudiants disent procrastiner (chiffres cités par Steel, 2007, Psychological Bulletin). Information, pas un avis médical.",
+    "hashtags": ["#procrastination", "#cerveau", "#psychologie", "#productivite", "#test"],
+    "commentaire": "A ou B ? Réponds honnêtement 👇"
+  }
+}

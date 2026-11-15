@@ -1,0 +1,462 @@
+{
+  "id": "cameleon",
+  "chapitre": "cycle",
+  "titre": "Nuit 1 : la langue",
+  "concept": "La boucle d'outils",
+  "theme": "nuit",
+  "musique": "drift",
+  "tempo": 145,
+  "poussee": 0.05,
+  "arrangement": {
+    "parties": [
+      "intro",
+      "intro",
+      "plein",
+      "plein",
+      "plein",
+      "plein",
+      "creux",
+      "creux",
+      "creux",
+      "creux",
+      "plein",
+      "plein",
+      "montee",
+      "plein",
+      "plein",
+      "plein",
+      "plein",
+      "plein"
+    ],
+    "coupures": [
+      11.586
+    ]
+  },
+  "serie": {
+    "nom": "Les nuits du terrarium",
+    "episode": 1,
+    "total": 5
+  },
+  "duree": 29.793,
+  "decor": {
+    "cameleon": 0.3,
+    "mouche": "cachee",
+    "lanterne": "eteinte"
+  },
+  "accroches": {
+    "b": [
+      "mon *IA* chasse."
+    ],
+    "c": [
+      "ton IA *rate* ?"
+    ]
+  },
+  "plans": [
+    {
+      "debut": 0.0,
+      "fin": 1.655,
+      "camera": {
+        "cible": "cameleon-oeil",
+        "zoom": 2.6,
+        "duree": 0
+      },
+      "legende": [
+        "voici mon *IA*."
+      ],
+      "actions": [
+        {
+          "type": "gardien.lanterne",
+          "a": 0.414,
+          "etat": "allumer"
+        },
+        {
+          "type": "cameleon.balayer",
+          "a": 0.621,
+          "duree": 1.0
+        }
+      ]
+    },
+    {
+      "debut": 1.655,
+      "fin": 3.31,
+      "camera": {
+        "cible": "cameleon",
+        "zoom": 1.9,
+        "duree": 0.55,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "elle a *faim*."
+      ],
+      "actions": [
+        {
+          "type": "scene.etiquette",
+          "a": 0.414,
+          "sur": "cameleon",
+          "texte": "l'IA",
+          "dx": -190,
+          "dy": -250,
+          "duree": 1.241
+        },
+        {
+          "type": "gardien.geste",
+          "a": 0.0,
+          "geste": "pointer",
+          "duree": 1.655
+        },
+        {
+          "type": "cameleon.avaler",
+          "a": 0.828
+        }
+      ]
+    },
+    {
+      "debut": 3.31,
+      "fin": 6.621,
+      "camera": {
+        "cible": "mouche",
+        "zoom": 3.0,
+        "duree": 0.45,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "voici sa *tâche*."
+      ],
+      "actions": [
+        {
+          "type": "mouche.venir",
+          "a": 0,
+          "dx": 30,
+          "dy": -38,
+          "duree": 0.828,
+          "courbe": 0.5,
+          "attente": 2.2
+        },
+        {
+          "type": "gardien.expression",
+          "a": 0.414,
+          "humeur": "surpris"
+        },
+        {
+          "type": "scene.etiquette",
+          "a": 1.241,
+          "sur": "mouche",
+          "texte": "la tâche",
+          "dx": -190,
+          "dy": -150,
+          "duree": 2.069
+        }
+      ]
+    },
+    {
+      "debut": 6.621,
+      "fin": 9.931,
+      "camera": {
+        "cible": "cameleon-oeil",
+        "zoom": 3.0,
+        "duree": 0.5,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "sa langue ? un *outil*."
+      ],
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.0,
+          "humeur": "neutre"
+        },
+        {
+          "type": "gardien.geste",
+          "a": 0.0,
+          "geste": "pencher",
+          "duree": 2.897
+        },
+        {
+          "type": "cameleon.langue",
+          "a": 0.828,
+          "portee": 0.38
+        },
+        {
+          "type": "scene.etiquette",
+          "a": 1.241,
+          "sur": "langue",
+          "texte": "l'outil",
+          "dx": -230,
+          "dy": -30,
+          "duree": 1.655
+        },
+        {
+          "type": "cameleon.ramener",
+          "a": 2.897
+        }
+      ]
+    },
+    {
+      "debut": 9.931,
+      "fin": 11.586,
+      "camera": {
+        "cible": "cameleon",
+        "zoom": 1.9,
+        "duree": 0.5,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "tir à l'*aveugle*…"
+      ],
+      "actions": [
+        {
+          "type": "cameleon.langue",
+          "a": 1.49,
+          "rate": true
+        },
+        {
+          "type": "mouche.esquiver",
+          "a": 1.51,
+          "dx": -14,
+          "dy": -16,
+          "duree": 0.18
+        }
+      ]
+    },
+    {
+      "debut": 11.586,
+      "fin": 13.241,
+      "legende": [
+        "*raté*."
+      ],
+      "actions": [
+        {
+          "type": "cameleon.ramener",
+          "a": 0.207
+        },
+        {
+          "type": "gardien.expression",
+          "a": 0.0,
+          "humeur": "blase"
+        },
+        {
+          "type": "gardien.geste",
+          "a": 0.0,
+          "geste": "depit",
+          "duree": 1.655
+        }
+      ]
+    },
+    {
+      "debut": 13.241,
+      "fin": 16.552,
+      "camera": {
+        "cible": "mouche",
+        "zoom": 3.0,
+        "duree": 0.45,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "la mouche se *moque*."
+      ],
+      "actions": [
+        {
+          "type": "mouche.narguer",
+          "a": 0.414,
+          "duree": 2.483,
+          "rayon": 8
+        }
+      ]
+    },
+    {
+      "debut": 16.552,
+      "fin": 18.207,
+      "camera": {
+        "cible": "cameleon-oeil",
+        "zoom": 3.0,
+        "duree": 0.4,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "1. *observer*"
+      ],
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.0,
+          "humeur": "neutre"
+        },
+        {
+          "type": "cameleon.viser",
+          "a": 0.207,
+          "duree": 0.5
+        },
+        {
+          "type": "gardien.geste",
+          "a": 0.0,
+          "geste": "pencher",
+          "duree": 1.655
+        }
+      ]
+    },
+    {
+      "debut": 18.207,
+      "fin": 19.862,
+      "camera": {
+        "cible": "cameleon",
+        "zoom": 1.9,
+        "duree": 0.35,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "2. *agir*"
+      ],
+      "actions": [
+        {
+          "type": "cameleon.langue",
+          "a": 0.828
+        }
+      ]
+    },
+    {
+      "debut": 19.862,
+      "fin": 21.517,
+      "camera": {
+        "cible": "cameleon-oeil",
+        "zoom": 2.6,
+        "duree": 0.4,
+        "ease": "power3.inOut"
+      },
+      "legende": [
+        "3. *vérifier*"
+      ],
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.0,
+          "humeur": "surpris"
+        },
+        {
+          "type": "cameleon.ramener",
+          "a": 0.414
+        },
+        {
+          "type": "cameleon.avaler",
+          "a": 0.91
+        }
+      ]
+    },
+    {
+      "debut": 21.517,
+      "fin": 23.172,
+      "camera": {
+        "cible": "cameleon",
+        "zoom": 1.9,
+        "duree": 0.3,
+        "ease": "power3.out"
+      },
+      "legende": [
+        "*attrapée* !"
+      ],
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.0,
+          "humeur": "content"
+        },
+        {
+          "type": "gardien.geste",
+          "a": 0.0,
+          "geste": "sauter",
+          "duree": 1.655,
+          "fois": 2
+        },
+        {
+          "type": "cameleon.teinte",
+          "a": 0.0,
+          "couleur": "turquoise",
+          "duree": 1.2
+        }
+      ]
+    },
+    {
+      "debut": 23.172,
+      "fin": 26.483,
+      "camera": {
+        "cible": "cameleon",
+        "zoom": 1.5,
+        "duree": 0.8
+      },
+      "legende": [
+        "observer, agir, vérifier.",
+        "= *boucle d'outils*"
+      ],
+      "actions": [
+        {
+          "type": "cameleon.repos",
+          "a": 0.0
+        },
+        {
+          "type": "gardien.geste",
+          "a": 1.655,
+          "geste": "rire",
+          "duree": 1.241
+        }
+      ]
+    },
+    {
+      "debut": 26.483,
+      "fin": 29.793,
+      "camera": {
+        "cible": "cameleon-oeil",
+        "zoom": 2.6,
+        "duree": 1.0
+      },
+      "legende": [
+        "et ça *recommence*…"
+      ],
+      "actions": [
+        {
+          "type": "gardien.expression",
+          "a": 0.0,
+          "humeur": "neutre"
+        },
+        {
+          "type": "mouche.venir",
+          "a": 0.414,
+          "dx": 30,
+          "dy": -38,
+          "duree": 0.828,
+          "courbe": -0.5,
+          "attente": 1.2
+        },
+        {
+          "type": "cameleon.teinte",
+          "a": 0.414,
+          "couleur": "vert",
+          "duree": 1.2
+        },
+        {
+          "type": "cameleon.viser",
+          "a": 1.448,
+          "duree": 0.5
+        },
+        {
+          "type": "gardien.lanterne",
+          "a": 2.897,
+          "etat": "eteindre"
+        }
+      ]
+    }
+  ],
+  "publication": {
+    "texte": "> nuit 1. mon IA rate, observe, recommence, et finit par l'avoir. observer, agir, vérifier : c'est la boucle d'outils d'un agent IA. — Mousse, gardien du terrarium",
+    "hashtags": [
+      "#ia",
+      "#intelligenceartificielle",
+      "#agentia",
+      "#apprendresurtiktok",
+      "#phonk",
+      "#tech"
+    ],
+    "commentaire": "> ton IA rate souvent aussi ?",
+    "couverture": 22.117,
+    "titreCouverture": "Nuit 1 : la langue"
+  }
+}
