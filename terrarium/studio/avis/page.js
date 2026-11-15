@@ -82,7 +82,7 @@ em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0
 .jauge span { font: 400 32px '${P.mono}'; opacity: .7; letter-spacing: .04em; }
 .fleche { position: absolute; left: 0; top: 0; color: var(--fg); }
 /* Sous-titres : dans une étiquette sombre, lisibles sur tous les fonds. */
-#st { position: absolute; z-index: 95; left: 50px; width: 910px; top: 1150px; height: 220px; }
+#st { position: absolute; z-index: 95; left: 50px; width: 910px; top: 1300px; height: 220px; }
 .st { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
 .st div { display: inline-block; background: ${c.fond}; color: ${c.texte}; padding: 16px 22px 20px; border-radius: 30px; font: 700 82px/1.05 '${P.titre}'; letter-spacing: -.02em; box-shadow: 0 14px 44px #00000066; white-space: nowrap; }
 .st div { border: 2px solid #ffffff24; }

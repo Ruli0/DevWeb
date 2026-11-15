@@ -10,7 +10,7 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 - **En-tête** : barre de progression, pastille de la rubrique à gauche, « Avis · N° » à droite, dans des étiquettes sombres.
 - **Typographie** : Inter Tight 700 (titres, sous-titres), Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
-- **Sous-titres** : une étiquette sombre vers y 1150, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
+- **Sous-titres** : une étiquette sombre vers y 1300, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
 - **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`.
 - **Fin** : toujours une question au spectateur et une flèche vers les commentaires.
 - Du grain sur toute l'image.
@@ -28,8 +28,8 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 |---|---|---|
 | En-tête | 112 à 190 | barre, rubrique, numéro |
 | Plan | 270 à 700 | étiquette, titre ou liste |
-| Illustration | 700 à 1100 | dessin au trait (fonds unis) ou sujet du décor |
-| Sous-titres | 1150 à 1300 | la voix, mot par mot |
+| Illustration | 700 à 1280 | dessin au trait (fonds unis) ou sujet du décor |
+| Sous-titres | 1300 à 1430 | la voix, mot par mot |
 | Bas | sous 1440 | rien d'important : interface de TikTok |
 
 Rien d'important à droite de x 940 dans la moitié basse (boutons de TikTok).

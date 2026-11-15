@@ -84,7 +84,7 @@ Un plan : `"plan"` (`titre`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (fac
 
 Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, el, t0, d) }` :
 
-- Dessiner en 1080 × 1920. **Le sujet dans la moitié basse** (y > 700) : le haut porte le texte du plan, sous un voile sombre. Les sous-titres passent vers y 1150 à 1300. Sous y 1440, l'interface de TikTok couvre l'image : décor seulement.
+- Dessiner en 1080 × 1920. **Le sujet dans la moitié basse** (y > 700) : le haut porte le texte du plan, sous un voile sombre. Les sous-titres passent vers y 1300 à 1430 (descendus le 15 nov. à la demande de l'auteur, pour ne pas couvrir le sujet du décor). Sous y 1440, l'interface de TikTok couvre l'image : décor seulement.
 - Trois groupes `.loin`, `.milieu`, `.pres` : ils glissent à des vitesses différentes (profondeur).
 - Les identifiants de dégradés s'écrivent `xx-nom` (deux mots en minuscules) : `page.js` leur ajoute le numéro du plan, sinon un décor utilisé deux fois perd ses dégradés.
 - Pas de filtre SVG (le flou ralentit beaucoup le rendu) : faire les halos avec des dégradés radiaux.
