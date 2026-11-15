@@ -116,3 +116,11 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes mots : « je vais parler librement d'un sujet », avec des visuels « cohérents entre eux » mais « variés ». La valeur ajoutée est ton propos et ta voix, pas le visuel.
 - **Écarté** : une voix de synthèse ou clonée (ce ne serait plus toi) ; changer le ton ou les intonations (hors de portée sans service externe).
 - **Où** : `scripts/voix.py`, `studio/avis/`, `videos/voix/`, `production/DA-AVIS.md`. Premier épisode : `valeur-ia` (57 s).
+
+## 19. Des décors illustrés plutôt que des aplats (15 nov. 2026)
+
+- **Décision** : les plans importants ont un décor plein écran dessiné (cave du développeur, robot, scène de théâtre), avec ses propres couleurs et de la profondeur. Le texte arrive mot par mot ; dans les sous-titres, le mot en cours est dans une pastille.
+- **Pourquoi** : tes mots : « les visuels font trop IA encore », « cave avec pc pour métier développeur, robot pour l'IA et pour le théâtre une scène avec masque et micro », « améliore comment le texte s'affiche ».
+- **Écarté** : des images générées (aucun outil gratuit dans la session, et le reproche « trop IA » resterait) ; des banques d'images (réseau fermé, à rouvrir si tu le veux).
+- **Reste ouvert** : tes propres photos et vidéos en fond (`"fond": "photo"`), sans doute le meilleur remède.
+- **Où** : `studio/avis/decors.js`, `lecteur.js`, `production/PASSATION-AVIS.md`.

@@ -1,38 +1,41 @@
-# Chaîne « avis » : la voix d'abord
+# Direction artistique de la chaîne « avis »
 
-_Ouverte le 15 novembre 2026, sur la branche `claude/busy-feynman-m0q7yp`. Elle vit à côté de la V3 (cerveau et santé), sans la remplacer._
+_Ouverte le 15 novembre 2026. Pour reprendre le travail, lire d'abord `PASSATION-AVIS.md`._
 
 ## L'idée
 
-L'auteur parle librement d'un sujet (travail, escalade, relations…) et enregistre sa voix au téléphone. L'outil nettoie la voix, retire les blancs, et habille le propos : sous-titres calés sur les mots, plans visuels simples au-dessus. La valeur vient du propos et de la voix ; le visuel sert la lecture.
+L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au téléphone. L'outil nettoie la voix, retire les blancs et habille le propos. La valeur vient du propos et de la voix ; l'image sert l'écoute et empêche de s'ennuyer.
 
-## Le système graphique (le même pour tout le compte)
+## Ce qui ne change jamais (l'identité du compte)
 
-- Fond presque noir (`#0c0c0e`), texte blanc chaud (`#f3efe6`), un halo de la couleur de la rubrique, du grain.
-- **Une couleur par rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a` (`studio/avis/style.js`).
-- Inter Tight 700 pour les titres et les sous-titres, Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
-- En haut : barre de progression, nom de la rubrique, numéro. Plans entre y 300 et 1040, sous-titres vers y 1130, rien sous y 1440 (interface de TikTok).
-- Quatre plans : `titre`, `liste`, `bascule`, `fin`. La fin pose toujours une question au spectateur.
-- **Trois fonds** qui alternent (`nuit`, `papier`, `accent`) : deux plans voisins n'ont jamais le même. **Quatre transitions** (`cercle`, `volet`, `biseau`, `rideau`).
-- **Une illustration animée par plan** (`"illu"`), au trait, entre le texte et les sous-titres : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire` (`studio/avis/illustrations.js`).
-- Sous-titres et en-tête dans des étiquettes sombres, lisibles sur les trois fonds.
+- **En-tête** : barre de progression, pastille de la rubrique à gauche, « Avis · N° » à droite, dans des étiquettes sombres.
+- **Typographie** : Inter Tight 700 (titres, sous-titres), Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
+- **Sous-titres** : une étiquette sombre vers y 1150, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
+- **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`.
+- **Fin** : toujours une question au spectateur et une flèche vers les commentaires.
+- Du grain sur toute l'image.
 
-## Fabriquer une vidéo
+## Ce qui varie (pour ne pas lasser)
 
-```bash
-python3 scripts/voix.py <enregistrement.m4a> <id>   # débruitage (RNNoise), transcription, silences → videos/voix/<id>/
-# écrire videos/episodes/<id>.json ("version": 4) : modèle valeur-ia.json
-npm run video -- <id>                               # composition et planche d'aperçu
-```
+- **Les fonds**, jamais deux fois le même à la suite : trois fonds unis (`nuit`, `papier`, `accent`) et des **décors illustrés** plein écran, avec leurs propres couleurs : `cave` (le développeur de dos devant ses écrans), `robot` (l'IA), `scene` (théâtre : rideaux, projecteurs, micro, masques). Le fond `photo` affiche une photo de l'auteur.
+- **Les transitions** : cercle, volet, biseau, rideau.
+- **Les illustrations au trait**, sur les fonds unis seulement.
+- **Le mouvement** : chaque plan arrive avec un léger zoom, son texte monte mot par mot, le mot fort est souligné d'un trait ; les décors vivent (code qui s'écrit, yeux qui clignent, masques qui flottent) et leurs calques glissent à des vitesses différentes.
 
-Dans l'épisode : `retirer` (passages coupés, par leurs premiers et derniers mots), `corrections` (orthographe d'un mot, par son indice dans `mots.json`), `forts` (mots en couleur dans les sous-titres), `plans` (chacun commence sur son ancre `a`, une suite de mots de la voix). Réglages de la voix dans `reglages` (`vitesse`, `respiration`, `musique`).
+## Mise en page (1080 × 1920)
 
-`scripts/voix.py` demande `pip install faster-whisper pyrnnoise soundfile numpy` et l'accès à `huggingface.co` et `us.aws.cdn.hf.co` (environnement « DevWeb »).
+| Zone | y | Contenu |
+|---|---|---|
+| En-tête | 112 à 190 | barre, rubrique, numéro |
+| Plan | 270 à 700 | étiquette, titre ou liste |
+| Illustration | 700 à 1100 | dessin au trait (fonds unis) ou sujet du décor |
+| Sous-titres | 1150 à 1300 | la voix, mot par mot |
+| Bas | sous 1440 | rien d'important : interface de TikTok |
 
-## Limites connues (15 nov. 2026)
+Rien d'important à droite de x 940 dans la moitié basse (boutons de TikTok).
 
-- Personne n'a écouté le résultat avant l'auteur : le modèle ne peut pas entendre. Niveaux mesurés seulement.
-- Le ton et les intonations ne sont pas modifiés : seuls le bruit, l'égalisation, le niveau, les blancs et la vitesse (+5 %) le sont.
-- La musique est « Labo », à bas volume ; une signature sonore propre au compte reste à faire.
-- Retour du 15 nov. sur la première version : « on s'ennuie un peu », d'où les fonds, transitions et illustrations de la version 2.
-- Les illustrations couvrent le sujet « travail » ; l'escalade et les relations demanderont les leurs.
+## Limites connues
+
+- Les décors sont des dessins vectoriels faits à la main dans le code : plus chaleureux que des aplats, mais ce ne sont pas des photos. De vraies images de l'auteur feront mieux.
+- La musique est « Labo », héritée de la V3, à bas volume.
+- Le ton et les intonations de la voix ne sont pas modifiés.

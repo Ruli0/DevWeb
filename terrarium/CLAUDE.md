@@ -4,6 +4,8 @@ Le but du projet est de converger vers un **outil de production de vidéos TikTo
 
 ## Au début de chaque session
 
+**Sur la branche `claude/busy-feynman-m0q7yp`, le cap est la chaîne « avis »** (15 nov. 2026) : l'auteur parle librement, l'outil habille sa voix. Lire `production/PASSATION-AVIS.md` d'abord, puis `production/DA-AVIS.md` ; utiliser le skill `avis`. Ce qui suit décrit la V3, mise en attente.
+
 **Le cap actuel est la V3** (14 nov. 2026) : des vidéos de 30 à 60 s pour adultes, sur le cerveau et la santé, études à l'appui. Lire dans cet ordre :
 
 1. `production/BRIEF-V3.md` : la mission, ce qu'on garde, ce qu'on abandonne ;

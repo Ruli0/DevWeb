@@ -11,11 +11,28 @@
       const c = { tl };
       c.ft = (cible, de, a, t) => tl.fromTo(cible, de, Object.assign({ immediateRender: false }, a), t);
       c.monter = (el, t) => { if (!el) return; gsap.set(el, { opacity: 0, y: 30 }); c.ft(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, t); };
+      // Un texte arrive mot par mot (chaque ligne est un masque), puis ses mots forts sont surlignés d'un trait.
       c.lignes = (el, t) => {
         if (!el) return;
-        const l = new SplitText(el, { type: 'lines', mask: 'lines', linesClass: 'ligne' }).lines;
-        gsap.set(l, { yPercent: 110 });
-        c.ft(l, { yPercent: 110 }, { yPercent: 0, duration: 0.55, ease: 'power3.out', stagger: 0.08 }, t);
+        const sp = new SplitText(el, { type: 'words,lines', mask: 'lines', linesClass: 'ligne' });
+        // Les mesures se font avant de déplacer les mots.
+        const boite = el.getBoundingClientRect();
+        // Un trait par ligne de mot fort (un <em> peut tenir sur deux lignes).
+        const rangs = {};
+        el.querySelectorAll('em').forEach((em) => {
+          const morceaux = em.children.length ? [...em.children] : [em];
+          morceaux.forEach((m) => { const r = m.getBoundingClientRect(); const k = Math.round(r.bottom); const g = (rangs[k] = rangs[k] || { x0: r.left, x1: r.right, y: r.bottom }); g.x0 = Math.min(g.x0, r.left); g.x1 = Math.max(g.x1, r.right); });
+        });
+        gsap.set(sp.words, { yPercent: 115, rotation: 5 });
+        c.ft(sp.words, { yPercent: 115, rotation: 5 }, { yPercent: 0, rotation: 0, duration: 0.5, ease: 'power3.out', stagger: 0.045, transformOrigin: '0% 100%' }, t);
+        const fin = t + 0.5 + 0.045 * sp.words.length;
+        Object.values(rangs).forEach((g, k) => {
+          const trait = document.createElement('i'); trait.className = 'trait';
+          trait.style.left = `${Math.round(g.x0 - boite.left)}px`; trait.style.top = `${Math.round(g.y - boite.top - 10)}px`; trait.style.width = `${Math.round(g.x1 - g.x0)}px`;
+          el.appendChild(trait);
+          gsap.set(trait, { scaleX: 0 });
+          c.ft(trait, { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: 'power2.out' }, fin - 0.25 + 0.12 * k);
+        });
       };
       const ENTREES = {
         cercle: ['circle(0% at 50% 42%)', 'circle(125% at 50% 42%)'],
@@ -33,6 +50,9 @@
         const retard = i ? 0.22 : 0;
         // Petit coup de zoom à l'arrivée, puis une dérive lente du contenu et du décor.
         c.ft(el.querySelector('.contenu'), { scale: 1.06 }, { scale: 1, duration: 0.6, ease: 'power3.out' }, pl.t0 + retard);
+        const decor = el.querySelector('.decor-svg'), photo = el.querySelector('.photo-img');
+        if (decor) A.decors[pl.fond].jouer(c, decor, pl.t0, pl.dClip);
+        if (photo) c.ft(photo, { scale: 1.04, xPercent: -1.5 * (i % 2 ? 1 : -1) }, { scale: 1.16, xPercent: 1.5 * (i % 2 ? 1 : -1), duration: pl.dClip, ease: 'none' }, pl.t0);
         const da = el.querySelector('.deco .a'), db = el.querySelector('.deco .b');
         const sens = i % 2 ? 1 : -1;
         if (da) c.ft(da, { xPercent: -8 * sens, yPercent: -5 }, { xPercent: 8 * sens, yPercent: 6, duration: pl.dClip, ease: 'none' }, pl.t0);
@@ -45,16 +65,23 @@
         }
       });
 
-      // Sous-titres : le groupe apparaît d'un coup, chaque mot s'allume quand il est dit.
+      // Sous-titres : le groupe surgit ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles.
+      const PALE = 0.4;
       f.groupes.forEach((g, i) => {
         const el = document.getElementById(`st-${i}`);
+        const suivant = f.groupes[i + 1];
+        const fin = suivant && suivant.t0 - g.t1 < 0.05 ? g.t1 - 0.045 : g.t1;
         gsap.set(el, { opacity: 0 });
-        c.ft(el, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.12, ease: 'power2.out' }, Math.max(0, g.t0 - 0.04));
+        c.ft(el, { opacity: 0, scale: 0.8, y: 26, rotation: i % 2 ? 2 : -2 }, { opacity: 1, scale: 1, y: 0, rotation: 0, duration: 0.2, ease: 'back.out(2.2)' }, Math.max(0, g.t0 - 0.06));
         [...el.firstElementChild.children].forEach((m, k) => {
-          gsap.set(m, { opacity: 0.38 });
-          c.ft(m, { opacity: 0.38, y: 8 }, { opacity: 1, y: 0, duration: 0.1, ease: 'power2.out' }, Math.max(0, g.mots[k].t - 0.03));
+          const mot = g.mots[k], t = Math.max(0, mot.t - 0.03);
+          const tFin = Math.min(fin, g.mots[k + 1] ? g.mots[k + 1].t - 0.03 : fin);
+          gsap.set(m, { opacity: PALE });
+          tl.set(m, { opacity: 1, backgroundColor: f.accent, color: f.fond }, t);
+          c.ft(m, { scale: 1.22 }, { scale: 1, duration: 0.18, ease: 'power2.out' }, t);
+          if (g.mots[k + 1]) tl.set(m, { backgroundColor: 'rgba(0,0,0,0)', color: mot.fort ? f.accent : f.texte }, tFin);
         });
-        tl.set(el, { opacity: 0 }, f.groupes[i + 1] && f.groupes[i + 1].t0 - g.t1 < 0.05 ? g.t1 - 0.045 : g.t1);
+        tl.set(el, { opacity: 0 }, fin);
       });
       c.ft('#prog', { scaleX: 0 }, { scaleX: 1, duration: f.duree, ease: 'none' }, 0);
       tl.set({}, {}, f.duree);

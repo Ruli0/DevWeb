@@ -39,7 +39,7 @@
         if (q(el, '.moyen')) c.lignes(q(el, '.moyen'), t0 + 0.05);
         const lis = qa(el, 'li'), ratures = qa(el, '.rature');
         gsap.set(ratures, { scaleX: 0 });
-        lis.forEach((li, i) => c.ft(li, { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, t0 + (p.items[i].t == null ? 0.4 + 0.25 * i : p.items[i].t)));
+        lis.forEach((li, i) => c.ft(li, { opacity: 0, x: -90, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.45, ease: 'back.out(1.8)', transformOrigin: '0% 50%' }, t0 + (p.items[i].t == null ? 0.4 + 0.25 * i : p.items[i].t)));
         if (p.rayer) {
           const tr = t0 + p.rayer.t;
           c.ft(ratures, { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: 'power2.out', stagger: 0.1 }, tr);

@@ -10,10 +10,10 @@
   "corrections": { "12": "Quelle", "42": "", "43": "ChatGPT,"},
   "forts": ["valeur ajoutée", "clarté", "théâtre d'improvisation", "différencier"],
   "plans": [
-    { "plan": "titre", "fond": "nuit", "illu": "question", "kicker": "Développeur · ingénieur", "texte": "C'est quoi, notre *valeur ajoutée* ?" },
+    { "plan": "titre", "fond": "cave", "kicker": "Développeur · ingénieur", "texte": "C'est quoi, notre *valeur ajoutée* ?" },
     { "plan": "liste", "a": "pour quelqu'un dont", "fond": "papier", "illu": "code", "kicker": "Si ton métier, c'est", "items": [
       { "texte": "Programmeur", "a": "programmeur" }, { "texte": "Développeur", "a": "développeur" }, { "texte": "Ingénieur", "a": "ingénieur" } ] },
-    { "plan": "liste", "a": "J'ai posé", "fond": "accent", "illu": "chat", "kicker": "J'ai demandé aux IA", "items": [
+    { "plan": "liste", "a": "J'ai posé", "fond": "robot", "kicker": "J'ai demandé aux IA", "items": [
       { "texte": "Claude", "a": "Claude" }, { "texte": "ChatGPT", "a": "Tchad" } ],
       "rayer": { "a": "j'ai pas eu" }, "conclusion": "Aucune réponse ne m'a *convaincu*." },
     { "plan": "titre", "a": "Et du coup", "fond": "nuit", "illu": "deplacement", "kicker": "Mon hypothèse", "texte": "Notre valeur n'est *plus* là où on croit." },
@@ -21,11 +21,11 @@
       "droite": { "texte": "Mise en forme", "a": "mais plus dans" } },
     { "plan": "liste", "a": "comment on les", "fond": "accent", "illu": "presentation", "kicker": "La clarté", "items": [
       { "texte": "Présenter", "a": "présente" }, { "texte": "Expliquer", "a": "expliquer" } ] },
-    { "plan": "titre", "a": "Et donc je me", "fond": "nuit", "illu": "sortie", "kicker": "Ma réponse", "texte": "Sortir de la *technique*." },
-    { "plan": "titre", "a": "théâtre", "fond": "papier", "illu": "theatre", "kicker": "Mon pari", "texte": "Théâtre *d'impro*", "taille": "geant" },
-    { "plan": "liste", "a": "développer ses", "fond": "nuit", "illu": "micro", "kicker": "Ce qu'on y travaille", "items": [
+    { "plan": "titre", "a": "Et donc je me", "fond": "cave", "kicker": "Ma réponse", "texte": "Sortir de la *technique*." },
+    { "plan": "titre", "a": "théâtre", "fond": "scene", "kicker": "Mon pari", "texte": "Théâtre *d'impro*", "taille": "geant" },
+    { "plan": "liste", "a": "développer ses", "fond": "papier", "illu": "micro", "kicker": "Ce qu'on y travaille", "items": [
       { "texte": "Soft skills", "a": "soft" }, { "texte": "Présentation", "a": "présentation" }, { "texte": "Aisance à l'oral", "a": "d'être" } ] },
-    { "plan": "titre", "a": "Et je pense", "fond": "accent", "illu": "duo", "kicker": "Mon avis", "texte": "C'est ça qui nous *différencie*." },
+    { "plan": "titre", "a": "Et je pense", "fond": "robot", "kicker": "Mon avis", "texte": "C'est ça qui nous *différencie*." },
     { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3.2, "texte": "Et *toi* ?", "sous": "Tu mises sur quoi ? Dis-le en commentaire." }
   ],
   "publication": {

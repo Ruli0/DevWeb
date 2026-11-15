@@ -1,0 +1,130 @@
+# Passation : la chaîne « avis » (la voix d'abord)
+
+_Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en premier, avant tout autre fichier. Branche : `claude/busy-feynman-m0q7yp`._
+
+## 1. Où on en est, en cinq lignes
+
+- L'auteur ne veut plus (pour l'instant) du format « cerveau et santé » : il veut **parler librement** de sujets variés (travail et IA, escalade, relations) et que l'outil habille sa voix.
+- La chaîne « avis » fait cela : une voix enregistrée au téléphone entre, une vidéo verticale sous-titrée et illustrée sort.
+- Un épisode existe : `valeur-ia` (57 s, rubrique Travail). Trois versions ont été envoyées ; l'auteur a dit de la dernière base : « on est sur la bonne piste », puis « on a une base stable ».
+- **Prochaine action attendue** : l'auteur renvoie une nouvelle prise de voix sur le script resserré (section 7). Il faudra refaire le montage dessus.
+- Rien n'est publié. Aucune donnée d'audience. Tout ce qui touche au rythme est une hypothèse.
+
+## 2. Ce que l'auteur a dit (mot pour mot), dans l'ordre
+
+| Tour | Ce qui a été montré | Son retour |
+|---|---|---|
+| 1 | Voix nettoyée (filtre ffmpeg) | « il y a encore trop de bruit parasite […] améliorer la voix en général sur le ton et les intonations […] Essaye de couper les blancs pour faire plus rapide et je te laisse gérer » |
+| 2 | Vidéo v1 : fond sombre, typographie, sous-titres | « j'aime bien, c'est pas mal […] essaye de changer de fond, faire des choses plus dynamiques, mettre plus d'illustrations. […] on s'ennuie un peu quand on lit juste les textes et les graphiques […] fais des transitions » |
+| 3 | Vidéo v2 : fonds alternés, transitions, illustrations au trait | « c'est beaucoup mieux » (sur le script réécrit) ; « Améliore comment le texte s'affiche » ; « les visuels font trop IA encore. Peux-tu mettre des fonds différents ? Du style cave avec pc pour métier développeur, robot pour l'IA et pour le théâtre une scène avec des éléments tels que masque et micro » |
+| 4 | Vidéo v3 : décors illustrés (cave, robot, scène), texte mot par mot, mot en cours en pastille | en attente |
+
+Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
+
+Ce qu'il ne faut pas reproposer : une voix de synthèse ou clonée ; le terrarium ; l'infographie sobre seule.
+
+## 3. Fabriquer une vidéo, de bout en bout
+
+```bash
+cd terrarium && npm install
+pip install faster-whisper pyrnnoise soundfile "numpy<2"     # une fois par session
+# 1. La voix : débruitage (RNNoise), transcription mot par mot (Whisper « medium »), silences
+HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # → videos/voix/<id>/propre.flac et mots.json
+# 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
+# 3. La composition et la planche d'aperçu (une image par plan)
+npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
+npm test                         # 51 tests, tous verts
+# 4. Le rendu (CLI HyperFrames installé hors du dépôt : npm i hyperframes dans le dossier temporaire)
+cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
+  <dossier-temporaire>/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
+```
+
+- Les enregistrements de l'auteur arrivent dans `/root/.claude/uploads/<session>/…m4a` (pièce jointe du message).
+- Un rendu de 57 s en 30 images par seconde prend environ 3 minutes. Le rendu final se fera en 60 (`--fps 60`), une fois le montage validé.
+- Envoyer le MP4 à l'auteur comme fichier. Les MP4 et `videos/studio/` ne vont pas dans le dépôt ; `videos/voix/<id>/` y va (c'est la source).
+- Lint : `hyperframes lint --json <chemin de la composition>` : 0 erreur attendue ; les avertissements « sub-composition » et « track too dense » sont connus et sans effet.
+
+## 4. L'épisode (`videos/episodes/<id>.json`)
+
+| Champ | Rôle |
+|---|---|
+| `"version": 4`, `"rubrique"` | Choisit la chaîne « avis » ; la rubrique donne la couleur (`travail`, `escalade`, `relations`, dans `studio/avis/style.js`) |
+| `"voix"` | Le dossier de `videos/voix/` (par défaut l'identifiant) |
+| `"retirer"` | Passages coupés : `[["premiers mots", "derniers mots"]]`. La coupe va de silence à silence |
+| `"corrections"` | Orthographe des sous-titres, par indice du mot dans `mots.json` (`""` supprime le mot affiché) |
+| `"forts"` | Mots en couleur dans les sous-titres (toutes leurs occurrences) |
+| `"reglages"` | `vitesse` (1,05), `respiration` (0,14 s laissée par silence), `musique` (volume 0,16) |
+| `"plans"` | Les plans visuels. Chacun commence sur son ancre `"a"` (une suite de mots dits) et dure jusqu'au suivant |
+
+Un plan : `"plan"` (`titre`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). Le dernier plan est `fin` avec `"apres": 3.2` (il vient après la voix).
+
+- **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`. **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
+- Deux plans voisins ne peuvent pas avoir le même fond (le montage le refuse). Sans `"fond"`, les fonds unis alternent.
+- **Transitions** : `cercle`, `volet`, `biseau`, `rideau` (elles alternent si rien n'est précisé).
+- **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit.
+- Le montage refuse l'épisode avec un message qui dit quoi changer (ancre introuvable, texte trop long, plan de moins de 1,2 s, fond répété).
+
+## 5. Le code (`studio/avis/`), fichier par fichier
+
+| Fichier | Rôle | Côté |
+|---|---|---|
+| `scripts/voix.py` | Débruite, transcrit, repère les silences | Python |
+| `montage.js` | Fonction pure : épisode + `mots.json` → feuille de route (coupes de la voix, instants des mots, sous-titres, plans) | Node |
+| `style.js` | Couleurs, rubriques, polices, réglages des sous-titres et de la voix | Node |
+| `plans.js` | Les 4 plans : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
+| `illustrations.js` | Les 11 illustrations au trait : `svg`, `jouer` | Node et page |
+| `decors.js` | Les 3 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
+| `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
+| `page.js` | Écrit `index.html`, la voix montée (ffmpeg) et la musique | Node |
+| `test/avis.test.js` | 7 tests du montage | Node |
+
+`scripts/video.js` aiguille : `"version": 4` → chaîne « avis », `3` → V3, sinon l'ancienne.
+
+### Ajouter un décor (le besoin le plus probable)
+
+Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, el, t0, d) }` :
+
+- Dessiner en 1080 × 1920. **Le sujet dans la moitié basse** (y > 700) : le haut porte le texte du plan, sous un voile sombre. Les sous-titres passent vers y 1150 à 1300. Sous y 1440, l'interface de TikTok couvre l'image : décor seulement.
+- Trois groupes `.loin`, `.milieu`, `.pres` : ils glissent à des vitesses différentes (profondeur).
+- Les identifiants de dégradés s'écrivent `xx-nom` (deux mots en minuscules) : `page.js` leur ajoute le numéro du plan, sinon un décor utilisé deux fois perd ses dégradés.
+- Pas de filtre SVG (le flou ralentit beaucoup le rendu) : faire les halos avec des dégradés radiaux.
+- Animer avec `c.ft(cible, de, vers, t)` uniquement, et des répétitions **finies** (`fois(d, periode)`). Ni minuterie, ni hasard, ni `repeat: -1` : le rendu image par image doit être reproductible.
+- Prochains décors utiles : un mur d'escalade (prises colorées, corde, grimpeur), un salon ou un café pour les relations, un open space.
+
+## 6. Pièges rencontrés (à ne pas redécouvrir)
+
+- **Réseau** : la transcription télécharge son modèle depuis `huggingface.co` et `us.aws.cdn.hf.co`. L'environnement « DevWeb » les autorise ; l'environnement par défaut non. Mettre `HF_HUB_DISABLE_XET=1`. GitHub (hors dépôt) et les autres hôtes de modèles sont bloqués : DeepFilterNet n'a pas pu être essayé.
+- **`faster-whisper` et PyAV** : `transcribe(<chemin>)` plante ici ; `voix.py` décode donc l'audio avec ffmpeg et passe un tableau.
+- **Le modèle ne peut pas écouter.** Seules des mesures existent : bruit dans les pauses de −28 dB à −63 dB après RNNoise, voix à −14 LUFS, musique environ 17 dB sous la voix. C'est l'auteur qui juge à l'oreille ; lui demander un mot précis (bruit, robotique, sourde, sifflante, trop rapide).
+- **Whisper et les noms** : « ChatGPT » a été transcrit « Tchad, GPT ». Relire `mots.json` et corriger avec `"corrections"`.
+- **Mesurer avant de déplacer** : dans `lecteur.js`, les traits sous les mots forts sont placés d'après `getBoundingClientRect` ; la mesure doit se faire avant tout `gsap.set` sur les mots.
+- **Planche d'aperçu** : une image tombée au milieu d'une transition ou d'un clignement d'œil n'est pas un défaut. Demander d'autres instants : `NODE_PATH=$(npm root -g) node scripts/apercu.js videos/studio/<id>/index.html <sortie.png> t1 t2 …`.
+- **`production/CATALOGUE.md`** est généré (`node studio/catalogue.js`) et vérifié par un test ; il ne décrit pas la chaîne « avis ».
+- Les chaînes plus anciennes (terrarium, V3) restent dans le dépôt et leurs tests passent : ne pas les faire évoluer sans demande.
+
+## 7. Le script resserré que l'auteur doit réenregistrer
+
+Envoyé le 15 nov. (« c'est beaucoup mieux », « je referai le texte demain ») :
+
+> Développeur, ingénieur : à quoi on sert encore, maintenant que l'IA code ?
+> J'ai posé la question à Claude. À ChatGPT. Aucune réponse ne m'a convaincu.
+> Alors voilà la mienne.
+> Notre valeur n'est plus dans la technique. La technique, l'IA l'a déjà.
+> Notre valeur, c'est la clarté. Savoir présenter un résultat. Expliquer un sujet compliqué à quelqu'un qui n'y connaît rien.
+> Et ça, ça ne s'apprend pas devant un écran.
+> Du coup, moi, j'ai fait un choix bizarre pour un développeur : je me mets au théâtre d'improvisation.
+> Et toi, tu mises sur quoi ?
+
+À la réception : `scripts/voix.py` sur le nouveau fichier (nouvel identifiant, par exemple `valeur-ia-2`), nouvel épisode copié de `valeur-ia.json`, **toutes les ancres et les corrections sont à refaire** (elles dépendent des mots dits). Viser 35 à 45 s.
+
+## 8. Les outils, tous gratuits
+
+RNNoise (débruitage), Whisper par faster-whisper (transcription), ffmpeg (coupes, égalisation, niveau), GSAP (animation), HyperFrames et Chromium (rendu MP4), Node.js. Aucun service payant, aucune clé. Le seul coût est l'abonnement Claude de l'auteur.
+
+## 9. La suite, par ordre d'intérêt
+
+1. Monter la nouvelle prise de voix (section 7), obtenir l'accord de l'auteur, rendre en 60 images par seconde.
+2. **Photos et vidéos de l'auteur** comme fonds (escalade surtout) : c'est le meilleur remède au reproche « ça fait trop IA ». Le fond `photo` existe ; il n'a été essayé que sur une image de test, jamais sur une vraie photo. La vidéo en fond reste à faire.
+3. Décors pour les rubriques « escalade » et « relations ».
+4. Une signature sonore propre au compte (la musique est encore « Labo », de la V3) et quelques bruitages sur les transitions.
+5. Publier, puis relever les chiffres dans `videos/resultats.csv` : sans mesure, on règle à l'aveugle.

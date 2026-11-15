@@ -4,7 +4,17 @@ _Dernière mise à jour : 15 novembre 2026._
 
 ## Chaîne « avis » (15 nov. 2026)
 
-Nouvelle direction à côté de la V3 : la voix de l'auteur d'abord (`production/DA-AVIS.md`). `scripts/voix.py` débruite et transcrit un enregistrement ; `npm run video -- <id>` monte la voix (blancs retirés), les sous-titres et les plans (`studio/avis/`). Premier épisode `valeur-ia` (57 s) rendu en 30 images par seconde et envoyé ; en attente du retour de l'auteur sur la voix et le visuel. 7 tests dans `test/avis.test.js`.
+Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord. Passation complète dans `PASSATION-AVIS.md`.
+
+| Ce qui marche | Où |
+|---|---|
+| Voix : débruitage RNNoise, transcription mot par mot, silences | `scripts/voix.py` |
+| Montage : blancs retirés, passages coupés, vitesse, fondu aux raccords | `studio/avis/montage.js`, `page.js` |
+| Sous-titres mot par mot, mot en cours en pastille | `studio/avis/lecteur.js` |
+| 4 plans, 11 illustrations, 3 fonds unis, 3 décors illustrés, fond photo, 4 transitions | `studio/avis/` |
+| Épisode `valeur-ia` (57 s), 3 versions envoyées | `videos/episodes/valeur-ia.json` |
+
+Limites : le son n'est jugé que par l'auteur (le modèle ne peut pas écouter) ; le fond photo n'a jamais servi avec une vraie photo ; pas de décor pour l'escalade ni les relations ; musique héritée de la V3 ; rien n'est publié. En attente : la nouvelle prise de voix de l'auteur sur le script resserré.
 
 ## Cap V3 (14 nov. 2026)
 

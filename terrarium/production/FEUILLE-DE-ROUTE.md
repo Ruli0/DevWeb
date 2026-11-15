@@ -1,6 +1,20 @@
 # Feuille de route
 
-_Dernière mise à jour : 12 novembre 2026._
+_Dernière mise à jour : 15 novembre 2026._
+
+## Chaîne « avis » (15 nov. 2026) : le cap actuel
+
+| # | Étape | Qui | Statut |
+|---|---|---|---|
+| A1 | Chaîne voix : débruitage, transcription, montage, sous-titres | Claude | fait |
+| A2 | Fonds, transitions, illustrations, décors illustrés (cave, robot, scène) | Claude | fait |
+| A3 | Réenregistrer la voix sur le script resserré | Toi | à faire |
+| A4 | Monter la nouvelle prise, rendu final en 60 images par seconde | Claude | à faire |
+| A5 | Photos et vidéos de l'auteur comme fonds (escalade) | Toi puis Claude | à faire |
+| A6 | Décors « escalade » et « relations », signature sonore | Claude | à faire |
+| A7 | Publier, relever les chiffres | Toi | à faire |
+
+Tout ce qui suit date d'avant et ne sert que d'historique.
 
 Statuts : **à faire**, **en cours**, **fait**, **abandonné**. Les priorités vont de P0 (bloquant) à P3 (plus tard).
 

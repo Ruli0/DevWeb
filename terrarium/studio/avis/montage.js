@@ -9,7 +9,9 @@
 const S = require('./style.js');
 const PLANS = require('./plans.js');
 const ILLUS = require('./illustrations.js');
-const FONDS = ['nuit', 'papier', 'accent'];
+const DECORS = require('./decors.js');
+const UNIS = ['nuit', 'papier', 'accent'];                       // les fonds unis, qui alternent quand rien n'est précisé
+const FONDS = [...UNIS, ...Object.keys(DECORS), 'photo'];        // + les décors illustrés + une photo de l'auteur
 const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
 const RECOUVREMENT = 0.6;   // un plan reste affiché sous le suivant pendant sa transition
 
@@ -136,6 +138,7 @@ function montage(ep, voix) {
     const ou = `plan ${n + 1} (${pl.plan})`;
     if (!def) { erreurs.push(`${ou} : inconnu. Plans possibles : ${Object.keys(PLANS).join(', ')}`); return; }
     const p = JSON.parse(JSON.stringify(pl)); delete p.plan; delete p.a; delete p.apres; delete p.fond; delete p.transition;
+    if (pl.fond === 'photo' && !p.photo) erreurs.push(`${ou} : le fond « photo » demande "photo": "fichier.jpg" (dans videos/medias/)`);
     if (p.illu && !ILLUS[p.illu]) erreurs.push(`${ou} : illustration « ${p.illu} » inconnue. Possibles : ${Object.keys(ILLUS).join(', ')}`);
     if (pl.fond && !FONDS.includes(pl.fond)) erreurs.push(`${ou} : "fond" : un parmi ${FONDS.join(', ')}`);
     if (pl.transition && !TRANSITIONS.includes(pl.transition)) erreurs.push(`${ou} : "transition" : une parmi ${TRANSITIONS.join(', ')}`);
@@ -149,17 +152,17 @@ function montage(ep, voix) {
     });
     def.textes(p).forEach((x) => { const nu = String(x || '').replace(/\*/g, ''); if (nu.length > def.max) erreurs.push(`${ou} : « ${nu} » fait ${nu.length} caractères (au plus ${def.max})`); });
     // Sans consigne, les fonds et les transitions alternent : deux plans voisins n'ont jamais le même fond.
-    plans.push({ id: pl.plan, t0: arrondi(t0), p, fond: pl.fond || FONDS[n % FONDS.length], transition: pl.transition || TRANSITIONS[n % TRANSITIONS.length] });
+    plans.push({ id: pl.plan, t0: arrondi(t0), p, fond: pl.fond || UNIS[n % UNIS.length], transition: pl.transition || TRANSITIONS[n % TRANSITIONS.length] });
   });
   const duree = arrondi(dureeVoix + apres);
   plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); x.dClip = arrondi(plans[i + 1] ? Math.min(x.d + RECOUVREMENT, duree - x.t0) : x.d); if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
-  plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond) erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
+  plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond && x.fond !== 'photo') erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
   if (!plans.length) erreurs.push('aucun plan');
   if (!ep.essai && (duree < 15 || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre 15 et 75 s`);
 
   const feuille = {
     version: 4, format: 'avis', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
-    rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff',
+    rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: ep.musique || 'labo', volume: reglages.musique },
     mots: mots.length, groupes, plans, publication: ep.publication || null,
@@ -167,4 +170,4 @@ function montage(ep, voix) {
   return { erreurs, feuille };
 }
 
-module.exports = { FONDS, TRANSITIONS, montage, chercher, garder, horloge, sousTitres, reunir };
+module.exports = { UNIS, FONDS, TRANSITIONS, montage, chercher, garder, horloge, sousTitres, reunir };

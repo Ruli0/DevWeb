@@ -9,6 +9,7 @@ const { execFileSync } = require('node:child_process');
 const S = require('./style.js');
 const PLANS = require('./plans.js');
 const ILLUS = require('./illustrations.js');
+const DECORS = require('./decors.js');
 
 const RACINE = path.join(__dirname, '../..');
 const lire = (f) => fs.readFileSync(path.join(RACINE, f), 'utf8');
@@ -37,6 +38,13 @@ function css(f) {
 .plan.nuit { --bg: ${c.fond}; --fg: ${c.texte}; --ac: ${acc}; }
 .plan.papier { --bg: ${c.texte}; --fg: ${c.fond}; --ac: ${acc}; }
 .plan.accent { --bg: ${acc}; --fg: ${c.fond}; --ac: #ffffff; }
+.plan.decor, .plan.photo { --bg: ${c.fond}; --fg: ${c.texte}; --ac: ${acc}; }
+${Object.entries(DECORS).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n} { --ac: ${d.accent}; }`).join('\n')}
+.decor-svg, .photo-img { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+.photo-img { object-fit: cover; transform-origin: 50% 50%; }
+/* Le voile : le haut du décor est assombri pour que le texte du plan reste lisible. */
+.voile { position: absolute; inset: 0; background: linear-gradient(to bottom, #000000b8 0, #00000099 620px, #00000000 980px); }
+.decor .cadre, .photo .cadre { text-shadow: 0 3px 24px #000000aa; }
 .deco, .deco i { position: absolute; display: block; }
 .deco { inset: 0; }
 .nuit .deco .a { left: -200px; top: -100px; width: 1480px; height: 1500px; background: radial-gradient(closest-side, ${acc}55, ${acc}00); }
@@ -50,8 +58,11 @@ function css(f) {
 .illu { position: absolute; left: 70px; top: 700px; width: 940px; height: 400px; overflow: visible; }
 .cadre { position: absolute; inset: 0; padding: 270px 70px 0 70px; display: flex; flex-direction: column; gap: 34px; width: 1010px; }
 em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0; }
+/* Le trait de surligneur sous le mot fort : il se trace après l'arrivée du texte. */
+.trait { position: absolute; left: 0; height: 12px; border-radius: 6px; background: var(--ac); opacity: .55; transform-origin: 0 50%; }
+.grand, .moyen, .conclusion { position: relative; }
 .ligne { overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
-.kicker { font: 400 30px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); opacity: .7; }
+.kicker { align-self: flex-start; font: 400 28px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); border: 2px solid var(--fg); border-radius: 40px; padding: 9px 22px; }
 .grand { font: 700 108px/1.02 '${P.titre}'; letter-spacing: -.025em; }
 .grand.geant { font-size: 168px; line-height: .98; letter-spacing: -.035em; }
 .moyen { font: 700 76px/1.05 '${P.titre}'; letter-spacing: -.02em; }
@@ -73,16 +84,23 @@ em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0
 /* Sous-titres : dans une étiquette sombre, lisibles sur tous les fonds. */
 #st { position: absolute; z-index: 95; left: 50px; width: 910px; top: 1150px; height: 220px; }
 .st { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
-.st div { display: inline-block; background: ${c.fond}; color: ${c.texte}; padding: 16px 30px 22px; border-radius: 28px; font: 700 80px/1.05 '${P.titre}'; letter-spacing: -.02em; box-shadow: 0 12px 40px #00000055; white-space: nowrap; }
+.st div { display: inline-block; background: ${c.fond}; color: ${c.texte}; padding: 16px 22px 20px; border-radius: 30px; font: 700 82px/1.05 '${P.titre}'; letter-spacing: -.02em; box-shadow: 0 14px 44px #00000066; white-space: nowrap; }
 .st div { border: 2px solid #ffffff24; }
 .geant + .filet { display: none; }
-.st span { display: inline-block; margin: 0 .1em; }
+.st span { display: inline-block; padding: 2px .11em 6px; margin: 0 .035em; border-radius: 16px; }
 .st .fort { color: ${acc}; }
 .grain { z-index: 99; }`;
 }
 
 function html(f) {
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco"><i class="a"></i><i class="b"></i></div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  // Un même décor peut servir à deux plans : ses dégradés reçoivent un identifiant propre à chaque plan
+  // (un dégradé défini dans un plan caché ne s'applique plus).
+  const fond = (pl, i) => {
+    if (DECORS[pl.fond]) return `<svg class="decor-svg" viewBox="0 0 1080 1920">${DECORS[pl.fond].svg().replace(/(id="|url\(#)([a-z]+-[a-z]+)/g, `$1$2-${i}`)}</svg><div class="voile"></div>`;
+    if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo)}" alt=""><div class="voile"></div>`;
+    return '<i class="a"></i><i class="b"></i>';
+  };
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] ? ' decor' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
   return `<!doctype html>
@@ -105,6 +123,7 @@ ${plans}
 <script>
 ${lire('studio/avis/plans.js')}
 ${lire('studio/avis/illustrations.js')}
+${lire('studio/avis/decors.js')}
 ${lire('studio/avis/lecteur.js')}
 (function () {
   gsap.registerPlugin(SplitText, DrawSVGPlugin);
@@ -136,6 +155,11 @@ function ecrire(f, dossier) {
   fs.writeFileSync(path.join(dossier, 'feuille.json'), `${JSON.stringify(f, null, 1)}\n`);
   for (const g of PLUGINS) fs.copyFileSync(path.join(RACINE, 'node_modules/gsap/dist', g), path.join(dossier, 'assets', g));
   for (const poids of Object.values(S.polices.fichiers)) for (const p of Object.values(poids)) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));
+  // Les photos de l'auteur (fond « photo ») : videos/medias/ → assets/medias/.
+  f.plans.filter((pl) => pl.fond === 'photo').forEach((pl) => {
+    fs.mkdirSync(path.join(dossier, 'assets/medias'), { recursive: true });
+    fs.copyFileSync(path.join(RACINE, 'videos/medias', pl.p.photo), path.join(dossier, 'assets/medias', pl.p.photo));
+  });
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
   const { MUSIQUES_ARRANGEES, outils } = require('../../scripts/build-sons.js');
   const mesures = Math.ceil(f.duree / (4 * 60 / 90)) + 1;
