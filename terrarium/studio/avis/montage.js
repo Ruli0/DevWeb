@@ -61,11 +61,17 @@ function garder(voix, retraits, reglages) {
 }
 
 // Instant d'origine → instant dans la voix montée (accélérée de `vitesse`).
-function horloge(garde, vitesse) {
+// `pauses` : des silences ajoutés après certains passages gardés ({ k: indice du passage, d: secondes }), pour un compte à rebours.
+function horloge(garde, vitesse, pauses = []) {
   return (t) => {
-    let passe = 0;
-    for (const [a, b] of garde) { if (t <= a) break; passe += Math.min(t, b) - a; }
-    return arrondi(passe / vitesse);
+    let passe = 0, ajoute = 0;
+    garde.some(([a, b], k) => {
+      if (t <= a) return true;
+      passe += Math.min(t, b) - a;
+      if (t > b) pauses.forEach((p) => { if (p.k === k) ajoute += p.d; });
+      return false;
+    });
+    return arrondi(passe / vitesse + ajoute);
   };
 }
 
@@ -102,7 +108,19 @@ function montage(ep, voix) {
     retraits.push([i, j0 + cle(a).split(/\s+/).length - 1]);
   });
   const garde = garder(voix, retraits, reglages);
-  const h = horloge(garde, reglages.vitesse);
+  // Les pauses demandées ("pauses": [{ "apres": "derniers mots", "duree": 5 }]) : un silence ajouté à la fin du passage qui contient ces mots.
+  const pausesVoix = [];
+  (ep.pauses || []).forEach((pa) => {
+    const i = chercher(voix.mots, pa.apres);
+    if (i < 0) { erreurs.push(`"pauses" : « ${pa.apres} » introuvable dans la voix`); return; }
+    const fin = voix.mots[i + cle(pa.apres).split(/\s+/).length - 1].f;
+    const k = garde.findIndex(([, b]) => b >= fin - 0.05);
+    if (k < 0) { erreurs.push(`"pauses" : « ${pa.apres} » tombe dans un passage retiré`); return; }
+    pausesVoix.push({ k, d: pa.duree });
+  });
+  const h = horloge(garde, reglages.vitesse, pausesVoix);
+  // L'instant où commence chaque pause dans la vidéo.
+  const pauses = pausesVoix.map((pa) => ({ t: arrondi(h(garde[pa.k][1])), d: pa.d }));
   const dureeVoix = h(voix.duree);
 
   // 2. Les mots affichés : sans les passages retirés, avec les corrections d'orthographe et les mots forts.
@@ -152,6 +170,12 @@ function montage(ep, voix) {
     });
     def.textes(p).forEach((x) => { const nu = String(x || '').replace(/\*/g, ''); if (nu.length > def.max) erreurs.push(`${ou} : « ${nu} » fait ${nu.length} caractères (au plus ${def.max})`); });
     // Sans consigne, les fonds et les transitions alternent : deux plans voisins n'ont jamais le même fond.
+    // Un compte à rebours se cale sur la première pause qui suit le début du plan.
+    if (pl.plan === 'rebours') {
+      const pa = pauses.find((x) => x.t >= t0 - 0.01);
+      if (!pa) erreurs.push(`${ou} : aucune pause après ce plan (ajoute "pauses": [{ "apres": "…", "duree": 5 }])`);
+      else { p.t = arrondi(pa.t - t0); p.secondes = pa.d; }
+    }
     plans.push({ id: pl.plan, t0: arrondi(t0), p, fond: pl.fond || UNIS[n % UNIS.length], transition: pl.transition || TRANSITIONS[n % TRANSITIONS.length] });
   });
   const duree = arrondi(dureeVoix + apres);
@@ -163,8 +187,10 @@ function montage(ep, voix) {
   const feuille = {
     version: 4, format: 'avis', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
-    duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, vitesse: reglages.vitesse, volume: reglages.volume },
+    duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: ep.musique || 'labo', volume: reglages.musique },
+    // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
+    pauses, sons: pauses.flatMap((pa) => [...Array.from({ length: Math.round(pa.d) }, (_, i) => ({ f: 'tic.wav', t: arrondi(pa.t + i), v: 0.4 })), { f: 'impact.wav', t: arrondi(pa.t + pa.d - 0.05), v: 0.3 }]),
     mots: mots.length, groupes, plans, publication: ep.publication || null,
   };
   return { erreurs, feuille };

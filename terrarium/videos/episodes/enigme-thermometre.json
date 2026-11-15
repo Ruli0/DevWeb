@@ -1,0 +1,28 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "enigme-thermometre",
+  "titre": "L'énigme du thermomètre",
+  "rubrique": "enigme",
+  "numero": 3,
+  "voix": "enigme-thermometre",
+  "corrections": { "1": "10 %", "16": "30", "41": "30", "51": "5" },
+  "forts": ["énigme", "30 degrés", "30 mètres", "température de la pièce"],
+  "reglages": { "respiration": 0.32, "vitesse": 1 },
+  "pauses": [{ "apres": "pour réfléchir", "duree": 5 }],
+  "plans": [
+    { "plan": "titre", "fond": "accent", "illu": "question", "texte": "Seuls *10 %* trouvent." },
+    { "plan": "visuel", "a": "Tu es dans ta", "fond": "salon" },
+    { "plan": "visuel", "a": "30 degrés", "fond": "papier", "illu": "soleil" },
+    { "plan": "visuel", "a": "Une fenêtre", "fond": "nuit", "illu": "fenetre" },
+    { "plan": "visuel", "a": "et tu dois deviner", "fond": "papier", "illu": "thermometre" },
+    { "plan": "visuel", "a": "sachant qu'il", "fond": "nuit", "illu": "distance", "moment": { "a": "30 mètres" } },
+    { "plan": "rebours", "a": "Tu as 5 secondes", "fond": "accent" },
+    { "plan": "titre", "a": "Le thermomètre indique la température de", "fond": "salon", "texte": "La température *de la pièce*." },
+    { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3.2, "texte": "Et *toi* ?", "sous": "Tu avais trouvé ?" }
+  ],
+  "publication": {
+    "texte": "Seuls 10 % trouvent ? À toi de jouer : 30 degrés dehors, une fenêtre ouverte, un thermomètre à 30 mètres. Tu avais trouvé ?",
+    "hashtags": ["#enigme", "#devinette", "#logique", "#quiz"]
+  }
+}

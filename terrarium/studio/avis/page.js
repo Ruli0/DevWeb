@@ -57,6 +57,9 @@ ${Object.entries(DECORS).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n}
 /* Plan sans texte : l'illustration prend la place, plus grande ; le décor n'est pas assombri. */
 .sans-texte .illu { left: 30px; top: 520px; width: 1020px; height: 434px; }
 .sans-texte .voile { display: none; }
+.rebours { position: absolute; left: 280px; top: 520px; width: 520px; height: 520px; }
+.rebours svg { position: absolute; left: 0; top: 0; }
+.rebours span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 700 300px/1 '${P.titre}'; letter-spacing: -.04em; }
 .kicker.repere { font-size: 34px; opacity: 1; padding: 12px 28px; background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .cadre { position: absolute; inset: 0; padding: 270px 70px 0 70px; display: flex; flex-direction: column; gap: 34px; width: 1010px; }
 em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0; }
@@ -118,8 +121,7 @@ ${plans}
    ${st}
  </div>
  ${GRAIN}
- <audio id="voix" class="clip" src="assets/sons/voix.wav" data-start="0" data-duration="${f.dureeVoix}" data-track-index="5" data-volume="${f.voix.volume}"></audio>
- <audio id="musique" class="clip" src="assets/sons/musique.wav" data-start="0" data-duration="${f.duree}" data-track-index="6" data-volume="${f.musique.volume}"></audio>
+ <audio id="son" class="clip" src="assets/sons/mixage.wav" data-start="0" data-duration="${f.duree}" data-track-index="5" data-volume="1"></audio>
 </div>
 <script>
 ${lire('studio/avis/plans.js')}
@@ -141,7 +143,9 @@ ${lire('studio/avis/lecteur.js')}
 // Chaque passage gardé reçoit un fondu de 12 ms à ses deux bouts : aucun clic aux raccords.
 function filtreVoix(v) {
   const F = 0.012;
-  const bouts = v.garde.map(([a, b], i) => `[0:a]atrim=${a}:${b},asetpts=PTS-STARTPTS,afade=t=in:d=${F},afade=t=out:st=${Math.max(0, b - a - F).toFixed(3)}:d=${F}[s${i}]`);
+  // Une pause demandée (compte à rebours) : du silence ajouté à la fin du passage ; il est allongé de `vitesse` car l'accélération vient après.
+  const pause = (i) => (v.pauses || []).filter((p) => p.k === i).map((p) => `,apad=pad_dur=${(p.d * v.vitesse).toFixed(3)}`).join('');
+  const bouts = v.garde.map(([a, b], i) => `[0:a]atrim=${a}:${b},asetpts=PTS-STARTPTS,afade=t=in:d=${F},afade=t=out:st=${Math.max(0, b - a - F).toFixed(3)}:d=${F}${pause(i)}[s${i}]`);
   const chaine = ['highpass=f=90', 'equalizer=f=160:t=q:w=1:g=2', 'equalizer=f=300:t=q:w=1.2:g=-2.5', 'equalizer=f=4500:t=q:w=1:g=3',
     'highshelf=f=9000:g=2.5', 'deesser=i=0.4',
     'acompressor=threshold=-24dB:ratio=3:attack=6:release=120:makeup=4', 'acompressor=threshold=-12dB:ratio=6:attack=2:release=80',
@@ -163,9 +167,19 @@ function ecrire(f, dossier) {
   });
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
   const { MUSIQUES_ARRANGEES, outils } = require('../../scripts/build-sons.js');
+  const { BRUITAGES } = require('../../scripts/sons-v3.js');
+  const sons = path.join(dossier, 'assets/sons');
+  for (const b of new Set((f.sons || []).map((x) => x.f))) outils.ecrireWav(path.join(dossier, 'assets/sons', b), outils.normaliser(BRUITAGES[b](), 0.89), true);
   const mesures = Math.ceil(f.duree / (4 * 60 / 90)) + 1;
   const m = outils.normaliser(MUSIQUES_ARRANGEES[f.musique.nom]({ duree: f.duree + 0.3, parties: Array.from({ length: mesures }, () => 'plein'), coupures: [] }), 0.8);
   outils.ecrireWav(path.join(dossier, 'assets/sons/musique.wav'), m, true);
+  // Le mixage est fait ici, en un seul fichier (voix, musique, bruitages), avec un limiteur à -3 dB :
+  // laissé au moteur de rendu, le niveau d'ensemble changeait d'une vidéo à l'autre.
+  const bruits = f.sons || [];
+  const entrees = ['-i', path.join(sons, 'voix.wav'), '-i', path.join(sons, 'musique.wav'), ...bruits.flatMap((b) => ['-i', path.join(sons, b.f)])];
+  const pistes = [`[0:a]volume=${f.voix.volume}[v]`, `[1:a]volume=${f.musique.volume}[m]`, ...bruits.map((b, i) => `[${i + 2}:a]volume=${b.v},adelay=${Math.round(b.t * 1000)}:all=1[b${i}]`)];
+  const mixage = `${pistes.join(';')};[v][m]${bruits.map((_, i) => `[b${i}]`).join('')}amix=inputs=${2 + bruits.length}:normalize=0:duration=longest,alimiter=limit=0.7:level=disabled,atrim=0:${f.duree},aresample=48000[out]`;
+  execFileSync('ffmpeg', ['-v', 'error', '-y', ...entrees, '-filter_complex', mixage, '-map', '[out]', '-c:a', 'pcm_s16le', path.join(sons, 'mixage.wav')]);
 }
 
 module.exports = { html, ecrire, filtreVoix };

@@ -11,7 +11,7 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 - **En-tête** : la pastille de la rubrique, seule. **Pas de barre de progression** : l'auteur n'en veut pas (« je n'aime pas », 15 nov.).
 - **Typographie** : Inter Tight 700 (titres, sous-titres), Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
 - **Sous-titres** : une étiquette sombre vers y 1300, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
-- **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`.
+- **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`, énigme `#a78bfa`.
 - **Fin** : toujours une question au spectateur et une flèche vers les commentaires.
 - Du grain sur toute l'image.
 
@@ -21,7 +21,7 @@ Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop
 
 ## Ce qui varie (pour ne pas lasser)
 
-- **Les fonds**, jamais deux fois le même à la suite : trois fonds unis (`nuit`, `papier`, `accent`) et des **décors illustrés** plein écran, avec leurs propres couleurs : `cave` (le développeur de dos devant ses écrans), `robot` (l'IA), `scene` (théâtre : rideaux, projecteurs, micro, masques), `mur` (salle d'escalade : prises de couleur, corde, quelqu'un de dos). Le fond `photo` affiche une photo de l'auteur.
+- **Les fonds**, jamais deux fois le même à la suite : trois fonds unis (`nuit`, `papier`, `accent`) et des **décors illustrés** plein écran, avec leurs propres couleurs : `cave` (le développeur de dos devant ses écrans), `robot` (l'IA), `scene` (théâtre : rideaux, projecteurs, micro, masques), `mur` (salle d'escalade : prises de couleur, corde, quelqu'un de dos), `salon` (fenêtre ouverte sur un dehors brûlant, canapé, thermomètre au mur). Le fond `photo` affiche une photo de l'auteur.
 - **Les transitions** : cercle, volet, biseau, rideau.
 - **Les illustrations au trait**, sur les fonds unis seulement.
 - **Le mouvement** : chaque plan arrive avec un léger zoom, son texte monte mot par mot, le mot fort est souligné d'un trait ; les décors vivent (code qui s'écrit, yeux qui clignent, masques qui flottent) et leurs calques glissent à des vitesses différentes.

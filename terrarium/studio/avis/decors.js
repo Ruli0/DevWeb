@@ -169,6 +169,58 @@
         c.ft(cr, { scale: 0.4, opacity: 0.9 }, { scale: 1.6, opacity: 0, duration: 1.1, ease: 'power2.out', stagger: 0.6, repeat: fois(d, 2.2) - 1, repeatDelay: 1.1, transformOrigin: '50% 50%' }, t0 + 0.4);
       },
     },
+    // Le salon : une grande fenêtre ouverte sur un dehors brûlant, un canapé, et un thermomètre au mur, loin de la fenêtre.
+    salon: {
+      description: 'Un salon : fenêtre ouverte sur un dehors très chaud, rideaux qui bougent, canapé, plante, thermomètre au mur à l’opposé.',
+      accent: '#ffb238',
+      svg: () => `<defs>
+          <linearGradient id="sa-mur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16262f"/><stop offset="1" stop-color="#2c4a55"/></linearGradient>
+          <linearGradient id="sa-ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ffd27a"/></linearGradient>
+          <linearGradient id="sa-sol" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a06a3f"/><stop offset="1" stop-color="#4a2c18"/></linearGradient>
+          <radialGradient id="sa-lueur"><stop offset="0" stop-color="#ffb238" stop-opacity=".5"/><stop offset="1" stop-color="#ffb238" stop-opacity="0"/></radialGradient>
+          <radialGradient id="sa-rond"><stop offset="0" stop-color="#e0564a" stop-opacity=".6"/><stop offset="1" stop-color="#e0564a" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="1080" height="1920" fill="url(#sa-mur)"/>
+        <g class="loin">
+          <ellipse cx="280" cy="930" rx="520" ry="560" fill="url(#sa-lueur)"/>
+          <rect x="90" y="650" width="380" height="560" fill="url(#sa-ciel)"/>
+          <circle class="astre" cx="350" cy="800" r="74" fill="#fff3c4"/>
+          <path d="M90 1130 C170 1070 230 1110 300 1080 C370 1050 420 1100 470 1070 V1210 H90 Z" fill="#d9772e" opacity=".8"/>
+          ${[880, 960, 1040].map((y) => `<path class="onde" d="M130 ${y} q28 -22 56 0 t56 0 t56 0 t56 0 t56 0" fill="none" stroke="#ffffff" stroke-opacity=".6" stroke-width="7" stroke-linecap="round"/>`).join('')}
+          <rect x="74" y="634" width="412" height="592" fill="none" stroke="#e9e2d2" stroke-width="22"/>
+          <path d="M74 634 L8 676 V1260 L74 1226 Z" fill="#e9e2d2" opacity=".5"/><path d="M486 634 L552 676 V1260 L486 1226 Z" fill="#e9e2d2" opacity=".5"/>
+          <rect x="52" y="1226" width="456" height="26" rx="6" fill="#e9e2d2"/>
+          <rect x="640" y="700" width="170" height="210" rx="8" fill="#12202a" stroke="#c9a56a" stroke-width="12"/><path d="M660 880 L710 800 L745 846 L770 812 L792 880 Z" fill="#4fa58c"/><circle cx="770" cy="752" r="18" fill="#f2c14e"/>
+        </g>
+        <g class="milieu">
+          <path class="rideau rg" d="M40 610 H170 C150 820 190 1040 130 1290 H40 Z" fill="#f1ead9"/><path class="rideau rd" d="M520 610 H400 C420 820 380 1040 440 1290 H520 Z" fill="#f1ead9"/>
+          <rect x="20" y="596" width="520" height="22" rx="11" fill="#8a6a45"/>
+          <circle class="alerte" cx="940" cy="900" r="150" fill="url(#sa-rond)"/>
+          <rect x="884" y="740" width="112" height="330" rx="20" fill="#f1ead9"/><rect x="926" y="772" width="28" height="210" rx="14" fill="#c9c2b2"/>
+          <rect class="mercure" x="926" y="772" width="28" height="210" rx="14" fill="#e0564a"/><circle cx="940" cy="1012" r="34" fill="#e0564a"/>
+          ${[800, 850, 900, 950].map((y) => `<path d="M966 ${y} h18" stroke="#6b6558" stroke-width="5"/>`).join('')}
+          <path d="M-60 1460 H1140 V1920 H-60 Z" fill="url(#sa-sol)"/><rect x="-60" y="1444" width="1200" height="20" fill="#0f1c23"/>
+          <ellipse cx="560" cy="1650" rx="460" ry="110" fill="#c0564a" opacity=".55"/><ellipse cx="560" cy="1650" rx="360" ry="78" fill="none" stroke="#f1ead9" stroke-opacity=".5" stroke-width="8"/>
+        </g>
+        <g class="pres">
+          <rect x="300" y="1270" width="620" height="210" rx="50" fill="#d9a441"/><rect x="330" y="1390" width="560" height="130" rx="40" fill="#e9b653"/>
+          <rect x="262" y="1350" width="96" height="190" rx="40" fill="#c9922f"/><rect x="862" y="1350" width="96" height="190" rx="40" fill="#c9922f"/>
+          <rect x="350" y="1300" width="150" height="120" rx="30" fill="#4fa58c"/><rect x="330" y="1530" width="24" height="50" fill="#3a2414"/><rect x="866" y="1530" width="24" height="50" fill="#3a2414"/>
+          <path d="M110 1560 h110 l-16 130 h-78 z" fill="#b5653a"/>
+          <g class="plante"><path d="M165 1560 C120 1440 80 1400 50 1330 M165 1560 C165 1420 180 1360 170 1270 M165 1560 C210 1450 250 1420 280 1350" stroke="#3f8f6c" stroke-width="16" fill="none" stroke-linecap="round"/>
+            <ellipse cx="50" cy="1322" rx="34" ry="60" fill="#4fa58c" transform="rotate(-30 50 1322)"/><ellipse cx="170" cy="1256" rx="34" ry="64" fill="#4fa58c"/><ellipse cx="284" cy="1340" rx="34" ry="60" fill="#4fa58c" transform="rotate(34 284 1340)"/></g>
+        </g>`,
+      jouer(c, el, t0, d) {
+        profondeur(c, el, t0, d, 1);
+        c.ft(qa(el, '.rg'), { skewX: -3 }, { skewX: 5, duration: 1.3, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 2.6)), transformOrigin: '50% 0%' }, t0);
+        c.ft(qa(el, '.rd'), { skewX: 3 }, { skewX: -5, duration: 1.5, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 3.0)), transformOrigin: '50% 0%' }, t0);
+        c.ft(qa(el, '.onde'), { x: -16, opacity: 0.2 }, { x: 16, opacity: 0.8, duration: 0.8, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 1.6)), stagger: 0.2 }, t0);
+        c.ft(qa(el, '.astre'), { scale: 1 }, { scale: 1.12, duration: 1.0, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 2.0)), transformOrigin: '50% 50%' }, t0);
+        c.ft(qa(el, '.alerte'), { scale: 0.6, opacity: 1 }, { scale: 1.25, opacity: 0, duration: 1.2, ease: 'power2.out', repeat: fois(d, 1.2) - 1, transformOrigin: '50% 50%' }, t0 + 0.3);
+        c.ft(qa(el, '.mercure'), { scaleY: 0.5 }, { scaleY: 0.62, duration: 1.1, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 2.2)), transformOrigin: '50% 100%' }, t0);
+        c.ft(qa(el, '.plante'), { rotation: -2 }, { rotation: 3, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 3.2)), svgOrigin: '165 1560' }, t0);
+      },
+    },
     // La scène de théâtre : rideaux rouges qui s'ouvrent, projecteurs, micro sur pied, masques de comédie et de tragédie.
     scene: {
       description: 'Le théâtre : rideaux rouges qui s’ouvrent, projecteurs, plancher, micro sur pied, masques de comédie et de tragédie.',

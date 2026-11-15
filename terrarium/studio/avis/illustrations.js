@@ -99,6 +99,58 @@
         tracer(c, qa(el, '.tire'), t0 + 0.6, 0.5, 0); battre(c, qa(el, '.tire'), t0 + 1.2, d, { x: -22, y: 8 });
       },
     },
+// --- Énigme du thermomètre ---
+    soleil: {
+      svg: (p) => `<g class="rayons">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => `<path d="M250 200 m0 -150 v-44" transform="rotate(${i * 30} 250 200)" stroke="#ffb238" stroke-width="18" stroke-linecap="round"/>`).join('')}</g>
+        <circle class="s" cx="250" cy="200" r="118" fill="#ffb238"/>
+        <text class="val" x="700" y="270" text-anchor="middle" font-family="Inter Tight" font-weight="700" font-size="230" letter-spacing="-8" fill="var(--fg)">${p.valeur || '30°'}</text>
+        <path class="chaud" d="M520 370 q30 -24 60 0 t60 0 t60 0 t60 0 t60 0 t60 0" ${T}/>`,
+      jouer(c, el, p, t0, d) {
+        surgir(c, qa(el, '.s'), t0);
+        c.ft(qa(el, '.rayons'), { rotation: 0, opacity: 1 }, { rotation: 60, duration: d, ease: 'none', svgOrigin: '250 200' }, t0);
+        const m = p.moment; surgir(c, qa(el, '.val'), t0 + (m && m.t != null ? Math.max(0.3, m.t - 0.1) : 0.5));
+        tracer(c, qa(el, '.chaud'), t0 + 0.9, 0.6, 0);
+        c.ft(qa(el, '.chaud'), { x: -20 }, { x: 20, duration: 0.8, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(d, 1.6) - 1 }, t0 + 1.5);
+      },
+    },
+    fenetre: {
+      svg: () => `<rect x="330" y="10" width="280" height="370" fill="#ffb238" opacity=".85"/><circle cx="520" cy="110" r="46" fill="#fff3c4"/>
+        <rect class="t" x="330" y="10" width="280" height="370" ${T} stroke-width="14"/>
+        <path class="vg" d="M330 10 L190 50 L190 400 L330 380 Z" fill="var(--fg)" fill-opacity=".12" stroke="var(--fg)" stroke-width="10" stroke-linejoin="round"/>
+        <path class="vd" d="M610 10 L750 50 L750 400 L610 380 Z" fill="var(--fg)" fill-opacity=".12" stroke="var(--fg)" stroke-width="10" stroke-linejoin="round"/>
+        ${[120, 200, 280].map((y, i) => `<path class="air" d="M420 ${y} q40 -30 80 0 t80 0 t80 0 t80 0 t80 0 m-34 -34 l40 34 l-40 34" fill="none" stroke="var(--ac)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`).join('')}`,
+      jouer(c, el, p, t0, d) {
+        c.ft(qa(el, '.vg'), { scaleX: 0.15 }, { scaleX: 1, duration: 0.7, ease: 'back.out(1.6)', transformOrigin: '100% 50%' }, t0 + 0.1);
+        c.ft(qa(el, '.vd'), { scaleX: 0.15 }, { scaleX: 1, duration: 0.7, ease: 'back.out(1.6)', transformOrigin: '0% 50%' }, t0 + 0.1);
+        const a = qa(el, '.air'); gsap.set(a, { opacity: 0 });
+        c.ft(a, { x: -90, opacity: 0 }, { x: 60, opacity: 1, duration: 0.9, ease: 'sine.out', stagger: 0.2, repeat: fois(d, 1.4) - 1, repeatDelay: 0.3 }, t0 + 0.7);
+      },
+    },
+    thermometre: {
+      svg: () => `<rect x="300" y="0" width="92" height="300" rx="46" fill="var(--bg)" stroke="var(--fg)" stroke-width="12"/><circle cx="346" cy="322" r="74" fill="var(--bg)" stroke="var(--fg)" stroke-width="12"/>
+        <circle cx="346" cy="322" r="50" fill="#e0564a"/><rect class="merc" x="326" y="40" width="40" height="270" rx="20" fill="#e0564a"/>
+        ${[60, 110, 160, 210].map((y) => `<path d="M410 ${y} h40" stroke="var(--fg)" stroke-width="9" stroke-linecap="round"/>`).join('')}
+        <text class="qm" x="660" y="290" text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="360" fill="var(--ac)">?</text>`,
+      jouer(c, el, p, t0, d) {
+        const m = qa(el, '.merc'); gsap.set(m, { transformOrigin: '50% 100%' });
+        c.ft(m, { scaleY: 0.25 }, { scaleY: 0.95, duration: 0.9, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(d, 1.8) - 1, transformOrigin: '50% 100%' }, t0);
+        surgir(c, qa(el, '.qm'), t0 + 0.5);
+        c.ft(qa(el, '.qm'), { rotation: -6 }, { rotation: 6, duration: 0.7, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(d, 1.4) - 1, transformOrigin: '50% 60%' }, t0 + 1);
+      },
+    },
+    distance: {
+      svg: (p) => `<g class="g1"><rect x="40" y="130" width="150" height="190" fill="#ffb238" opacity=".85"/><rect x="40" y="130" width="150" height="190" ${T}/><path d="M115 130 V320" ${T}/></g>
+        <g class="g2"><rect x="800" y="110" width="56" height="170" rx="28" fill="var(--bg)" stroke="var(--fg)" stroke-width="10"/><circle cx="828" cy="296" r="44" fill="#e0564a" stroke="var(--fg)" stroke-width="10"/><rect x="818" y="170" width="20" height="110" rx="10" fill="#e0564a"/></g>
+        <path class="ligne" d="M230 228 H760" fill="none" stroke="var(--ac)" stroke-width="12" stroke-linecap="round" stroke-dasharray="6 30"/>
+        <path class="bouts" d="M270 190 L228 228 L270 266 M720 190 L762 228 L720 266" ${A}/>
+        <text class="val" x="495" y="170" text-anchor="middle" font-family="Inter Tight" font-weight="700" font-size="130" letter-spacing="-4" fill="var(--fg)">${p.valeur || '30 m'}</text>`,
+      jouer(c, el, p, t0, d) {
+        surgir(c, qa(el, '.g1'), t0); surgir(c, qa(el, '.g2'), t0 + 0.25);
+        c.ft(qa(el, '.ligne'), { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: 'power2.out', transformOrigin: '0% 50%' }, t0 + 0.5);
+        tracer(c, qa(el, '.bouts'), t0 + 0.9, 0.3, 0);
+        const m = p.moment; surgir(c, qa(el, '.val'), t0 + (m && m.t != null ? Math.max(0.6, m.t - 0.1) : 1.1));
+      },
+    },
     question: {
       svg: () => `<circle class="s o1" cx="170" cy="140" r="56" ${T}/><rect class="s o2" x="700" y="190" width="110" height="110" rx="18" ${T}/>
         <path class="t" d="M395 140 C395 40 545 40 545 140 C545 205 470 205 470 275" ${A} stroke-width="30"/><circle class="s" cx="470" cy="345" r="20" fill="var(--ac)"/>

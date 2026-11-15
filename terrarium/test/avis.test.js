@@ -85,3 +85,15 @@ test('maquette de voix : un script donne des mots horodatés, et l’épisode d�
   const voixEsc = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix/escalade-techniques/mots.json'), 'utf8'));
   assert.deepStrictEqual(montage(ep, voixEsc).erreurs, []);
 });
+
+test('pauses : un silence ajouté décale la suite, donne un compte à rebours et ses bruitages', () => {
+  const plans = [{ plan: 'titre', texte: 'x' }, { plan: 'rebours', a: 'compte' }, { plan: 'titre', a: "l'impro", texte: 'y' }];
+  const sans = montage(episode({ plans }), voix);
+  const avec = montage(episode({ plans, pauses: [{ apres: 'compte', duree: 5 }] }), voix);
+  assert.ok(sans.erreurs.some((e) => e.includes('aucune pause')));
+  assert.deepStrictEqual(avec.erreurs, []);
+  assert.ok(Math.abs(avec.feuille.duree - sans.feuille.duree - 5) < 0.01);
+  assert.strictEqual(avec.feuille.pauses[0].d, 5);
+  assert.strictEqual(avec.feuille.sons.filter((s) => s.f === 'tic.wav').length, 5);
+  assert.ok(Math.abs(avec.feuille.plans[2].t0 - sans.feuille.plans[2].t0 - 5) < 0.01);
+});

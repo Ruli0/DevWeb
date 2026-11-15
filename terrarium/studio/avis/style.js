@@ -9,6 +9,7 @@ module.exports = {
     travail: { nom: 'Travail', accent: '#5b8cff' },
     escalade: { nom: 'Escalade', accent: '#ff8a3d' },
     relations: { nom: 'Relations', accent: '#ff5d7a' },
+    enigme: { nom: 'Énigme', accent: '#a78bfa' },
   },
   polices: {
     titre: 'Inter Tight', fort: 'Instrument Serif', mono: 'JetBrains Mono',

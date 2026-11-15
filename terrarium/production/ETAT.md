@@ -13,6 +13,8 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Sous-titres mot par mot, mot en cours en pastille | `studio/avis/lecteur.js` |
 | 5 plans (dont `visuel`, sans texte), 11 illustrations, 3 fonds unis, 3 décors illustrés, fond photo, 4 transitions | `studio/avis/` |
 | Épisode `valeur-ia` (57 s), 5 versions envoyées | `videos/episodes/valeur-ia.json` |
+| Épisode `enigme-thermometre` (33 s) : pause de 5 s avec compte à rebours et tics, décor `salon` | `videos/episodes/enigme-thermometre.json` |
+| Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
 
 Limites : le son n'est jugé que par l'auteur (le modèle ne peut pas écouter) ; le fond photo n'a jamais servi avec une vraie photo ; pas de décor pour les relations ; les dessins d'escalade n'ont pas été relus par un grimpeur ; musique héritée de la V3 ; rien n'est publié. En attente : deux prises de voix de l'auteur (`valeur-ia` resserré et `escalade-techniques`).

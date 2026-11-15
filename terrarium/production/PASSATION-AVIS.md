@@ -20,7 +20,8 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 4 | Vidéo v3 : décors illustrés (cave, robot, scène), texte mot par mot, mot en cours en pastille | « Met le texte un peu plus bas pour ne pas gêner les visuels » (sous-titres descendus à y 1300) |
 | 5 | Vidéo v4 : sous-titres plus bas | « met moins d'éléments visuels genre texte autre que celui que je dis. Ça peut être trop d'infos pour le spectateur » |
 | 6 | Vidéo v5 : plans sans texte (`visuel`), trois textes seulement (accroche, « Théâtre d'impro », question de fin) | « Fais un script d'escalade où tu parles de 3 techniques de mains et de pied et fais le visuel […] Je ferai la voix demain » |
-| 7 | Script d'escalade et maquette muette `escalade-techniques` (37 s) : décor `mur`, six dessins de gestes | en attente |
+| 7 | Script d'escalade et maquette muette `escalade-techniques` (37 s) : décor `mur`, six dessins de gestes | « pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas » |
+| 8 | Nouvelle prise de voix (une énigme) : « Je vais te donner juste un texte et tu vas essayer d'en faire une vidéo » → `enigme-thermometre` (33 s), envoyée | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -36,7 +37,7 @@ HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # →
 # 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
-npm test                         # 52 tests, tous verts
+npm test                         # 53 tests, tous verts
 # 4. Le rendu (CLI HyperFrames installé hors du dépôt : npm i hyperframes dans le dossier temporaire)
 cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
   <dossier-temporaire>/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
@@ -63,22 +64,23 @@ npm run video -- <id>
 
 | Champ | Rôle |
 |---|---|
-| `"version": 4`, `"rubrique"` | Choisit la chaîne « avis » ; la rubrique donne la couleur (`travail`, `escalade`, `relations`, dans `studio/avis/style.js`) |
+| `"version": 4`, `"rubrique"` | Choisit la chaîne « avis » ; la rubrique donne la couleur (`travail`, `escalade`, `relations`, `enigme`, dans `studio/avis/style.js`) |
 | `"voix"` | Le dossier de `videos/voix/` (par défaut l'identifiant) |
 | `"retirer"` | Passages coupés : `[["premiers mots", "derniers mots"]]`. La coupe va de silence à silence |
 | `"corrections"` | Orthographe des sous-titres, par indice du mot dans `mots.json` (`""` supprime le mot affiché) |
 | `"forts"` | Mots en couleur dans les sous-titres (toutes leurs occurrences) |
+| `"pauses"` | `[{ "apres": "derniers mots", "duree": 5 }]` : un silence ajouté dans la voix, pour un plan `rebours` (compte à rebours, un tic par seconde) |
 | `"reglages"` | `vitesse` (1,05), `respiration` (0,14 s laissée par silence), `musique` (volume 0,16) |
 | `"plans"` | Les plans visuels. Chacun commence sur son ancre `"a"` (une suite de mots dits) et dure jusqu'au suivant |
 
 **Règle depuis le 15 nov. : presque aucun texte à l'écran en dehors des sous-titres.** Le plan par défaut est `visuel` (fond et illustration, sans texte). Garder au plus trois textes par vidéo : l'accroche du premier plan, un mot fort au moment clé, la question de fin. Les plans `liste` et `bascule` existent encore mais ne sont plus utilisés.
 
-Un plan : `"plan"` (`visuel`, `titre`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). Le dernier plan est `fin` avec `"apres": 3.2` (il vient après la voix).
+Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). Le dernier plan est `fin` avec `"apres": 3.2` (il vient après la voix).
 
-- **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`, `mur` (salle d'escalade). **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
+- **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`, `mur` (salle d'escalade), `salon` (fenêtre ouverte, thermomètre au mur). **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
 - Deux plans voisins ne peuvent pas avoir le même fond (le montage le refuse). Sans `"fond"`, les fonds unis alternent.
 - **Transitions** : `cercle`, `volet`, `biseau`, `rideau` (elles alternent si rien n'est précisé).
-- **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire` ; pour l'escalade : `reglette`, `pince`, `aplat`, `carre`, `adherence`, `talon`. Sur le fond `accent` orange, la couleur de peau des dessins d'escalade se lit mal : les mettre sur `nuit` ou `papier`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit. Dans un plan `visuel`, `"moment": { "a": "mots" }` déclenche le temps fort de l'illustration (la balance bascule, la croix se trace).
+- **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire` ; pour l'escalade : `reglette`, `pince`, `aplat`, `carre`, `adherence`, `talon` ; pour l'énigme : `soleil`, `fenetre`, `thermometre`, `distance` (`"valeur"` change le nombre affiché). Sur le fond `accent` orange, la couleur de peau des dessins d'escalade se lit mal : les mettre sur `nuit` ou `papier`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit. Dans un plan `visuel`, `"moment": { "a": "mots" }` déclenche le temps fort de l'illustration (la balance bascule, la croix se trace).
 - Le montage refuse l'épisode avec un message qui dit quoi changer (ancre introuvable, texte trop long, plan de moins de 1,2 s, fond répété).
 
 ## 5. Le code (`studio/avis/`), fichier par fichier
@@ -88,13 +90,13 @@ Un plan : `"plan"` (`visuel`, `titre`, `liste`, `bascule`, `fin`), `"fond"`, `"i
 | `scripts/voix.py` | Débruite, transcrit, repère les silences | Python |
 | `montage.js` | Fonction pure : épisode + `mots.json` → feuille de route (coupes de la voix, instants des mots, sous-titres, plans) | Node |
 | `style.js` | Couleurs, rubriques, polices, réglages des sous-titres et de la voix | Node |
-| `plans.js` | Les 5 plans (`visuel` d'abord) : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
-| `illustrations.js` | Les 17 illustrations : `svg`, `jouer` | Node et page |
-| `decors.js` | Les 4 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
+| `plans.js` | Les 6 plans (`visuel` d'abord) : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
+| `illustrations.js` | Les 21 illustrations : `svg`, `jouer` | Node et page |
+| `decors.js` | Les 5 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
-| `page.js` | Écrit `index.html`, la voix montée (ffmpeg) et la musique | Node |
+| `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
-| `test/avis.test.js` | 8 tests du montage | Node |
+| `test/avis.test.js` | 9 tests du montage | Node |
 
 `scripts/video.js` aiguille : `"version": 4` → chaîne « avis », `3` → V3, sinon l'ancienne.
 
@@ -115,6 +117,9 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - **Réseau** : la transcription télécharge son modèle depuis `huggingface.co` et `us.aws.cdn.hf.co`. L'environnement « DevWeb » les autorise ; l'environnement par défaut non. Mettre `HF_HUB_DISABLE_XET=1`. GitHub (hors dépôt) et les autres hôtes de modèles sont bloqués : DeepFilterNet n'a pas pu être essayé.
 - **`faster-whisper` et PyAV** : `transcribe(<chemin>)` plante ici ; `voix.py` décode donc l'audio avec ffmpeg et passe un tableau.
 - **Le modèle ne peut pas écouter.** Seules des mesures existent : bruit dans les pauses de −28 dB à −63 dB après RNNoise, voix à −14 LUFS, musique environ 17 dB sous la voix. C'est l'auteur qui juge à l'oreille ; lui demander un mot précis (bruit, robotique, sourde, sifflante, trop rapide).
+- **Le mixage se fait dans `page.js`** (`mixage.wav` : voix, musique, bruitages, limiteur à −3 dB). Avec plusieurs pistes audio, HyperFrames baissait tout le mixage de 5 dB (« audio_lowered ») dès qu'un bruitage s'ajoutait. Avec une seule piste, il sort autour de −11 LUFS, comme les autres vidéos.
+- **Une prise sans consigne** (« fais-en une vidéo ») : lire `mots.json`, comprendre le genre (avis, liste, énigme), choisir la rubrique ; en créer une dans `style.js` si aucune ne convient. Pour une énigme, ralentir (`"reglages": { "respiration": 0.32, "vitesse": 1 }`) : il faut le temps de suivre.
+- **Whisper et les chiffres** : il écrit « 10% », « 30 », « 5 » ; corriger l'affichage avec `"corrections"` si besoin.
 - **Whisper et les noms** : « ChatGPT » a été transcrit « Tchad, GPT ». Relire `mots.json` et corriger avec `"corrections"`.
 - **Mesurer avant de déplacer** : dans `lecteur.js`, les traits sous les mots forts sont placés d'après `getBoundingClientRect` ; la mesure doit se faire avant tout `gsap.set` sur les mots.
 - **Planche d'aperçu** : une image tombée au milieu d'une transition ou d'un clignement d'œil n'est pas un défaut. Demander d'autres instants : `NODE_PATH=$(npm root -g) node scripts/apercu.js videos/studio/<id>/index.html <sortie.png> t1 t2 …`.
