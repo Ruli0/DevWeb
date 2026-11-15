@@ -48,7 +48,7 @@
       jouer(c, el, p, t0, d) {
         surgir(c, qa(el, '.b1'), t0); surgir(c, qa(el, '.b2'), t0 + 0.45);
         c.ft(qa(el, '.p'), { y: 0 }, { y: -22, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(d, 0.9) - 1, stagger: 0.12 }, t0 + 0.9);
-        const tx = t0 + (p.rayer && p.rayer.t != null ? p.rayer.t - 0.25 : d * 0.6);
+        const m = p.moment || p.rayer; const tx = t0 + (m && m.t != null ? Math.max(0.8, m.t - 0.25) : d * 0.6);
         tracer(c, qa(el, '.x'), tx, 0.3, 0.12);
         c.ft(qa(el, '.b2'), { opacity: 1 }, { opacity: 0.4, duration: 0.3 }, tx + 0.15);
       },
@@ -61,7 +61,7 @@
       jouer(c, el, p, t0, d) {
         tracer(c, qa(el, '.t'), t0, 0.4);
         const f = qa(el, '.fleau'), o = { svgOrigin: '470 300' };
-        const tb = t0 + (p.droite && p.droite.t != null ? p.droite.t - 0.25 : d * 0.45);
+        const m = p.moment || p.droite; const tb = t0 + (m && m.t != null ? Math.max(0.9, m.t - 0.25) : d * 0.45);
         c.ft(f, Object.assign({ opacity: 0, rotation: 0 }, o), Object.assign({ opacity: 1, rotation: -9, duration: 0.7, ease: 'back.out(2)' }, o), t0 + 0.15);
         c.ft(f, Object.assign({ rotation: -9 }, o), Object.assign({ rotation: 9, duration: 1.1, ease: 'elastic.out(1, 0.5)' }, o), tb);
         c.ft(qa(el, '.dr'), { scale: 1 }, { scale: 1.18, duration: 0.5, ease: 'back.out(3)', transformOrigin: '50% 100%' }, tb);

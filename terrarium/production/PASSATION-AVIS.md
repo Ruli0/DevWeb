@@ -17,7 +17,9 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 1 | Voix nettoyée (filtre ffmpeg) | « il y a encore trop de bruit parasite […] améliorer la voix en général sur le ton et les intonations […] Essaye de couper les blancs pour faire plus rapide et je te laisse gérer » |
 | 2 | Vidéo v1 : fond sombre, typographie, sous-titres | « j'aime bien, c'est pas mal […] essaye de changer de fond, faire des choses plus dynamiques, mettre plus d'illustrations. […] on s'ennuie un peu quand on lit juste les textes et les graphiques […] fais des transitions » |
 | 3 | Vidéo v2 : fonds alternés, transitions, illustrations au trait | « c'est beaucoup mieux » (sur le script réécrit) ; « Améliore comment le texte s'affiche » ; « les visuels font trop IA encore. Peux-tu mettre des fonds différents ? Du style cave avec pc pour métier développeur, robot pour l'IA et pour le théâtre une scène avec des éléments tels que masque et micro » |
-| 4 | Vidéo v3 : décors illustrés (cave, robot, scène), texte mot par mot, mot en cours en pastille | en attente |
+| 4 | Vidéo v3 : décors illustrés (cave, robot, scène), texte mot par mot, mot en cours en pastille | « Met le texte un peu plus bas pour ne pas gêner les visuels » (sous-titres descendus à y 1300) |
+| 5 | Vidéo v4 : sous-titres plus bas | « met moins d'éléments visuels genre texte autre que celui que je dis. Ça peut être trop d'infos pour le spectateur » |
+| 6 | Vidéo v5 : plans sans texte (`visuel`), trois textes seulement (accroche, « Théâtre d'impro », question de fin) | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -56,12 +58,14 @@ cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_head
 | `"reglages"` | `vitesse` (1,05), `respiration` (0,14 s laissée par silence), `musique` (volume 0,16) |
 | `"plans"` | Les plans visuels. Chacun commence sur son ancre `"a"` (une suite de mots dits) et dure jusqu'au suivant |
 
-Un plan : `"plan"` (`titre`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). Le dernier plan est `fin` avec `"apres": 3.2` (il vient après la voix).
+**Règle depuis le 15 nov. : presque aucun texte à l'écran en dehors des sous-titres.** Le plan par défaut est `visuel` (fond et illustration, sans texte). Garder au plus trois textes par vidéo : l'accroche du premier plan, un mot fort au moment clé, la question de fin. Les plans `liste` et `bascule` existent encore mais ne sont plus utilisés.
+
+Un plan : `"plan"` (`visuel`, `titre`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). Le dernier plan est `fin` avec `"apres": 3.2` (il vient après la voix).
 
 - **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`. **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
 - Deux plans voisins ne peuvent pas avoir le même fond (le montage le refuse). Sans `"fond"`, les fonds unis alternent.
 - **Transitions** : `cercle`, `volet`, `biseau`, `rideau` (elles alternent si rien n'est précisé).
-- **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit.
+- **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit. Dans un plan `visuel`, `"moment": { "a": "mots" }` déclenche le temps fort de l'illustration (la balance bascule, la croix se trace).
 - Le montage refuse l'épisode avec un message qui dit quoi changer (ancre introuvable, texte trop long, plan de moins de 1,2 s, fond répété).
 
 ## 5. Le code (`studio/avis/`), fichier par fichier
@@ -71,7 +75,7 @@ Un plan : `"plan"` (`titre`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (fac
 | `scripts/voix.py` | Débruite, transcrit, repère les silences | Python |
 | `montage.js` | Fonction pure : épisode + `mots.json` → feuille de route (coupes de la voix, instants des mots, sous-titres, plans) | Node |
 | `style.js` | Couleurs, rubriques, polices, réglages des sous-titres et de la voix | Node |
-| `plans.js` | Les 4 plans : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
+| `plans.js` | Les 5 plans (`visuel` d'abord) : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
 | `illustrations.js` | Les 11 illustrations au trait : `svg`, `jouer` | Node et page |
 | `decors.js` | Les 3 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |

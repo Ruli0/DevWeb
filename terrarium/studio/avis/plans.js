@@ -12,6 +12,16 @@
   const kicker = (p, u) => (p.kicker ? `<div class="kicker">${u.esc(p.kicker)}</div>` : '');
 
   return {
+    // Aucun texte : seulement le fond (décor ou fond uni) et, si on veut, une illustration. C'est le plan par défaut :
+    // le spectateur lit déjà les sous-titres, il ne faut pas lui donner un second texte à lire.
+    visuel: {
+      description: 'Aucun texte : le fond et, si on veut, une illustration. "moment": { "a": ancre } déclenche le temps fort de l’illustration.',
+      max: 0,
+      ancres: (p) => [[p.moment, 'a']],
+      textes: () => [],
+      dessin: () => '',
+      jouer() {},
+    },
     // Une phrase forte, en grand. "taille": "geant" pour deux ou trois mots.
     titre: {
       description: 'Une phrase forte en grand (avec un surtitre facultatif). "taille": "geant" pour deux ou trois mots.',

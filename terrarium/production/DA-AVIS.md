@@ -8,12 +8,16 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 ## Ce qui ne change jamais (l'identité du compte)
 
-- **En-tête** : barre de progression, pastille de la rubrique à gauche, « Avis · N° » à droite, dans des étiquettes sombres.
+- **En-tête** : barre de progression et pastille de la rubrique.
 - **Typographie** : Inter Tight 700 (titres, sous-titres), Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
 - **Sous-titres** : une étiquette sombre vers y 1300, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
 - **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`.
 - **Fin** : toujours une question au spectateur et une flèche vers les commentaires.
 - Du grain sur toute l'image.
+
+## Peu de texte
+
+Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop d'informations (retour de l'auteur, 15 nov.). La plupart des plans sont donc sans texte (`visuel`). Au plus trois textes par vidéo : l'accroche, un mot fort au moment clé, la question de fin. L'en-tête ne garde que la rubrique.
 
 ## Ce qui varie (pour ne pas lasser)
 

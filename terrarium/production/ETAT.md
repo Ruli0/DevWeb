@@ -11,8 +11,8 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Voix : débruitage RNNoise, transcription mot par mot, silences | `scripts/voix.py` |
 | Montage : blancs retirés, passages coupés, vitesse, fondu aux raccords | `studio/avis/montage.js`, `page.js` |
 | Sous-titres mot par mot, mot en cours en pastille | `studio/avis/lecteur.js` |
-| 4 plans, 11 illustrations, 3 fonds unis, 3 décors illustrés, fond photo, 4 transitions | `studio/avis/` |
-| Épisode `valeur-ia` (57 s), 3 versions envoyées | `videos/episodes/valeur-ia.json` |
+| 5 plans (dont `visuel`, sans texte), 11 illustrations, 3 fonds unis, 3 décors illustrés, fond photo, 4 transitions | `studio/avis/` |
+| Épisode `valeur-ia` (57 s), 5 versions envoyées | `videos/episodes/valeur-ia.json` |
 
 Limites : le son n'est jugé que par l'auteur (le modèle ne peut pas écouter) ; le fond photo n'a jamais servi avec une vraie photo ; pas de décor pour l'escalade ni les relations ; musique héritée de la V3 ; rien n'est publié. En attente : la nouvelle prise de voix de l'auteur sur le script resserré.
 

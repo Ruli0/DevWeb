@@ -56,6 +56,9 @@ ${Object.entries(DECORS).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n}
 .accent .deco .b { left: 600px; top: -200px; width: 700px; height: 700px; border-radius: 120px; background: ${c.fond}1f; }
 .contenu { position: absolute; inset: 0; transform-origin: 540px 800px; }
 .illu { position: absolute; left: 70px; top: 700px; width: 940px; height: 400px; overflow: visible; }
+/* Plan sans texte : l'illustration prend la place, plus grande ; le décor n'est pas assombri. */
+.sans-texte .illu { left: 30px; top: 520px; width: 1020px; height: 434px; }
+.sans-texte .voile { display: none; }
 .cadre { position: absolute; inset: 0; padding: 270px 70px 0 70px; display: flex; flex-direction: column; gap: 34px; width: 1010px; }
 em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0; }
 /* Le trait de surligneur sous le mot fort : il se trace après l'arrivée du texte. */
@@ -100,7 +103,7 @@ function html(f) {
     if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo)}" alt=""><div class="voile"></div>`;
     return '<i class="a"></i><i class="b"></i>';
   };
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] ? ' decor' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
   return `<!doctype html>
@@ -111,7 +114,7 @@ ${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}
 <body>
 <div id="root" data-composition-id="${f.id}" data-start="0" data-duration="${f.duree}" data-width="1080" data-height="1920" data-fps="60">
  <div class="barre"><i id="prog"></i></div>
- <div class="tete"><b>${esc(f.rubrique)}</b><span>Avis · N° ${String(f.numero).padStart(2, '0')}</span></div>
+ <div class="tete"><b>${esc(f.rubrique)}</b></div>
 ${plans}
  <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="3">
    ${st}
