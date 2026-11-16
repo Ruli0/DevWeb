@@ -132,6 +132,17 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - **`production/CATALOGUE.md`** est généré (`node studio/catalogue.js`) et vérifié par un test ; il ne décrit pas la chaîne « avis ».
 - Les chaînes plus anciennes (terrarium, V3) restent dans le dépôt et leurs tests passent : ne pas les faire évoluer sans demande.
 
+## 6 bis. Voix clonée (essai du 16 nov. 2026)
+
+L'auteur a demandé si sa voix pouvait dire un texte nouveau. Un essai de 8 s a été généré et envoyé ; **son avis n'est pas encore connu**. Rien n'est branché dans la chaîne.
+
+- Outil : Chatterbox multilingue (`pip install chatterbox-tts "setuptools<81"` dans un environnement virtuel à part, 3,7 Go ; modèle téléchargé depuis Hugging Face). Sans carte graphique : environ 45 s de calcul pour 8 s de voix.
+- Référence : une vingtaine de secondes de `videos/voix/valeur-ia/propre.flac`, silences retirés, en 24 kHz.
+- `ChatterboxMultilingualTTS.from_pretrained(device="cpu").generate(texte, language_id="fr", audio_prompt_path="ref.wav")`.
+- Le modèle pose un **filigrane inaudible** « généré par IA » sur chaque son. Il lui faut `pkg_resources` (d'où `setuptools<81`). Ne pas le désactiver.
+- Vérification possible sans oreille : retranscrire le résultat avec Whisper. Sur l'essai, le texte est dit en entier ; « l'IA » et « ChatGPT » sont mal prononcés selon la transcription (« qu'il y a code », « chat de GPT ») : écrire ces mots comme ils se disent (« l'i-a », « tchate-jé-pé-té »).
+- À dire à l'auteur à chaque fois : TikTok demande de signaler une voix générée par IA ; sa vraie voix reste préférable, la voix clonée sert à dépanner.
+
 ## 7. Le script resserré que l'auteur doit réenregistrer
 
 Envoyé le 15 nov. (« c'est beaucoup mieux », « je referai le texte demain ») :
