@@ -4,7 +4,7 @@
  * où t est le temps écoulé dans le plan, d sa durée, et p les paramètres du plan ("camera", "accents").
  * Tout se calcule à partir de t (pas de minuterie, pas de hasard : les positions viennent d'un générateur à graine fixe),
  * donc la même image sort toujours au même instant, quel que soit l'ordre du rendu.
- * L'aspect « papier découpé » : couleurs en aplats (trois tons), facettes, contours fins, ombres nettes.
+ * Deux aspects : « doux » (par défaut, celui que l'auteur préfère) et « decoupe » (aplats, contours, ombres nettes).
  * Côté Node, seules les descriptions servent ; THREE n'existe que dans la page.
  */
 (function (racine, fabrique) {
@@ -80,11 +80,15 @@
     if (Math.abs(camera.fov - f) > 1e-4) { camera.fov = f; camera.updateProjectionMatrix(); }
   }
 
-  function rendu(canvas, fond) {
+  // Deux aspects, au choix de l'épisode ("aspect3d") : « doux » (par défaut : facettes éclairées en dégradé, ombres douces)
+  // ou « decoupe » (aplats à trois tons, contours, ombres nettes).
+  let ASPECT = 'doux';
+  function rendu(canvas, fond, aspect) {
+    ASPECT = aspect === 'decoupe' ? 'decoupe' : 'doux';
     const T = THREE;
     const r = new T.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
     r.setPixelRatio(1); r.setSize(canvas.width, canvas.height, false);
-    r.shadowMap.enabled = true; r.shadowMap.type = T.BasicShadowMap;   // ombres nettes, comme du papier découpé
+    r.shadowMap.enabled = true; r.shadowMap.type = ASPECT === 'decoupe' ? T.BasicShadowMap : T.PCFSoftShadowMap;
     const scene = new T.Scene(); scene.background = new T.Color(fond); scene.fog = new T.Fog(fond, 18, 46);
     const camera = new T.PerspectiveCamera(42, canvas.width / canvas.height, 0.1, 200);
     return { T, r, scene, camera };
@@ -95,11 +99,11 @@
     if (!rampe) { rampe = new T.DataTexture(new Uint8Array([110, 110, 110, 255, 185, 185, 185, 255, 255, 255, 255, 255]), 3, 1, T.RGBAFormat); rampe.minFilter = T.NearestFilter; rampe.magFilter = T.NearestFilter; rampe.needsUpdate = true; }
     return rampe;
   };
-  const mat = (T, couleur, plus) => new T.MeshToonMaterial(Object.assign({ color: couleur, gradientMap: tons(T) }, plus || {}));
+  const mat = (T, couleur, plus) => (ASPECT === 'decoupe' ? new T.MeshToonMaterial(Object.assign({ color: couleur, gradientMap: tons(T) }, plus || {})) : new T.MeshLambertMaterial(Object.assign({ color: couleur }, plus || {})));
   // Une forme à facettes : chaque face a sa propre teinte.
   const forme = (T, geo, couleur, ombre) => { const g = geo.index ? geo.toNonIndexed() : geo; g.computeVertexNormals(); const m = new T.Mesh(g, mat(T, couleur)); m.castShadow = ombre !== false; return m; };
   // Un contour fin et sombre sur les arêtes marquées.
-  const contour = (T, m, couleur) => { m.add(new T.LineSegments(new T.EdgesGeometry(m.geometry, 30), new T.LineBasicMaterial({ color: couleur || 0x16222c }))); return m; };
+  const contour = (T, m, couleur) => { if (ASPECT === 'decoupe') m.add(new T.LineSegments(new T.EdgesGeometry(m.geometry, 30), new T.LineBasicMaterial({ color: couleur || 0x16222c }))); return m; };
   // Un membre : un cylindre posé entre deux points.
   function membre(T, a, b, rayon, couleur) {
     const va = new T.Vector3(...a), vb = new T.Vector3(...b), dir = vb.clone().sub(va);
@@ -117,8 +121,8 @@
       ambiance: 'campagne.wav',
       mouvements: MOUVEMENTS,
       cibles: ['paysan', 'buffle', 'repiqueuse', 'canards', 'cabane', 'palmier', 'soleil', 'oiseaux'],
-      creer(canvas, p) {
-        const { T, r, scene, camera } = rendu(canvas, '#f3b98c');
+      creer(canvas, p, aspect) {
+        const { T, r, scene, camera } = rendu(canvas, '#f3b98c', aspect);
         scene.fog = new T.Fog(0xf3b98c, 28, 100);
         // Le ciel : une grande sphère dégradée, du bleu nuit en haut à l'orange à l'horizon.
         const ciel = new T.SphereGeometry(150, 24, 12), cc = [];
@@ -250,8 +254,10 @@
             temps.value = t;
             // Le jour se lève : le soleil monte, la lumière passe de l'orange au doré.
             astre.position.set(soleilPos[0], soleilPos[1] + u * 4, soleilPos[2]);
-            lum.position.set(-13, 9 + u * 6, -7); lum.color.setRGB(1, entre(0.7, 0.87, u), entre(0.48, 0.68, u)); lum.intensity = entre(0.85, 1, u);
-            ambiante.intensity = entre(0.55, 0.68, u);
+            lum.position.set(-13, 9 + u * 6, -7); lum.color.setRGB(1, entre(0.7, 0.87, u), entre(0.48, 0.68, u)); // L'aspect doux a besoin de plus de lumière que les aplats, sinon les talus sont trop sombres.
+            const plus = ASPECT === 'decoupe' ? 0 : 0.22;
+            lum.intensity = entre(0.85, 1, u) + plus;
+            ambiante.intensity = entre(0.55, 0.68, u) + plus;
             // Le paysan et son buffle avancent le long de la terrasse (angle inversé : même repère que les digues).
             const place = (g, a, cle, hy) => { const R = Rp(a); g.position.set(R * Math.cos(a), yp, -R * Math.sin(a)); g.rotation.y = a; pos[cle] = [g.position.x, yp + hy, g.position.z]; };
             const a = -1.06 - t * 0.02, pas = Math.sin(t * 5);
@@ -283,8 +289,8 @@
       accent: '#ff8a3d',
       mouvements: MOUVEMENTS,
       cibles: ['grimpeur', 'prise', 'sommet', 'sol'],
-      creer(canvas, p) {
-        const { T, r, scene, camera } = rendu(canvas, '#1a2030');
+      creer(canvas, p, aspect) {
+        const { T, r, scene, camera } = rendu(canvas, '#1a2030', aspect);
         scene.add(new T.HemisphereLight(0xffffff, 0x2a3350, 0.85));
         const soleil = new T.DirectionalLight(0xfff0d8, 1.05); soleil.position.set(7, 16, 11); soleil.castShadow = true;
         soleil.shadow.mapSize.set(2048, 2048); Object.assign(soleil.shadow.camera, { left: -9, right: 9, top: 20, bottom: -4, near: 1, far: 50 });

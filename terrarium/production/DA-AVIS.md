@@ -8,11 +8,11 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 ## Ce qui ne change jamais (l'identité du compte)
 
-- **En-tête** : la pastille de la rubrique, seule. **Pas de barre de progression** : l'auteur n'en veut pas (« je n'aime pas », 15 nov.).
+- **Rien en haut de l'image** : ni barre de progression (« je n'aime pas », 15 nov.), ni bulle de rubrique (retirée le 16 nov.). La rubrique ne se voit plus que par la couleur d'accent.
 - **Typographie** : Inter Tight 700 (titres, sous-titres), Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
 - **Sous-titres** : une étiquette sombre vers y 1300, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
 - **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`, énigme `#a78bfa`, voyage `#3fbf8f`.
-- **Fin** : toujours une question au spectateur et une flèche vers les commentaires.
+- **Fin** : une question au spectateur, sur une étiquette de papier posée dans le décor du dernier plan. Pas d'écran « Et toi ? » séparé.
 - Du grain sur toute l'image.
 
 ## Peu de texte
@@ -44,15 +44,14 @@ Un style est une couche posée sur le même contenu (`"theme"` dans l'épisode, 
 
 L'auteur a aimé le premier essai (« ça me plaît ») et veut « des tours, des effets plongeants, des zooms ». Un décor peut avoir une version en volume (`mur3d`, `riziere3d`) : formes simples à facettes, vraie caméra qui se déplace, ombres portées. Elle se choisit avec `--3d` ou `"decors3d": true`. La caméra enchaîne des mouvements calés sur les mots (`"camera"`, voir la passation). À réserver aux plans où le mouvement de caméra apporte quelque chose ; les personnages restent des silhouettes de blocs.
 
-### La 3D dans le style du compte
+### L'aspect de la 3D
 
-Depuis le 16 nov., la 3D reprend le papier découpé : couleurs en aplats à trois tons, facettes, contours fins, ombres nettes. La rizière vit (riz en rangs qui ondule, eau qui scintille, paysan à la palanche, buffle, repiqueuse, canards, brume, lumière qui se lève) et une ambiance de campagne passe sous la voix.
+Par défaut, la 3D est « douce » : facettes éclairées en dégradé, ombres douces. L'aspect en aplats avec contours (`decoupe`) a été essayé le 16 nov. ; l'auteur a préféré l'aspect d'avant. Il reste disponible avec `--aspect=decoupe`. La rizière vit (riz en rangs qui ondule, eau qui scintille, paysan à la palanche, buffle, repiqueuse, canards, brume, lumière qui se lève) et une ambiance de campagne passe sous la voix.
 
 ## Mise en page (1080 × 1920)
 
 | Zone | y | Contenu |
 |---|---|---|
-| En-tête | 120 à 170 | rubrique |
 | Plan | 270 à 700 | étiquette, titre ou liste |
 | Illustration | 700 à 1280 | dessin au trait (fonds unis) ou sujet du décor |
 | Sous-titres | 1300 à 1430 | la voix, mot par mot |

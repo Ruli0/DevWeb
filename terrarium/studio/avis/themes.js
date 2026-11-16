@@ -27,8 +27,7 @@ module.exports = {
 .decor-svg .milieu, .decor-svg .pres { filter: drop-shadow(0 16px 0 #00000040); }
 .illu { filter: drop-shadow(8px 10px 0 #00000030); }
 .grand, .moyen { font-family: 'Bricolage Grotesque'; font-weight: 800; letter-spacing: -.035em; }
-.tete { top: 150px; left: 96px; }
-.tete b { background: ${c.texte}; color: ${c.fond}; box-shadow: 5px 5px 0 ${c.fond}; }
+.question p { font-family: 'Bricolage Grotesque'; font-weight: 800; }
 .st div { background: ${c.texte}; color: ${c.fond}; border: 0; border-radius: 10px; box-shadow: 9px 9px 0 ${c.fond}; font-family: 'Bricolage Grotesque'; font-weight: 800; padding: 14px 20px 18px; }
 .st:nth-child(odd) div { transform: rotate(-1.6deg); } .st:nth-child(even) div { transform: rotate(1.4deg); }
 .st span { border-radius: 8px; }`,

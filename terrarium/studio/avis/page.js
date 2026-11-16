@@ -29,10 +29,6 @@ function css(f) {
   return `${fontes}
 * { box-sizing: border-box; margin: 0; padding: 0; } html, body { background: ${c.fond}; }
 #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; color: ${c.texte}; font-family: '${P.titre}'; background: ${c.fond}; }
-/* En-tête : lisible sur tous les fonds. */
-.tete { position: absolute; z-index: 90; top: 120px; left: 70px; right: 70px; display: flex; justify-content: space-between; align-items: center; font: 400 26px '${P.mono}'; letter-spacing: .08em; text-transform: uppercase; }
-.tete b, .tete span { background: ${c.fond}; color: ${c.texte}; padding: 10px 20px; border-radius: 30px; font-weight: 400; display: flex; align-items: center; gap: 12px; }
-.tete b::before { content: ''; width: 14px; height: 14px; border-radius: 50%; background: ${acc}; }
 /* Les trois fonds : nuit, papier, accent. */
 .plan { position: absolute; inset: 0; overflow: hidden; background: var(--bg); color: var(--fg); }
 .plan.nuit { --bg: ${c.fond}; --fg: ${c.texte}; --ac: ${acc}; }
@@ -62,6 +58,10 @@ ${Object.entries(Object.assign({}, DECORS, DECORS3D)).filter(([, d]) => d.accent
 .rebours { position: absolute; left: 280px; top: 520px; width: 520px; height: 520px; }
 .rebours svg { position: absolute; left: 0; top: 0; }
 .rebours span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 700 300px/1 '${P.titre}'; letter-spacing: -.04em; }
+/* La question de fin : une grande étiquette de papier dans le décor, à la place des sous-titres. */
+.question { position: absolute; left: 60px; width: 880px; top: 1180px; text-align: center; transform-origin: 50% 50%; }
+.question p { display: inline-block; background: ${c.texte}; color: ${c.fond}; font: 700 92px/1.06 '${P.titre}'; letter-spacing: -.025em; padding: 26px 36px 32px; border-radius: 14px; box-shadow: 12px 12px 0 ${c.fond}; }
+.question em { color: ${acc}; }
 .kicker.repere { font-size: 34px; opacity: 1; padding: 12px 28px; background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .cadre { position: absolute; inset: 0; padding: 270px 70px 0 70px; display: flex; flex-direction: column; gap: 34px; width: 1010px; }
 em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0; }
@@ -110,7 +110,7 @@ function html(f) {
     if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo)}" alt=""><div class="voile"></div>`;
     return '<i class="a"></i><i class="b"></i>';
   };
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
   const troisD = f.plans.some((pl) => DECORS3D[pl.fond]);
@@ -124,7 +124,6 @@ ${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}${troisD ? 
 <body>
 ${theme.filtre || ''}
 <div id="root" data-composition-id="${f.id}" data-start="0" data-duration="${f.duree}" data-width="1080" data-height="1920" data-fps="60">
- <div class="tete"><b>${esc(f.rubrique)}</b></div>
 ${plans}
  <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="3">
    ${st}

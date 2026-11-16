@@ -22,6 +22,8 @@ const episode = JSON.parse(fs.readFileSync(source, 'utf8'));
 const choixTheme = process.argv.find((x) => x.startsWith('--theme='));
 if (choixTheme) episode.theme = choixTheme.split('=')[1];
 if (option('--3d')) episode.decors3d = true;
+const choixAspect = process.argv.find((x) => x.startsWith('--aspect='));
+if (choixAspect) episode.aspect3d = choixAspect.split('=')[1];
 const V3 = episode.version === 3;
 const AVIS = episode.version === 4;
 let erreurs; let feuille;

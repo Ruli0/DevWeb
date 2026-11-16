@@ -98,6 +98,7 @@ function montage(ep, voix) {
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
+  if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');
   const rub = S.rubriques[ep.rubrique];
   if (!rub) erreurs.push(`"rubrique" : une parmi ${Object.keys(S.rubriques).join(', ')}`);
   if (!voix) { erreurs.push(`la voix manque : python3 scripts/voix.py <enregistrement> ${ep.voix || ep.id}`); return { erreurs, feuille: null }; }
@@ -194,6 +195,16 @@ function montage(ep, voix) {
     if (ep.decors3d && pl.fond && DECORS3D[`${pl.fond}3d`]) pl = Object.assign({}, pl, { fond: `${pl.fond}3d` });
     plans.push({ id: pl.plan, t0: arrondi(t0), p, fond: pl.fond || UNIS[n % UNIS.length], transition: pl.transition || TRANSITIONS[n % TRANSITIONS.length] });
   });
+  // La question de fin posée dans le décor : "question": { "texte": "…", "apres": 3 } sur le dernier plan. Elle arrive quand la voix
+  // se tait et prolonge la vidéo de "apres" secondes.
+  (ep.plans || []).forEach((pl, n) => { if (pl.question && n !== (ep.plans.length - 1)) erreurs.push(`plan ${n + 1} (${pl.plan}) : "question" se met sur le dernier plan seulement`); });
+  const dernier = plans[plans.length - 1];
+  if (dernier && dernier.p.question) {
+    const q = dernier.p.question;
+    if (!q.texte) erreurs.push('"question" : il manque "texte"');
+    else if (String(q.texte).replace(/\*/g, '').length > 44) erreurs.push(`"question" : « ${q.texte} » dépasse 44 caractères`);
+    q.apres = q.apres || 3; q.t = arrondi(Math.max(0, dureeVoix - dernier.t0)); apres += q.apres;
+  }
   const duree = arrondi(dureeVoix + apres);
   plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); x.dClip = arrondi(plans[i + 1] ? Math.min(x.d + RECOUVREMENT, duree - x.t0) : x.d);
     // Les mouvements sans ancre se partagent le plan à parts égales.
@@ -216,7 +227,7 @@ function montage(ep, voix) {
     if (d3.ambiance && reglages.ambiance > 0) sons.push({ f: d3.ambiance, t: x.t0, v: reglages.ambiance, duree: x.dClip });
   });
   const feuille = {
-    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
+    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: ep.musique || 'labo', volume: reglages.musique },

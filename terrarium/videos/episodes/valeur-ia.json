@@ -28,8 +28,7 @@
     { "plan": "visuel", "a": "Et donc je me", "fond": "cave" },
     { "plan": "titre", "a": "théâtre", "fond": "scene", "texte": "Théâtre *d'impro*", "taille": "geant" },
     { "plan": "visuel", "a": "développer ses", "fond": "papier", "illu": "micro" },
-    { "plan": "visuel", "a": "Et je pense", "fond": "robot" },
-    { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3.2, "texte": "Et *toi* ?", "sous": "Tu mises sur quoi ?" }
+    { "plan": "visuel", "a": "Et je pense", "fond": "robot", "question": { "texte": "Tu mises sur *quoi* ?", "apres": 3 } }
   ],
   "publication": {
     "texte": "Développeur à l'ère de l'IA : et si notre valeur n'était plus dans la technique, mais dans la clarté ? Mon pari : le théâtre d'improvisation. Et toi, tu mises sur quoi ?",

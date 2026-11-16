@@ -139,3 +139,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Écarté pour l'instant** : des personnages modelés dans un logiciel 3D (il faudrait ouvrir le réseau vers une banque de modèles) ; la 3D pour tous les décors (seuls `mur3d` et `riziere3d` existent).
 - **Coût accepté** : un rendu plus long (4 min pour 20 s en pleine résolution).
 - **Où** : `studio/avis/decors3d.js`, `montage.js` (validation, accents, sons), `scripts/sons-v3.js` (`campagne.wav`).
+
+## 22. Image épurée : ni bulle de rubrique, ni écran « Et toi ? » ; 3D douce (16 nov. 2026)
+
+- **Décision** : plus rien en haut de l'image ; la question de fin se pose dans le décor du dernier plan (`"question"`) ; la 3D revient à son premier aspect (éclairage doux), l'aspect en aplats devient une option (`--aspect=decoupe`).
+- **Pourquoi** : tes mots : « Enlève la bulle en haut qui spécifie le thème », « À la fin, enlève le Et toi ? ou intègre-le dans le décor », « la qualité de l'image est un peu dégradée, c'était plus joli avant ».
+- **Gardé de l'essai précédent** : la scène enrichie, les nouveaux mouvements de caméra, l'ambiance sonore, la pleine résolution.
+- **Où** : `studio/avis/page.js`, `montage.js`, `lecteur.js`, `decors3d.js` ; les quatre épisodes sont convertis.

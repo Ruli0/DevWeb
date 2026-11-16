@@ -149,3 +149,20 @@ test('caméra 3D : nouveaux mouvements, réglages, coups de zoom sur les mots fo
   assert.deepStrictEqual(mur.erreurs, []);
   assert.ok(montage(episode({ plans: [{ plan: 'visuel', fond: 'mur3d', camera: ['zoom:buffle'] }, { plan: 'fin', apres: 3, fond: 'nuit', texte: 'z' }] }), voix).erreurs.some((e) => e.includes('buffle')));
 });
+
+test('question de fin dans le décor : elle prolonge le dernier plan, et seulement lui', () => {
+  const plans = [{ plan: 'titre', texte: 'x' }, { plan: 'visuel', a: "l'impro", fond: 'cave', question: { texte: 'Tu mises sur *quoi* ?', apres: 3 } }];
+  const { erreurs, feuille } = montage(episode({ plans }), voix);
+  assert.deepStrictEqual(erreurs, []);
+  assert.strictEqual(feuille.duree, +(feuille.dureeVoix + 3).toFixed(3));
+  const q = feuille.plans[1].p.question;
+  assert.ok(Math.abs(feuille.plans[1].t0 + q.t - feuille.dureeVoix) < 0.01);
+  const page = require('../studio/avis/page.js');
+  const html = page.html(feuille);
+  assert.ok(html.includes('class="question"') && !html.includes('<div class="tete">'));
+  const mal = montage(episode({ plans: [{ plan: 'titre', texte: 'x', question: { texte: 'y' } }, { plan: 'titre', a: "l'impro", texte: 'z' }] }), voix);
+  assert.ok(mal.erreurs.some((e) => e.includes('dernier plan')));
+  assert.strictEqual(montage(episode({ aspect3d: 'decoupe' }), voix).feuille.aspect3d, 'decoupe');
+  assert.strictEqual(montage(episode(), voix).feuille.aspect3d, 'doux');
+  assert.ok(montage(episode({ aspect3d: 'flou' }), voix).erreurs.some((e) => e.includes('aspect3d')));
+});

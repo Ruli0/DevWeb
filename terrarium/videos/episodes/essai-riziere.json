@@ -8,7 +8,6 @@
   "voix": "essai-riziere",
   "forts": ["personne ne court", "tout pousse", "prend son temps"],
   "plans": [
-    { "plan": "visuel", "fond": "riziere", "camera": [{ "m": "spirale", "vitesse": "lent" }, { "m": "travelling:paysan", "a": "Le paysan" }, { "m": "plongee:repiqueuse", "a": "Le riz" }, { "m": "contre-plongee:cabane", "a": "Tout là-haut" }, { "m": "zoom:paysan", "a": "et personne ne regarde", "vitesse": "vif", "force": 1.2 }, { "m": "recul:paysan", "a": "On a peut-être" }] },
-    { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3, "texte": "Et *toi* ?", "sous": "Tu cours après quoi ?" }
+    { "plan": "visuel", "fond": "riziere", "camera": [{ "m": "spirale", "vitesse": "lent" }, { "m": "travelling:paysan", "a": "Le paysan" }, { "m": "plongee:repiqueuse", "a": "Le riz" }, { "m": "contre-plongee:cabane", "a": "Tout là-haut" }, { "m": "zoom:paysan", "a": "et personne ne regarde", "vitesse": "vif", "force": 1.2 }, { "m": "recul:paysan", "a": "On a peut-être" }], "question": { "texte": "Tu cours après *quoi* ?", "apres": 3 } }
   ]
 }

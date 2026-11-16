@@ -18,8 +18,7 @@
     { "plan": "visuel", "a": "et tu dois deviner", "fond": "papier", "illu": "thermometre" },
     { "plan": "visuel", "a": "sachant qu'il", "fond": "nuit", "illu": "distance", "moment": { "a": "30 mètres" } },
     { "plan": "rebours", "a": "Tu as 5 secondes", "fond": "accent" },
-    { "plan": "titre", "a": "Le thermomètre indique la température de", "fond": "salon", "texte": "La température *de la pièce*." },
-    { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3.2, "texte": "Et *toi* ?", "sous": "Tu avais trouvé ?" }
+    { "plan": "titre", "a": "Le thermomètre indique la température de", "fond": "salon", "texte": "La température *de la pièce*.", "question": { "texte": "Tu avais *trouvé* ?", "apres": 3 } }
   ],
   "publication": {
     "texte": "Seuls 10 % trouvent ? À toi de jouer : 30 degrés dehors, une fenêtre ouverte, un thermomètre à 30 mètres. Tu avais trouvé ?",

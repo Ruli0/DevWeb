@@ -56,12 +56,15 @@
         if (photo) c.ft(photo, { scale: 1.04, xPercent: -1.5 * (i % 2 ? 1 : -1) }, { scale: 1.16, xPercent: 1.5 * (i % 2 ? 1 : -1), duration: pl.dClip, ease: 'none' }, pl.t0);
         // Décor 3D : dessiné à chaque image, à partir du temps écoulé dans le plan.
         const toile = el.querySelector('.decor-3d');
-        if (toile) scenes3d.push({ t0: pl.t0, d: pl.dClip, scene: A.decors3d[pl.fond].creer(toile, pl.p) });
+        if (toile) scenes3d.push({ t0: pl.t0, d: pl.dClip, scene: A.decors3d[pl.fond].creer(toile, pl.p, f.aspect3d) });
         const da = el.querySelector('.deco .a'), db = el.querySelector('.deco .b');
         const sens = i % 2 ? 1 : -1;
         if (da) c.ft(da, { xPercent: -8 * sens, yPercent: -5 }, { xPercent: 8 * sens, yPercent: 6, duration: pl.dClip, ease: 'none' }, pl.t0);
         if (db) c.ft(db, { rotation: 0, scale: 0.9 }, { rotation: 40 * sens, scale: 1.15, duration: pl.dClip, ease: 'none' }, pl.t0);
         A.plans[pl.id].jouer(c, el, pl.p, pl.t0 + retard, pl.d - retard);
+        // La question de fin : une étiquette de papier posée dans le décor du dernier plan, à la place des sous-titres.
+        const question = el.querySelector('.question');
+        if (question) { gsap.set(question, { opacity: 0 }); c.ft(question, { opacity: 0, scale: 0.7, y: 40, rotation: -6 }, { opacity: 1, scale: 1, y: 0, rotation: -2, duration: 0.45, ease: 'back.out(2)' }, pl.t0 + pl.p.question.t); }
         const illu = el.querySelector('.illu');
         if (illu) {
           A.illus[pl.p.illu].jouer(c, illu, pl.p, pl.t0 + retard + 0.15, pl.d - retard - 0.15);
