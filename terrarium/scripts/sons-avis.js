@@ -90,6 +90,55 @@ function musique({ duree = 30, rubrique = 'travail', indicatif: cle = 'A' } = {}
   return reverbe(b, 0.28);
 }
 
+// --- Trois musiques vivantes (16 nov. : l'auteur trouve les musiques trop sages et en veut de « plus vivantes ») ---------------
+// Batterie, basse et accords sur la même suite d'accords (la mineur, fa, do, sol). Tout se joue sur une grille de doubles croches.
+const BATTERIE = {
+  grosse(b, t, a) { const { sinus, enveloppe } = O(); sinus(b, (x) => 46 + 120 * Math.exp(-x * 32), (x) => a * enveloppe(x, 0.002, 0.17), t, 'sin', 0.5); },
+  claire(b, t, a, g) { const { sinus, bruit, enveloppe, graine } = O(); bruit(b, (x) => a * enveloppe(x, 0.001, 0.085), { bas: 1300, haut: 7500, debut: t, hasard: graine(g), duree: 0.3 }); sinus(b, () => 196, (x) => a * 0.5 * enveloppe(x, 0.001, 0.05), t, 'sin', 0.2); },
+  charley(b, t, a, g, ouvert) { const { bruit, enveloppe, graine } = O(); bruit(b, (x) => a * enveloppe(x, 0.0005, ouvert ? 0.09 : 0.022), { bas: 7000, haut: 13000, debut: t, hasard: graine(g), duree: ouvert ? 0.3 : 0.08 }); },
+  mains(b, t, a, g) { const { bruit, enveloppe, graine } = O(); [0, 0.011, 0.024].forEach((d, k) => bruit(b, (x) => a * enveloppe(x, 0.0008, k === 2 ? 0.07 : 0.012), { bas: 900, haut: 5200, debut: t + d, hasard: graine(g + k), duree: 0.25 })); },
+  maracas(b, t, a, g) { const { bruit, enveloppe, graine } = O(); bruit(b, (x) => a * enveloppe(x, 0.012, 0.03), { bas: 5000, haut: 11000, debut: t, hasard: graine(g), duree: 0.12 }); },
+};
+function basse(b, n, t, duree, a) { const { sinus } = O(); const f = note(n), env = (x) => a * Math.min(1, x / 0.006) * Math.exp(-x / (duree * 0.9)); sinus(b, () => f, env, t, 'sin', duree * 2); sinus(b, () => f * 2, (x) => env(x) * 0.45, t, 'sin', duree * 2); sinus(b, () => f * 3, (x) => env(x) * 0.2, t, 'sin', duree * 1.2); }
+function clavier(b, notes, t, a, tenue = 0.13) { const { sinus, enveloppe } = O(); notes.forEach((n) => { const f = note(n); sinus(b, () => f, (x) => a * enveloppe(x, 0.003, tenue), t, 'sin', tenue * 5); sinus(b, () => f * 2, (x) => a * 0.35 * enveloppe(x, 0.002, tenue * 0.6), t, 'sin', tenue * 3); sinus(b, () => f * 4, (x) => a * 0.12 * enveloppe(x, 0.001, 0.03), t, 'sin', 0.2); }); }
+
+const VIVES = {
+  // Funk léger : basse qui rebondit, accords piqués à contretemps, caisse claire sur 2 et 4.
+  funk: { nom: 'Funk léger', tempo: 108, jouer(b, m, t0, pas, accord, g) {
+    [0, 3, 8, 10].forEach((k) => BATTERIE.grosse(b, t0 + k * pas, k === 3 ? 0.55 : 0.8));
+    [4, 12].forEach((k) => BATTERIE.claire(b, t0 + k * pas, 0.5, g + k));
+    for (let k = 0; k < 16; k += 1) BATTERIE.charley(b, t0 + k * pas, k % 4 === 2 ? 0.2 : 0.1, g + 20 + k, k === 14);
+    [[0, 0, 1.6], [3, 0, 1], [6, 12, 1], [8, 0, 1.6], [11, 7, 1], [14, 12, 1.2]].forEach(([k, i, d]) => basse(b, accord[0] - 24 + i, t0 + k * pas, d * pas, 0.5));
+    [2, 6, 10, 15].forEach((k) => clavier(b, accord.map((n) => n + 12), t0 + k * pas, 0.13, 0.07));
+    if (m % 2 === 1) [[9, 12], [11, 15], [13, 12]].forEach(([k, i]) => TIMBRES.bois(b, note(accord[0] + 12 + i), t0 + k * pas, 0.12, 0.5));
+  } },
+  // Électro pop : grosse caisse sur chaque temps, basse à contretemps, arpège rapide.
+  electro: { nom: 'Électro pop', tempo: 122, jouer(b, m, t0, pas, accord, g) {
+    [0, 4, 8, 12].forEach((k) => BATTERIE.grosse(b, t0 + k * pas, 0.85));
+    [4, 12].forEach((k) => BATTERIE.mains(b, t0 + k * pas, 0.4, g + k));
+    [2, 6, 10, 14].forEach((k) => { BATTERIE.charley(b, t0 + k * pas, 0.2, g + 30 + k, true); basse(b, accord[0] - 24, t0 + k * pas, 1.5 * pas, 0.5); });
+    const suite = [0, 1, 2, 1, 0, 2, 1, 2];
+    for (let k = 0; k < 16; k += 1) TIMBRES.pince(b, note(accord[suite[k % 8]] + (k % 8 > 3 ? 24 : 12)), t0 + k * pas, 0.085, 0.35);
+    const { sinus } = O(); accord.forEach((n) => sinus(b, () => note(n), (x) => 0.035 * Math.min(1, x / 0.2) * Math.min(1, (16 * pas - x) / 0.2), t0, 'sin', 16 * pas));
+  } },
+  // Acoustique entraînante : cordes grattées, maracas, mains qui claquent, une petite mélodie de bois.
+  acoustique: { nom: 'Acoustique entraînante', tempo: 100, jouer(b, m, t0, pas, accord, g) {
+    [0, 8, 10].forEach((k) => BATTERIE.grosse(b, t0 + k * pas, k === 10 ? 0.4 : 0.6));
+    [4, 12].forEach((k) => BATTERIE.mains(b, t0 + k * pas, 0.45, g + k));
+    for (let k = 0; k < 16; k += 2) BATTERIE.maracas(b, t0 + k * pas, k % 4 ? 0.16 : 0.09, g + 40 + k);
+    [0, 3, 6, 8, 11, 14].forEach((k, i) => [accord[0] - 12, ...accord, accord[0] + 12].forEach((n, c) => TIMBRES.pince(b, note(n), t0 + k * pas + (i % 2 ? 4 - c : c) * 0.012, 0.075, 0.6)));
+    const gamme = [0, 3, 5, 7, 10, 12], air = [[0, 3], [3, 4], [6, 5], [8, 4], [11, 2], [14, 3]];
+    air.forEach(([k, i]) => TIMBRES.bois(b, note(69 + gamme[(i + m) % 6] + (m % 2 ? 0 : 12) - 12), t0 + k * pas, 0.13, 0.6));
+    basse(b, accord[0] - 24, t0, 6 * pas, 0.35); basse(b, accord[0] - 24, t0 + 8 * pas, 6 * pas, 0.35);
+  } },
+};
+function vive(style = 'funk', { duree = 30 } = {}) {
+  const { tampon } = O();
+  const v = VIVES[style] || VIVES.funk, pas = 60 / v.tempo / 4, b = tampon(duree);
+  for (let m = 0; m * 16 * pas < duree; m += 1) v.jouer(b, m, m * 16 * pas, pas, ACCORDS[m % 4], 200 + m * 50);
+  return reverbe(b, 0.14);
+}
+
 // --- Les bruitages calés sur l'image --------------------------------------------------
 const BRUITAGES = {
   'indicatif.wav': (cle) => indicatif(cle),
@@ -140,8 +189,9 @@ if (require.main === module) {
   const dossier = process.argv[2] || '.';
   Object.keys(INDICATIFS).forEach((c) => ecrireWav(path.join(dossier, `indicatif-${c}.wav`), normaliser(indicatif(c), 0.8), true));
   Object.keys(RUBRIQUES).forEach((r) => ecrireWav(path.join(dossier, `musique-${r}.wav`), normaliser(musique({ duree: 12, rubrique: r }), 0.8), true));
+  Object.keys(VIVES).forEach((v) => ecrireWav(path.join(dossier, `vive-${v}.wav`), normaliser(vive(v, { duree: 13 }), 0.8), true));
   Object.keys(BRUITAGES).forEach((f) => ecrireWav(path.join(dossier, f), normaliser(BRUITAGES[f]('A'), 0.8), true));
   console.log(`Sons écrits dans ${dossier}`);
 }
 
-module.exports = { INDICATIFS, RUBRIQUES, indicatif, musique, BRUITAGES, TEMPO };
+module.exports = { INDICATIFS, RUBRIQUES, VIVES, indicatif, musique, vive, BRUITAGES, TEMPO };

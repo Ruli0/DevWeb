@@ -3,6 +3,7 @@
 //   npm run video -- <id> --rendu     … puis le rendu MP4 en 60 images par seconde
 //   npm run video -- <id> --brouillon … rendu rapide (30 images par seconde, qualité brouillon)
 //   npm run video -- <id> --theme=neon --3d   (chaîne « avis ») autre style, décors en 3D quand ils existent
+//   npm run video -- <id> --musique=funk       (chaîne « avis ») labo, funk, electro, acoustique, avis ou aucune
 //   npm run video -- <id> --accroche          (chaîne « avis ») seulement les trois premières secondes, en quatre images
 // Sortie : videos/studio/<id>/ (index.html, feuille.json, apercu.png, <id>.mp4)
 'use strict';
@@ -23,6 +24,8 @@ const episode = JSON.parse(fs.readFileSync(source, 'utf8'));
 const choixTheme = process.argv.find((x) => x.startsWith('--theme='));
 if (choixTheme) episode.theme = choixTheme.split('=')[1];
 if (option('--3d')) episode.decors3d = true;
+const choixMusique = process.argv.find((x) => x.startsWith('--musique='));
+if (choixMusique) episode.musique = choixMusique.split('=')[1];
 const choixAspect = process.argv.find((x) => x.startsWith('--aspect='));
 if (choixAspect) episode.aspect3d = choixAspect.split('=')[1];
 const V3 = episode.version === 3;
