@@ -3,6 +3,7 @@
 //   npm run video -- <id> --rendu     … puis le rendu MP4 en 60 images par seconde
 //   npm run video -- <id> --brouillon … rendu rapide (30 images par seconde, qualité brouillon)
 //   npm run video -- <id> --theme=neon --3d   (chaîne « avis ») autre style, décors en 3D quand ils existent
+//   npm run video -- <id> --accroche          (chaîne « avis ») seulement les trois premières secondes, en quatre images
 // Sortie : videos/studio/<id>/ (index.html, feuille.json, apercu.png, <id>.mp4)
 'use strict';
 const fs = require('node:fs');
@@ -44,6 +45,15 @@ const dossier = path.join(RACINE, 'videos/studio', id);
 if (AVIS) require('../studio/avis/page.js').ecrire(feuille, dossier); else if (V3) require('../studio/page-v3.js').ecrire(feuille, dossier); else page.ecrire(feuille, dossier);
 console.log(AVIS ? `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.plans.length} plans, ${feuille.groupes.length} sous-titres)` : V3 ? `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.scenes.length} scènes, ${feuille.sons.length} sons, sources : ${feuille.statutSources})`
   : `Composition écrite : videos/studio/${id}/ (${feuille.duree} s, ${feuille.ordres.length} gestes, ${feuille.sons.length} sons)`);
+
+if (AVIS && feuille.conseils.length) console.log(`Conseils pour l'accroche (voir production/ACCROCHES.md) :\n  - ${feuille.conseils.join('\n  - ')}`);
+
+if (AVIS && option('--accroche')) {
+  // Juger l'ouverture sans tout fabriquer : quatre images des trois premières secondes.
+  const globaux = execSync('npm root -g').toString().trim();
+  const r = spawnSync('node', [path.join(RACINE, 'scripts/apercu.js'), path.join(dossier, 'index.html'), path.join(dossier, 'accroche.png'), '0', '0.7', '1.5', '3'], { stdio: 'inherit', env: { ...process.env, NODE_PATH: globaux } });
+  process.exit(r.status || 0);
+}
 
 if (!option('--sans-apercu')) {
   // V3 : une image par scène, à 70 % de sa durée. Ancienne chaîne : une image par plan de caméra.

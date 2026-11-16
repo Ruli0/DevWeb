@@ -137,8 +137,8 @@ test('caméra 3D : nouveaux mouvements, réglages, coups de zoom sur les mots fo
   const ok = montage(episode({ forts: ['clarté'], plans: plan([{ m: 'spirale', vitesse: 'lent' }, { m: 'travelling:paysan', a: 'compte' }, { m: 'contre-plongee:cabane', a: "l'impro", vitesse: 'vif', force: 1.4 }, 'recul']) }), voix);
   assert.deepStrictEqual(ok.erreurs, []);
   const p0 = ok.feuille.plans[0];
-  assert.strictEqual(p0.p.accents.length, 1);
-  assert.ok(p0.p.accents[0] >= 0 && p0.p.accents[0] < p0.d);
+  assert.strictEqual(p0.p.accents.length, 2);   // le coup d'ouverture, puis le mot fort
+  assert.ok(p0.p.accents[1] > 0.15 && p0.p.accents[1] < p0.d);
   assert.strictEqual(ok.feuille.sons.filter((s) => s.f === 'souffle.wav').length, 3);
   const amb = ok.feuille.sons.find((s) => s.f === 'campagne.wav');
   assert.ok(amb && amb.duree === p0.dClip);
@@ -165,4 +165,23 @@ test('question de fin dans le décor : elle prolonge le dernier plan, et seuleme
   assert.strictEqual(montage(episode({ aspect3d: 'decoupe' }), voix).feuille.aspect3d, 'decoupe');
   assert.strictEqual(montage(episode(), voix).feuille.aspect3d, 'doux');
   assert.ok(montage(episode({ aspect3d: 'flou' }), voix).erreurs.some((e) => e.includes('aspect3d')));
+});
+
+test('accroche : des conseils, jamais des erreurs ; ouverture vive par défaut', () => {
+  // La voix d'essai commence par « Bon, alors » puis un long silence : l'accroche est mauvaise, le montage le dit sans refuser.
+  const tardif = { duree: 6, mots: [{ m: 'Alors', d: 1.2, f: 1.5 }, { m: 'voilà.', d: 1.6, f: 2.0 }], silences: [[2.1, 6]] };
+  const r1 = montage({ version: 4, id: 'x', rubrique: 'travail', essai: true, plans: [{ plan: 'titre', fond: 'nuit', texte: 'x' }] }, tardif);
+  assert.deepStrictEqual(r1.erreurs, []);
+  assert.ok(r1.feuille.conseils.some((c) => c.includes('la voix commence')));
+  assert.ok(r1.feuille.conseils.some((c) => c.includes('fond uni')));
+  const net = montage(episode({ retirer: [['Bon,', 'alors']], plans: [{ plan: 'titre', fond: 'cave', texte: 'x' }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix);
+  assert.deepStrictEqual(net.feuille.conseils, []);
+  const longue = { duree: 30, mots: Array.from({ length: 16 }, (_, i) => ({ m: i === 15 ? 'fin.' : `mot${i}`, d: i * 0.4, f: i * 0.4 + 0.3 })), silences: [] };
+  const r3 = montage({ version: 4, id: 'x', rubrique: 'travail', essai: true, plans: [{ plan: 'titre', fond: 'cave', texte: 'x' }] }, longue);
+  assert.ok(r3.feuille.conseils.some((c) => c.includes('16 mots')));
+  assert.strictEqual(net.feuille.ouverture, 'vive');
+  assert.strictEqual(montage(episode({ ouverture: 'calme' }), voix).feuille.ouverture, 'calme');
+  assert.ok(montage(episode({ ouverture: 'explosive' }), voix).erreurs.some((e) => e.includes('ouverture')));
+  const en3d = montage(episode({ plans: [{ plan: 'visuel', fond: 'riziere3d' }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix).feuille;
+  assert.strictEqual(en3d.plans[0].p.accents[0], 0.15);
 });

@@ -40,7 +40,7 @@ function garder(voix, retraits, reglages) {
   const sil = voix.silences;
   const coupes = [];
   sil.forEach(([a, b]) => {
-    if (a <= 0.01) coupes.push([0, b - marge]);                       // silence de début
+    if (a <= 0.3) coupes.push([0, b - marge]);                        // silence de début (même s'il est précédé d'un petit bruit)
     else if (b >= voix.duree - 0.01) coupes.push([a + 0.25, voix.duree]); // silence de fin : on garde la retombée
     else if (b - a > respiration) coupes.push([a + respiration / 2, b - respiration / 2]);
   });
@@ -98,6 +98,7 @@ function montage(ep, voix) {
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
+  if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
   if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');
   const rub = S.rubriques[ep.rubrique];
   if (!rub) erreurs.push(`"rubrique" : une parmi ${Object.keys(S.rubriques).join(', ')}`);
@@ -212,6 +213,7 @@ function montage(ep, voix) {
     // Décor 3D : les instants des mots forts (la caméra y donne un petit coup de zoom) ; un seul par groupe de mots rapprochés.
     if (DECORS3D[x.fond]) {
       x.p.accents = [];
+      if (i === 0 && ep.ouverture !== 'calme') x.p.accents.push(0.15);   // le coup d'ouverture
       mots.forEach((m) => { const ta = arrondi(m.t - x.t0); if (m.fort && ta >= 0 && ta < x.d && !(x.p.accents.length && ta - x.p.accents[x.p.accents.length - 1] < 1)) x.p.accents.push(ta); });
     } if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
   plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond && x.fond !== 'photo') erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
@@ -227,7 +229,7 @@ function montage(ep, voix) {
     if (d3.ambiance && reglages.ambiance > 0) sons.push({ f: d3.ambiance, t: x.t0, v: reglages.ambiance, duree: x.dClip });
   });
   const feuille = {
-    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
+    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: ep.musique || 'labo', volume: reglages.musique },
@@ -235,7 +237,23 @@ function montage(ep, voix) {
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,
   };
+  feuille.conseils = conseils(feuille, mots);
   return { erreurs, feuille };
 }
 
-module.exports = { UNIS, FONDS, TRANSITIONS, montage, chercher, garder, horloge, sousTitres, reunir };
+// Les conseils d'accroche : des avertissements, jamais des erreurs. Voir production/ACCROCHES.md.
+function conseils(f, mots) {
+  const c = [];
+  if (!mots.length || !f.plans.length) return c;
+  if (mots[0].t > 0.3) c.push(`la voix commence à ${String(mots[0].t).replace('.', ',')} s : la première image doit déjà parler (coupe le début avec "retirer")`);
+  const fin = mots.findIndex((m) => /[.?!…]$/.test(m.m));
+  const phrase = mots.slice(0, fin < 0 ? mots.length : fin + 1);
+  const duree = phrase[phrase.length - 1].f - phrase[0].t;
+  if (phrase.length > 12 || duree > 4) c.push(`la première phrase fait ${phrase.length} mots et ${duree.toFixed(1).replace('.', ',')} s : une accroche tient en 12 mots et 4 s`);
+  const p0 = f.plans[0];
+  if (UNIS.includes(p0.fond) && !p0.p.illu) c.push('le premier plan est un fond uni sans illustration : ouvre sur un décor ou un dessin');
+  if (f.duree > 45) c.push(`la vidéo dure ${Math.round(f.duree)} s : au-delà de 45 s, peu de gens vont au bout (à vérifier sur tes chiffres)`);
+  return c;
+}
+
+module.exports = { conseils, UNIS, FONDS, TRANSITIONS, montage, chercher, garder, horloge, sousTitres, reunir };

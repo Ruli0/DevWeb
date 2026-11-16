@@ -1,13 +1,40 @@
 # Passation : la chaîne « avis » (la voix d'abord)
 
-_Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en premier, avant tout autre fichier. Branche : `claude/busy-feynman-m0q7yp`._
+_Écrit le 15 novembre 2026, relu et nettoyé le 16, pour le modèle qui reprend le travail (l'auteur prévoit de passer la main à Opus 5.5). À lire en premier, avant tout autre fichier. Branche : `claude/busy-feynman-m0q7yp`._
 
-## 1. Où on en est, en cinq lignes
+## 0. Démarrer en cinq minutes
 
-- L'auteur ne veut plus (pour l'instant) du format « cerveau et santé » : il veut **parler librement** de sujets variés (travail et IA, escalade, relations) et que l'outil habille sa voix.
+```bash
+cd terrarium && bash scripts/installer.sh     # dépendances Node et Python, CLI de rendu, tests (sans danger à relancer)
+```
+
+Puis, pour une vidéo à partir d'un enregistrement de l'auteur (il arrive en pièce jointe, dans `/root/.claude/uploads/<session>/`) :
+
+```bash
+HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>   # voix débruitée et transcrite → videos/voix/<id>/
+# lire videos/voix/<id>/mots.json, puis écrire videos/episodes/<id>.json (modèle : enigme-thermometre.json)
+npm run video -- <id>                     # composition, conseils d'accroche, planche d'aperçu à regarder
+npm run video -- <id> --accroche          # les trois premières secondes en quatre images
+# rendu : la commande exacte est affichée à la fin de scripts/installer.sh ; envoyer le MP4 comme fichier
+```
+
+**Les choix de l'auteur, à respecter sans les redemander :**
+
+- style « papier découpé » aux couleurs vives (le défaut : ne pas préciser `"theme"`) ; en 3D, l'aspect doux (le défaut) ;
+- presque aucun texte à l'écran en dehors des sous-titres : au plus trois textes par vidéo ;
+- rien en haut de l'image (ni barre de progression, ni bulle de rubrique) ;
+- pas d'écran « Et toi ? » : la question de fin se pose dans le décor du dernier plan (`"question"`) ;
+- sous-titres bas (y 1300), pour ne pas couvrir le sujet ;
+- des réponses **courtes**, en français ; un MP4 envoyé à chaque étape ; dire ce qui n'a pas pu être vérifié (le son : le modèle ne peut pas écouter).
+
+À lire ensuite selon le besoin : `ACCROCHES.md` (les deux premières secondes), `IDEES-VIDEOS.md` (sujets), `DA-AVIS.md` (direction artistique), et le skill `avis`.
+
+## 1. Où on en est
+
+- L'auteur veut **parler librement** de sujets variés (travail et IA, escalade, relations, énigmes, voyage) et que l'outil habille sa voix. Le format « cerveau et santé » (V3) est en attente.
 - La chaîne « avis » fait cela : une voix enregistrée au téléphone entre, une vidéo verticale sous-titrée et illustrée sort.
-- Un épisode existe : `valeur-ia` (57 s, rubrique Travail). Trois versions ont été envoyées ; l'auteur a dit de la dernière base : « on est sur la bonne piste », puis « on a une base stable ».
-- **Prochaine action attendue** : l'auteur renvoie une nouvelle prise de voix sur le script resserré (section 7). Il faudra refaire le montage dessus.
+- Quatre épisodes existent : `valeur-ia` (57 s, vraie voix, à réenregistrer plus court), `enigme-thermometre` (32 s, vraie voix, le plus abouti), `escalade-techniques` (maquette muette, voix attendue), `essai-riziere` (maquette muette, sert à montrer la 3D).
+- **Prochaines actions attendues** : monter les prises de voix que l'auteur enverra ; l'aider sur ses accroches ; publier et mesurer.
 - Rien n'est publié. Aucune donnée d'audience. Tout ce qui touche au rythme est une hypothèse.
 
 ## 2. Ce que l'auteur a dit (mot pour mot), dans l'ordre
@@ -27,31 +54,32 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 11 | Essai de voix clonée (8 s) envoyé ; question sur la 3D → « Ok, essayons three.js pour un test. De toute manière on doit faire le projet pour switcher facilement entre nos différentes versions de style » → décor `mur3d`, options `--theme` et `--3d`, vidéo d'essai envoyée | « Ça me plaît, on pourrait encore plus jouer sur les effets caméra en faisant des tours, des effets plongeants, des zooms. Fais des essais sur la rizière où tu peux zoomer sur des éléments » |
 | 12 | `riziere3d` et le système de caméra (`tour`, `plongee`, `zoom:cible`, `survol`), essai de 20 s envoyé | « Ahaha j'aime bien ! Comment améliorer ? » (plan d'amélioration approuvé) |
 | 13 | 3D en papier découpé, scène enrichie, nouveaux mouvements, ambiance sonore ; `riziere-3d-v2` envoyée | « J'aime bien. Enlève la bulle en haut qui spécifie le thème. À la fin, enlève le Et toi ? ou intègre-le dans le décor. J'ai l'impression que la qualité de l'image est un peu dégradée, c'était plus joli avant » |
-| 14 | Bulle de rubrique retirée ; question de fin en étiquette dans le décor (`"question"`) ; 3D revenue à l'aspect doux par défaut ; `riziere-3d-v3` envoyée | en attente |
+| 14 | Bulle de rubrique retirée ; question de fin en étiquette dans le décor (`"question"`) ; 3D revenue à l'aspect doux par défaut ; `riziere-3d-v3` envoyée | « Comment faire de meilleurs hooks pour la rétention ? Et est-ce que je peux passer la main à Opus pour faire les vidéos ? » |
+| 15 | Guide `ACCROCHES.md`, conseils d'accroche dans le montage, ouverture plus vive, `--accroche`, `scripts/installer.sh`, passation nettoyée | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
-Ce qu'il ne faut pas reproposer : la bulle de rubrique en haut de l'image (retirée le 16 nov.) ; un écran de fin « Et toi ? » séparé (la question se pose dans le décor du dernier plan) ; la 3D en aplats avec contours comme aspect par défaut (« c'était plus joli avant ») ; une voix de synthèse ou clonée ; le terrarium ; l'infographie sobre seule ; **une barre de progression** (« pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas », retirée le 15 nov.) ; du texte à l'écran en plus des sous-titres.
+Ce qu'il ne faut pas reproposer : la bulle de rubrique en haut de l'image (retirée le 16 nov.) ; un écran de fin « Et toi ? » séparé (la question se pose dans le décor du dernier plan) ; la 3D en aplats avec contours comme aspect par défaut (« c'était plus joli avant ») ; une voix de synthèse comme solution par défaut (la voix clonée a été essayée à sa demande : la réserver au dépannage) ; le terrarium ; l'infographie sobre seule ; **une barre de progression** (« pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas », retirée le 15 nov.) ; du texte à l'écran en plus des sous-titres.
 
 ## 3. Fabriquer une vidéo, de bout en bout
 
 ```bash
-cd terrarium && npm install
-pip install faster-whisper pyrnnoise soundfile "numpy<2"     # une fois par session
+cd terrarium && bash scripts/installer.sh                    # une fois par session
 # 1. La voix : débruitage (RNNoise), transcription mot par mot (Whisper « medium »), silences
 HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # → videos/voix/<id>/propre.flac et mots.json
 # 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
-npm test                         # 58 tests, tous verts
-# 4. Le rendu (CLI HyperFrames installé hors du dépôt : npm i hyperframes dans le dossier temporaire)
+npm test                         # tous verts
+# 4. Le rendu (le CLI HyperFrames est installé hors du dépôt par scripts/installer.sh)
 cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
-  <dossier-temporaire>/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
+  ~/.cache/avis-hyperframes/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
 ```
 
 - Les enregistrements de l'auteur arrivent dans `/root/.claude/uploads/<session>/…m4a` (pièce jointe du message).
 - Un rendu de 57 s en 30 images par seconde prend environ 3 minutes. Le rendu final se fera en 60 (`--fps 60`), une fois le montage validé.
 - Envoyer le MP4 à l'auteur comme fichier. Les MP4 et `videos/studio/` ne vont pas dans le dépôt ; `videos/voix/<id>/` y va (c'est la source).
+- Avant d'envoyer : recompresser un MP4 lourd avec `ffmpeg -i <id>.mp4 -c:v libx264 -crf 18 -preset slow -c:a copy <id>-envoi.mp4` (pas plus fort : l'auteur voit la dégradation).
 - Lint : `hyperframes lint --json <chemin de la composition>` : 0 erreur attendue ; les avertissements « sub-composition » et « track too dense » sont connus et sans effet.
 
 ### Préparer les visuels avant la voix (maquette)
@@ -64,17 +92,18 @@ npm run video -- <id>
 
 `mots.json` porte alors `"maquette": true`. Quand la vraie voix arrive, `python3 scripts/voix.py <enregistrement> <id>` remplace les deux fichiers. Si l'auteur dit les mêmes mots, les ancres de l'épisode restent valables ; sinon le montage dit lesquelles refaire. Relire ensuite les `"corrections"` et les instants des plans sur la planche.
 
-**Deux épisodes attendent une voix** : `valeur-ia` (script resserré, section 7) et `escalade-techniques` (script dans `videos/voix/escalade-techniques/script.txt`, 3 techniques de mains et 3 de pieds).
+**Trois épisodes attendent une voix** : `valeur-ia` (script resserré, section 7), `escalade-techniques` (script dans `videos/voix/escalade-techniques/script.txt`) et `essai-riziere` (script dans `videos/voix/essai-riziere/script.txt`).
 
 ### Changer de style sans toucher à l'épisode
 
-L'auteur veut pouvoir « switcher facilement entre nos différentes versions de style ». Deux interrupteurs, en ligne de commande ou dans l'épisode :
+L'auteur veut pouvoir « switcher facilement entre nos différentes versions de style ». Trois interrupteurs, en ligne de commande ou dans l'épisode :
 
 ```bash
 npm run video -- <id>                    # le style du compte : papier découpé, décors plats
 npm run video -- <id> --theme=neon       # un autre thème : base, decoupe, neon, feutre, affiche
 npm run video -- <id> --3d               # les décors passent en 3D quand une version existe (mur → mur3d)
 npm run video -- <id> --theme=affiche --3d
+npm run video -- <id> --3d --aspect=decoupe   # la 3D en aplats avec contours (non retenue par défaut)
 ```
 
 Dans l'épisode, les mêmes choix s'écrivent `"theme": "neon"` et `"decors3d": true`. Un troisième interrupteur règle l'aspect de la 3D : `--aspect=doux` (défaut, celui que l'auteur préfère : facettes éclairées en dégradé, ombres douces) ou `--aspect=decoupe` (aplats à trois tons, contours, ombres nettes) ; dans l'épisode, `"aspect3d"`.
@@ -96,7 +125,8 @@ Sur un plan dont le décor est en 3D, `"camera"` donne la suite des mouvements :
 - Une ancre `"a"` fait partir le mouvement sur un mot ; sans ancre, les mouvements se partagent le plan à parts égales. Chaque mouvement glisse depuis la fin du précédent.
 - En 2D (sans `--3d`), `"camera"` est ignoré : le même épisode marche dans les deux versions.
 - Sans `"camera"`, un décor 3D joue son mouvement par défaut (`spirale`). Sur `mur3d`, la caméra reste devant le mur : son tour est un arc.
- Un nouveau style se range toujours dans l'un de ces deux mécanismes (un thème dans `themes.js`, un décor 3D dans `decors3d.js`), jamais dans une copie de la chaîne.
+
+Un nouveau style se range toujours dans l'un de ces mécanismes (un thème dans `themes.js`, un décor 3D dans `decors3d.js`), jamais dans une copie de la chaîne.
 
 ## 4. L'épisode (`videos/episodes/<id>.json`)
 
@@ -108,13 +138,15 @@ Sur un plan dont le décor est en 3D, `"camera"` donne la suite des mouvements :
 | `"corrections"` | Orthographe des sous-titres, par indice du mot dans `mots.json` (`""` supprime le mot affiché) |
 | `"forts"` | Mots en couleur dans les sous-titres (toutes leurs occurrences) |
 | `"pauses"` | `[{ "apres": "derniers mots", "duree": 5 }]` : un silence ajouté dans la voix, pour un plan `rebours` (compte à rebours, un tic par seconde) |
-| `"theme"` | Le style d'ensemble : `base` (défaut), `decoupe`, `neon`, `feutre`, `affiche` (`studio/avis/themes.js`). **Ne pas le préciser : le défaut est `decoupe`, le style choisi par l'auteur** |
-| `"reglages"` | `vitesse` (1,05), `respiration` (0,14 s laissée par silence), `musique` (volume 0,16) |
+| `"theme"` | Le style d'ensemble : `decoupe` (défaut, choisi par l'auteur), `base`, `neon`, `feutre`, `affiche` (`studio/avis/themes.js`). **Ne pas le préciser** |
+| `"ouverture"` | `vive` (défaut : zoom d'ouverture, texte déjà en place à la première image) ou `calme` |
+| `"decors3d"`, `"aspect3d"` | Décors en 3D quand ils existent ; aspect `doux` (défaut) ou `decoupe` |
+| `"reglages"` | `vitesse` (1,05), `respiration` (0,14 s laissée par silence), `musique` (volume 0,16), `ambiance` (0,5 ; décors 3D) |
 | `"plans"` | Les plans visuels. Chacun commence sur son ancre `"a"` (une suite de mots dits) et dure jusqu'au suivant |
 
-**Règle depuis le 15 nov. : presque aucun texte à l'écran en dehors des sous-titres.** Le plan par défaut est `visuel` (fond et illustration, sans texte). Garder au plus trois textes par vidéo : l'accroche du premier plan, un mot fort au moment clé, la question de fin. Les plans `liste` et `bascule` existent encore mais ne sont plus utilisés.
+**Règle depuis le 15 nov. : presque aucun texte à l'écran en dehors des sous-titres.** Le plan par défaut est `visuel` (fond et illustration, sans texte). Garder au plus trois textes par vidéo : l'accroche du premier plan, un mot fort au moment clé, la question de fin. Les plans `liste`, `bascule` et `fin` existent encore dans le code mais ne sont plus utilisés.
 
-Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). **La fin** : pas d'écran « Et toi ? ». Le dernier plan porte `"question": { "texte": "Tu mises sur *quoi* ?", "apres": 3 }` : quand la voix se tait, la question apparaît sur une étiquette de papier dans le décor, à la place des sous-titres, et la vidéo dure `apres` secondes de plus. Le plan `fin` existe encore dans le code mais n'est plus utilisé.
+Un plan : `"plan"` (`visuel`, `titre`, `rebours`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). **La fin** : pas d'écran « Et toi ? ». Le dernier plan porte `"question": { "texte": "Tu mises sur *quoi* ?", "apres": 3 }` : quand la voix se tait, la question apparaît sur une étiquette de papier dans le décor, à la place des sous-titres, et la vidéo dure `apres` secondes de plus.
 
 - **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`, `mur` (salle d'escalade), `salon` (fenêtre ouverte, thermomètre au mur), `riziere` (terrasses au Vietnam, paysan et buffle, aigrettes). **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
 - Deux plans voisins ne peuvent pas avoir le même fond (le montage le refuse). Sans `"fond"`, les fonds unis alternent.
@@ -133,11 +165,12 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"
 | `illustrations.js` | Les 21 illustrations : `svg`, `jouer` | Node et page |
 | `decors.js` | Les 6 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
 | `themes.js` | Les styles : polices, CSS ajouté, aspect du mot de sous-titre (actif, dit, pâle), filtre SVG éventuel | Node |
-| `decors3d.js` | Les décors en 3D (Three.js 0.149, `three.min.js`) : `creer(canvas)` → `maj(t, d)`, tout calculé à partir du temps du plan | page |
+| `decors3d.js` | Les décors en 3D (Three.js 0.149, `three.min.js`) : `creer(canvas, p, aspect)` → `maj(t, d)`, tout calculé à partir du temps du plan ; moteur de caméra `pose()` et `piloter()` | page |
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
-| `test/avis.test.js` | 14 tests du montage | Node |
+| `scripts/installer.sh` | Prépare une session neuve | shell |
+| `test/avis.test.js` | Les tests du montage (une quinzaine) | Node |
 
 `scripts/video.js` aiguille : `"version": 4` → chaîne « avis », `3` → V3, sinon l'ancienne.
 
@@ -166,8 +199,8 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - **Pas de `from: 'random'`** dans un `stagger` : c'est du hasard, chaque processus de rendu tirerait un ordre différent.
 - **Qualité d'image** : l'auteur a trouvé la 3D en aplats « dégradée ». Causes probables : ombres nettes en escalier, contours d'un pixel, et une recompression trop forte du MP4 envoyé (`crf 23`). Envoyer en `crf 18`.
 - **3D, aspect « decoupe » (non retenu par défaut)** : matières en aplats (`MeshToonMaterial` et une rampe à trois tons), facettes (`forme()` recalcule les normales), contours (`contour()`), ombres nettes. Le flanc d'une forme extrudée doit recevoir des normales rayonnantes, sinon il se raye. Une forme extrudée puis couchée (`rotation.x = -π/2`) inverse l'axe : un point d'angle `a` se retrouve en `z = -d·sin(a)` ; les personnages et le riz utilisent la même convention.
-- **3D, coût** : la toile est maintenant en 1080 × 1920 ; l'essai de rizière (20 s) se rend en 4 min au lieu de 2 min 30, et le MP4 brut pèse 52 Mo : le recompresser avant l'envoi (`ffmpeg -c:v libx264 -crf 23`, 23 Mo). Sans voix, le mixage sort vers −19 LUFS (musique et ambiance seules).
-- **3D** : le navigateur de rendu n'a pas de carte graphique (WebGL logiciel, SwiftShader). La toile 3D fait 720 × 1280, agrandie par le CSS ; la maquette d'escalade (37 s dont 10 s de 3D) se rend en 1 min 12, l'essai de rizière (20 s dont 17 s de 3D) en 2 min 30. Le filtre de couleurs vives du thème est plus doux sur la 3D (`.decor-3d`), sinon l'eau et l'herbe brûlent. Garder `preserveDrawingBuffer: true`, sinon la capture d'image est noire. Three.js est figé en 0.149 : les versions suivantes n'ont plus de fichier `three.min.js` chargeable par une balise `<script>`. Un panneau incliné recouvre les prises posées dessus : le mur est à plat.
+- **3D, coût** : la toile est en 1080 × 1920 ; l'essai de rizière (20 s) se rend en 4 min, et le MP4 brut peut peser 25 à 50 Mo : le recompresser avant l'envoi en `crf 18`. Sans voix, le mixage sort vers −19 LUFS (musique et ambiance seules).
+- **3D** : le navigateur de rendu n'a pas de carte graphique (WebGL logiciel, SwiftShader). Le filtre de couleurs vives du thème est plus doux sur la 3D (`.decor-3d`), sinon l'eau et l'herbe brûlent. Garder `preserveDrawingBuffer: true`, sinon la capture d'image est noire. Three.js est figé en 0.149 : les versions suivantes n'ont plus de fichier `three.min.js` chargeable par une balise `<script>`. Un panneau incliné recouvre les prises posées dessus : le mur est à plat.
 - **Mesurer avant de déplacer** : dans `lecteur.js`, les traits sous les mots forts sont placés d'après `getBoundingClientRect` ; la mesure doit se faire avant tout `gsap.set` sur les mots.
 - **Planche d'aperçu** : une image tombée au milieu d'une transition ou d'un clignement d'œil n'est pas un défaut. Demander d'autres instants : `NODE_PATH=$(npm root -g) node scripts/apercu.js videos/studio/<id>/index.html <sortie.png> t1 t2 …`.
 - **`production/CATALOGUE.md`** est généré (`node studio/catalogue.js`) et vérifié par un test ; il ne décrit pas la chaîne « avis ».
@@ -175,7 +208,7 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 
 ## 6 bis. Voix clonée (essai du 16 nov. 2026)
 
-L'auteur a demandé si sa voix pouvait dire un texte nouveau. Un essai de 8 s a été généré et envoyé ; **son avis n'est pas encore connu**. Rien n'est branché dans la chaîne.
+L'auteur a demandé si sa voix pouvait dire un texte nouveau. Un essai de 8 s a été généré et envoyé ; **son avis n'est pas encore connu**. Rien n'est branché dans la chaîne, et `scripts/installer.sh` ne l'installe pas.
 
 - Outil : Chatterbox multilingue (`pip install chatterbox-tts "setuptools<81"` dans un environnement virtuel à part, 3,7 Go ; modèle téléchargé depuis Hugging Face). Sans carte graphique : environ 45 s de calcul pour 8 s de voix.
 - Référence : une vingtaine de secondes de `videos/voix/valeur-ia/propre.flac`, silences retirés, en 24 kHz.
@@ -209,8 +242,9 @@ RNNoise (débruitage), Whisper par faster-whisper (transcription), ffmpeg (coupe
 
 ## 9. La suite, par ordre d'intérêt
 
-1. Monter la nouvelle prise de voix (section 7), obtenir l'accord de l'auteur, rendre en 60 images par seconde.
-2. **Photos et vidéos de l'auteur** comme fonds (escalade surtout) : c'est le meilleur remède au reproche « ça fait trop IA ». Le fond `photo` existe ; il n'a été essayé que sur une image de test, jamais sur une vraie photo. La vidéo en fond reste à faire.
-3. Décors pour la rubrique « relations » ; faire relire les dessins d'escalade par l'auteur.
-4. Une signature sonore propre au compte (la musique est encore « Labo », de la V3) et quelques bruitages sur les transitions.
-5. Publier, puis relever les chiffres dans `videos/resultats.csv` : sans mesure, on règle à l'aveugle.
+1. **Monter les voix que l'auteur enverra** (trois épisodes en attente), en soignant l'accroche (`ACCROCHES.md`), puis rendre en 60 images par seconde une fois le montage validé.
+2. **Publier, puis relever les chiffres** dans `videos/resultats.csv` (rétention à 3 secondes, visionnage complet, commentaires) : sans mesure, on règle à l'aveugle.
+3. **Photos et vidéos de l'auteur** comme fonds (escalade surtout) : le meilleur remède au reproche « ça fait trop IA ». Le fond `photo` existe ; il n'a servi que sur une image de test. La vidéo en fond reste à faire.
+4. Versions 3D de la cave, du théâtre et du salon ; un décor pour la rubrique « relations » ; faire relire les dessins d'escalade par l'auteur, qui pratique.
+5. Une signature sonore propre au compte (la musique est encore « Labo », de la V3).
+6. Si l'auteur valide la voix clonée : la brancher dans la chaîne (un texte → une vidéo), avec le signalement « généré par IA ».

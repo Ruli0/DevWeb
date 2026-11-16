@@ -4,19 +4,17 @@ Le but du projet est de converger vers un **outil de production de vidéos TikTo
 
 ## Au début de chaque session
 
-**Sur la branche `claude/busy-feynman-m0q7yp`, le cap est la chaîne « avis »** (15 nov. 2026) : l'auteur parle librement, l'outil habille sa voix. Lire `production/PASSATION-AVIS.md` d'abord, puis `production/DA-AVIS.md` ; utiliser le skill `avis`. Ce qui suit décrit la V3, mise en attente.
+**Le cap est la chaîne « avis »** (depuis le 15 nov. 2026, branche `claude/busy-feynman-m0q7yp`) : l'auteur parle librement, l'outil habille sa voix (sous-titres, décors, 3D). Dans cet ordre :
 
-**Le cap actuel est la V3** (14 nov. 2026) : des vidéos de 30 à 60 s pour adultes, sur le cerveau et la santé, études à l'appui. Lire dans cet ordre :
+1. `bash scripts/installer.sh` : prépare la session (dépendances, CLI de rendu, tests) ;
+2. `production/PASSATION-AVIS.md` : la section 0 suffit pour fabriquer une vidéo ; le reste se lit au besoin ;
+3. le skill `avis` (dans `.claude/skills/`, à la racine du dépôt) pour monter une vidéo ;
+4. selon le besoin : `production/ACCROCHES.md`, `IDEES-VIDEOS.md`, `DA-AVIS.md`.
 
-1. `production/BRIEF-V3.md` : la mission, ce qu'on garde, ce qu'on abandonne ;
-2. `production/DA-V3.md` : la direction artistique « éditorial scientifique » ;
-3. `production/PLAN-V3.md` : les étapes, une à la fois, avec une seule question à l'utilisateur par étape ;
-4. `production/SOURCES.md` : aucun chiffre à l'écran sans fiche de source vérifiée ;
-5. `production/GUIDE-EXECUTION.md` : commandes, rendu déterministe, pièges connus.
+### Archives (ne pas faire évoluer sans demande)
 
-Des skills de projet existent dans `.claude/skills/` (à la racine du dépôt) : `episode`, `sources`, `apercu`, `rendu`, `scene`, `style`. Les utiliser, et les tenir à jour quand la chaîne change.
-
-L'univers du terrarium (animaux, Mousse, épisodes `demo`, `nuit-1`, `jugement`) est archivé : ne pas le faire évoluer. `PLAN-REFONTE.md` et `SPEC-STUDIO.md` sont des documents d'histoire.
+- **V3 « cerveau et santé »** (14 nov. 2026), mise en attente : `production/BRIEF-V3.md`, `DA-V3.md`, `PLAN-V3.md`, `SOURCES.md`, `GUIDE-EXECUTION.md` ; skills `episode`, `sources`, `apercu`, `rendu`, `scene`, `style`.
+- **L'univers du terrarium** (animaux, Mousse, épisodes `demo`, `nuit-1`, `jugement`) ; `PLAN-REFONTE.md` et `SPEC-STUDIO.md` sont des documents d'histoire.
 
 ## À la fin de chaque session (ou après un changement notable)
 
@@ -28,6 +26,6 @@ L'univers du terrarium (animaux, Mousse, épisodes `demo`, `nuit-1`, `jugement`)
 ## Règles de travail
 
 - L'épisode JSON (`videos/episodes/`) est la source : ne jamais retoucher une composition générée à la main.
-- Avant de livrer une vidéo : `npm test`, `npm run video -- <id>` (planche regardée), `npx hyperframes lint`, puis le rendu (skill `rendu`).
+- Avant de livrer une vidéo : `npm test`, `npm run video -- <id>` (planche regardée, conseils d'accroche lus), le contrôle `hyperframes lint`, puis le rendu.
 - Le moteur (`public/js/film/film.js`) ne doit contenir ni minuterie, ni hasard non reproductible, ni répétition infinie (un test le vérifie).
 - Tout le texte destiné à l'utilisateur est en français.
