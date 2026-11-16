@@ -24,7 +24,8 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 8 | Nouvelle prise de voix (une énigme) : « Je vais te donner juste un texte et tu vas essayer d'en faire une vidéo » → `enigme-thermometre` (33 s), envoyée | « fais des visuels sur un décor de rizière animé comme au Vietnam. Et aide-moi à trouver de l'inspiration […] Fais-toi un .md avec plein d'idées » |
 | 9 | Décor `riziere` (essai de 12 s envoyé) et `production/IDEES-VIDEOS.md` (une soixantaine d'idées) | « Maintenant que tu as ma voix, tu peux l'utiliser sur du texte nouveau ? Aussi trouve un moyen d'améliorer les visuels pour se donner un style particulier (propose-les-moi) et de l'affichage du texte aussi » |
 | 10 | Quatre styles proposés en planches (`decoupe`, `neon`, `feutre`, `affiche`) ; essai de clonage de voix (voir section 6 bis) | « J'aime bien le papier découpé mais avec des couleurs plus vives comme le 2. Et j'aime bien aussi l'affichage du texte sur le papier découpé » → `decoupe` devient le style par défaut |
-| 11 | Essai de voix clonée (8 s) envoyé ; question sur la 3D → « Ok, essayons three.js pour un test. De toute manière on doit faire le projet pour switcher facilement entre nos différentes versions de style » → décor `mur3d`, options `--theme` et `--3d`, vidéo d'essai envoyée | en attente |
+| 11 | Essai de voix clonée (8 s) envoyé ; question sur la 3D → « Ok, essayons three.js pour un test. De toute manière on doit faire le projet pour switcher facilement entre nos différentes versions de style » → décor `mur3d`, options `--theme` et `--3d`, vidéo d'essai envoyée | « Ça me plaît, on pourrait encore plus jouer sur les effets caméra en faisant des tours, des effets plongeants, des zooms. Fais des essais sur la rizière où tu peux zoomer sur des éléments » |
+| 12 | `riziere3d` et le système de caméra (`tour`, `plongee`, `zoom:cible`, `survol`), essai de 20 s envoyé | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -40,7 +41,7 @@ HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # →
 # 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
-npm test                         # 55 tests, tous verts
+npm test                         # 56 tests, tous verts
 # 4. Le rendu (CLI HyperFrames installé hors du dépôt : npm i hyperframes dans le dossier temporaire)
 cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
   <dossier-temporaire>/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
@@ -74,7 +75,23 @@ npm run video -- <id> --3d               # les décors passent en 3D quand une v
 npm run video -- <id> --theme=affiche --3d
 ```
 
-Dans l'épisode, les mêmes choix s'écrivent `"theme": "neon"` et `"decors3d": true`. Un nouveau style se range toujours dans l'un de ces deux mécanismes (un thème dans `themes.js`, un décor 3D dans `decors3d.js`), jamais dans une copie de la chaîne.
+Dans l'épisode, les mêmes choix s'écrivent `"theme": "neon"` et `"decors3d": true`.
+
+### Les mouvements de caméra (décors 3D)
+
+Sur un plan dont le décor est en 3D, `"camera"` donne la suite des mouvements :
+
+```json
+{ "plan": "visuel", "fond": "riziere",
+  "camera": ["tour", { "m": "zoom:paysan", "a": "Le paysan" }, { "m": "plongee", "a": "Le riz" }, { "m": "zoom:cabane", "a": "Tout là-haut" }, "survol"] }
+```
+
+- Mouvements : `tour` (autour de la scène), `plongee` ou `plongee:cible` (de très haut vers la cible), `zoom:cible` (s'approche en resserrant le champ), `survol` (au ras du sol), `large` (plan d'ensemble).
+- Cibles de `riziere3d` : `paysan`, `buffle`, `cabane`, `palmier`, `soleil`, `oiseaux`. Chaque décor 3D déclare les siennes (`cibles` dans `decors3d.js`).
+- Une ancre `"a"` fait partir le mouvement sur un mot ; sans ancre, les mouvements se partagent le plan à parts égales. Chaque mouvement glisse depuis la fin du précédent.
+- En 2D (sans `--3d`), `"camera"` est ignoré : le même épisode marche dans les deux versions.
+- `mur3d` a encore une caméra fixe dans son code ; le brancher sur `piloter()` comme `riziere3d` est la prochaine étape naturelle.
+ Un nouveau style se range toujours dans l'un de ces deux mécanismes (un thème dans `themes.js`, un décor 3D dans `decors3d.js`), jamais dans une copie de la chaîne.
 
 ## 4. L'épisode (`videos/episodes/<id>.json`)
 
@@ -115,7 +132,7 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
-| `test/avis.test.js` | 11 tests du montage | Node |
+| `test/avis.test.js` | 12 tests du montage | Node |
 
 `scripts/video.js` aiguille : `"version": 4` → chaîne « avis », `3` → V3, sinon l'ancienne.
 
@@ -142,7 +159,7 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - **Whisper et les noms** : « ChatGPT » a été transcrit « Tchad, GPT ». Relire `mots.json` et corriger avec `"corrections"`.
 - **Un `transform` SVG et GSAP** : animer `x` ou `y` sur un groupe qui porte déjà `transform="translate(…)"` écrase sa position (le paysan de la rizière partait en haut de l'image). Mettre l'animation sur un groupe intérieur sans attribut `transform`.
 - **Pas de `from: 'random'`** dans un `stagger` : c'est du hasard, chaque processus de rendu tirerait un ordre différent.
-- **3D** : le navigateur de rendu n'a pas de carte graphique (WebGL logiciel, SwiftShader). La toile 3D fait 720 × 1280, agrandie par le CSS ; la maquette d'escalade (37 s dont 10 s de 3D) se rend en 1 min 12. Garder `preserveDrawingBuffer: true`, sinon la capture d'image est noire. Three.js est figé en 0.149 : les versions suivantes n'ont plus de fichier `three.min.js` chargeable par une balise `<script>`. Un panneau incliné recouvre les prises posées dessus : le mur est à plat.
+- **3D** : le navigateur de rendu n'a pas de carte graphique (WebGL logiciel, SwiftShader). La toile 3D fait 720 × 1280, agrandie par le CSS ; la maquette d'escalade (37 s dont 10 s de 3D) se rend en 1 min 12, l'essai de rizière (20 s dont 17 s de 3D) en 2 min 30. Le filtre de couleurs vives du thème est plus doux sur la 3D (`.decor-3d`), sinon l'eau et l'herbe brûlent. Garder `preserveDrawingBuffer: true`, sinon la capture d'image est noire. Three.js est figé en 0.149 : les versions suivantes n'ont plus de fichier `three.min.js` chargeable par une balise `<script>`. Un panneau incliné recouvre les prises posées dessus : le mur est à plat.
 - **Mesurer avant de déplacer** : dans `lecteur.js`, les traits sous les mots forts sont placés d'après `getBoundingClientRect` ; la mesure doit se faire avant tout `gsap.set` sur les mots.
 - **Planche d'aperçu** : une image tombée au milieu d'une transition ou d'un clignement d'œil n'est pas un défaut. Demander d'autres instants : `NODE_PATH=$(npm root -g) node scripts/apercu.js videos/studio/<id>/index.html <sortie.png> t1 t2 …`.
 - **`production/CATALOGUE.md`** est généré (`node studio/catalogue.js`) et vérifié par un test ; il ne décrit pas la chaîne « avis ».

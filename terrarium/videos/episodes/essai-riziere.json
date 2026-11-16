@@ -6,9 +6,9 @@
   "titre": "Essai du décor « rizière »",
   "rubrique": "voyage",
   "voix": "essai-riziere",
-  "forts": ["personne ne court", "tout pousse"],
+  "forts": ["personne ne court", "tout pousse", "prend son temps"],
   "plans": [
-    { "plan": "visuel", "fond": "riziere" },
+    { "plan": "visuel", "fond": "riziere", "camera": ["tour", { "m": "zoom:paysan", "a": "Le paysan" }, { "m": "plongee", "a": "Le riz" }, { "m": "zoom:cabane", "a": "Tout là-haut" }, { "m": "survol", "a": "On a peut-être" }] },
     { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3, "texte": "Et *toi* ?", "sous": "Tu cours après quoi ?" }
   ]
 }

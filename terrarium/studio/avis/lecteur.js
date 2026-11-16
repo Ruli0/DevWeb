@@ -56,7 +56,7 @@
         if (photo) c.ft(photo, { scale: 1.04, xPercent: -1.5 * (i % 2 ? 1 : -1) }, { scale: 1.16, xPercent: 1.5 * (i % 2 ? 1 : -1), duration: pl.dClip, ease: 'none' }, pl.t0);
         // Décor 3D : dessiné à chaque image, à partir du temps écoulé dans le plan.
         const toile = el.querySelector('.decor-3d');
-        if (toile) scenes3d.push({ t0: pl.t0, d: pl.dClip, scene: A.decors3d[pl.fond].creer(toile) });
+        if (toile) scenes3d.push({ t0: pl.t0, d: pl.dClip, scene: A.decors3d[pl.fond].creer(toile, pl.p) });
         const da = el.querySelector('.deco .a'), db = el.querySelector('.deco .b');
         const sens = i % 2 ? 1 : -1;
         if (da) c.ft(da, { xPercent: -8 * sens, yPercent: -5 }, { xPercent: 8 * sens, yPercent: 6, duration: pl.dClip, ease: 'none' }, pl.t0);

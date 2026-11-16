@@ -42,7 +42,7 @@ Un style est une couche posée sur le même contenu (`"theme"` dans l'épisode, 
 
 ## Décors en 3D (essai du 16 nov. 2026)
 
-Un décor peut avoir une version en volume (`mur3d` pour l'instant) : formes simples à facettes, vraie caméra qui se déplace, ombres portées. Elle se choisit avec `--3d` ou `"decors3d": true`. C'est un essai : l'avis de l'auteur n'est pas encore connu. À réserver aux plans où le mouvement de caméra apporte quelque chose ; les personnages restent des silhouettes de blocs.
+L'auteur a aimé le premier essai (« ça me plaît ») et veut « des tours, des effets plongeants, des zooms ». Un décor peut avoir une version en volume (`mur3d`, `riziere3d`) : formes simples à facettes, vraie caméra qui se déplace, ombres portées. Elle se choisit avec `--3d` ou `"decors3d": true`. La caméra enchaîne des mouvements calés sur les mots (`"camera"`, voir la passation). À réserver aux plans où le mouvement de caméra apporte quelque chose ; les personnages restent des silhouettes de blocs.
 
 ## Mise en page (1080 × 1920)
 

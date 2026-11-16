@@ -22,7 +22,8 @@ module.exports = {
     polices: ['bricolage-grotesque-latin-800-normal.woff2'],
     css: (f, c) => `${police('Bricolage Grotesque', 'bricolage-grotesque-latin-800-normal.woff2', 800)}
 #root::after { content: ''; position: absolute; inset: 0; border: 26px solid ${c.texte}; z-index: 97; pointer-events: none; box-shadow: inset 0 0 0 3px ${c.fond}22, inset 0 0 90px #00000055; }
-.decor-svg, .photo-img, .decor-3d { filter: saturate(1.4) contrast(1.12); }
+.decor-svg, .photo-img { filter: saturate(1.4) contrast(1.12); }
+.decor-3d { filter: saturate(1.15) contrast(1.06); }
 .decor-svg .milieu, .decor-svg .pres { filter: drop-shadow(0 16px 0 #00000040); }
 .illu { filter: drop-shadow(8px 10px 0 #00000030); }
 .grand, .moyen { font-family: 'Bricolage Grotesque'; font-weight: 800; letter-spacing: -.035em; }

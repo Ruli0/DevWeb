@@ -120,3 +120,14 @@ test('3D : "decors3d" remplace un décor par sa version 3D quand elle existe, et
   const page = require('../studio/avis/page.js');
   assert.ok(page.html(volume).includes('three.min.js') && !page.html(plat).includes('three.min.js'));
 });
+
+test('caméra 3D : les mouvements se calent sur leurs ancres, les autres se partagent le plan, les inconnus sont refusés', () => {
+  const plan = (camera) => [{ plan: 'visuel', fond: 'riziere3d', camera }, { plan: 'fin', apres: 3, fond: 'nuit', texte: 'z' }];
+  const { erreurs, feuille } = montage(episode({ plans: plan(['tour', { m: 'zoom:paysan', a: "l'impro" }]) }), voix);
+  assert.deepStrictEqual(erreurs, []);
+  const cam = feuille.plans[0].p.camera;
+  assert.strictEqual(cam[0].t, 0);
+  assert.ok(cam[1].t > 1 && cam[1].t < feuille.plans[0].d);
+  assert.ok(montage(episode({ plans: plan(['looping']) }), voix).erreurs.some((e) => e.includes('looping')));
+  assert.ok(montage(episode({ plans: plan(['zoom:licorne']) }), voix).erreurs.some((e) => e.includes('licorne')));
+});

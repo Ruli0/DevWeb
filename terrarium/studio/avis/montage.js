@@ -171,6 +171,13 @@ function montage(ep, voix) {
       if (!objet || !objet[champ]) return;
       objet.t = arrondi(Math.max(0, instant(objet[champ], curseur, ou).t - t0 - 0.1));
     });
+    // Les mouvements de caméra (décors 3D) : "camera": ["tour", { "m": "zoom:paysan", "a": "le paysan" }]. Une ancre fixe le début du mouvement.
+    if (p.camera) {
+      p.camera = p.camera.map((c) => (typeof c === 'string' ? { m: c } : Object.assign({}, c)));
+      p.camera.forEach((c) => { if (c.a) { c.t = arrondi(Math.max(0, instant(c.a, curseur, ou).t - t0 - 0.15)); delete c.a; } });
+      const d3 = DECORS3D[pl.fond] || DECORS3D[`${pl.fond}3d`];
+      if (d3 && d3.mouvements) p.camera.forEach((c) => { const [m, cible] = String(c.m).split(':'); if (!d3.mouvements.includes(m) || (cible && !d3.cibles.includes(cible))) erreurs.push(`${ou} : mouvement de caméra « ${c.m} » inconnu. Mouvements : ${d3.mouvements.join(', ')} ; cibles : ${d3.cibles.join(', ')}`); });
+    }
     def.textes(p).forEach((x) => { const nu = String(x || '').replace(/\*/g, ''); if (nu.length > def.max) erreurs.push(`${ou} : « ${nu} » fait ${nu.length} caractères (au plus ${def.max})`); });
     // Sans consigne, les fonds et les transitions alternent : deux plans voisins n'ont jamais le même fond.
     // Un compte à rebours se cale sur la première pause qui suit le début du plan.
@@ -184,7 +191,9 @@ function montage(ep, voix) {
     plans.push({ id: pl.plan, t0: arrondi(t0), p, fond: pl.fond || UNIS[n % UNIS.length], transition: pl.transition || TRANSITIONS[n % TRANSITIONS.length] });
   });
   const duree = arrondi(dureeVoix + apres);
-  plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); x.dClip = arrondi(plans[i + 1] ? Math.min(x.d + RECOUVREMENT, duree - x.t0) : x.d); if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
+  plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); x.dClip = arrondi(plans[i + 1] ? Math.min(x.d + RECOUVREMENT, duree - x.t0) : x.d);
+    // Les mouvements sans ancre se partagent le plan à parts égales.
+    if (x.p.camera) { const n = x.p.camera.length; x.p.camera.forEach((c, k) => { if (c.t == null) c.t = arrondi(k * x.dClip / n); }); x.p.camera.sort((u, v) => u.t - v.t); } if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
   plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond && x.fond !== 'photo') erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
   if (!plans.length) erreurs.push('aucun plan');
   if (!ep.essai && (duree < 15 || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre 15 et 75 s`);
