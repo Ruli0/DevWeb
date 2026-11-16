@@ -40,6 +40,7 @@
         rideau: ['inset(100% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
         biseau: ['polygon(0% 0%, 0% 0%, -40% 100%, -40% 100%)', 'polygon(0% 0%, 140% 0%, 100% 100%, -40% 100%)'],
       };
+      const scenes3d = [];
       f.plans.forEach((pl, i) => {
         const el = document.getElementById(`plan-${i}`);
         // Transition : le plan arrive par-dessus le précédent, découpé par un masque qui s'ouvre.
@@ -53,6 +54,9 @@
         const decor = el.querySelector('.decor-svg'), photo = el.querySelector('.photo-img');
         if (decor) A.decors[pl.fond].jouer(c, decor, pl.t0, pl.dClip);
         if (photo) c.ft(photo, { scale: 1.04, xPercent: -1.5 * (i % 2 ? 1 : -1) }, { scale: 1.16, xPercent: 1.5 * (i % 2 ? 1 : -1), duration: pl.dClip, ease: 'none' }, pl.t0);
+        // Décor 3D : dessiné à chaque image, à partir du temps écoulé dans le plan.
+        const toile = el.querySelector('.decor-3d');
+        if (toile) scenes3d.push({ t0: pl.t0, d: pl.dClip, scene: A.decors3d[pl.fond].creer(toile) });
         const da = el.querySelector('.deco .a'), db = el.querySelector('.deco .b');
         const sens = i % 2 ? 1 : -1;
         if (da) c.ft(da, { xPercent: -8 * sens, yPercent: -5 }, { xPercent: 8 * sens, yPercent: 6, duration: pl.dClip, ease: 'none' }, pl.t0);
@@ -84,6 +88,7 @@
         });
         tl.set(el, { opacity: 0 }, fin);
       });
+      if (scenes3d.length) tl.eventCallback('onUpdate', () => { const t = tl.time(); scenes3d.forEach((x) => { if (t >= x.t0 - 0.05 && t <= x.t0 + x.d + 0.05) x.scene.maj(t - x.t0, x.d); }); });
       tl.set({}, {}, f.duree);
       tl.seek(0.001); tl.seek(0);
       return tl;

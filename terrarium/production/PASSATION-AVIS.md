@@ -24,6 +24,7 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 8 | Nouvelle prise de voix (une énigme) : « Je vais te donner juste un texte et tu vas essayer d'en faire une vidéo » → `enigme-thermometre` (33 s), envoyée | « fais des visuels sur un décor de rizière animé comme au Vietnam. Et aide-moi à trouver de l'inspiration […] Fais-toi un .md avec plein d'idées » |
 | 9 | Décor `riziere` (essai de 12 s envoyé) et `production/IDEES-VIDEOS.md` (une soixantaine d'idées) | « Maintenant que tu as ma voix, tu peux l'utiliser sur du texte nouveau ? Aussi trouve un moyen d'améliorer les visuels pour se donner un style particulier (propose-les-moi) et de l'affichage du texte aussi » |
 | 10 | Quatre styles proposés en planches (`decoupe`, `neon`, `feutre`, `affiche`) ; essai de clonage de voix (voir section 6 bis) | « J'aime bien le papier découpé mais avec des couleurs plus vives comme le 2. Et j'aime bien aussi l'affichage du texte sur le papier découpé » → `decoupe` devient le style par défaut |
+| 11 | Essai de voix clonée (8 s) envoyé ; question sur la 3D → « Ok, essayons three.js pour un test. De toute manière on doit faire le projet pour switcher facilement entre nos différentes versions de style » → décor `mur3d`, options `--theme` et `--3d`, vidéo d'essai envoyée | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -39,7 +40,7 @@ HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # →
 # 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
-npm test                         # 54 tests, tous verts
+npm test                         # 55 tests, tous verts
 # 4. Le rendu (CLI HyperFrames installé hors du dépôt : npm i hyperframes dans le dossier temporaire)
 cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
   <dossier-temporaire>/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
@@ -61,6 +62,19 @@ npm run video -- <id>
 `mots.json` porte alors `"maquette": true`. Quand la vraie voix arrive, `python3 scripts/voix.py <enregistrement> <id>` remplace les deux fichiers. Si l'auteur dit les mêmes mots, les ancres de l'épisode restent valables ; sinon le montage dit lesquelles refaire. Relire ensuite les `"corrections"` et les instants des plans sur la planche.
 
 **Deux épisodes attendent une voix** : `valeur-ia` (script resserré, section 7) et `escalade-techniques` (script dans `videos/voix/escalade-techniques/script.txt`, 3 techniques de mains et 3 de pieds).
+
+### Changer de style sans toucher à l'épisode
+
+L'auteur veut pouvoir « switcher facilement entre nos différentes versions de style ». Deux interrupteurs, en ligne de commande ou dans l'épisode :
+
+```bash
+npm run video -- <id>                    # le style du compte : papier découpé, décors plats
+npm run video -- <id> --theme=neon       # un autre thème : base, decoupe, neon, feutre, affiche
+npm run video -- <id> --3d               # les décors passent en 3D quand une version existe (mur → mur3d)
+npm run video -- <id> --theme=affiche --3d
+```
+
+Dans l'épisode, les mêmes choix s'écrivent `"theme": "neon"` et `"decors3d": true`. Un nouveau style se range toujours dans l'un de ces deux mécanismes (un thème dans `themes.js`, un décor 3D dans `decors3d.js`), jamais dans une copie de la chaîne.
 
 ## 4. L'épisode (`videos/episodes/<id>.json`)
 
@@ -97,10 +111,11 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"
 | `illustrations.js` | Les 21 illustrations : `svg`, `jouer` | Node et page |
 | `decors.js` | Les 6 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
 | `themes.js` | Les styles : polices, CSS ajouté, aspect du mot de sous-titre (actif, dit, pâle), filtre SVG éventuel | Node |
+| `decors3d.js` | Les décors en 3D (Three.js 0.149, `three.min.js`) : `creer(canvas)` → `maj(t, d)`, tout calculé à partir du temps du plan | page |
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
-| `test/avis.test.js` | 10 tests du montage | Node |
+| `test/avis.test.js` | 11 tests du montage | Node |
 
 `scripts/video.js` aiguille : `"version": 4` → chaîne « avis », `3` → V3, sinon l'ancienne.
 
@@ -127,6 +142,7 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - **Whisper et les noms** : « ChatGPT » a été transcrit « Tchad, GPT ». Relire `mots.json` et corriger avec `"corrections"`.
 - **Un `transform` SVG et GSAP** : animer `x` ou `y` sur un groupe qui porte déjà `transform="translate(…)"` écrase sa position (le paysan de la rizière partait en haut de l'image). Mettre l'animation sur un groupe intérieur sans attribut `transform`.
 - **Pas de `from: 'random'`** dans un `stagger` : c'est du hasard, chaque processus de rendu tirerait un ordre différent.
+- **3D** : le navigateur de rendu n'a pas de carte graphique (WebGL logiciel, SwiftShader). La toile 3D fait 720 × 1280, agrandie par le CSS ; la maquette d'escalade (37 s dont 10 s de 3D) se rend en 1 min 12. Garder `preserveDrawingBuffer: true`, sinon la capture d'image est noire. Three.js est figé en 0.149 : les versions suivantes n'ont plus de fichier `three.min.js` chargeable par une balise `<script>`. Un panneau incliné recouvre les prises posées dessus : le mur est à plat.
 - **Mesurer avant de déplacer** : dans `lecteur.js`, les traits sous les mots forts sont placés d'après `getBoundingClientRect` ; la mesure doit se faire avant tout `gsap.set` sur les mots.
 - **Planche d'aperçu** : une image tombée au milieu d'une transition ou d'un clignement d'œil n'est pas un défaut. Demander d'autres instants : `NODE_PATH=$(npm root -g) node scripts/apercu.js videos/studio/<id>/index.html <sortie.png> t1 t2 …`.
 - **`production/CATALOGUE.md`** est généré (`node studio/catalogue.js`) et vérifié par un test ; il ne décrit pas la chaîne « avis ».

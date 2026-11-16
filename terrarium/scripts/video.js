@@ -2,6 +2,7 @@
 //   npm run video -- <id>             compile videos/episodes/<id>.json, écrit la composition, fait la planche d'aperçu
 //   npm run video -- <id> --rendu     … puis le rendu MP4 en 60 images par seconde
 //   npm run video -- <id> --brouillon … rendu rapide (30 images par seconde, qualité brouillon)
+//   npm run video -- <id> --theme=neon --3d   (chaîne « avis ») autre style, décors en 3D quand ils existent
 // Sortie : videos/studio/<id>/ (index.html, feuille.json, apercu.png, <id>.mp4)
 'use strict';
 const fs = require('node:fs');
@@ -17,6 +18,10 @@ if (!id) { console.error('Usage : npm run video -- <id> [--rendu | --brouillon] 
 
 const source = path.join(RACINE, 'videos/episodes', `${id}.json`);
 const episode = JSON.parse(fs.readFileSync(source, 'utf8'));
+// Chaîne « avis » : --theme=<nom> et --3d changent le style sans toucher à l'épisode.
+const choixTheme = process.argv.find((x) => x.startsWith('--theme='));
+if (choixTheme) episode.theme = choixTheme.split('=')[1];
+if (option('--3d')) episode.decors3d = true;
 const V3 = episode.version === 3;
 const AVIS = episode.version === 4;
 let erreurs; let feuille;

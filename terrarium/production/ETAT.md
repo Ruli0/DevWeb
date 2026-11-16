@@ -15,6 +15,8 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Épisode `valeur-ia` (57 s), 5 versions envoyées | `videos/episodes/valeur-ia.json` |
 | Épisode `enigme-thermometre` (33 s) : pause de 5 s avec compte à rebours et tics, décor `salon` | `videos/episodes/enigme-thermometre.json` |
 | Décor `riziere` (Vietnam) et essai de 12 s ; réservoir d'idées | `studio/avis/decors.js`, `production/IDEES-VIDEOS.md` |
+| Style du compte « papier découpé vif » et 4 autres thèmes ; `--theme=` et `--3d` pour changer de style | `studio/avis/themes.js`, `scripts/video.js` |
+| Décor 3D `mur3d` (Three.js), essai envoyé | `studio/avis/decors3d.js` |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
 

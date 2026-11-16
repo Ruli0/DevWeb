@@ -111,3 +111,12 @@ test('thèmes : chaque style fournit son habillage, et un thème inconnu est ref
     THEMES[nom].polices.forEach((p) => assert.ok(fs.existsSync(path.join(__dirname, '../studio/polices', p)), p));
   });
 });
+
+test('3D : "decors3d" remplace un décor par sa version 3D quand elle existe, et seulement alors', () => {
+  const plans = [{ plan: 'titre', fond: 'mur', texte: 'x' }, { plan: 'titre', a: "l'impro", fond: 'cave', texte: 'y' }, { plan: 'fin', apres: 3, fond: 'nuit', texte: 'z' }];
+  const plat = montage(episode({ plans }), voix).feuille, volume = montage(episode({ plans, decors3d: true }), voix).feuille;
+  assert.deepStrictEqual(plat.plans.map((p) => p.fond), ['mur', 'cave', 'nuit']);
+  assert.deepStrictEqual(volume.plans.map((p) => p.fond), ['mur3d', 'cave', 'nuit']);
+  const page = require('../studio/avis/page.js');
+  assert.ok(page.html(volume).includes('three.min.js') && !page.html(plat).includes('three.min.js'));
+});

@@ -40,6 +40,10 @@ Un style est une couche posée sur le même contenu (`"theme"` dans l'épisode, 
 | `feutre` | Tous les contours tremblent comme un dessin à la main | Caveat Brush, surligneur jaune | plus élevé (filtre SVG sur tout le décor) |
 | `affiche` | Une seule encre sombre sur papier crème, trame de points | Anton en capitales, un bloc par mot | faible |
 
+## Décors en 3D (essai du 16 nov. 2026)
+
+Un décor peut avoir une version en volume (`mur3d` pour l'instant) : formes simples à facettes, vraie caméra qui se déplace, ombres portées. Elle se choisit avec `--3d` ou `"decors3d": true`. C'est un essai : l'avis de l'auteur n'est pas encore connu. À réserver aux plans où le mouvement de caméra apporte quelque chose ; les personnages restent des silhouettes de blocs.
+
 ## Mise en page (1080 × 1920)
 
 | Zone | y | Contenu |

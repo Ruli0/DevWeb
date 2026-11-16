@@ -11,6 +11,7 @@ const PLANS = require('./plans.js');
 const ILLUS = require('./illustrations.js');
 const DECORS = require('./decors.js');
 const THEMES = require('./themes.js');
+const DECORS3D = require('./decors3d.js');
 
 const RACINE = path.join(__dirname, '../..');
 const lire = (f) => fs.readFileSync(path.join(RACINE, f), 'utf8');
@@ -38,8 +39,8 @@ function css(f) {
 .plan.papier { --bg: ${c.texte}; --fg: ${c.fond}; --ac: ${acc}; }
 .plan.accent { --bg: ${acc}; --fg: ${c.fond}; --ac: #ffffff; }
 .plan.decor, .plan.photo { --bg: ${c.fond}; --fg: ${c.texte}; --ac: ${acc}; }
-${Object.entries(DECORS).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n} { --ac: ${d.accent}; }`).join('\n')}
-.decor-svg, .photo-img { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+${Object.entries(Object.assign({}, DECORS, DECORS3D)).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n} { --ac: ${d.accent}; }`).join('\n')}
+.decor-svg, .photo-img, .decor-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
 .photo-img { object-fit: cover; transform-origin: 50% 50%; }
 /* Le voile : le haut du décor est assombri pour que le texte du plan reste lisible. */
 .voile { position: absolute; inset: 0; background: linear-gradient(to bottom, #000000b8 0, #00000099 620px, #00000000 980px); }
@@ -105,18 +106,20 @@ function html(f) {
   // (un dégradé défini dans un plan caché ne s'applique plus).
   const fond = (pl, i) => {
     if (DECORS[pl.fond]) return `<svg class="decor-svg" viewBox="0 0 1080 1920">${DECORS[pl.fond].svg().replace(/(id="|url\(#)([a-z]+-[a-z]+)/g, `$1$2-${i}`)}</svg><div class="voile"></div>`;
+    if (DECORS3D[pl.fond]) return '<canvas class="decor-3d" width="720" height="1280"></canvas><div class="voile"></div>';
     if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo)}" alt=""><div class="voile"></div>`;
     return '<i class="a"></i><i class="b"></i>';
   };
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
+  const troisD = f.plans.some((pl) => DECORS3D[pl.fond]);
   const theme = THEMES[f.theme || 'decoupe'];
   propre.mot = theme.mot(f, S.couleurs);
   return `<!doctype html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=1920">
 <title>${esc(f.titre)}</title>
-${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}
+${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}${troisD ? '<script src="assets/three.min.js"></script>' : ''}
 <style>${css(f)}</style></head>
 <body>
 ${theme.filtre || ''}
@@ -133,6 +136,7 @@ ${plans}
 ${lire('studio/avis/plans.js')}
 ${lire('studio/avis/illustrations.js')}
 ${lire('studio/avis/decors.js')}
+${troisD ? lire('studio/avis/decors3d.js') : ''}
 ${lire('studio/avis/lecteur.js')}
 (function () {
   gsap.registerPlugin(SplitText, DrawSVGPlugin);
@@ -164,6 +168,7 @@ function ecrire(f, dossier) {
   fs.mkdirSync(path.join(dossier, 'assets/polices'), { recursive: true });
   fs.writeFileSync(path.join(dossier, 'index.html'), html(f));
   fs.writeFileSync(path.join(dossier, 'feuille.json'), `${JSON.stringify(f, null, 1)}\n`);
+  if (f.plans.some((pl) => DECORS3D[pl.fond])) fs.copyFileSync(path.join(RACINE, 'node_modules/three/build/three.min.js'), path.join(dossier, 'assets/three.min.js'));
   for (const g of PLUGINS) fs.copyFileSync(path.join(RACINE, 'node_modules/gsap/dist', g), path.join(dossier, 'assets', g));
   for (const p of THEMES[f.theme || 'decoupe'].polices) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));
   for (const poids of Object.values(S.polices.fichiers)) for (const p of Object.values(poids)) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));

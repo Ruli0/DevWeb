@@ -11,7 +11,8 @@ const PLANS = require('./plans.js');
 const ILLUS = require('./illustrations.js');
 const DECORS = require('./decors.js');
 const UNIS = ['nuit', 'papier', 'accent'];                       // les fonds unis, qui alternent quand rien n'est précisé
-const FONDS = [...UNIS, ...Object.keys(DECORS), 'photo'];        // + les décors illustrés + une photo de l'auteur
+const DECORS3D = require('./decors3d.js');
+const FONDS = [...UNIS, ...Object.keys(DECORS), ...Object.keys(DECORS3D), 'photo'];        // + les décors illustrés + une photo de l'auteur
 const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
 const RECOUVREMENT = 0.6;   // un plan reste affiché sous le suivant pendant sa transition
 
@@ -178,6 +179,8 @@ function montage(ep, voix) {
       if (!pa) erreurs.push(`${ou} : aucune pause après ce plan (ajoute "pauses": [{ "apres": "…", "duree": 5 }])`);
       else { p.t = arrondi(pa.t - t0); p.secondes = pa.d; }
     }
+    // "decors3d": true dans l'épisode (ou --3d en ligne de commande) : un décor passe à sa version 3D quand elle existe (mur → mur3d).
+    if (ep.decors3d && pl.fond && DECORS3D[`${pl.fond}3d`]) pl = Object.assign({}, pl, { fond: `${pl.fond}3d` });
     plans.push({ id: pl.plan, t0: arrondi(t0), p, fond: pl.fond || UNIS[n % UNIS.length], transition: pl.transition || TRANSITIONS[n % TRANSITIONS.length] });
   });
   const duree = arrondi(dureeVoix + apres);
