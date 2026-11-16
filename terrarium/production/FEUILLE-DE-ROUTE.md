@@ -15,6 +15,8 @@ _Dernière mise à jour : 15 novembre 2026._
 | A6c | Format « énigme » : pause, compte à rebours, décor `salon` ; épisode `enigme-thermometre` envoyé | Claude | fait, en attente de ton avis |
 | A6d | 3D : `mur3d`, `riziere3d`, caméra pilotée, aspect papier découpé | Claude | fait, en attente de ton avis |
 | A6e | 3D pour la cave, le théâtre et le salon ; personnages modelés | Claude | à faire si tu le veux |
+| A8 | Accroches : guide, conseils automatiques, ouverture vive | Claude | fait |
+| A9 | Passation à un autre modèle : installation en une commande, essai à blanc | Claude | fait |
 | A6b | Décor « relations », signature sonore | Claude | à faire |
 | A7 | Publier, relever les chiffres | Toi | à faire |
 

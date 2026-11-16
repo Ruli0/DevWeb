@@ -17,6 +17,8 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Décor `riziere` (Vietnam) et essai de 12 s ; réservoir d'idées | `studio/avis/decors.js`, `production/IDEES-VIDEOS.md` |
 | Style du compte « papier découpé vif » et 4 autres thèmes ; `--theme=` et `--3d` pour changer de style | `studio/avis/themes.js`, `scripts/video.js` |
 | Décors 3D `mur3d` et `riziere3d` (Three.js), aspect doux par défaut ou aplats (`--aspect=decoupe`) ; caméra pilotée par l'épisode (9 mouvements, vitesse, force, coups de zoom sur les mots forts) ; souffles et ambiance | `studio/avis/decors3d.js`, `scripts/sons-v3.js` |
+| Accroche : conseils du montage, ouverture vive, `--accroche`, guide | `studio/avis/montage.js`, `lecteur.js`, `production/ACCROCHES.md` |
+| Session neuve prête en une commande (essai à blanc réussi) | `scripts/installer.sh`, `PASSATION-AVIS.md` section 0 |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
 

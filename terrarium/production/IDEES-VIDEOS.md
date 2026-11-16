@@ -16,7 +16,7 @@ Une bonne idée de vidéo tient en une phrase, et quelqu'un peut ne pas être d'
 
 Avant d'enregistrer, vérifier trois choses :
 
-- **L'accroche tient en une phrase** et arrive dans les deux premières secondes.
+- **L'accroche tient en une phrase** et arrive dans les deux premières secondes. Voir `ACCROCHES.md` : sept modèles, et trois variantes pour chaque vidéo existante.
 - **Une seule idée** par vidéo. S'il y en a deux, ce sont deux vidéos.
 - **La fin pose une question** à laquelle on a envie de répondre.
 

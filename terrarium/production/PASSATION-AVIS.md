@@ -55,7 +55,7 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 12 | `riziere3d` et le système de caméra (`tour`, `plongee`, `zoom:cible`, `survol`), essai de 20 s envoyé | « Ahaha j'aime bien ! Comment améliorer ? » (plan d'amélioration approuvé) |
 | 13 | 3D en papier découpé, scène enrichie, nouveaux mouvements, ambiance sonore ; `riziere-3d-v2` envoyée | « J'aime bien. Enlève la bulle en haut qui spécifie le thème. À la fin, enlève le Et toi ? ou intègre-le dans le décor. J'ai l'impression que la qualité de l'image est un peu dégradée, c'était plus joli avant » |
 | 14 | Bulle de rubrique retirée ; question de fin en étiquette dans le décor (`"question"`) ; 3D revenue à l'aspect doux par défaut ; `riziere-3d-v3` envoyée | « Comment faire de meilleurs hooks pour la rétention ? Et est-ce que je peux passer la main à Opus pour faire les vidéos ? » |
-| 15 | Guide `ACCROCHES.md`, conseils d'accroche dans le montage, ouverture plus vive, `--accroche`, `scripts/installer.sh`, passation nettoyée | en attente |
+| 15 | Guide `ACCROCHES.md`, conseils d'accroche dans le montage, ouverture plus vive, `--accroche`, `scripts/installer.sh`, passation nettoyée ; essai à blanc réussi (dossier propre → vidéo de l'énigme rendue en suivant la section 0) | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 

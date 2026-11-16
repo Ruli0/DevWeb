@@ -146,3 +146,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes mots : « Enlève la bulle en haut qui spécifie le thème », « À la fin, enlève le Et toi ? ou intègre-le dans le décor », « la qualité de l'image est un peu dégradée, c'était plus joli avant ».
 - **Gardé de l'essai précédent** : la scène enrichie, les nouveaux mouvements de caméra, l'ambiance sonore, la pleine résolution.
 - **Où** : `studio/avis/page.js`, `montage.js`, `lecteur.js`, `decors3d.js` ; les quatre épisodes sont convertis.
+
+## 23. L'accroche est vérifiée par l'outil ; la passation est exécutable (16 nov. 2026)
+
+- **Décision** : le montage donne des conseils sur les deux premières secondes (sans jamais bloquer), le premier plan a son texte et son sous-titre en place dès la première image et s'ouvre sur un zoom ; `production/ACCROCHES.md` sert de guide. Une session neuve se prépare avec `scripts/installer.sh`, et la section 0 de la passation suffit pour fabriquer une vidéo.
+- **Pourquoi** : tes questions : « Comment faire de meilleurs hooks pour la rétention ? » et « Est-ce que je peux passer la main à Opus pour faire les vidéos ? ».
+- **Limite assumée** : aucune donnée d'audience ; les seuils (12 mots, 4 s, 45 s) sont des points de départ à corriger avec tes chiffres.
+- **Vérifié** : essai à blanc depuis un dossier propre, jusqu'au MP4 de l'énigme.
