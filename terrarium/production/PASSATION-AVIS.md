@@ -22,7 +22,8 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 6 | Vidéo v5 : plans sans texte (`visuel`), trois textes seulement (accroche, « Théâtre d'impro », question de fin) | « Fais un script d'escalade où tu parles de 3 techniques de mains et de pied et fais le visuel […] Je ferai la voix demain » |
 | 7 | Script d'escalade et maquette muette `escalade-techniques` (37 s) : décor `mur`, six dessins de gestes | « pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas » |
 | 8 | Nouvelle prise de voix (une énigme) : « Je vais te donner juste un texte et tu vas essayer d'en faire une vidéo » → `enigme-thermometre` (33 s), envoyée | « fais des visuels sur un décor de rizière animé comme au Vietnam. Et aide-moi à trouver de l'inspiration […] Fais-toi un .md avec plein d'idées » |
-| 9 | Décor `riziere` (essai de 12 s envoyé) et `production/IDEES-VIDEOS.md` (une soixantaine d'idées) | en attente |
+| 9 | Décor `riziere` (essai de 12 s envoyé) et `production/IDEES-VIDEOS.md` (une soixantaine d'idées) | « Maintenant que tu as ma voix, tu peux l'utiliser sur du texte nouveau ? Aussi trouve un moyen d'améliorer les visuels pour se donner un style particulier (propose-les-moi) et de l'affichage du texte aussi » |
+| 10 | Quatre styles proposés en planches (`decoupe`, `neon`, `feutre`, `affiche`) ; essai de clonage de voix (voir section 6 bis) | en attente du choix de l'auteur |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -38,7 +39,7 @@ HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # →
 # 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
-npm test                         # 53 tests, tous verts
+npm test                         # 54 tests, tous verts
 # 4. Le rendu (CLI HyperFrames installé hors du dépôt : npm i hyperframes dans le dossier temporaire)
 cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
   <dossier-temporaire>/node_modules/.bin/hyperframes render --workers 3 --fps 30 --quiet -o <id>.mp4
@@ -71,6 +72,7 @@ npm run video -- <id>
 | `"corrections"` | Orthographe des sous-titres, par indice du mot dans `mots.json` (`""` supprime le mot affiché) |
 | `"forts"` | Mots en couleur dans les sous-titres (toutes leurs occurrences) |
 | `"pauses"` | `[{ "apres": "derniers mots", "duree": 5 }]` : un silence ajouté dans la voix, pour un plan `rebours` (compte à rebours, un tic par seconde) |
+| `"theme"` | Le style d'ensemble : `base` (défaut), `decoupe`, `neon`, `feutre`, `affiche` (`studio/avis/themes.js`). **À fixer pour tout le compte dès que l'auteur a choisi** |
 | `"reglages"` | `vitesse` (1,05), `respiration` (0,14 s laissée par silence), `musique` (volume 0,16) |
 | `"plans"` | Les plans visuels. Chacun commence sur son ancre `"a"` (une suite de mots dits) et dure jusqu'au suivant |
 
@@ -94,10 +96,11 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"
 | `plans.js` | Les 6 plans (`visuel` d'abord) : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
 | `illustrations.js` | Les 21 illustrations : `svg`, `jouer` | Node et page |
 | `decors.js` | Les 6 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
+| `themes.js` | Les styles : polices, CSS ajouté, aspect du mot de sous-titre (actif, dit, pâle), filtre SVG éventuel | Node |
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
-| `test/avis.test.js` | 9 tests du montage | Node |
+| `test/avis.test.js` | 10 tests du montage | Node |
 
 `scripts/video.js` aiguille : `"version": 4` → chaîne « avis », `3` → V3, sinon l'ancienne.
 

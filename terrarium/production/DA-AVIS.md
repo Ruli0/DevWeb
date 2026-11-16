@@ -26,6 +26,18 @@ Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop
 - **Les illustrations au trait**, sur les fonds unis seulement.
 - **Le mouvement** : chaque plan arrive avec un léger zoom, son texte monte mot par mot, le mot fort est souligné d'un trait ; les décors vivent (code qui s'écrit, yeux qui clignent, masques qui flottent) et leurs calques glissent à des vitesses différentes.
 
+## Quatre styles proposés (16 nov. 2026), choix en attente
+
+Un style est une couche posée sur le même contenu (`"theme"` dans l'épisode, `studio/avis/themes.js`). L'auteur doit en choisir un pour tout le compte : c'est ce qui rendra ses vidéos reconnaissables.
+
+| Thème | Image | Texte et sous-titres | Coût au rendu |
+|---|---|---|---|
+| `base` | Les décors tels quels | Inter Tight, étiquette sombre, mot en cours en pastille | — |
+| `decoupe` | Cadre crème, calques avec une ombre nette (papier découpé) | Bricolage Grotesque, étiquette de papier posée de travers | faible |
+| `neon` | Image assombrie et contrastée, lignes d'écran | Anton en capitales, sans étiquette, cerné de noir, le mot en cours s'allume | faible |
+| `feutre` | Tous les contours tremblent comme un dessin à la main | Caveat Brush, surligneur jaune | plus élevé (filtre SVG sur tout le décor) |
+| `affiche` | Une seule encre sombre sur papier crème, trame de points | Anton en capitales, un bloc par mot | faible |
+
 ## Mise en page (1080 × 1920)
 
 | Zone | y | Contenu |

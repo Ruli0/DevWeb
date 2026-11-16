@@ -66,7 +66,8 @@
       });
 
       // Sous-titres : le groupe surgit ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles.
-      const PALE = 0.4;
+      // L'aspect des mots vient du thème (studio/avis/themes.js).
+      const MOT = f.mot, PALE = MOT.pale;
       f.groupes.forEach((g, i) => {
         const el = document.getElementById(`st-${i}`);
         const suivant = f.groupes[i + 1];
@@ -77,9 +78,9 @@
           const mot = g.mots[k], t = Math.max(0, mot.t - 0.03);
           const tFin = Math.min(fin, g.mots[k + 1] ? g.mots[k + 1].t - 0.03 : fin);
           gsap.set(m, { opacity: PALE });
-          tl.set(m, { opacity: 1, backgroundColor: f.accent, color: f.fond }, t);
+          tl.set(m, Object.assign({ opacity: 1 }, MOT.actif), t);
           c.ft(m, { scale: 1.22 }, { scale: 1, duration: 0.18, ease: 'power2.out' }, t);
-          if (g.mots[k + 1]) tl.set(m, { backgroundColor: 'rgba(0,0,0,0)', color: mot.fort ? f.accent : f.texte }, tFin);
+          if (g.mots[k + 1]) tl.set(m, Object.assign({}, MOT.dit, mot.fort ? { color: MOT.fort } : {}), tFin);
         });
         tl.set(el, { opacity: 0 }, fin);
       });

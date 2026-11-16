@@ -95,6 +95,8 @@ function sousTitres(mots, r) {
 function montage(ep, voix) {
   const erreurs = [];
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
+  const THEMES = require('./themes.js');
+  if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
   const rub = S.rubriques[ep.rubrique];
   if (!rub) erreurs.push(`"rubrique" : une parmi ${Object.keys(S.rubriques).join(', ')}`);
   if (!voix) { erreurs.push(`la voix manque : python3 scripts/voix.py <enregistrement> ${ep.voix || ep.id}`); return { erreurs, feuille: null }; }
@@ -185,7 +187,7 @@ function montage(ep, voix) {
   if (!ep.essai && (duree < 15 || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre 15 et 75 s`);
 
   const feuille = {
-    version: 4, format: 'avis', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
+    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'base', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: ep.musique || 'labo', volume: reglages.musique },

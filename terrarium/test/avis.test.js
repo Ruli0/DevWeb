@@ -97,3 +97,17 @@ test('pauses : un silence ajouté décale la suite, donne un compte à rebours e
   assert.strictEqual(avec.feuille.sons.filter((s) => s.f === 'tic.wav').length, 5);
   assert.ok(Math.abs(avec.feuille.plans[2].t0 - sans.feuille.plans[2].t0 - 5) < 0.01);
 });
+
+test('thèmes : chaque style fournit son habillage, et un thème inconnu est refusé', () => {
+  const THEMES = require('../studio/avis/themes.js');
+  const page = require('../studio/avis/page.js');
+  assert.ok(montage(episode({ theme: 'inconnu' }), voix).erreurs.some((e) => e.includes('theme')));
+  Object.keys(THEMES).forEach((nom) => {
+    const { erreurs, feuille } = montage(episode({ theme: nom }), voix);
+    assert.deepStrictEqual(erreurs, []);
+    assert.strictEqual(feuille.theme, nom);
+    const html = page.html(feuille);
+    assert.ok(html.includes(`thème « ${nom} »`));
+    THEMES[nom].polices.forEach((p) => assert.ok(fs.existsSync(path.join(__dirname, '../studio/polices', p)), p));
+  });
+});
