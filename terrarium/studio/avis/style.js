@@ -31,5 +31,6 @@ module.exports = {
   musique: 'labo',
   indicatif: 'A',
   // L'allure du personnage récurrent (studio/avis/personnage.js). L'auteur a choisi le bonnet (« le personnage 1 », 16 nov.).
-  personnage: 'bonnet',
+  // Puis : « Je verrais plus un hibou qu'un personnage pour la référence » : la mascotte est le hibou.
+  personnage: 'hibou',
 };

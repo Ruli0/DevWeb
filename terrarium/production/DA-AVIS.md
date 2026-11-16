@@ -17,7 +17,7 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 ## Le personnage et le son (16 nov. 2026)
 
-**Un personnage** revient d'une vidéo à l'autre : un double stylisé de l'auteur, au bonnet orange, en papier découpé (liseré clair, ombre nette). Il se montre peu : à l'ouverture et à la fin. **Le son** : la musique baisse quand l'auteur parle, et les décors ont leurs bruitages. Une musique propre au compte, avec un indicatif, a été proposée et n'a pas plu ; la musique d'avant est restée.
+**Une mascotte** revient d'une vidéo à l'autre : un hibou brun aux grands yeux, en papier découpé (liseré clair, ombre nette). L'auteur l'a préféré à un personnage humain. Il se montre peu : à l'ouverture et à la fin. **Le son** : la musique baisse quand l'auteur parle, et les décors ont leurs bruitages. Une musique propre au compte, avec un indicatif, a été proposée et n'a pas plu ; la musique d'avant est restée.
 
 ## Peu de texte
 

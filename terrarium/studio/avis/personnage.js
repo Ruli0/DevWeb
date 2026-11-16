@@ -15,6 +15,7 @@
   const PEAU = '#f3c6a0', PAPIER = '#f6f1e7';
   // Les trois allures proposées à l'auteur ; il en choisit une (studio/avis/style.js, "personnage").
   const ALLURES = {
+    hibou: { nom: 'Le hibou (la mascotte choisie)', hibou: true },
     bonnet: { nom: 'Le bonnet', coiffe: 'bonnet', couleurCoiffe: '#ff8a3d', cheveux: '#3a2a22', haut: '#2f7f8a', bas: '#22323f', chaussures: '#f2c14e' },
     casquette: { nom: 'La casquette', coiffe: 'casquette', couleurCoiffe: '#5b8cff', cheveux: '#2a2018', haut: '#f2c14e', bas: '#2b3a55', chaussures: '#e0564a' },
     boucles: { nom: 'Les boucles et les lunettes', coiffe: 'boucles', cheveux: '#4a3020', haut: '#e0564a', bas: '#2e3b4e', chaussures: '#f6f1e7', lunettes: true },
@@ -38,7 +39,25 @@
   const trait = (pts, largeur, couleur) => { const d = `M${pts.map((p) => `${f(p[0])} ${f(p[1])}`).join(' L')}`; return `<path d="${d}" fill="none" stroke="${PAPIER}" stroke-width="${largeur + 12}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round"/>`; };
   const BORD = `stroke="${PAPIER}" stroke-width="7" stroke-linejoin="round" paint-order="stroke"`;
 
+  // Le hibou : la mascotte du compte (l'auteur : « Je verrais plus un hibou qu'un personnage pour la référence », 16 nov.).
+  // Mêmes poses que le personnage, lues autrement : ses ailes sont ses bras (seul l'angle du haut du bras compte), il n'a pas de dos.
+  // Mêmes noms de groupes (.elan, .tete-p, .bg, .bd, .jg, .jd), donc le même mouvement dans jouer().
+  function hibou(pose) {
+    const P = POSES[pose] || POSES.debout;
+    const BRUN = '#8a5a3a', SOMBRE = '#5f3d26', VENTRE = '#f3dcb2', BEC = '#ff9a3d';
+    const aile = (cls, x, angle, miroir) => `<g transform="translate(${x} -262) rotate(${f(-angle)})"><g class="${cls}"><path d="M0 -6 C${miroir * 62} 30 ${miroir * 58} 150 ${miroir * 8} 196 C${miroir * -34} 140 ${miroir * -30} 40 0 -6 Z" fill="${SOMBRE}" ${BORD}/><path d="M${miroir * 10} 150 L${miroir * 26} 122 M${miroir * 2} 120 L${miroir * 20} 92" stroke="${BRUN}" stroke-width="6" stroke-linecap="round"/></g></g>`;
+    const patte = (cls, x) => `<g transform="translate(${x} -8)"><g class="${cls}"><path d="M0 0 L-22 14 M0 0 L0 20 M0 0 L22 14" fill="none" stroke="${PAPIER}" stroke-width="20" stroke-linecap="round"/><path d="M0 0 L-22 14 M0 0 L0 20 M0 0 L22 14" fill="none" stroke="${BEC}" stroke-width="11" stroke-linecap="round"/></g></g>`;
+    const corps = `<ellipse cx="0" cy="-168" rx="124" ry="170" fill="${BRUN}" ${BORD}/><ellipse cx="0" cy="-138" rx="80" ry="118" fill="${VENTRE}"/>`
+      + [[-30, -190], [30, -190], [0, -150], [-34, -112], [34, -112], [0, -74]].map(([x, y]) => `<path d="M${x - 13} ${y} Q${x} ${y + 16} ${x + 13} ${y}" fill="none" stroke="${BRUN}" stroke-width="6" stroke-linecap="round" opacity=".75"/>`).join('');
+    // La tête : deux aigrettes, deux grands yeux ronds, un petit bec. Les pupilles regardent vers le geste.
+    const regard = pose === 'montre' ? 9 : pose === 'reflechit' ? -6 : 0, yT = -338;
+    const oeil = (x) => `<circle cx="${x}" cy="${yT}" r="52" fill="${PAPIER}"/><circle cx="${x}" cy="${yT}" r="52" fill="none" stroke="${SOMBRE}" stroke-width="7"/><circle cx="${x + regard}" cy="${yT + (pose === 'reflechit' ? -8 : 2)}" r="24" fill="#22232a"/><circle cx="${x + regard + 8}" cy="${yT - 8 + (pose === 'reflechit' ? -8 : 0)}" r="8" fill="${PAPIER}"/>`;
+    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" fill="${SOMBRE}" ${BORD}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" fill="${BRUN}" ${BORD}/>${oeil(-52)}${oeil(52)}<path d="M-17 ${yT + 34} L17 ${yT + 34} L0 ${yT + 70} Z" fill="${BEC}" ${BORD}/>`;
+    return `<g class="perso" data-pose="${pose}"><g class="elan"><g transform="rotate(${P.penche || 0})">${patte('jg', -44)}${patte('jd', 44)}${corps}${aile('bg', -104, P.bg[0], -1)}${aile('bd', 104, P.bd[0], 1)}<g class="tete-p">${tete}</g></g></g></g>`;
+  }
+
   function svg(pose = 'debout', allure = 'bonnet') {
+    if (allure === 'hibou') return hibou(pose);
     const P = POSES[pose] || POSES.debout, A = ALLURES[allure] || ALLURES.bonnet;
     const yB = P.bassin || -200, yE = yB - 150;                    // bassin et épaules
     // Chaque membre est dessiné autour de son articulation (l'origine de son groupe) : il tourne autour d'elle sans calcul.
@@ -96,5 +115,13 @@
     riziere: { x: 760, y: 1560, taille: 0.95, poses: ['marche', 'debout', 'salue'] },
   };
 
-  return { ALLURES, POSES, PLACES, svg, jouer };
+  // Les places sont réglées pour le personnage (visage à 424 au-dessus des pieds). Le hibou est plus trapu (visage à 338) et
+  // prendrait trop de place à la même taille : il est dessiné aux trois quarts, et placé pour que son visage tombe
+  // au même endroit, donc toujours au-dessus des sous-titres.
+  const VISAGE = { hibou: 338, defaut: 424 }, ECHELLE = { hibou: 0.75, defaut: 1 };
+  const placer = (allure, place) => {
+    const taille = place.taille * (ECHELLE[allure] || 1);
+    return { x: place.x, taille, y: Math.round(place.y - VISAGE.defaut * place.taille + (VISAGE[allure] || VISAGE.defaut) * taille) };
+  };
+  return { ALLURES, POSES, PLACES, VISAGE, placer, svg, jouer };
 });

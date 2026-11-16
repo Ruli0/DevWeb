@@ -160,6 +160,7 @@ function caisseHouse(b, t, a, g) {
   sinus(b, (x) => 48 + 170 * Math.exp(-x * 40), (x) => a * enveloppe(x, 0.0015, 0.19), t, 'sin', 0.6);
   bruit(b, (x) => a * 0.3 * enveloppe(x, 0.0003, 0.004), { bas: 2000, haut: 9000, debut: t, hasard: graine(g), duree: 0.02 });
 }
+const sinusDoux = (b, f, ampli, t, duree) => O().sinus(b, () => f, ampli, t, 'sin', duree);
 // La ligne de basse : [double croche dans la mesure, intervalle au-dessus de la fondamentale, durée en doubles croches].
 const LIGNE_HOUSE = [[2, 0, 1.5], [5, 0, 0.7], [6, 0, 1.5], [10, 12, 1.5], [13, 7, 0.7], [14, 0, 1.5]];
 // La ligne « plate » : la même note sur les quatre contretemps, sans saut d'octave ni note de passage.
@@ -169,6 +170,7 @@ const LIGNE_PLATE = [[2, 0, 1.5], [6, 0, 1.5], [10, 0, 1.5], [14, 0, 1.5]];
 // nue : seulement la basse, la grosse caisse et le charley. pistes : renvoie { basse, reste } au lieu du mélange (pour les tests).
 // plate : une boucle régulière, sans effets (demande de l'auteur : « fais plus plat », « régulier, sans effets ») : tout joue dès
 // la première seconde et ne change plus ; ni entrée étouffée, ni montée, ni pompe, ni « wah » ; plein est alors ignoré.
+// Sa basse est ronde (des sinus), pas en dent de scie.
 function house({ duree = 30, plein = 3.87, nue = false, plate = false, pistes = false } = {}) {
   if (plate) { plein = 0; nue = true; }
   const { tampon, bruit, enveloppe, graine, FREQ } = O();
@@ -182,7 +184,14 @@ function house({ duree = 30, plein = 3.87, nue = false, plate = false, pistes = 
       const t = t0 + k * pas; if (t < 0 || t >= duree - 0.05) continue;
       const lance = t >= plein - 1e-6, monte = !lance && t >= plein - 2 * mesure;
       const ouverture = lance ? 1 : Math.max(0.16, 0.16 + 0.7 * Math.max(0, 1 - (plein - t) / (2 * mesure)) ** 2);
-      (plate ? LIGNE_PLATE : LIGNE_HOUSE).filter(([d]) => d === k).forEach(([, i, d]) => basseHouse(bz, accord[0] - 12 + i, t, d * pas, 0.5, ouverture, plate ? 720 : 0));
+      if (plate) {
+        // « Juste le fond, pas le klaxon » (16 nov.) : la basse en dent de scie sonnait comme un klaxon. Ici, une basse ronde :
+        // des sinus seulement (la note, son octave et sa quinte au-dessus pour rester audible sur un téléphone), attaque douce.
+        LIGNE_PLATE.filter(([d]) => d === k).forEach(([, , d]) => {
+          const f = note(accord[0] - 12), env = (x) => 0.42 * Math.min(1, x / 0.012) * Math.min(1, Math.max(0, (d * pas + 0.05 - x) / 0.05));
+          sinusDoux(bz, f, env, t, d * pas + 0.05); sinusDoux(bz, f * 2, (x) => env(x) * 0.38, t, d * pas + 0.05); sinusDoux(bz, f * 3, (x) => env(x) * 0.12, t, d * pas + 0.05);
+        });
+      } else LIGNE_HOUSE.filter(([d]) => d === k).forEach(([, i, d]) => basseHouse(bz, accord[0] - 12 + i, t, d * pas, 0.5, ouverture));
       if (lance) {
         if (k % 4 === 0) { caisseHouse(bat, t, 0.95, g + k); pompe[Math.round(t * FREQ)] = 1; }
         if (k % 4 === 2) BATTERIE.charley(bat, t, 0.22, g + 60 + k, true);

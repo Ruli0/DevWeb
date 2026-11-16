@@ -115,7 +115,7 @@ function html(f) {
     return '<i class="a"></i><i class="b"></i>';
   };
   // Le personnage : un calque posé sur le décor, à la place que le décor lui a faite. Le figurant du décor est alors caché.
-  const perso = (pl) => { const pl0 = PERSO.PLACES[pl.fond]; return pl.p.personnage && pl0 ? `<svg class="perso-svg" viewBox="0 0 1080 1920"><g transform="translate(${pl0.x} ${pl0.y}) scale(${pl0.taille})">${PERSO.svg(pl.p.personnage, f.allure)}</g></svg>` : ''; };
+  const perso = (pl) => { const pl0 = PERSO.PLACES[pl.fond] && PERSO.placer(f.allure, PERSO.PLACES[pl.fond]); return pl.p.personnage && pl0 ? `<svg class="perso-svg" viewBox="0 0 1080 1920"><g transform="translate(${pl0.x} ${pl0.y}) scale(${pl0.taille})">${PERSO.svg(pl.p.personnage, f.allure)}</g></svg>` : ''; };
   const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}${pl.p.personnage ? ' avec-perso' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}${perso(pl)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));

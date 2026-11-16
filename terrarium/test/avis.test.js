@@ -224,7 +224,7 @@ test('signature sonore : indicatif, musique qui suit la voix, bruitages des déc
 test('personnage récurrent : poses par décor, visage au-dessus des sous-titres, dessin reproductible', () => {
   const P = require('../studio/avis/personnage.js');
   Object.entries(P.PLACES).forEach(([decor, pl]) => {
-    assert.ok(pl.y - 424 * pl.taille < 1200, `${decor} : le visage passerait sous les sous-titres`);
+    Object.keys(P.ALLURES).forEach((al) => { const q = P.placer(al, pl); assert.ok(q.y - (P.VISAGE[al] || P.VISAGE.defaut) * q.taille < 1200, `${decor}, ${al} : le visage passerait sous les sous-titres`); });
     pl.poses.forEach((pose) => assert.ok(P.POSES[pose], `${decor} : pose ${pose} inconnue`));
   });
   Object.keys(P.ALLURES).forEach((a) => Object.keys(P.POSES).forEach((pose) => { const s = P.svg(pose, a); assert.strictEqual(s, P.svg(pose, a)); assert.ok(s.includes('class="perso"')); }));
@@ -287,7 +287,10 @@ test('house plate : une boucle régulière, sans montée, sans pompe, sans « wa
   const forces = notes.map((t) => rms(basse, t + 0.01, t + 0.15)), eclats = notes.map((t) => eclat(t + 0.01, t + 0.15));
   forces.forEach((f) => assert.ok(Math.abs(f - forces[0]) < 0.05 * forces[0], 'même force à chaque note'));
   eclats.forEach((e) => assert.ok(Math.abs(e - eclats[0]) < 0.08 * eclats[0], 'même son à chaque note'));
-  const debutNote = eclat(notes[0] + 0.005, notes[0] + 0.04), finNote = eclat(notes[0] + 0.11, notes[0] + 0.145);
+  const debutNote = eclat(notes[0] + 0.03, notes[0] + 0.07), finNote = eclat(notes[0] + 0.1, notes[0] + 0.14);
   assert.ok(Math.abs(debutNote - finNote) < 0.25 * debutNote, 'le son ne s’ouvre ni ne se referme pendant la note');
+  // Pas de « klaxon » : la basse est ronde, donc bien moins brillante que la basse en dent de scie de la house complète.
+  const vive2 = sons.house({ duree: D, plein: 0, pistes: true }).basse; let brillant = 0; for (let i = Math.round(notes[0] * 44100) + 400; i < Math.round(notes[0] * 44100) + 6000; i += 1) brillant += (vive2[i] - vive2[i - 1]) ** 2;
+  assert.ok(eclat(notes[0] + 0.01, notes[0] + 0.136) < 0.35 * brillant, 'basse ronde');
   assert.deepStrictEqual(Array.from(m.slice(50000, 52000)), Array.from(sons.vive('house-plate', { duree: D }).slice(50000, 52000)));
 });

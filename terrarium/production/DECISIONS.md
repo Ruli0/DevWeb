@@ -161,3 +161,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Gardé** : la musique qui baisse quand tu parles, les bruitages des décors.
 - **Ouvert** : ce qui te déplaît dans la musique (mélodie, sonorité, ou le fait qu'il y en ait une). Tant que ce n'est pas clair, on ne propose pas une nouvelle musique à l'aveugle.
 - **Où** : `studio/avis/style.js` (`musique`, `personnage`), `montage.js`.
+
+## 25. La mascotte est un hibou ; la musique : un fond rond et constant (16 nov. 2026)
+
+- **Décision** : le hibou remplace le personnage humain comme repère du compte (mêmes poses, mêmes places, toujours peu présent). Pour la musique, la piste retenue à ce stade est `house-plate` avec une basse ronde ; le défaut reste `labo` tant que tu n'as pas dit oui.
+- **Pourquoi** : tes mots : « Je verrais plus un hibou qu'un personnage pour la référence » et « Juste le fond, pas le klaxon ».
+- **Écarté** : les trois allures humaines ; la basse en dent de scie ; les montées, la pompe et les effets.
+- **Où** : `studio/avis/personnage.js` (`hibou`, `placer`), `style.js`, `scripts/sons-avis.js`.

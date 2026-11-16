@@ -20,7 +20,7 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Accroche : conseils du montage, ouverture vive, `--accroche`, guide | `studio/avis/montage.js`, `lecteur.js`, `production/ACCROCHES.md` |
 | Session neuve prête en une commande (essai à blanc réussi) | `scripts/installer.sh`, `PASSATION-AVIS.md` section 0 |
 | Son : musique « Labo » qui baisse sous la voix, bruitages des décors ; musique du compte et indicatif disponibles mais non retenus | `scripts/sons-avis.js`, `studio/avis/montage.js`, `page.js` |
-| Personnage récurrent en 2D (bonnet), sept poses, six décors, à l'ouverture et à la fin seulement | `studio/avis/personnage.js` |
+| Mascotte : un hibou en 2D, sept poses, six décors, à l'ouverture et à la fin seulement | `studio/avis/personnage.js` |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
 

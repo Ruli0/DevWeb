@@ -63,7 +63,8 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 18 | Musique revenue à « Labo » par défaut, sans indicatif ; allure `bonnet` fixée ; le personnage n'apparaît qu'au premier et au dernier décor ; énigme renvoyée | « On peut faire des musiques plus vivantes ? » |
 | 19 | Trois musiques vivantes proposées (`funk`, `electro`, `acoustique`), envoyées seules puis sous sa voix | « Juste la basse, essaye de faire une instru electro house » |
 | 20 | Électro house portée par la basse, deux versions (`house`, `house-nue`), envoyées seules, sous sa voix, et dans la vidéo de l'énigme | « J'aime pas trop, fais plus plat » ; précisé à ma question : « Régulier, sans effets » |
-| 21 | `house-plate` : la même house en boucle régulière (ni montée, ni pompe, ni « wah », une seule note de basse par accord), envoyée seule et dans l'énigme | **en attente** (le défaut reste `labo`) |
+| 21 | `house-plate` : la même house en boucle régulière (ni montée, ni pompe, ni « wah », une seule note de basse par accord), envoyée seule et dans l'énigme | « Juste le fond, pas le klaxon. Comment faire pour améliorer l'outil au global ? Je verrais plus un hibou qu'un personnage pour la référence » |
+| 22 | Basse de `house-plate` rendue ronde (plus de dent de scie : c'était le « klaxon ») ; **le hibou** remplace le personnage comme mascotte (mêmes poses, mêmes places) ; planches et extraits envoyés | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -236,6 +237,7 @@ Tout est dans `scripts/sons-avis.js`, synthétisé et reproductible.
 - **Ce qu'il veut** : des musiques « plus vivantes ». Trois styles avec batterie et basse ont été proposés le 16 nov. (`VIVES` dans `sons-avis.js`) : `funk` (108 à la minute), `electro` (122), `acoustique` (100). Essai : `npm run video -- <id> --musique=funk`. Quand il aura choisi, mettre son choix dans `style.js` (`musique`) ; s'il veut un style par rubrique, ajouter une table rubrique → musique au même endroit.
 - **Sa réponse aux trois styles** : « Juste la basse, essaye de faire une instru electro house ». D'où `house` et `house-nue` (`house()` dans `sons-avis.js`) : 124 à la minute, grosse caisse sur chaque temps, basse à contretemps passée dans un filtre résonant (`basseHouse`), « pompe » sur chaque coup de grosse caisse, entrée étouffée puis montée ; le plein tombe sur le premier mot fort (`feuille.musique.plein`). `house-nue` ne garde que la basse, la grosse caisse et le charley.
 - **Puis « fais plus plat »**, c'est-à-dire, selon lui, « régulier, sans effets » : `house-plate` (`house({ plate: true })`) joue la boucle complète dès la première seconde et ne change plus : pas d'entrée étouffée, pas de montée, pas de pompe, pas de « wah » (coupure du filtre fixe à 720 Hz), la même note de basse aux quatre contretemps. Un test mesure cette régularité. **Leçon** : après plusieurs essais refusés, demander ce que le mot veut dire avant de refaire (le modèle ne peut pas écouter) ; il aime ce qui est constant et sobre, pas les effets.
+- **Puis « Juste le fond, pas le klaxon »** : le « klaxon » était la basse en dent de scie de `house-plate`. Elle est maintenant faite de sinus seulement (note, octave, quinte au-dessus), avec une attaque douce. Retenir : il n'aime pas les sons riches et nasillards ; il veut un fond rond et constant.
 - **Deux pièges rencontrés** : une puissance d'un nombre très légèrement négatif (`x ** 2.2` au premier échantillon) donnait un nombre invalide que la réverbération propageait : toute la batterie devenait muette sans erreur ; un test vérifie maintenant qu'aucun nombre invalide ne sort. Et un téléphone ne rend presque rien sous 200 Hz : la basse a une seconde onde à l'octave et un filtre assez ouvert, sinon elle disparaît (mesurer la bande 250 à 2 000 Hz, pas seulement le niveau global).
 - **La musique du compte** (`"musique": "avis"`, à la demande) : la même mélodie et les mêmes accords pour tout le compte, une instrumentation par rubrique (`RUBRIQUES`). `"musique": "labo"` est le défaut, `"aucune"` la coupe.
 - **Elle suit la voix** : le montage calcule les « creux » (les moments où l'auteur parle, `feuille.musique.creux`) ; `volumeMusique()` dans `page.js` en fait une expression pour ffmpeg : `reglages.musique` (0,16) sous la voix, `reglages.musiqueSeule` (0,42) dans les silences.
@@ -244,17 +246,19 @@ Tout est dans `scripts/sons-avis.js`, synthétisé et reproductible.
 - Mesuré sur l'énigme : −15 LUFS avant rendu ; la musique remonte pendant le compte à rebours et sur la question de fin. **Personne n'a écouté** avant l'auteur.
 - Ce qui reste de ce lot dans toutes les vidéos : la musique qui baisse sous la voix (elle s'applique aussi à `labo`) et les bruitages des décors.
 
-## 6 quater. Le personnage récurrent (lot 2 du plan « aller plus loin », 16 nov. 2026)
+## 6 quater. La mascotte : un hibou (lot 2 du plan « aller plus loin », 16 nov. 2026)
 
-Un double stylisé de l'auteur, en papier découpé, le même dans chaque vidéo : `studio/avis/personnage.js`.
+**La mascotte du compte est un hibou** en papier découpé (`"personnage": 'hibou'` dans `style.js`), choisi par l'auteur après avoir vu un personnage humain : « Je verrais plus un hibou qu'un personnage pour la référence ». Tout est dans `studio/avis/personnage.js` ; le mot « personnage » reste dans le code et dans l'épisode.
+
+- **Le hibou** (`hibou()`) reprend les poses du personnage : ses ailes sont ses bras (seul l'angle du haut du bras sert), ses pupilles regardent vers le geste. Il est dessiné aux trois quarts de la taille prévue et placé par `placer()` pour que son visage tombe au même endroit que celui du personnage.
+- Les allures humaines (`bonnet`, `casquette`, `boucles`) restent dans le code ; ne pas les reproposer.
 
 - **Pas trop souvent** (demande de l'auteur) : avec `"personnage": true`, il n'apparaît que dans le premier et le dernier décor qui lui font une place ; le montage donne un conseil s'il est à l'écran plus de 40 % du temps.
 - **Dans l'épisode** : `"personnage": true` (pose par défaut du décor), ou sur un plan `"personnage": "salue"` ; `"personnage": false` sur un plan l'enlève. `"allure"` change son allure pour un épisode.
-- **Allure** : `bonnet`, choisie par l'auteur (« le personnage 1 »). `casquette` et `boucles` restent dans le code.
 - **Poses** : `debout`, `salue`, `montre`, `reflechit`, `marche`, `assis`, `grimpe`. Une pose est une liste d'angles (`POSES`) : en ajouter une coûte une ligne.
 - **Places** (`PLACES`) : `cave`, `robot`, `scene`, `mur`, `salon`, `riziere`. Règle vérifiée par un test : le centre de la tête reste au-dessus de y 1200, pour que les sous-titres ne passent jamais sur le visage. Quand il est là, le figurant du décor (classe `figurant` : la silhouette de la cave, le grimpeur du mur) est caché.
 - **Piège** : ne jamais l'animer avec les propriétés `x`, `y`, `rotation` ou `svgOrigin` de GSAP (elles se repèrent dans l'image entière et décalent un dessin placé par un groupe parent : il se retrouvait 300 pixels trop haut). Tout passe par l'attribut `transform` (`attr: { transform: 'rotate(9)' }`), chaque membre étant dessiné autour de son articulation.
-- **Reste à faire** : sa version 3D (dans `mur3d` et `riziere3d`, comme cible de caméra `moi`) ; la pose `assis` ressemble plus à un accroupi.
+- **Reste à faire** : le hibou en 3D (dans `mur3d` et `riziere3d`, comme cible de caméra) ; une pose de vol plus franche pour le mur d'escalade (aujourd'hui `grimpe` lève seulement les ailes).
 
 ## 7. Le script resserré que l'auteur doit réenregistrer
 
@@ -278,6 +282,17 @@ RNNoise (débruitage), Whisper par faster-whisper (transcription), ffmpeg (coupe
 ## 8 bis. Le réservoir d'idées
 
 `production/IDEES-VIDEOS.md` : une méthode pour trouver des idées, les formats disponibles, et une soixantaine d'idées par rubrique avec leur statut. Le tenir à jour : marquer ce qui est fait, ajouter les idées de l'auteur, noter ce que les chiffres disent après publication.
+
+## 8 ter. Améliorer l'outil dans son ensemble (réponse donnée à l'auteur le 16 nov.)
+
+Par ordre d'effet, ce qui a été dit à l'auteur quand il a demandé comment améliorer l'outil « au global » :
+
+1. **Publier et mesurer** : rien n'est en ligne ; tous les réglages sont des paris.
+2. **De l'enregistrement à la vidéo en une étape** : aujourd'hui l'épisode s'écrit à la main après lecture de la transcription. Une commande qui propose un premier épisode (découpage en plans, décors, mots forts, accroche) ferait gagner le plus de temps.
+3. **La musique** : cinq versions synthétisées refusées ou à moitié acceptées. Le modèle ne peut pas écouter ; de vrais morceaux libres de droits choisis par l'auteur (il faudrait ouvrir le réseau vers une banque de sons) régleraient le problème plus sûrement.
+4. **Ses propres images** (photos, courtes vidéos), surtout pour l'escalade.
+5. **Moins d'options** : cinq thèmes, deux aspects 3D, sept musiques ; retirer ce qu'il a écarté une fois ses choix stables.
+6. **Un contrôle automatique de l'image** avant envoi (texte coupé, visage sous les sous-titres, plan vide), et le rendu final en 60 images par seconde.
 
 ## 9. La suite, par ordre d'intérêt
 
