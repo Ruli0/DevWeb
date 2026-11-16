@@ -268,3 +268,26 @@ test('électro house : acceptée, reproductible, portée par la basse, le plein 
   assert.deepStrictEqual(Array.from(a.slice(90000, 92000)), Array.from(b2.slice(90000, 92000)));
   assert.ok(a.every((v) => Number.isFinite(v)));
 });
+
+test('house plate : une boucle régulière, sans montée, sans pompe, sans « wah »', () => {
+  const sons = require('../scripts/sons-avis.js');
+  assert.deepStrictEqual(montage(episode({ musique: 'house-plate' }), voix).erreurs, []);
+  const D = 16, mesure = (60 / 124) * 4;
+  const rms = (b, a, z) => { let s = 0; for (let i = Math.round(a * 44100); i < Math.round(z * 44100); i += 1) s += b[i] * b[i]; return Math.sqrt(s / ((z - a) * 44100)); };
+  const m = sons.vive('house-plate', { duree: D, plein: 6 });
+  assert.ok(m.every((v) => Number.isFinite(v)), 'aucun nombre invalide');
+  // Régulier : chaque mesure a le même niveau, de la première à la dernière ; "plein" est ignoré.
+  const niveaux = []; for (let k = 0; (k + 1) * mesure < D - 0.5; k += 1) niveaux.push(rms(m, k * mesure, (k + 1) * mesure));
+  const moyenne = niveaux.reduce((a, b) => a + b, 0) / niveaux.length;
+  niveaux.forEach((n, k) => assert.ok(Math.abs(n - moyenne) < 0.1 * moyenne, `mesure ${k + 1} : ${n.toFixed(3)} contre ${moyenne.toFixed(3)}`));
+  // Sans pompe ni « wah » : la basse a le même niveau et le même éclat à chacun des quatre contretemps d'une mesure.
+  const { basse } = sons.house({ duree: D, plate: true, pistes: true }), pas = 60 / 124 / 4;
+  const eclat = (a, z) => { let t = 0; for (let i = Math.round(a * 44100); i < Math.round(z * 44100); i += 1) t += (basse[i] - basse[i - 1]) ** 2; return t; };
+  const notes = [2, 6, 10, 14].map((k) => 4 * mesure + k * pas);
+  const forces = notes.map((t) => rms(basse, t + 0.01, t + 0.15)), eclats = notes.map((t) => eclat(t + 0.01, t + 0.15));
+  forces.forEach((f) => assert.ok(Math.abs(f - forces[0]) < 0.05 * forces[0], 'même force à chaque note'));
+  eclats.forEach((e) => assert.ok(Math.abs(e - eclats[0]) < 0.08 * eclats[0], 'même son à chaque note'));
+  const debutNote = eclat(notes[0] + 0.005, notes[0] + 0.04), finNote = eclat(notes[0] + 0.11, notes[0] + 0.145);
+  assert.ok(Math.abs(debutNote - finNote) < 0.25 * debutNote, 'le son ne s’ouvre ni ne se referme pendant la note');
+  assert.deepStrictEqual(Array.from(m.slice(50000, 52000)), Array.from(sons.vive('house-plate', { duree: D }).slice(50000, 52000)));
+});

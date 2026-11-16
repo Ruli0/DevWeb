@@ -136,7 +136,8 @@ const VIVES = {
 // Une note de basse de house : une onde riche (dent de scie et carré) dans un filtre passe-bas résonant qui s'ouvre puis se
 // referme à chaque note (le « wah »), plus un sinus à la même hauteur pour le poids. ouverture (0 à 1) : filtre plus ou moins ouvert.
 // Les notes restent au-dessus de 60 Hz : en dessous, un téléphone ne les rend pas.
-function basseHouse(b, n, t, duree, a, ouverture = 1) {
+// fixe : une coupure constante en hertz (pas de « wah » : le son de la basse ne bouge pas).
+function basseHouse(b, n, t, duree, a, ouverture = 1, fixe = 0) {
   const { FREQ } = O();
   const f = note(n), debut = Math.round(t * FREQ), fin = Math.min(b.length, Math.round((t + duree + 0.06) * FREQ));
   let phase = 0, bas = 0, bande = 0;
@@ -146,7 +147,7 @@ function basseHouse(b, n, t, duree, a, ouverture = 1) {
     // Une seconde dent de scie à l'octave : c'est elle qu'on entend sur un téléphone, qui ne rend presque rien sous 200 Hz.
     const onde = 0.5 * (2 * (phase % 1) - 1) + 0.3 * (phase % 1 < 0.5 ? 1 : -1) + 0.34 * (2 * ((2 * phase) % 1) - 1);
     // Filtre à variable d'état : la coupure descend d'environ 2 400 Hz à 550 Hz en un dixième de seconde.
-    const coupure = (480 + 1900 * ouverture * Math.exp(-x / 0.11)) * (0.3 + 0.7 * ouverture) + 90;
+    const coupure = fixe || (480 + 1900 * ouverture * Math.exp(-x / 0.11)) * (0.3 + 0.7 * ouverture) + 90;
     const k = 2 * Math.sin((Math.PI * Math.min(coupure, 6000)) / FREQ);
     bas += k * bande; bande += k * (onde - bas - 0.42 * bande);
     const env = Math.min(1, x / 0.004) * (x < duree ? 1 : Math.exp(-(x - duree) / 0.02));
@@ -161,10 +162,15 @@ function caisseHouse(b, t, a, g) {
 }
 // La ligne de basse : [double croche dans la mesure, intervalle au-dessus de la fondamentale, durée en doubles croches].
 const LIGNE_HOUSE = [[2, 0, 1.5], [5, 0, 0.7], [6, 0, 1.5], [10, 12, 1.5], [13, 7, 0.7], [14, 0, 1.5]];
+// La ligne « plate » : la même note sur les quatre contretemps, sans saut d'octave ni note de passage.
+const LIGNE_PLATE = [[2, 0, 1.5], [6, 0, 1.5], [10, 0, 1.5], [14, 0, 1.5]];
 
 // house({ duree, plein, nue, pistes }) : plein = l'instant où tout entre (avant : la basse filtrée seule, puis une montée).
 // nue : seulement la basse, la grosse caisse et le charley. pistes : renvoie { basse, reste } au lieu du mélange (pour les tests).
-function house({ duree = 30, plein = 3.87, nue = false, pistes = false } = {}) {
+// plate : une boucle régulière, sans effets (demande de l'auteur : « fais plus plat », « régulier, sans effets ») : tout joue dès
+// la première seconde et ne change plus ; ni entrée étouffée, ni montée, ni pompe, ni « wah » ; plein est alors ignoré.
+function house({ duree = 30, plein = 3.87, nue = false, plate = false, pistes = false } = {}) {
+  if (plate) { plein = 0; nue = true; }
   const { tampon, bruit, enveloppe, graine, FREQ } = O();
   const TEMPO_H = 124, temps = 60 / TEMPO_H, pas = temps / 4, mesure = 16 * pas;
   const bz = tampon(duree), bat = tampon(duree), pompe = tampon(duree);
@@ -176,7 +182,7 @@ function house({ duree = 30, plein = 3.87, nue = false, pistes = false } = {}) {
       const t = t0 + k * pas; if (t < 0 || t >= duree - 0.05) continue;
       const lance = t >= plein - 1e-6, monte = !lance && t >= plein - 2 * mesure;
       const ouverture = lance ? 1 : Math.max(0.16, 0.16 + 0.7 * Math.max(0, 1 - (plein - t) / (2 * mesure)) ** 2);
-      LIGNE_HOUSE.filter(([d]) => d === k).forEach(([, i, d]) => basseHouse(bz, accord[0] - 12 + i, t, d * pas, 0.5, ouverture));
+      (plate ? LIGNE_PLATE : LIGNE_HOUSE).filter(([d]) => d === k).forEach(([, i, d]) => basseHouse(bz, accord[0] - 12 + i, t, d * pas, 0.5, ouverture, plate ? 720 : 0));
       if (lance) {
         if (k % 4 === 0) { caisseHouse(bat, t, 0.95, g + k); pompe[Math.round(t * FREQ)] = 1; }
         if (k % 4 === 2) BATTERIE.charley(bat, t, 0.22, g + 60 + k, true);
@@ -192,17 +198,18 @@ function house({ duree = 30, plein = 3.87, nue = false, pistes = false } = {}) {
   // Le souffle qui monte avant le plein, et une cymbale à l'instant où tout entre.
   const dm = Math.min(plein, 2 * mesure);
   // (x peut être très légèrement négatif au premier échantillon : sans le max, la puissance donnerait un nombre invalide.)
-  if (dm > 0.5) bruit(bat, (x) => 0.2 * (Math.max(0, x) / dm) ** 2.2, { bas: 600, haut: (x) => 1500 + 9000 * (Math.max(0, x) / dm) ** 2, debut: plein - dm, hasard: graine(399), duree: dm });
-  if (plein < duree - 0.5) bruit(bat, (x) => 0.3 * enveloppe(x, 0.002, 0.5), { bas: 5000, haut: 12000, debut: Math.max(0, plein), hasard: graine(398), duree: 1.6 });
+  if (dm > 0.5 && !plate) bruit(bat, (x) => 0.2 * (Math.max(0, x) / dm) ** 2.2, { bas: 600, haut: (x) => 1500 + 9000 * (Math.max(0, x) / dm) ** 2, debut: plein - dm, hasard: graine(399), duree: dm });
+  if (plein < duree - 0.5 && !plate) bruit(bat, (x) => 0.3 * enveloppe(x, 0.002, 0.5), { bas: 5000, haut: 12000, debut: Math.max(0, plein), hasard: graine(398), duree: 1.6 });
   // La pompe : la basse s'écrase sur chaque coup de grosse caisse et remonte en un quart de seconde.
   let depuis = 1;
-  for (let i = 0; i < bz.length; i += 1) { if (pompe[i]) depuis = 0; bz[i] *= 0.22 + 0.78 * Math.min(1, depuis / 0.24) ** 1.6; depuis += 1 / FREQ; }
+  if (!plate) for (let i = 0; i < bz.length; i += 1) { if (pompe[i]) depuis = 0; bz[i] *= 0.22 + 0.78 * Math.min(1, depuis / 0.24) ** 1.6; depuis += 1 / FREQ; }
   reverbe(bat, 0.1);
   if (pistes) return { basse: bz, reste: bat };
   for (let i = 0; i < bz.length; i += 1) bz[i] += bat[i];
   return bz;
 }
 VIVES.house = { nom: 'Électro house', tempo: 124, fabrique: (o) => house(o) };
+VIVES['house-plate'] = { nom: 'Électro house plate (régulière, sans effets)', tempo: 124, fabrique: (o) => house(Object.assign({}, o, { plate: true })) };
 VIVES['house-nue'] = { nom: 'Électro house, basse et grosse caisse seules', tempo: 124, fabrique: (o) => house(Object.assign({}, o, { nue: true })) };
 
 function vive(style = 'funk', { duree = 30, plein } = {}) {
