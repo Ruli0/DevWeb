@@ -8,6 +8,8 @@ _Écrit le 15 novembre 2026, relu et nettoyé le 16, pour le modèle qui reprend
 cd terrarium && bash scripts/installer.sh     # dépendances Node et Python, CLI de rendu, tests (sans danger à relancer)
 ```
 
+L'environnement « DevWeb » lance ce script tout seul au démarrage d'une session neuve, si le dépôt est ouvert sur une branche qui le contient (enregistré le 16 nov. ; pas encore éprouvé sur une vraie session neuve : en cas de doute, le relancer à la main).
+
 Puis, pour une vidéo à partir d'un enregistrement de l'auteur (il arrive en pièce jointe, dans `/root/.claude/uploads/<session>/`) :
 
 ```bash
