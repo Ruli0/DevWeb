@@ -1,0 +1,27 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "agriculteur-ia",
+  "titre": "L'agriculteur et le supermarché : pourquoi il faut continuer à coder",
+  "rubrique": "travail",
+  "numero": 4,
+  "voix": "agriculteur-ia",
+  "personnage": true,
+  "corrections": { "16": "supermarché ?", "17": "", "74": "coder,", "93": "model", "104": "s'appauvrit" },
+  "forts": ["légumes", "supermarché", "exactement pareil", "humains", "propres productions", "modèle collapse", "médiocre"],
+  "plans": [
+    { "plan": "titre", "fond": "champ", "texte": "À quoi bon *cultiver* ?" },
+    { "plan": "visuel", "a": "alors qu'il y en a", "fond": "supermarche" },
+    { "plan": "visuel", "a": "Si elle arrête", "fond": "papier", "illu": "rayons", "moment": { "a": "finissent vides" } },
+    { "plan": "visuel", "a": "Avec l'IA et le code", "fond": "robot" },
+    { "plan": "visuel", "a": "Aujourd'hui, certains", "fond": "cave" },
+    { "plan": "visuel", "a": "Mais l'IA, c'est juste", "fond": "supermarche", "personnage": false },
+    { "plan": "visuel", "a": "Si on arrête", "fond": "robot", "personnage": false },
+    { "plan": "titre", "a": "En science des données", "fond": "accent", "texte": "Model *collapse*", "taille": "geant" },
+    { "plan": "visuel", "a": "Un cercle vicieux", "fond": "nuit", "illu": "copies", "question": { "texte": "Et toi, tu *codes* encore ?", "apres": 3 } }
+  ],
+  "publication": {
+    "texte": "Pourquoi cultiver des légumes quand le supermarché en est plein ? Avec l'IA et le code, c'est pareil : si on arrête d'écrire du code, elle finira par apprendre sur elle-même. C'est mon avis ; et toi, tu codes encore ?",
+    "hashtags": ["#ia", "#developpeur", "#code", "#modelcollapse", "#tech"]
+  }
+}

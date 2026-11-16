@@ -120,6 +120,8 @@
     mur: { x: 540, y: 1560, taille: 1.3, poses: ['grimpe'], figurant: true },
     salon: { x: 596, y: 1700, taille: 1.3, poses: ['reflechit', 'debout', 'montre', 'assis'] },
     riziere: { x: 760, y: 1560, taille: 0.95, poses: ['marche', 'debout', 'salue'] },
+    champ: { x: 210, y: 1640, taille: 1.2, poses: ['montre', 'debout', 'reflechit', 'salue'] },
+    supermarche: { x: 860, y: 1640, taille: 1.2, poses: ['reflechit', 'montre', 'debout'] },
   };
 
   // Les places sont réglées pour le personnage (visage à 424 au-dessus des pieds). Le hibou, lui, est petit et vole sur place :

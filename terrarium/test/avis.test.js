@@ -294,3 +294,14 @@ test('house plate : une boucle régulière, sans montée, sans pompe, sans « wa
   assert.ok(eclat(notes[0] + 0.01, notes[0] + 0.136) < 0.35 * brillant, 'basse ronde');
   assert.deepStrictEqual(Array.from(m.slice(50000, 52000)), Array.from(sons.vive('house-plate', { duree: D }).slice(50000, 52000)));
 });
+
+test('tous les épisodes « avis » du dépôt se montent sans erreur', () => {
+  const racine = path.join(__dirname, '..');
+  const dossier = path.join(racine, 'videos/episodes');
+  const liste = fs.readdirSync(dossier).filter((f) => f.endsWith('.json') && !f.endsWith('.sources.json')).map((f) => JSON.parse(fs.readFileSync(path.join(dossier, f), 'utf8'))).filter((e) => e.version === 4);
+  assert.ok(liste.length >= 5);
+  liste.forEach((ep) => {
+    const v = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix', ep.voix || ep.id, 'mots.json'), 'utf8'));
+    assert.deepStrictEqual(montage(ep, v).erreurs, [], ep.id);
+  });
+});

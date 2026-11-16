@@ -12,6 +12,7 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Montage : blancs retirés, passages coupés, vitesse, fondu aux raccords | `studio/avis/montage.js`, `page.js` |
 | Sous-titres mot par mot, mot en cours en pastille | `studio/avis/lecteur.js` |
 | 5 plans (dont `visuel`, sans texte), 11 illustrations, 3 fonds unis, 3 décors illustrés, fond photo, 4 transitions | `studio/avis/` |
+| Épisode `agriculteur-ia` (37 s, vraie voix) : champ, supermarché, robot, « model collapse » | `videos/episodes/agriculteur-ia.json` |
 | Épisode `valeur-ia` (57 s), 5 versions envoyées | `videos/episodes/valeur-ia.json` |
 | Épisode `enigme-thermometre` (33 s) : pause de 5 s avec compte à rebours et tics, décor `salon` | `videos/episodes/enigme-thermometre.json` |
 | Décor `riziere` (Vietnam) et essai de 12 s ; réservoir d'idées | `studio/avis/decors.js`, `production/IDEES-VIDEOS.md` |

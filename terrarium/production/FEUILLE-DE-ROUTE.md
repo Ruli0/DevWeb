@@ -21,6 +21,7 @@ _Dernière mise à jour : 15 novembre 2026._
 | B2 | Mascotte : un petit hibou de verre | Claude | 2D fait, peu présent ; version 3D à faire |
 | B3 | Plan-séquence 3D, mots dans le décor, lumière selon l'émotion | Claude | à faire |
 | B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |
+| A10 | Vidéo « L'agriculteur et le supermarché » sur ta nouvelle prise | Claude | fait, en attente de ton avis |
 | A6b | Décor « relations » | Claude | à faire |
 | A7 | Publier, relever les chiffres | Toi | à faire |
 

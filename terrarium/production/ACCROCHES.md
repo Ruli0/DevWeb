@@ -70,3 +70,9 @@ La première image compte autant que la première phrase : c'est elle qui s'affi
 - La scène : « Au Vietnam, j'ai regardé un homme marcher derrière son buffle pendant une heure. »
 - Le contre-pied : « Ici, personne ne court. Et pourtant, tout pousse. »
 - L'aveu : « J'ai longtemps confondu aller vite et avancer. »
+
+**L'agriculteur et le supermarché** (`agriculteur-ia`, accroche actuelle : 17 mots, 4,7 secondes, un peu longue mais elle intrigue)
+
+- La question qui pique (l'actuelle, resserrée) : « Pourquoi cultiver des légumes ? Le supermarché en est plein. »
+- Le contre-pied : « Arrêter de coder parce que l'IA code, c'est arrêter de cultiver parce que le supermarché est plein. »
+- La scène : « Un agriculteur entre dans un supermarché. Et il décide d'arrêter de cultiver. »

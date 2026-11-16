@@ -151,6 +151,26 @@
         const m = p.moment; surgir(c, qa(el, '.val'), t0 + (m && m.t != null ? Math.max(0.6, m.t - 0.1) : 1.1));
       },
     },
+    // Des rayons pleins qui se vident : le temps fort ("moment") fait disparaître les légumes un à un.
+    rayons: {
+      svg: () => `<rect class="t" x="90" y="20" width="760" height="360" rx="14" ${T}/><path class="t" d="M90 200 H850" ${T}/>
+        ${[0, 1].flatMap((r) => [0, 1, 2, 3, 4, 5].map((k) => `<circle class="leg" cx="${160 + k * 124}" cy="${130 + r * 180}" r="46" fill="${['#e0453a', '#6cc45a', '#ff8a3d', '#f2c14e', '#8a4fb0', '#3f9a46'][(k + r * 2) % 6]}"/>`)).join('')}`,
+      jouer(c, el, p, t0, d) {
+        tracer(c, qa(el, '.t'), t0, 0.4); surgir(c, qa(el, '.leg'), t0 + 0.15, 0.03);
+        const m = p.moment, tv = t0 + (m && m.t != null ? Math.max(0.9, m.t - 0.5) : d * 0.5);
+        c.ft(qa(el, '.leg'), { scale: 1, opacity: 1 }, { scale: 0, opacity: 0, duration: 0.3, ease: 'back.in(2)', stagger: 0.06, transformOrigin: '50% 50%' }, tv);
+      },
+    },
+    // Des copies de copies : quatre têtes de robot, chacune copiée de la précédente, de plus en plus pâle et de travers.
+    copies: {
+      svg: () => [0, 1, 2, 3].map((k) => { const x = 130 + k * 228, e = 1 - k * 0.1;
+        return `<g class="copie" transform="translate(${x} 200) rotate(${k * 5}) skewX(${k * 6}) scale(${e})" opacity="${1 - k * 0.22}"><rect x="-80" y="-80" width="160" height="150" rx="34" fill="none" stroke="var(--fg)" stroke-width="9"/><path d="M0 -80 V-112" stroke="var(--fg)" stroke-width="9" stroke-linecap="round"/><circle cx="0" cy="-122" r="12" fill="var(--ac)"/><circle cx="${-30 - k * 3}" cy="${-20 + k * 4}" r="${16 - k * 2}" fill="var(--ac)"/><circle cx="${30 + k * 2}" cy="${-20 - k * 3}" r="${16 - k * 3}" fill="var(--ac)"/><path d="M-34 ${30 + k * 3} H${34 - k * 10}" stroke="var(--fg)" stroke-width="9" stroke-linecap="round"/></g>${k < 3 ? `<path class="fl" d="M${x + 92} 200 h34 m-14 -14 l16 14 l-16 14" fill="none" stroke="var(--ac)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>` : ''}`; }).join(''),
+      jouer(c, el, p, t0, d) {
+        const k = qa(el, '.copie'), f = qa(el, '.fl'), pas = Math.min(0.7, d / 6);
+        k.forEach((g, i) => { const o = +g.getAttribute('opacity'); gsap.set(g, { opacity: 0 }); c.ft(g, { opacity: 0 }, { opacity: o, duration: 0.3 }, t0 + 0.1 + i * pas); });
+        gsap.set(f, { opacity: 0 }); f.forEach((g, i) => c.ft(g, { opacity: 0 }, { opacity: 1, duration: 0.2 }, t0 + 0.1 + (i + 0.6) * pas));
+      },
+    },
     question: {
       svg: () => `<circle class="s o1" cx="170" cy="140" r="56" ${T}/><rect class="s o2" x="700" y="190" width="110" height="110" rx="18" ${T}/>
         <path class="t" d="M395 140 C395 40 545 40 545 140 C545 205 470 205 470 275" ${A} stroke-width="30"/><circle class="s" cx="470" cy="345" r="20" fill="var(--ac)"/>
