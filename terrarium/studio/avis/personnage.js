@@ -39,21 +39,27 @@
   const trait = (pts, largeur, couleur) => { const d = `M${pts.map((p) => `${f(p[0])} ${f(p[1])}`).join(' L')}`; return `<path d="${d}" fill="none" stroke="${PAPIER}" stroke-width="${largeur + 12}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round"/>`; };
   const BORD = `stroke="${PAPIER}" stroke-width="7" stroke-linejoin="round" paint-order="stroke"`;
 
-  // Le hibou : la mascotte du compte (l'auteur : « Je verrais plus un hibou qu'un personnage pour la référence », 16 nov.).
+  // Le hibou de verre : la mascotte du compte (l'auteur : « Je verrais plus un hibou qu'un personnage pour la référence », puis
+  // « Fais le hibou couleur verre transparent et plus petit », 16 nov.).
   // Mêmes poses que le personnage, lues autrement : ses ailes sont ses bras (seul l'angle du haut du bras compte), il n'a pas de dos.
   // Mêmes noms de groupes (.elan, .tete-p, .bg, .bd, .jg, .jd), donc le même mouvement dans jouer().
   function hibou(pose) {
     const P = POSES[pose] || POSES.debout;
-    const BRUN = '#8a5a3a', SOMBRE = '#5f3d26', VENTRE = '#f3dcb2', BEC = '#ff9a3d';
-    const aile = (cls, x, angle, miroir) => `<g transform="translate(${x} -262) rotate(${f(-angle)})"><g class="${cls}"><path d="M0 -6 C${miroir * 62} 30 ${miroir * 58} 150 ${miroir * 8} 196 C${miroir * -34} 140 ${miroir * -30} 40 0 -6 Z" fill="${SOMBRE}" ${BORD}/><path d="M${miroir * 10} 150 L${miroir * 26} 122 M${miroir * 2} 120 L${miroir * 20} 92" stroke="${BRUN}" stroke-width="6" stroke-linecap="round"/></g></g>`;
-    const patte = (cls, x) => `<g transform="translate(${x} -8)"><g class="${cls}"><path d="M0 0 L-22 14 M0 0 L0 20 M0 0 L22 14" fill="none" stroke="${PAPIER}" stroke-width="20" stroke-linecap="round"/><path d="M0 0 L-22 14 M0 0 L0 20 M0 0 L22 14" fill="none" stroke="${BEC}" stroke-width="11" stroke-linecap="round"/></g></g>`;
-    const corps = `<ellipse cx="0" cy="-168" rx="124" ry="170" fill="${BRUN}" ${BORD}/><ellipse cx="0" cy="-138" rx="80" ry="118" fill="${VENTRE}"/>`
-      + [[-30, -190], [30, -190], [0, -150], [-34, -112], [34, -112], [0, -74]].map(([x, y]) => `<path d="M${x - 13} ${y} Q${x} ${y + 16} ${x + 13} ${y}" fill="none" stroke="${BRUN}" stroke-width="6" stroke-linecap="round" opacity=".75"/>`).join('');
+    // En verre (demande de l'auteur : « couleur verre transparent ») : des aplats bleutés très transparents, un liseré blanc,
+    // des reflets. Pas de dégradé SVG : un dégradé défini dans un plan caché ne s'applique plus (piège des décors).
+    const VERRE = 'fill="#bfe6ff" fill-opacity=".26"', FONCE = 'fill="#9fd4f5" fill-opacity=".36"';
+    const BORDV = 'stroke="#ffffff" stroke-opacity=".9" stroke-width="5" stroke-linejoin="round"';
+    const reflet = (d, l) => `<path d="${d}" fill="none" stroke="#ffffff" stroke-opacity=".75" stroke-width="${l}" stroke-linecap="round"/>`;
+    const aile = (cls, x, angle, miroir) => `<g transform="translate(${x} -262) rotate(${f(-angle)})"><g class="${cls}"><path d="M0 -6 C${miroir * 62} 30 ${miroir * 58} 150 ${miroir * 8} 196 C${miroir * -34} 140 ${miroir * -30} 40 0 -6 Z" ${FONCE} ${BORDV}/>${reflet(`M${miroir * 22} 40 Q${miroir * 34} 90 ${miroir * 20} 140`, 5)}</g></g>`;
+    const patte = (cls, x) => `<g transform="translate(${x} -8)"><g class="${cls}"><path d="M0 0 L-22 14 M0 0 L0 20 M0 0 L22 14" fill="none" stroke="#ffffff" stroke-opacity=".8" stroke-width="10" stroke-linecap="round"/></g></g>`;
+    const corps = `<ellipse cx="0" cy="-168" rx="124" ry="170" ${VERRE} ${BORDV}/><ellipse cx="0" cy="-138" rx="80" ry="118" fill="#ffffff" fill-opacity=".16"/>`
+      + [[-30, -190], [30, -190], [0, -150], [-34, -112], [34, -112], [0, -74]].map(([x, y]) => `<path d="M${x - 13} ${y} Q${x} ${y + 16} ${x + 13} ${y}" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="5" stroke-linecap="round"/>`).join('')
+      + reflet('M-98 -230 Q-112 -160 -92 -90', 9);
     // La tête : deux aigrettes, deux grands yeux ronds, un petit bec. Les pupilles regardent vers le geste.
     const regard = pose === 'montre' ? 9 : pose === 'reflechit' ? -6 : 0, yT = -338;
-    const oeil = (x) => `<circle cx="${x}" cy="${yT}" r="52" fill="${PAPIER}"/><circle cx="${x}" cy="${yT}" r="52" fill="none" stroke="${SOMBRE}" stroke-width="7"/><circle cx="${x + regard}" cy="${yT + (pose === 'reflechit' ? -8 : 2)}" r="24" fill="#22232a"/><circle cx="${x + regard + 8}" cy="${yT - 8 + (pose === 'reflechit' ? -8 : 0)}" r="8" fill="${PAPIER}"/>`;
-    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" fill="${SOMBRE}" ${BORD}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" fill="${BRUN}" ${BORD}/>${oeil(-52)}${oeil(52)}<path d="M-17 ${yT + 34} L17 ${yT + 34} L0 ${yT + 70} Z" fill="${BEC}" ${BORD}/>`;
-    return `<g class="perso" data-pose="${pose}"><g class="elan"><g transform="rotate(${P.penche || 0})">${patte('jg', -44)}${patte('jd', 44)}${corps}${aile('bg', -104, P.bg[0], -1)}${aile('bd', 104, P.bd[0], 1)}<g class="tete-p">${tete}</g></g></g></g>`;
+    const oeil = (x) => `<circle cx="${x}" cy="${yT}" r="52" fill="#ffffff" fill-opacity=".72" ${BORDV}/><circle cx="${x + regard}" cy="${yT + (pose === 'reflechit' ? -8 : 2)}" r="24" fill="#17283a" fill-opacity=".9"/><circle cx="${x + regard + 8}" cy="${yT - 8 + (pose === 'reflechit' ? -8 : 0)}" r="8" fill="#ffffff"/>`;
+    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" ${FONCE} ${BORDV}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" ${VERRE} ${BORDV}/>${reflet(`M-104 ${yT - 44} Q-72 ${yT - 92} -22 ${yT - 100}`, 8)}${oeil(-52)}${oeil(52)}<path d="M-17 ${yT + 34} L17 ${yT + 34} L0 ${yT + 70} Z" fill="#ffffff" fill-opacity=".8" ${BORDV}/>`;
+    return `<g class="perso hibou" data-pose="${pose}"><g class="elan"><g transform="rotate(${P.penche || 0})">${patte('jg', -44)}${patte('jd', 44)}${corps}${aile('bg', -104, P.bg[0], -1)}${aile('bd', 104, P.bd[0], 1)}<g class="tete-p">${tete}</g></g></g></g>`;
   }
 
   function svg(pose = 'debout', allure = 'bonnet') {
@@ -98,6 +104,7 @@
     tr(q('.perso'), 'translate(0 70) scale(0.6)', 'translate(0 0) scale(1)', { duration: 0.5, ease: 'back.out(1.8)' }, t0 + 0.15);
     tr(q('.tete-p'), 'translate(0 0)', 'translate(0 -7)', { duration: 0.9, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(1.8) - 1 }, t0 + 0.7);
     const balance = (cls, de, vers, periode) => tr(q(cls), `rotate(${de})`, `rotate(${vers})`, { duration: periode / 2, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(periode) - 1 }, t0 + 0.7);
+    if (q('.hibou') && P.geste !== 'grimpe') { tr(q('.elan'), 'translate(0 0)', 'translate(0 -12)', { duration: 1.0, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(2.0) - 1 }, t0 + 0.7); if (!P.geste) { balance('.bg', -4, 6, 1.0); balance('.bd', 4, -6, 1.0); } }
     if (P.geste === 'bd') balance('.bd', -7, 9, 0.7);
     if (P.geste === 'marche') { balance('.jg', -12, 14, 0.9); balance('.jd', 12, -14, 0.9); balance('.bg', 10, -12, 0.9); balance('.bd', -10, 12, 0.9); }
     if (P.geste === 'grimpe') { balance('.bg', -5, 7, 2.2); tr(q('.elan'), 'translate(0 0)', 'translate(0 -16)', { duration: 1.1, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(2.2) - 1 }, t0 + 0.7); }
@@ -115,13 +122,9 @@
     riziere: { x: 760, y: 1560, taille: 0.95, poses: ['marche', 'debout', 'salue'] },
   };
 
-  // Les places sont réglées pour le personnage (visage à 424 au-dessus des pieds). Le hibou est plus trapu (visage à 338) et
-  // prendrait trop de place à la même taille : il est dessiné aux trois quarts, et placé pour que son visage tombe
-  // au même endroit, donc toujours au-dessus des sous-titres.
-  const VISAGE = { hibou: 338, defaut: 424 }, ECHELLE = { hibou: 0.75, defaut: 1 };
-  const placer = (allure, place) => {
-    const taille = place.taille * (ECHELLE[allure] || 1);
-    return { x: place.x, taille, y: Math.round(place.y - VISAGE.defaut * place.taille + (VISAGE[allure] || VISAGE.defaut) * taille) };
-  };
+  // Les places sont réglées pour le personnage (visage à 424 au-dessus des pieds). Le hibou, lui, est petit et vole sur place :
+  // il se tient à la même abscisse, juste au-dessus de la bande des sous-titres (qui commence à 1300), dans tous les décors.
+  const VISAGE = { hibou: 338, defaut: 424 };
+  const placer = (allure, place) => (allure === 'hibou' ? { x: place.x, y: 1282, taille: 0.6 } : { x: place.x, y: place.y, taille: place.taille });
   return { ALLURES, POSES, PLACES, VISAGE, placer, svg, jouer };
 });

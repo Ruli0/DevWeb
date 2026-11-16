@@ -17,7 +17,7 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 ## Le personnage et le son (16 nov. 2026)
 
-**Une mascotte** revient d'une vidéo à l'autre : un hibou brun aux grands yeux, en papier découpé (liseré clair, ombre nette). L'auteur l'a préféré à un personnage humain. Il se montre peu : à l'ouverture et à la fin. **Le son** : la musique baisse quand l'auteur parle, et les décors ont leurs bruitages. Une musique propre au compte, avec un indicatif, a été proposée et n'a pas plu ; la musique d'avant est restée.
+**Une mascotte** revient d'une vidéo à l'autre : un petit hibou de verre (transparent, liseré blanc, reflets, grands yeux), qui vole sur place juste au-dessus des sous-titres. L'auteur l'a préféré à un personnage humain. Il se montre peu : à l'ouverture et à la fin. **Le son** : une house régulière et sobre (grosse caisse, charley, basse ronde, sans effets), validée par l'auteur ; elle baisse quand il parle, et les décors ont leurs bruitages.
 
 ## Peu de texte
 

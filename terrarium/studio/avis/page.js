@@ -60,8 +60,8 @@ ${Object.entries(Object.assign({}, DECORS, DECORS3D)).filter(([, d]) => d.accent
 .rebours svg { position: absolute; left: 0; top: 0; }
 .rebours span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 700 300px/1 '${P.titre}'; letter-spacing: -.04em; }
 /* Le personnage récurrent : au-dessus du décor, avec l'ombre nette du papier découpé. */
-.perso-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; filter: drop-shadow(9px 11px 0 #00000045); }
-.avec-perso .figurant { display: none; }
+.perso-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; filter: drop-shadow(6px 8px 0 #00000030); }
+.avec-perso .figurant, .avec-perso .corde { display: none; }
 /* La question de fin : une grande étiquette de papier dans le décor, à la place des sous-titres. */
 .question { position: absolute; left: 60px; width: 880px; top: 1180px; text-align: center; transform-origin: 50% 50%; }
 .question p { display: inline-block; background: ${c.texte}; color: ${c.fond}; font: 700 92px/1.06 '${P.titre}'; letter-spacing: -.025em; padding: 26px 36px 32px; border-radius: 14px; box-shadow: 12px 12px 0 ${c.fond}; }

@@ -17,8 +17,8 @@ _Dernière mise à jour : 15 novembre 2026._
 | A6e | 3D pour la cave, le théâtre et le salon ; personnages modelés | Claude | à faire si tu le veux |
 | A8 | Accroches : guide, conseils automatiques, ouverture vive | Claude | fait |
 | A9 | Passation à un autre modèle : installation en une commande, essai à blanc | Claude | fait |
-| B1 | Son : musique sous la voix, bruitages ; musique du compte écartée (« je n'aime pas la musique ») | Claude, puis ton choix | house « plate » à basse ronde (« juste le fond, pas le klaxon »), avis en attente |
-| B2 | Mascotte : le hibou (à la place du personnage) | Claude | 2D fait, peu présent ; version 3D à faire |
+| B1 | Son : musique sous la voix, bruitages ; musique du compte écartée (« je n'aime pas la musique ») | Claude | fait : house « plate » à basse ronde, validée (« la musique est parfaite ») |
+| B2 | Mascotte : un petit hibou de verre | Claude | 2D fait, peu présent ; version 3D à faire |
 | B3 | Plan-séquence 3D, mots dans le décor, lumière selon l'émotion | Claude | à faire |
 | B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |
 | A6b | Décor « relations » | Claude | à faire |

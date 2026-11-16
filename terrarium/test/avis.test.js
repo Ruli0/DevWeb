@@ -188,9 +188,9 @@ test('accroche : des conseils, jamais des erreurs ; ouverture vive par défaut',
 
 test('signature sonore : indicatif, musique qui suit la voix, bruitages des décors', () => {
   const plans = [{ plan: 'titre', fond: 'cave', texte: 'x' }, { plan: 'visuel', a: "l'impro", fond: 'scene', question: { texte: 'Et *après* ?', apres: 3 } }];
-  // Par défaut, l'ancienne musique et pas d'indicatif (l'auteur n'a pas aimé la musique du compte) ; elle reste disponible à la demande.
+  // Par défaut, la musique que l'auteur a validée (« house-plate ») et pas d'indicatif ; la musique du compte reste disponible à la demande.
   const defaut = montage(episode({ plans }), voix).feuille;
-  assert.strictEqual(defaut.musique.nom, 'labo');
+  assert.strictEqual(defaut.musique.nom, 'house-plate');
   assert.ok(!defaut.sons.some((s) => /indicatif/.test(s.f)));
   const { erreurs, feuille } = montage(episode({ plans, musique: 'avis' }), voix);
   assert.deepStrictEqual(erreurs, []);
@@ -227,7 +227,7 @@ test('personnage récurrent : poses par décor, visage au-dessus des sous-titres
     Object.keys(P.ALLURES).forEach((al) => { const q = P.placer(al, pl); assert.ok(q.y - (P.VISAGE[al] || P.VISAGE.defaut) * q.taille < 1200, `${decor}, ${al} : le visage passerait sous les sous-titres`); });
     pl.poses.forEach((pose) => assert.ok(P.POSES[pose], `${decor} : pose ${pose} inconnue`));
   });
-  Object.keys(P.ALLURES).forEach((a) => Object.keys(P.POSES).forEach((pose) => { const s = P.svg(pose, a); assert.strictEqual(s, P.svg(pose, a)); assert.ok(s.includes('class="perso"')); }));
+  Object.keys(P.ALLURES).forEach((a) => Object.keys(P.POSES).forEach((pose) => { const s = P.svg(pose, a); assert.strictEqual(s, P.svg(pose, a)); assert.ok(s.includes('class="perso')); }));
   const plans = (perso) => [{ plan: 'visuel', fond: 'scene', personnage: perso }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }];
   const ok = montage(episode({ plans: plans('salue') }), voix);
   assert.deepStrictEqual(ok.erreurs, []);

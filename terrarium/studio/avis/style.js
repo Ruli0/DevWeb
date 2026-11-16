@@ -28,7 +28,8 @@ module.exports = {
   // L'indicatif du compte (scripts/sons-avis.js) : A, B ou C. À fixer quand l'auteur aura choisi à l'oreille.
   // La musique par défaut. « avis » (la musique du compte, avec l'indicatif) a été essayée le 16 nov. : l'auteur ne l'aime pas.
   // On est revenu à « labo ». Ne pas remettre « avis » par défaut sans son accord.
-  musique: 'labo',
+  // Puis, après plusieurs essais : « La musique est parfaite » pour « house-plate » (boucle régulière, basse ronde). C'est le défaut.
+  musique: 'house-plate',
   indicatif: 'A',
   // L'allure du personnage récurrent (studio/avis/personnage.js). L'auteur a choisi le bonnet (« le personnage 1 », 16 nov.).
   // Puis : « Je verrais plus un hibou qu'un personnage pour la référence » : la mascotte est le hibou.

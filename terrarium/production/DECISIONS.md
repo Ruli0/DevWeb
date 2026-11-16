@@ -168,3 +168,9 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes mots : « Je verrais plus un hibou qu'un personnage pour la référence » et « Juste le fond, pas le klaxon ».
 - **Écarté** : les trois allures humaines ; la basse en dent de scie ; les montées, la pompe et les effets.
 - **Où** : `studio/avis/personnage.js` (`hibou`, `placer`), `style.js`, `scripts/sons-avis.js`.
+
+## 26. Musique validée ; le hibou est en verre et petit (16 nov. 2026)
+
+- **Décision** : `house-plate` (boucle régulière, grosse caisse, charley, basse ronde) est la musique de toutes les vidéos. Le hibou est transparent comme du verre, petit, et vole sur place juste au-dessus des sous-titres.
+- **Pourquoi** : tes mots : « La musique est parfaite. Fais le hibou couleur verre transparent et plus petit. »
+- **Où** : `studio/avis/style.js` (`musique`), `studio/avis/personnage.js` (`hibou`, `placer`).
