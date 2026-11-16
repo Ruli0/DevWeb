@@ -7,6 +7,8 @@ description: Monte une vidéo « avis » à partir d'un enregistrement de la voi
 
 **À lire, et rien d'autre** : `terrarium/production/PASSATION-AVIS.md` (sections 3 et 4) et le modèle `terrarium/videos/episodes/valeur-ia.json`. Ne lire `studio/avis/*.js` que pour ajouter un plan, une illustration ou un décor.
 
+Pour choisir un sujet avec l'auteur : `terrarium/production/IDEES-VIDEOS.md` (idées par rubrique, formats, statuts). Le tenir à jour.
+
 ## Étapes
 
 1. **La voix** : `HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <fichier> <id>` depuis `terrarium/`. Lire `videos/voix/<id>/mots.json` en entier : repérer les mots mal transcrits (noms propres) et les passages à retirer.

@@ -21,7 +21,8 @@ _Écrit le 15 novembre 2026 pour le modèle qui reprend le travail. À lire en p
 | 5 | Vidéo v4 : sous-titres plus bas | « met moins d'éléments visuels genre texte autre que celui que je dis. Ça peut être trop d'infos pour le spectateur » |
 | 6 | Vidéo v5 : plans sans texte (`visuel`), trois textes seulement (accroche, « Théâtre d'impro », question de fin) | « Fais un script d'escalade où tu parles de 3 techniques de mains et de pied et fais le visuel […] Je ferai la voix demain » |
 | 7 | Script d'escalade et maquette muette `escalade-techniques` (37 s) : décor `mur`, six dessins de gestes | « pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas » |
-| 8 | Nouvelle prise de voix (une énigme) : « Je vais te donner juste un texte et tu vas essayer d'en faire une vidéo » → `enigme-thermometre` (33 s), envoyée | en attente |
+| 8 | Nouvelle prise de voix (une énigme) : « Je vais te donner juste un texte et tu vas essayer d'en faire une vidéo » → `enigme-thermometre` (33 s), envoyée | « fais des visuels sur un décor de rizière animé comme au Vietnam. Et aide-moi à trouver de l'inspiration […] Fais-toi un .md avec plein d'idées » |
+| 9 | Décor `riziere` (essai de 12 s envoyé) et `production/IDEES-VIDEOS.md` (une soixantaine d'idées) | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -64,7 +65,7 @@ npm run video -- <id>
 
 | Champ | Rôle |
 |---|---|
-| `"version": 4`, `"rubrique"` | Choisit la chaîne « avis » ; la rubrique donne la couleur (`travail`, `escalade`, `relations`, `enigme`, dans `studio/avis/style.js`) |
+| `"version": 4`, `"rubrique"` | Choisit la chaîne « avis » ; la rubrique donne la couleur (`travail`, `escalade`, `relations`, `enigme`, `voyage`, dans `studio/avis/style.js`) |
 | `"voix"` | Le dossier de `videos/voix/` (par défaut l'identifiant) |
 | `"retirer"` | Passages coupés : `[["premiers mots", "derniers mots"]]`. La coupe va de silence à silence |
 | `"corrections"` | Orthographe des sous-titres, par indice du mot dans `mots.json` (`""` supprime le mot affiché) |
@@ -77,7 +78,7 @@ npm run video -- <id>
 
 Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"fond"`, `"illu"` (facultatif), `"transition"` (facultatif), et ses textes (`*mot*` = mot fort). Le dernier plan est `fin` avec `"apres": 3.2` (il vient après la voix).
 
-- **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`, `mur` (salle d'escalade), `salon` (fenêtre ouverte, thermomètre au mur). **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
+- **Fonds unis** : `nuit`, `papier`, `accent`. **Décors illustrés** : `cave`, `robot`, `scene`, `mur` (salle d'escalade), `salon` (fenêtre ouverte, thermomètre au mur), `riziere` (terrasses au Vietnam, paysan et buffle, aigrettes). **Photo de l'auteur** : `"fond": "photo", "photo": "fichier.jpg"` (fichier dans `videos/medias/`).
 - Deux plans voisins ne peuvent pas avoir le même fond (le montage le refuse). Sans `"fond"`, les fonds unis alternent.
 - **Transitions** : `cercle`, `volet`, `biseau`, `rideau` (elles alternent si rien n'est précisé).
 - **Illustrations** (au trait, 940 × 400, entre le texte et les sous-titres) : `question`, `code`, `chat`, `balance`, `presentation`, `sortie`, `deplacement`, `theatre`, `micro`, `duo`, `commentaire` ; pour l'escalade : `reglette`, `pince`, `aplat`, `carre`, `adherence`, `talon` ; pour l'énigme : `soleil`, `fenetre`, `thermometre`, `distance` (`"valeur"` change le nombre affiché). Sur le fond `accent` orange, la couleur de peau des dessins d'escalade se lit mal : les mettre sur `nuit` ou `papier`. Avec un décor illustré, ne pas mettre d'illustration : le décor suffit. Dans un plan `visuel`, `"moment": { "a": "mots" }` déclenche le temps fort de l'illustration (la balance bascule, la croix se trace).
@@ -92,7 +93,7 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`, `liste`, `bascule`, `fin`), `"
 | `style.js` | Couleurs, rubriques, polices, réglages des sous-titres et de la voix | Node |
 | `plans.js` | Les 6 plans (`visuel` d'abord) : `ancres`, `textes`, `dessin` (HTML), `jouer` (animation) | Node et page |
 | `illustrations.js` | Les 21 illustrations : `svg`, `jouer` | Node et page |
-| `decors.js` | Les 5 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
+| `decors.js` | Les 6 décors plein écran : `svg`, `jouer`, calques `.loin`, `.milieu`, `.pres` | Node et page |
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
@@ -121,6 +122,8 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - **Une prise sans consigne** (« fais-en une vidéo ») : lire `mots.json`, comprendre le genre (avis, liste, énigme), choisir la rubrique ; en créer une dans `style.js` si aucune ne convient. Pour une énigme, ralentir (`"reglages": { "respiration": 0.32, "vitesse": 1 }`) : il faut le temps de suivre.
 - **Whisper et les chiffres** : il écrit « 10% », « 30 », « 5 » ; corriger l'affichage avec `"corrections"` si besoin.
 - **Whisper et les noms** : « ChatGPT » a été transcrit « Tchad, GPT ». Relire `mots.json` et corriger avec `"corrections"`.
+- **Un `transform` SVG et GSAP** : animer `x` ou `y` sur un groupe qui porte déjà `transform="translate(…)"` écrase sa position (le paysan de la rizière partait en haut de l'image). Mettre l'animation sur un groupe intérieur sans attribut `transform`.
+- **Pas de `from: 'random'`** dans un `stagger` : c'est du hasard, chaque processus de rendu tirerait un ordre différent.
 - **Mesurer avant de déplacer** : dans `lecteur.js`, les traits sous les mots forts sont placés d'après `getBoundingClientRect` ; la mesure doit se faire avant tout `gsap.set` sur les mots.
 - **Planche d'aperçu** : une image tombée au milieu d'une transition ou d'un clignement d'œil n'est pas un défaut. Demander d'autres instants : `NODE_PATH=$(npm root -g) node scripts/apercu.js videos/studio/<id>/index.html <sortie.png> t1 t2 …`.
 - **`production/CATALOGUE.md`** est généré (`node studio/catalogue.js`) et vérifié par un test ; il ne décrit pas la chaîne « avis ».
@@ -144,6 +147,10 @@ Envoyé le 15 nov. (« c'est beaucoup mieux », « je referai le texte demain »
 ## 8. Les outils, tous gratuits
 
 RNNoise (débruitage), Whisper par faster-whisper (transcription), ffmpeg (coupes, égalisation, niveau), GSAP (animation), HyperFrames et Chromium (rendu MP4), Node.js. Aucun service payant, aucune clé. Le seul coût est l'abonnement Claude de l'auteur.
+
+## 8 bis. Le réservoir d'idées
+
+`production/IDEES-VIDEOS.md` : une méthode pour trouver des idées, les formats disponibles, et une soixantaine d'idées par rubrique avec leur statut. Le tenir à jour : marquer ce qui est fait, ajouter les idées de l'auteur, noter ce que les chiffres disent après publication.
 
 ## 9. La suite, par ordre d'intérêt
 

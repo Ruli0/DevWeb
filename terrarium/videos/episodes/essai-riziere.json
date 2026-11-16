@@ -1,0 +1,14 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "essai-riziere",
+  "essai": true,
+  "titre": "Essai du décor « rizière »",
+  "rubrique": "voyage",
+  "voix": "essai-riziere",
+  "forts": ["personne ne court", "tout pousse"],
+  "plans": [
+    { "plan": "visuel", "fond": "riziere" },
+    { "plan": "fin", "fond": "nuit", "illu": "commentaire", "apres": 3, "texte": "Et *toi* ?", "sous": "Tu cours après quoi ?" }
+  ]
+}

@@ -1,6 +1,6 @@
 # État de l'outil
 
-_Dernière mise à jour : 15 novembre 2026._
+_Dernière mise à jour : 16 novembre 2026._
 
 ## Chaîne « avis » (15 nov. 2026)
 
@@ -14,6 +14,7 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | 5 plans (dont `visuel`, sans texte), 11 illustrations, 3 fonds unis, 3 décors illustrés, fond photo, 4 transitions | `studio/avis/` |
 | Épisode `valeur-ia` (57 s), 5 versions envoyées | `videos/episodes/valeur-ia.json` |
 | Épisode `enigme-thermometre` (33 s) : pause de 5 s avec compte à rebours et tics, décor `salon` | `videos/episodes/enigme-thermometre.json` |
+| Décor `riziere` (Vietnam) et essai de 12 s ; réservoir d'idées | `studio/avis/decors.js`, `production/IDEES-VIDEOS.md` |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
 

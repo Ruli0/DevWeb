@@ -10,6 +10,7 @@ module.exports = {
     escalade: { nom: 'Escalade', accent: '#ff8a3d' },
     relations: { nom: 'Relations', accent: '#ff5d7a' },
     enigme: { nom: 'Énigme', accent: '#a78bfa' },
+    voyage: { nom: 'Voyage', accent: '#3fbf8f' },
   },
   polices: {
     titre: 'Inter Tight', fort: 'Instrument Serif', mono: 'JetBrains Mono',

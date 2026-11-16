@@ -221,6 +221,79 @@
         c.ft(qa(el, '.plante'), { rotation: -2 }, { rotation: 3, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 3.2)), svgOrigin: '165 1560' }, t0);
       },
     },
+    // La rizière en terrasses (Vietnam) : montagnes dans la brume, terrasses inondées, paysan au chapeau conique et son buffle, aigrettes.
+    riziere: {
+      description: 'Une rizière en terrasses au lever du soleil : montagnes dans la brume, eau qui scintille, paysan au chapeau conique avec son buffle, oiseaux, riz qui ondule.',
+      accent: '#ffe08a',
+      svg: () => {
+        // Les terrasses : des bandes courbes de plus en plus hautes vers le premier plan (perspective).
+        const verts = ['#8fcf7a', '#6dbb62', '#57a956', '#7cc46c', '#4f9d50', '#69b65e', '#458f49', '#5aa653', '#3c8343'];
+        let y = 930; const terrasses = [];
+        verts.forEach((v, i) => {
+          const h = 46 + i * i * 3.4 + i * 12, s = i % 2 ? 1 : -1, a = 26 + i * 9;
+          const haut = `M-80 ${y} C240 ${y - a * s} 520 ${y + a * s} 760 ${y - a * 0.4 * s} S1080 ${y + a * 0.6 * s} 1160 ${y - a * 0.3 * s}`;
+          terrasses.push(`<g class="terrasse"><path d="${haut} V${y + h + 80} H-80 Z" fill="url(#rz-eau)"/><path d="${haut} V${y + h + 80} H-80 Z" fill="url(#rz-riz${Math.min(2, Math.floor(i / 3))})" opacity=".6"/>
+            <path d="${haut}" fill="none" stroke="${v}" stroke-width="${14 + i * 3}" stroke-linecap="round"/><path d="${haut}" fill="none" stroke="#2f6b3a" stroke-opacity=".55" stroke-width="${4 + i}" transform="translate(0 ${9 + i * 2})"/>
+            ${[0, 1, 2].map((k) => `<path class="eclat" d="M${140 + ((i * 197 + k * 331) % 800)} ${Math.round(y + h * (0.35 + 0.2 * k))} h${40 + i * 8}" stroke="#ffffff" stroke-width="${3 + i * 0.6}" stroke-linecap="round" opacity=".7"/>`).join('')}</g>`);
+          y += h;
+        });
+        const riz = (id, e) => `<pattern id="rz-riz${id}" width="${26 * e}" height="${22 * e}" patternUnits="userSpaceOnUse"><path d="M${6 * e} ${18 * e} v${-10 * e} M${6 * e} ${18 * e} l${-4 * e} ${-8 * e} M${6 * e} ${18 * e} l${4 * e} ${-8 * e} M${19 * e} ${8 * e} v${-7 * e} M${19 * e} ${8 * e} l${-3 * e} ${-6 * e} M${19 * e} ${8 * e} l${3 * e} ${-6 * e}" stroke="#3f9a46" stroke-width="${1.6 * e}" stroke-linecap="round" fill="none"/></pattern>`;
+        const oiseau = (x, yy, t) => `<g class="oiseau" transform="translate(${x} ${yy}) scale(${t})"><path class="aile" d="M-34 0 C-20 -22 -8 -18 0 0 C8 -18 20 -22 34 0" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+        return `<defs>
+          <linearGradient id="rz-ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f3a5a"/><stop offset=".45" stop-color="#c9705a"/><stop offset=".8" stop-color="#ffb46b"/><stop offset="1" stop-color="#ffe2a6"/></linearGradient>
+          <radialGradient id="rz-halo"><stop offset="0" stop-color="#fff3c4" stop-opacity=".9"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></radialGradient>
+          <linearGradient id="rz-eau" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6bd"/><stop offset=".45" stop-color="#a6d8c9"/><stop offset="1" stop-color="#63a9a6"/></linearGradient>
+          <linearGradient id="rz-brume" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".6"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+          ${riz(0, 1)}${riz(1, 1.7)}${riz(2, 2.8)}
+        </defs>
+        <rect width="1080" height="1000" fill="url(#rz-ciel)"/>
+        <g class="loin">
+          <circle class="halo" cx="760" cy="720" r="330" fill="url(#rz-halo)"/><circle cx="760" cy="720" r="88" fill="#fff3c4"/>
+          <g class="nuage"><ellipse cx="240" cy="470" rx="170" ry="30" fill="#ffffff" opacity=".28"/><ellipse cx="330" cy="446" rx="110" ry="26" fill="#ffffff" opacity=".28"/><ellipse cx="900" cy="540" rx="150" ry="24" fill="#ffffff" opacity=".22"/></g>
+          <path d="M-80 900 C-20 700 40 660 90 760 C120 600 190 560 240 700 C290 620 340 640 380 780 C430 640 500 600 560 760 C610 690 680 700 720 800 C780 640 860 610 920 760 C980 680 1060 690 1160 820 V960 H-80 Z" fill="#7d95ad" opacity=".75"/>
+          <rect class="brume b1" x="-200" y="760" width="1480" height="110" fill="url(#rz-brume)"/>
+          ${oiseau(300, 600, 1)}${oiseau(380, 640, 0.75)}${oiseau(220, 660, 0.6)}
+          <path d="M-80 960 C0 800 70 770 130 860 C180 740 260 720 320 860 C380 790 450 800 500 900 C560 800 640 780 700 890 C760 820 840 830 900 910 C960 830 1040 820 1160 900 V1000 H-80 Z" fill="#4f8478"/>
+          <rect class="brume b2" x="-200" y="850" width="1480" height="120" fill="url(#rz-brume)"/>
+        </g>
+        <g class="milieu">
+          <path d="M-80 1000 C80 900 200 910 320 960 C460 900 620 900 760 950 C900 900 1020 910 1160 960 V1100 H-80 Z" fill="#3f7f4d"/>
+          ${terrasses.slice(0, 5).join('')}
+          <g class="paysan" transform="translate(0 0)">
+            <g transform="translate(300 1120) scale(0.86)"><g class="marche">
+              <ellipse cx="150" cy="-34" rx="74" ry="40" fill="#3b3f46"/><circle cx="226" cy="-52" r="28" fill="#3b3f46"/><path d="M214 -78 C196 -108 226 -116 240 -96 M240 -74 C262 -100 284 -84 266 -62" fill="none" stroke="#d9d2c4" stroke-width="8" stroke-linecap="round"/>
+              <path class="pattes" d="M104 -6 V34 M134 -4 V36 M172 -4 V36 M200 -6 V34" stroke="#3b3f46" stroke-width="15" stroke-linecap="round"/><path d="M78 -40 C58 -34 54 -8 60 4" fill="none" stroke="#3b3f46" stroke-width="8" stroke-linecap="round"/>
+              <path d="M22 -18 L84 -42" stroke="#8a6a45" stroke-width="5"/>
+              <path d="M0 34 L8 -24 M22 34 L14 -24" stroke="#22323f" stroke-width="13" stroke-linecap="round"/><rect x="-6" y="-78" width="34" height="62" rx="14" fill="#2f5f7a"/><circle cx="11" cy="-90" r="15" fill="#e2b48c"/>
+              <path d="M-36 -92 L11 -128 L58 -92 Z" fill="#f1e2b0"/><path d="M-36 -92 H58" stroke="#c9b477" stroke-width="5" stroke-linecap="round"/>
+            </g></g>
+          </g>
+        </g>
+        <g class="pres">
+          ${terrasses.slice(5).join('')}
+          <g class="palmier" transform="translate(960 1500)"><path d="M0 0 C-14 -180 6 -330 -22 -470" fill="none" stroke="#3a2a1c" stroke-width="26" stroke-linecap="round"/>
+            ${[[-270, 40], [-220, -70], [-120, -150], [60, -160], [170, -90], [230, 30], [-150, 120], [130, 120]].map(([x, yy]) => `<path class="palme" d="M-22 -470 Q${Math.round(-22 + x * 0.55)} ${-470 + yy - 110} ${-22 + x} ${-470 + yy}" fill="none" stroke="#2f7a45" stroke-width="22" stroke-linecap="round"/>`).join('')}</g>
+          ${[40, 110, 190, 880, 960, 1030, 280, 760].map((x, i) => `<path class="tige" d="M${x} 1930 C${x - 10} 1830 ${x + 16} 1760 ${x + (i % 2 ? 26 : -22)} ${1650 + (i % 3) * 40}" fill="none" stroke="${i % 2 ? '#2f7a3c' : '#3f9a46'}" stroke-width="${12 + (i % 3) * 3}" stroke-linecap="round"/>`).join('')}
+        </g>`;
+      },
+      jouer(c, el, t0, d) {
+        profondeur(c, el, t0, d, 1);
+        c.ft(qa(el, '.halo'), { scale: 0.92 }, { scale: 1.1, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 3.2)), transformOrigin: '50% 50%' }, t0);
+        c.ft(qa(el, '.b1'), { x: -90 }, { x: 90, duration: d, ease: 'none' }, t0);
+        c.ft(qa(el, '.b2'), { x: 110 }, { x: -110, duration: d, ease: 'none' }, t0);
+        c.ft(qa(el, '.nuage'), { x: -40 }, { x: 60, duration: d, ease: 'none' }, t0);
+        // L'eau scintille : de petits éclats s'allument et s'éteignent.
+        const e = qa(el, '.eclat'); gsap.set(e, { opacity: 0 });
+        c.ft(e, { opacity: 0, scaleX: 0.3 }, { opacity: 0.85, scaleX: 1, duration: 0.5, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 1.4)), repeatDelay: 0.4, stagger: 0.37, transformOrigin: '50% 50%' }, t0);
+        // Les aigrettes traversent le ciel en battant des ailes ; le paysan et son buffle avancent le long d'une terrasse.
+        c.ft(qa(el, '.oiseau'), { x: '-=140', y: '+=30' }, { x: '+=520', y: '-=90', duration: d, ease: 'none' }, t0);
+        c.ft(qa(el, '.aile'), { scaleY: 1 }, { scaleY: -0.5, duration: 0.32, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 0.64)), transformOrigin: '50% 100%', stagger: 0.1 }, t0);
+        c.ft(qa(el, '.paysan'), { x: -150 }, { x: 170, duration: d, ease: 'none' }, t0);
+        c.ft(qa(el, '.marche'), { y: 0 }, { y: -5, duration: 0.35, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 0.7)) }, t0);
+        c.ft(qa(el, '.tige'), { rotation: -3 }, { rotation: 4, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 2.4)), stagger: 0.15, transformOrigin: '50% 100%' }, t0);
+        c.ft(qa(el, '.palme'), { rotation: -3 }, { rotation: 4, duration: 1.5, ease: 'sine.inOut', yoyo: true, repeat: aller(fois(d, 3.0)), stagger: 0.1, svgOrigin: '938 1030' }, t0);
+      },
+    },
     // La scène de théâtre : rideaux rouges qui s'ouvrent, projecteurs, micro sur pied, masques de comédie et de tragédie.
     scene: {
       description: 'Le théâtre : rideaux rouges qui s’ouvrent, projecteurs, plancher, micro sur pied, masques de comédie et de tragédie.',
