@@ -66,7 +66,8 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 21 | `house-plate` : la même house en boucle régulière (ni montée, ni pompe, ni « wah », une seule note de basse par accord), envoyée seule et dans l'énigme | « Juste le fond, pas le klaxon. Comment faire pour améliorer l'outil au global ? Je verrais plus un hibou qu'un personnage pour la référence » |
 | 22 | Basse de `house-plate` rendue ronde (plus de dent de scie : c'était le « klaxon ») ; **le hibou** remplace le personnage comme mascotte (mêmes poses, mêmes places) ; planches et extraits envoyés | « La musique est parfaite. Fais le hibou couleur verre transparent et plus petit » |
 | 23 | `house-plate` devient la musique par défaut ; hibou de verre, petit, en vol juste au-dessus des sous-titres ; maquette d'escalade renvoyée | Nouvel enregistrement et son idée : l'agriculteur qui ne veut plus cultiver puisque le supermarché est plein ; l'IA entraînée sur le code des humains, qui s'appauvrit si elle apprend sur elle-même |
-| 24 | Épisode `agriculteur-ia` (37 s, vraie voix) : décors `champ` et `supermarche`, illustrations `rayons` et `copies` ; envoyé | en attente |
+| 24 | Épisode `agriculteur-ia` (37 s, vraie voix) : décors `champ` et `supermarche`, illustrations `rayons` et `copies` ; envoyé | « Est-ce que tu penses que tu peux générer des vidéos avec le ASCII art ? » |
+| 25 | Aspect 3D `ascii` et `ascii-vert` : la scène écrite en caractères ; deux essais sur la rizière envoyés | en attente |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -117,7 +118,7 @@ npm run video -- <id> --theme=affiche --3d
 npm run video -- <id> --3d --aspect=decoupe   # la 3D en aplats avec contours (non retenue par défaut)
 ```
 
-Dans l'épisode, les mêmes choix s'écrivent `"theme": "neon"` et `"decors3d": true`. Un troisième interrupteur règle l'aspect de la 3D : `--aspect=doux` (défaut, celui que l'auteur préfère : facettes éclairées en dégradé, ombres douces) ou `--aspect=decoupe` (aplats à trois tons, contours, ombres nettes) ; dans l'épisode, `"aspect3d"`.
+Dans l'épisode, les mêmes choix s'écrivent `"theme": "neon"` et `"decors3d": true`. Un troisième interrupteur règle l'aspect de la 3D (`--aspect=ascii` ou `ascii-vert` écrit la scène en caractères, voir les pièges) : `--aspect=doux` (défaut, celui que l'auteur préfère : facettes éclairées en dégradé, ombres douces) ou `--aspect=decoupe` (aplats à trois tons, contours, ombres nettes) ; dans l'épisode, `"aspect3d"`.
 
 ### Les mouvements de caméra (décors 3D)
 
@@ -214,6 +215,7 @@ Dans `decors.js`, ajouter une entrée `{ description, accent?, svg(), jouer(c, e
 - **Pas de `from: 'random'`** dans un `stagger` : c'est du hasard, chaque processus de rendu tirerait un ordre différent.
 - **Qualité d'image** : l'auteur a trouvé la 3D en aplats « dégradée ». Causes probables : ombres nettes en escalier, contours d'un pixel, et une recompression trop forte du MP4 envoyé (`crf 23`). Envoyer en `crf 18`.
 - **3D, aspect « decoupe » (non retenu par défaut)** : matières en aplats (`MeshToonMaterial` et une rampe à trois tons), facettes (`forme()` recalcule les normales), contours (`contour()`), ombres nettes. Le flanc d'une forme extrudée doit recevoir des normales rayonnantes, sinon il se raye. Une forme extrudée puis couchée (`rotation.x = -π/2`) inverse l'axe : un point d'angle `a` se retrouve en `z = -d·sin(a)` ; les personnages et le riz utilisent la même convention.
+- **3D en ASCII** (`rendu()` dans `decors3d.js`) : la scène est calculée sur une petite toile cachée (une case de 24 pixels par caractère, soit 45 × 80), ses pixels sont lus de façon synchrone, et chaque case devient un caractère de la rampe ` .:-=+*#%@` écrit en JetBrains Mono sur la toile visible ; la luminosité est étirée, sinon tout tombe dans les caractères sombres. Avec des cases de 15 pixels, les caractères ne se voyaient plus. Seuls les décors 3D peuvent passer en caractères : convertir un dessin SVG en pixels dans la page est asynchrone, donc impossible à rendre image par image. Rendu rapide (80 s pour 20 s), mais le MP4 est lourd (45 Mo) : l'envoyer en `crf 25`. Essai seulement : l'avis de l'auteur n'est pas connu.
 - **3D, coût** : la toile est en 1080 × 1920 ; l'essai de rizière (20 s) se rend en 4 min, et le MP4 brut peut peser 25 à 50 Mo : le recompresser avant l'envoi en `crf 18`. Sans voix, le mixage sort vers −19 LUFS (musique et ambiance seules).
 - **3D** : le navigateur de rendu n'a pas de carte graphique (WebGL logiciel, SwiftShader). Le filtre de couleurs vives du thème est plus doux sur la 3D (`.decor-3d`), sinon l'eau et l'herbe brûlent. Garder `preserveDrawingBuffer: true`, sinon la capture d'image est noire. Three.js est figé en 0.149 : les versions suivantes n'ont plus de fichier `three.min.js` chargeable par une balise `<script>`. Un panneau incliné recouvre les prises posées dessus : le mur est à plat.
 - **Mesurer avant de déplacer** : dans `lecteur.js`, les traits sous les mots forts sont placés d'après `getBoundingClientRect` ; la mesure doit se faire avant tout `gsap.set` sur les mots.

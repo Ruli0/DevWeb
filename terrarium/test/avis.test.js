@@ -165,6 +165,7 @@ test('question de fin dans le décor : elle prolonge le dernier plan, et seuleme
   assert.strictEqual(montage(episode({ aspect3d: 'decoupe' }), voix).feuille.aspect3d, 'decoupe');
   assert.strictEqual(montage(episode(), voix).feuille.aspect3d, 'doux');
   assert.ok(montage(episode({ aspect3d: 'flou' }), voix).erreurs.some((e) => e.includes('aspect3d')));
+  ['ascii', 'ascii-vert'].forEach((a) => { const r = montage(episode({ aspect3d: a, decors3d: true, plans: [{ plan: 'visuel', fond: 'riziere' }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix); assert.deepStrictEqual(r.erreurs, []); assert.strictEqual(r.feuille.aspect3d, a); assert.ok(page.html(r.feuille).includes('three.min.js')); });
 });
 
 test('accroche : des conseils, jamais des erreurs ; ouverture vive par défaut', () => {

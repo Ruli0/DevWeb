@@ -103,7 +103,7 @@ function montage(ep, voix) {
   if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique', 'house', 'house-nue', 'house-plate'].includes(ep.musique)) erreurs.push('"musique" : labo, house-plate, house, house-nue, funk, electro, acoustique, avis ou aucune');
   if (ep.indicatif && !['A', 'B', 'C'].includes(ep.indicatif)) erreurs.push('"indicatif" : A, B ou C');
   if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
-  if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');
+  if (ep.aspect3d && !['doux', 'decoupe', 'ascii', 'ascii-vert'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : doux, decoupe, ascii ou ascii-vert');
   const rub = S.rubriques[ep.rubrique];
   if (!rub) erreurs.push(`"rubrique" : une parmi ${Object.keys(S.rubriques).join(', ')}`);
   if (!voix) { erreurs.push(`la voix manque : python3 scripts/voix.py <enregistrement> ${ep.voix || ep.id}`); return { erreurs, feuille: null }; }
@@ -261,7 +261,7 @@ function montage(ep, voix) {
   groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
 
   const feuille = {
-    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
+    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ['decoupe', 'ascii', 'ascii-vert'].includes(ep.aspect3d) ? ep.aspect3d : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
