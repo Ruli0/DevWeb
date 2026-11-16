@@ -15,6 +15,10 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 - **Fin** : une question au spectateur, sur une étiquette de papier posée dans le décor du dernier plan. Pas d'écran « Et toi ? » séparé.
 - Du grain sur toute l'image.
 
+## Le personnage et le son (16 nov. 2026)
+
+Deux signes reviennent d'une vidéo à l'autre : **un personnage**, double stylisé de l'auteur en papier découpé (liseré clair, ombre nette), qui se tient dans les décors ; et **un indicatif** de quatre notes, dont la musique de fond reprend la mélodie. L'allure du personnage et l'indicatif attendent le choix de l'auteur.
+
 ## Peu de texte
 
 Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop d'informations (retour de l'auteur, 15 nov.). La plupart des plans sont donc sans texte (`visuel`). Au plus trois textes par vidéo : l'accroche, un mot fort au moment clé, la question de fin. L'en-tête ne garde que la rubrique. Dans une vidéo en liste, un compteur très court est permis (`"repere": "Mains 1/3"`).

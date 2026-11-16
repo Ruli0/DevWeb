@@ -216,3 +216,26 @@ test('signature sonore : indicatif, musique qui suit la voix, bruitages des déc
   const sons = require('../scripts/sons-avis.js');
   assert.deepStrictEqual(Array.from(sons.indicatif('B').slice(0, 2000)), Array.from(sons.indicatif('B').slice(0, 2000)), 'synthèse reproductible');
 });
+
+test('personnage récurrent : poses par décor, visage au-dessus des sous-titres, dessin reproductible', () => {
+  const P = require('../studio/avis/personnage.js');
+  Object.entries(P.PLACES).forEach(([decor, pl]) => {
+    assert.ok(pl.y - 424 * pl.taille < 1200, `${decor} : le visage passerait sous les sous-titres`);
+    pl.poses.forEach((pose) => assert.ok(P.POSES[pose], `${decor} : pose ${pose} inconnue`));
+  });
+  Object.keys(P.ALLURES).forEach((a) => Object.keys(P.POSES).forEach((pose) => { const s = P.svg(pose, a); assert.strictEqual(s, P.svg(pose, a)); assert.ok(s.includes('class="perso"')); }));
+  const plans = (perso) => [{ plan: 'visuel', fond: 'scene', personnage: perso }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }];
+  const ok = montage(episode({ plans: plans('salue') }), voix);
+  assert.deepStrictEqual(ok.erreurs, []);
+  assert.strictEqual(ok.feuille.plans[0].p.personnage, 'salue');
+  const page = require('../studio/avis/page.js');
+  assert.ok(page.html(ok.feuille).includes('perso-svg'));
+  assert.ok(montage(episode({ plans: plans('grimpe') }), voix).erreurs.some((e) => e.includes('grimpe')));
+  // "personnage": true dans l'épisode : la pose par défaut de chaque décor qui a une place ; rien ailleurs, sans erreur.
+  const partout = montage(episode({ personnage: true, plans: [{ plan: 'visuel', fond: 'mur' }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix);
+  assert.deepStrictEqual(partout.erreurs, []);
+  assert.strictEqual(partout.feuille.plans[0].p.personnage, 'grimpe');
+  assert.strictEqual(partout.feuille.plans[1].p.personnage, undefined);
+  assert.strictEqual(montage(episode({ personnage: true, plans: [{ plan: 'visuel', fond: 'mur', personnage: false }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix).feuille.plans[0].p.personnage, undefined);
+  assert.ok(montage(episode({ allure: 'pirate' }), voix).erreurs.some((e) => e.includes('allure')));
+});

@@ -12,6 +12,7 @@ const ILLUS = require('./illustrations.js');
 const DECORS = require('./decors.js');
 const UNIS = ['nuit', 'papier', 'accent'];                       // les fonds unis, qui alternent quand rien n'est précisé
 const DECORS3D = require('./decors3d.js');
+const PERSO = require('./personnage.js');
 const FONDS = [...UNIS, ...Object.keys(DECORS), ...Object.keys(DECORS3D), 'photo'];        // + les décors illustrés + une photo de l'auteur
 const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
 const RECOUVREMENT = 0.6;   // un plan reste affiché sous le suivant pendant sa transition
@@ -98,6 +99,7 @@ function montage(ep, voix) {
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
+  if (ep.allure && !PERSO.ALLURES[ep.allure]) erreurs.push(`"allure" : une parmi ${Object.keys(PERSO.ALLURES).join(', ')}`);
   if (ep.musique && !['avis', 'aucune', 'labo'].includes(ep.musique)) erreurs.push('"musique" : « avis » (défaut), « labo » (l’ancienne) ou « aucune »');
   if (ep.indicatif && !['A', 'B', 'C'].includes(ep.indicatif)) erreurs.push('"indicatif" : A, B ou C');
   if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
@@ -188,6 +190,18 @@ function montage(ep, voix) {
     }
     def.textes(p).forEach((x) => { const nu = String(x || '').replace(/\*/g, ''); if (nu.length > def.max) erreurs.push(`${ou} : « ${nu} » fait ${nu.length} caractères (au plus ${def.max})`); });
     // Sans consigne, les fonds et les transitions alternent : deux plans voisins n'ont jamais le même fond.
+    // Le personnage récurrent : "personnage": "salue" sur un plan, ou "personnage": true dans l'épisode (pose par défaut de chaque décor).
+    // "personnage": false sur un plan l'enlève. Il ne se tient que dans les décors qui lui ont fait une place.
+    {
+      const place = PERSO.PLACES[pl.fond], voulu = pl.personnage !== undefined ? pl.personnage : (ep.personnage ? true : false);
+      delete p.personnage;
+      if (voulu && !place) { if (pl.personnage) erreurs.push(`${ou} : le personnage n’a pas de place dans le décor « ${pl.fond} ». Décors possibles : ${Object.keys(PERSO.PLACES).join(', ')}`); }
+      else if (voulu) {
+        const pose = voulu === true ? place.poses[0] : voulu;
+        if (!place.poses.includes(pose)) erreurs.push(`${ou} : la pose « ${pose} » ne va pas dans le décor « ${pl.fond} ». Poses possibles : ${place.poses.join(', ')}`);
+        else p.personnage = pose;
+      }
+    }
     // Un compte à rebours se cale sur la première pause qui suit le début du plan.
     if (pl.plan === 'rebours') {
       const pa = pauses.find((x) => x.t >= t0 - 0.01);
@@ -244,7 +258,7 @@ function montage(ep, voix) {
   groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
 
   const feuille = {
-    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
+    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || 'avis'), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux },

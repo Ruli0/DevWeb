@@ -12,6 +12,7 @@ const ILLUS = require('./illustrations.js');
 const DECORS = require('./decors.js');
 const THEMES = require('./themes.js');
 const DECORS3D = require('./decors3d.js');
+const PERSO = require('./personnage.js');
 
 const RACINE = path.join(__dirname, '../..');
 const lire = (f) => fs.readFileSync(path.join(RACINE, f), 'utf8');
@@ -58,6 +59,9 @@ ${Object.entries(Object.assign({}, DECORS, DECORS3D)).filter(([, d]) => d.accent
 .rebours { position: absolute; left: 280px; top: 520px; width: 520px; height: 520px; }
 .rebours svg { position: absolute; left: 0; top: 0; }
 .rebours span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 700 300px/1 '${P.titre}'; letter-spacing: -.04em; }
+/* Le personnage récurrent : au-dessus du décor, avec l'ombre nette du papier découpé. */
+.perso-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; filter: drop-shadow(9px 11px 0 #00000045); }
+.avec-perso .figurant { display: none; }
 /* La question de fin : une grande étiquette de papier dans le décor, à la place des sous-titres. */
 .question { position: absolute; left: 60px; width: 880px; top: 1180px; text-align: center; transform-origin: 50% 50%; }
 .question p { display: inline-block; background: ${c.texte}; color: ${c.fond}; font: 700 92px/1.06 '${P.titre}'; letter-spacing: -.025em; padding: 26px 36px 32px; border-radius: 14px; box-shadow: 12px 12px 0 ${c.fond}; }
@@ -110,7 +114,9 @@ function html(f) {
     if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo)}" alt=""><div class="voile"></div>`;
     return '<i class="a"></i><i class="b"></i>';
   };
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  // Le personnage : un calque posé sur le décor, à la place que le décor lui a faite. Le figurant du décor est alors caché.
+  const perso = (pl) => { const pl0 = PERSO.PLACES[pl.fond]; return pl.p.personnage && pl0 ? `<svg class="perso-svg" viewBox="0 0 1080 1920"><g transform="translate(${pl0.x} ${pl0.y}) scale(${pl0.taille})">${PERSO.svg(pl.p.personnage, f.allure)}</g></svg>` : ''; };
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}${pl.p.personnage ? ' avec-perso' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}${perso(pl)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
   const troisD = f.plans.some((pl) => DECORS3D[pl.fond]);
@@ -135,6 +141,7 @@ ${plans}
 ${lire('studio/avis/plans.js')}
 ${lire('studio/avis/illustrations.js')}
 ${lire('studio/avis/decors.js')}
+${lire('studio/avis/personnage.js')}
 ${troisD ? lire('studio/avis/decors3d.js') : ''}
 ${lire('studio/avis/lecteur.js')}
 (function () {

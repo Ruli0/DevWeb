@@ -59,6 +59,7 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 14 | Bulle de rubrique retirée ; question de fin en étiquette dans le décor (`"question"`) ; 3D revenue à l'aspect doux par défaut ; `riziere-3d-v3` envoyée | « Comment faire de meilleurs hooks pour la rétention ? Et est-ce que je peux passer la main à Opus pour faire les vidéos ? » |
 | 15 | Guide `ACCROCHES.md`, conseils d'accroche dans le montage, ouverture plus vive, `--accroche`, `scripts/installer.sh`, passation nettoyée ; essai à blanc réussi (dossier propre → vidéo de l'énigme rendue en suivant la section 0) | « Comment aller plus loin dans la création artistique, l'attractivité ? » → quatre pistes proposées, toutes retenues : signature sonore, personnage récurrent, plan-séquence avec les mots dans le décor, ses images en collage |
 | 16 | Lot 1 (son) : trois indicatifs à choisir (A, B, C), musique du compte par rubrique, musique qui baisse sous la voix, bruitages des décors ; énigme renvoyée avec ce son | **en attente : quel indicatif ?** (A en attendant, `indicatif` dans `style.js`) |
+| 17 | Lot 2 (personnage) : trois allures au choix (bonnet, casquette, boucles), sept poses, une place dans six décors ; planches et maquette d'escalade envoyées | **en attente : quelle allure ?** (`bonnet` en attendant, `personnage` dans `style.js`) |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -172,6 +173,7 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`), `"fond"`, `"illu"` (facultati
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
+| `personnage.js` | Le personnage récurrent : allures, poses, places dans les décors | Node et page |
 | `scripts/sons-avis.js` | L'indicatif, la musique par rubrique, les bruitages | Node |
 | `scripts/installer.sh` | Prépare une session neuve | shell |
 | `test/avis.test.js` | Les tests du montage (une quinzaine) | Node |
@@ -232,6 +234,17 @@ Tout est dans `scripts/sons-avis.js`, synthétisé et reproductible.
 - **Écouter sans vidéo** : `node scripts/sons-avis.js <dossier>` écrit tous les sons.
 - Mesuré sur l'énigme : −15 LUFS avant rendu ; la musique remonte pendant le compte à rebours et sur la question de fin. **Personne n'a écouté** avant l'auteur.
 - Reste à faire pour ce lot : appliquer son choix d'indicatif ; ajuster les timbres selon ses retours.
+
+## 6 quater. Le personnage récurrent (lot 2 du plan « aller plus loin », 16 nov. 2026)
+
+Un double stylisé de l'auteur, en papier découpé, le même dans chaque vidéo : `studio/avis/personnage.js`.
+
+- **Dans l'épisode** : `"personnage": true` (il apparaît dans chaque décor qui lui a fait une place, dans la pose par défaut du décor), ou sur un plan `"personnage": "salue"` ; `"personnage": false` sur un plan l'enlève. `"allure"` change son allure pour un épisode.
+- **Allures** : `bonnet` (défaut provisoire), `casquette`, `boucles`. Le choix de l'auteur se fixe dans `style.js` (`personnage`).
+- **Poses** : `debout`, `salue`, `montre`, `reflechit`, `marche`, `assis`, `grimpe`. Une pose est une liste d'angles (`POSES`) : en ajouter une coûte une ligne.
+- **Places** (`PLACES`) : `cave`, `robot`, `scene`, `mur`, `salon`, `riziere`. Règle vérifiée par un test : le centre de la tête reste au-dessus de y 1200, pour que les sous-titres ne passent jamais sur le visage. Quand il est là, le figurant du décor (classe `figurant` : la silhouette de la cave, le grimpeur du mur) est caché.
+- **Piège** : ne jamais l'animer avec les propriétés `x`, `y`, `rotation` ou `svgOrigin` de GSAP (elles se repèrent dans l'image entière et décalent un dessin placé par un groupe parent : il se retrouvait 300 pixels trop haut). Tout passe par l'attribut `transform` (`attr: { transform: 'rotate(9)' }`), chaque membre étant dessiné autour de son articulation.
+- **Reste à faire** : sa version 3D (dans `mur3d` et `riziere3d`, comme cible de caméra `moi`) ; la pose `assis` ressemble plus à un accroupi ; appliquer l'allure choisie.
 
 ## 7. Le script resserré que l'auteur doit réenregistrer
 

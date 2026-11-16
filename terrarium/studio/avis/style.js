@@ -27,4 +27,6 @@ module.exports = {
   voix: { respiration: 0.14, marge: 0.05, vitesse: 1.05, volume: 1, musique: 0.16, musiqueSeule: 0.42, ambiance: 0.5, bruitages: 1 },
   // L'indicatif du compte (scripts/sons-avis.js) : A, B ou C. À fixer quand l'auteur aura choisi à l'oreille.
   indicatif: 'A',
+  // L'allure du personnage récurrent (studio/avis/personnage.js) : bonnet, casquette ou boucles. À fixer quand l'auteur aura choisi.
+  personnage: 'bonnet',
 };

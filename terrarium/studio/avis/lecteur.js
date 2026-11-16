@@ -61,6 +61,8 @@
         // Décor 3D : dessiné à chaque image, à partir du temps écoulé dans le plan.
         const toile = el.querySelector('.decor-3d');
         if (toile) scenes3d.push({ t0: pl.t0, d: pl.dClip, scene: A.decors3d[pl.fond].creer(toile, pl.p, f.aspect3d) });
+        const perso = el.querySelector('.perso-svg');
+        if (perso) A.personnage.jouer(c, perso, pl.p.personnage, pl.t0 + retard, pl.d - retard);
         const da = el.querySelector('.deco .a'), db = el.querySelector('.deco .b');
         const sens = i % 2 ? 1 : -1;
         if (da) c.ft(da, { xPercent: -8 * sens, yPercent: -5 }, { xPercent: 8 * sens, yPercent: 6, duration: pl.dClip, ease: 'none' }, pl.t0);

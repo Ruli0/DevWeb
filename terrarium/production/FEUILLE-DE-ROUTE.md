@@ -18,7 +18,7 @@ _Dernière mise à jour : 15 novembre 2026._
 | A8 | Accroches : guide, conseils automatiques, ouverture vive | Claude | fait |
 | A9 | Passation à un autre modèle : installation en une commande, essai à blanc | Claude | fait |
 | B1 | Signature sonore : indicatif, musique du compte, bruitages | Claude, puis ton choix d'indicatif | fait, choix en attente |
-| B2 | Personnage récurrent (ton double stylisé) | Claude, après ton choix de croquis | en cours |
+| B2 | Personnage récurrent (ton double stylisé) | Claude, puis ton choix d'allure | 2D fait, choix en attente ; version 3D à faire |
 | B3 | Plan-séquence 3D, mots dans le décor, lumière selon l'émotion | Claude | à faire |
 | B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |
 | A6b | Décor « relations » | Claude | à faire |

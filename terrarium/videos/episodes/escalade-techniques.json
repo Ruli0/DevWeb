@@ -6,6 +6,7 @@
   "rubrique": "escalade",
   "numero": 2,
   "voix": "escalade-techniques",
+  "personnage": true,
   "forts": ["réglette", "pince", "l'aplat", "carre", "l'adhérence", "crochet talon"],
   "plans": [
     { "plan": "titre", "fond": "mur", "texte": "Tu grimpes avec les *bras* ?" },
