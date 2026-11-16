@@ -185,3 +185,34 @@ test('accroche : des conseils, jamais des erreurs ; ouverture vive par défaut',
   const en3d = montage(episode({ plans: [{ plan: 'visuel', fond: 'riziere3d' }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix).feuille;
   assert.strictEqual(en3d.plans[0].p.accents[0], 0.15);
 });
+
+test('signature sonore : indicatif, musique qui suit la voix, bruitages des décors', () => {
+  const plans = [{ plan: 'titre', fond: 'cave', texte: 'x' }, { plan: 'visuel', a: "l'impro", fond: 'scene', question: { texte: 'Et *après* ?', apres: 3 } }];
+  const { erreurs, feuille } = montage(episode({ plans }), voix);
+  assert.deepStrictEqual(erreurs, []);
+  const noms = feuille.sons.map((s) => s.f);
+  assert.ok(noms.includes('indicatif-court.wav') && noms.includes('indicatif.wav'));
+  assert.ok(Math.abs(feuille.sons.find((s) => s.f === 'indicatif.wav').t - feuille.dureeVoix) < 0.3);
+  const clavier = feuille.sons.find((s) => s.f === 'clavier.wav');
+  assert.ok(clavier && clavier.duree > 0 && clavier.duree <= 19);
+  assert.ok(noms.includes('rideau.wav'));
+  // La musique : des « creux » qui couvrent tous les mots, et une expression de volume qui descend pendant qu'il parle.
+  const mu = feuille.musique;
+  assert.strictEqual(mu.nom, 'avis');
+  feuille.groupes.forEach((g) => assert.ok(mu.creux.some(([a, b]) => g.t0 >= a - 0.01 && g.t1 <= b + 0.01)));
+  mu.creux.forEach(([a, b], i) => { assert.ok(b > a); if (i) assert.ok(a - mu.creux[i - 1][1] >= 0.9); });
+  const { volumeMusique } = require('../studio/avis/page.js');
+  const expr = volumeMusique(mu);
+  const clip = (x, a, b) => Math.min(b, Math.max(a, x));
+  const vol = (t) => Function('t', 'clip', 'min', `return ${expr};`)(t, clip, Math.min);
+  const milieu = (mu.creux[0][0] + mu.creux[0][1]) / 2;
+  assert.ok(Math.abs(vol(milieu) - mu.volume) < 0.01, 'bas pendant la parole');
+  assert.ok(Math.abs(vol(feuille.duree - 0.2) - mu.seule) < 0.05, 'fort quand la voix s’est tue');
+  // Réglages : sans bruitages, sans musique, valeurs refusées.
+  const muet = montage(episode({ plans, musique: 'aucune', reglages: { bruitages: 0 } }), voix).feuille;
+  assert.ok(!muet.sons.some((s) => /clavier|rideau|indicatif/.test(s.f)));
+  assert.ok(montage(episode({ musique: 'techno' }), voix).erreurs.some((e) => e.includes('musique')));
+  assert.ok(montage(episode({ indicatif: 'Z' }), voix).erreurs.some((e) => e.includes('indicatif')));
+  const sons = require('../scripts/sons-avis.js');
+  assert.deepStrictEqual(Array.from(sons.indicatif('B').slice(0, 2000)), Array.from(sons.indicatif('B').slice(0, 2000)), 'synthèse reproductible');
+});

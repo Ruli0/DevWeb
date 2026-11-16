@@ -98,6 +98,8 @@ function montage(ep, voix) {
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
+  if (ep.musique && !['avis', 'aucune', 'labo'].includes(ep.musique)) erreurs.push('"musique" : « avis » (défaut), « labo » (l’ancienne) ou « aucune »');
+  if (ep.indicatif && !['A', 'B', 'C'].includes(ep.indicatif)) erreurs.push('"indicatif" : A, B ou C');
   if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
   if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');
   const rub = S.rubriques[ep.rubrique];
@@ -228,11 +230,24 @@ function montage(ep, voix) {
     (x.p.camera || []).slice(1).forEach((c) => sons.push({ f: 'souffle.wav', t: arrondi(x.t0 + c.t), v: 0.22 }));
     if (d3.ambiance && reglages.ambiance > 0) sons.push({ f: d3.ambiance, t: x.t0, v: reglages.ambiance, duree: x.dClip });
   });
+  // Les bruitages calés sur l'image : ceux que déclare le décor du plan, et un « pop » quand une illustration surgit.
+  if (reglages.bruitages > 0) plans.forEach((x) => {
+    const decor = DECORS[x.fond] || DECORS3D[x.fond];
+    ((decor && decor.sons) || []).forEach((b) => { if (b.t < x.d - 0.3) sons.push(Object.assign({ f: b.f, t: arrondi(x.t0 + b.t), v: arrondi(b.v * reglages.bruitages) }, b.boucle ? { duree: arrondi(Math.min(19, x.dClip - b.t)) } : {})); });
+    if (x.p.illu) sons.push({ f: 'pop.wav', t: arrondi(x.t0 + 0.4), v: arrondi(0.3 * reglages.bruitages) });
+  });
+  // L'indicatif du compte : deux notes sur la première image, le motif entier quand la voix se tait.
+  const sansMusique = ep.musique === 'aucune';
+  if (!sansMusique && ep.musique !== 'labo') { sons.push({ f: 'indicatif-court.wav', t: 0, v: 0.5 }); if (duree - dureeVoix > 1.5) sons.push({ f: 'indicatif.wav', t: arrondi(dureeVoix + 0.15), v: 0.6 }); }
+  // La musique suit la voix : basse quand l'auteur parle (« creux »), plus forte dans les silences.
+  const creux = [];
+  groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
+
   const feuille = {
     version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
-    musique: { nom: ep.musique || 'labo', volume: reglages.musique },
+    musique: { nom: sansMusique ? 'aucune' : (ep.musique || 'avis'), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,

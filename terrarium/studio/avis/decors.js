@@ -24,6 +24,7 @@
   return {
     // La « cave » du développeur : mur de briques, étagère, deux écrans allumés, quelqu'un de dos avec un casque.
     cave: {
+      sons: [{ f: 'clavier.wav', t: 0.3, v: 0.3, boucle: true }],
       description: 'La cave du développeur : briques, étagère, deux écrans qui écrivent du code, quelqu’un de dos avec un casque.',
       svg: () => `<defs>
           <linearGradient id="cv-mur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0d15"/><stop offset="1" stop-color="#1a1d2c"/></linearGradient>
@@ -133,6 +134,7 @@
     },
     // Le mur d'escalade : panneaux, prises de couleur, corde, une grimpeuse ou un grimpeur de dos.
     mur: {
+      sons: [{ f: 'craie.wav', t: 0.4, v: 0.45 }],
       description: 'La salle d’escalade : panneaux, prises de couleur, corde, quelqu’un de dos sur le mur.',
       accent: '#ff8a3d',
       svg: () => `<defs>
@@ -296,6 +298,7 @@
     },
     // La scène de théâtre : rideaux rouges qui s'ouvrent, projecteurs, micro sur pied, masques de comédie et de tragédie.
     scene: {
+      sons: [{ f: 'rideau.wav', t: 0.15, v: 0.5 }],
       description: 'Le théâtre : rideaux rouges qui s’ouvrent, projecteurs, plancher, micro sur pied, masques de comédie et de tragédie.',
       accent: '#f2c14e',
       svg: () => `<defs>

@@ -57,7 +57,8 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 12 | `riziere3d` et le système de caméra (`tour`, `plongee`, `zoom:cible`, `survol`), essai de 20 s envoyé | « Ahaha j'aime bien ! Comment améliorer ? » (plan d'amélioration approuvé) |
 | 13 | 3D en papier découpé, scène enrichie, nouveaux mouvements, ambiance sonore ; `riziere-3d-v2` envoyée | « J'aime bien. Enlève la bulle en haut qui spécifie le thème. À la fin, enlève le Et toi ? ou intègre-le dans le décor. J'ai l'impression que la qualité de l'image est un peu dégradée, c'était plus joli avant » |
 | 14 | Bulle de rubrique retirée ; question de fin en étiquette dans le décor (`"question"`) ; 3D revenue à l'aspect doux par défaut ; `riziere-3d-v3` envoyée | « Comment faire de meilleurs hooks pour la rétention ? Et est-ce que je peux passer la main à Opus pour faire les vidéos ? » |
-| 15 | Guide `ACCROCHES.md`, conseils d'accroche dans le montage, ouverture plus vive, `--accroche`, `scripts/installer.sh`, passation nettoyée ; essai à blanc réussi (dossier propre → vidéo de l'énigme rendue en suivant la section 0) | en attente |
+| 15 | Guide `ACCROCHES.md`, conseils d'accroche dans le montage, ouverture plus vive, `--accroche`, `scripts/installer.sh`, passation nettoyée ; essai à blanc réussi (dossier propre → vidéo de l'énigme rendue en suivant la section 0) | « Comment aller plus loin dans la création artistique, l'attractivité ? » → quatre pistes proposées, toutes retenues : signature sonore, personnage récurrent, plan-séquence avec les mots dans le décor, ses images en collage |
+| 16 | Lot 1 (son) : trois indicatifs à choisir (A, B, C), musique du compte par rubrique, musique qui baisse sous la voix, bruitages des décors ; énigme renvoyée avec ce son | **en attente : quel indicatif ?** (A en attendant, `indicatif` dans `style.js`) |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -171,6 +172,7 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`), `"fond"`, `"illu"` (facultati
 | `lecteur.js` | Construit la timeline GSAP : transitions, texte mot par mot, sous-titres, décors | page |
 | `page.js` | Écrit `index.html`, la voix montée (ffmpeg), la musique et le **mixage** en un seul fichier | Node |
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
+| `scripts/sons-avis.js` | L'indicatif, la musique par rubrique, les bruitages | Node |
 | `scripts/installer.sh` | Prépare une session neuve | shell |
 | `test/avis.test.js` | Les tests du montage (une quinzaine) | Node |
 
@@ -218,6 +220,18 @@ L'auteur a demandé si sa voix pouvait dire un texte nouveau. Un essai de 8 s a 
 - Le modèle pose un **filigrane inaudible** « généré par IA » sur chaque son. Il lui faut `pkg_resources` (d'où `setuptools<81`). Ne pas le désactiver.
 - Vérification possible sans oreille : retranscrire le résultat avec Whisper. Sur l'essai, le texte est dit en entier ; « l'IA » et « ChatGPT » sont mal prononcés selon la transcription (« qu'il y a code », « chat de GPT ») : écrire ces mots comme ils se disent (« l'i-a », « tchate-jé-pé-té »).
 - À dire à l'auteur à chaque fois : TikTok demande de signaler une voix générée par IA ; sa vraie voix reste préférable, la voix clonée sert à dépanner.
+
+## 6 ter. Le son du compte (lot 1 du plan « aller plus loin », 16 nov. 2026)
+
+Tout est dans `scripts/sons-avis.js`, synthétisé et reproductible.
+
+- **L'indicatif** : un motif de quatre notes. Trois propositions (`A` cloche qui monte, `B` corde qui rebondit, `C` bois qui répond). Le choix se fixe dans `studio/avis/style.js` (`indicatif`) ; un épisode peut le changer (`"indicatif": "B"`). Deux notes sur la première image, le motif entier quand la voix se tait.
+- **La musique** (`"musique": "avis"`, le défaut) : la même mélodie et les mêmes accords pour tout le compte, une instrumentation par rubrique (`RUBRIQUES`). `"musique": "labo"` rend l'ancienne, `"aucune"` la coupe.
+- **Elle suit la voix** : le montage calcule les « creux » (les moments où l'auteur parle, `feuille.musique.creux`) ; `volumeMusique()` dans `page.js` en fait une expression pour ffmpeg : `reglages.musique` (0,16) sous la voix, `reglages.musiqueSeule` (0,42) dans les silences.
+- **Les bruitages** : un décor déclare ses sons (`sons: [{ f, t, v, boucle }]` dans `decors.js` ou `decors3d.js`) ; une illustration qui surgit fait un « pop ». `"reglages": { "bruitages": 0 }` les coupe.
+- **Écouter sans vidéo** : `node scripts/sons-avis.js <dossier>` écrit tous les sons.
+- Mesuré sur l'énigme : −15 LUFS avant rendu ; la musique remonte pendant le compte à rebours et sur la question de fin. **Personne n'a écouté** avant l'auteur.
+- Reste à faire pour ce lot : appliquer son choix d'indicatif ; ajuster les timbres selon ses retours.
 
 ## 7. Le script resserré que l'auteur doit réenregistrer
 

@@ -119,6 +119,7 @@
       description: 'La rizière en 3D : colline en terrasses inondées, paysan à la palanche et son buffle, repiqueuse, canards, cabane au sommet, palmiers, aigrettes, montagnes dans la brume, lumière du lever du jour.',
       accent: '#ffe08a',
       ambiance: 'campagne.wav',
+      sons: [{ f: 'pas-eau.wav', t: 0.2, v: 0.2, boucle: true }],
       mouvements: MOUVEMENTS,
       cibles: ['paysan', 'buffle', 'repiqueuse', 'canards', 'cabane', 'palmier', 'soleil', 'oiseaux'],
       creer(canvas, p, aspect) {
@@ -285,6 +286,7 @@
     },
     // Le mur d'escalade en volume : panneaux, prises, une voie orange, quelqu'un qui grimpe.
     mur3d: {
+      sons: [{ f: 'craie.wav', t: 0.4, v: 0.45 }],
       description: 'Le mur d’escalade en 3D : panneaux, prises en volume, une voie orange, quelqu’un qui grimpe. Sans consigne, la caméra monte en spirale autour de lui.',
       accent: '#ff8a3d',
       mouvements: MOUVEMENTS,

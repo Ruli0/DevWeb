@@ -162,6 +162,14 @@ function filtreVoix(v) {
   return `${bouts.join(';')};${v.garde.map((_, i) => `[s${i}]`).join('')}concat=n=${v.garde.length}:v=0:a=1,${chaine}[out]`;
 }
 
+// Le volume de la musique au fil du temps : fort quand l'auteur se tait, bas pendant chaque « creux » (il parle),
+// avec une descente de 0,3 s et une remontée de 0,5 s. Expression lue par le filtre « volume » de ffmpeg.
+function volumeMusique(mu) {
+  const creux = (mu.creux || []).map(([a, b]) => `clip((t-${Math.max(0, a - 0.3).toFixed(2)})/${a < 0.3 ? '0.01' : '0.3'},0,1)*clip((${(b + 0.5).toFixed(2)}-t)/0.5,0,1)`);
+  if (!creux.length || mu.seule <= mu.volume) return String(mu.volume);
+  return `${mu.seule}-${(mu.seule - mu.volume).toFixed(3)}*min(1,${creux.join('+')})`;
+}
+
 function ecrire(f, dossier) {
   fs.mkdirSync(path.join(dossier, 'assets/sons'), { recursive: true });
   fs.mkdirSync(path.join(dossier, 'assets/polices'), { recursive: true });
@@ -180,17 +188,22 @@ function ecrire(f, dossier) {
   const { MUSIQUES_ARRANGEES, outils } = require('../../scripts/build-sons.js');
   const { BRUITAGES } = require('../../scripts/sons-v3.js');
   const sons = path.join(dossier, 'assets/sons');
-  for (const b of new Set((f.sons || []).map((x) => x.f))) outils.ecrireWav(path.join(dossier, 'assets/sons', b), outils.normaliser(BRUITAGES[b](), 0.89), true);
-  const mesures = Math.ceil(f.duree / (4 * 60 / 90)) + 1;
-  const m = outils.normaliser(MUSIQUES_ARRANGEES[f.musique.nom]({ duree: f.duree + 0.3, parties: Array.from({ length: mesures }, () => 'plein'), coupures: [] }), 0.8);
+  const AVIS = require('../../scripts/sons-avis.js');
+  const fabriques = Object.assign({}, BRUITAGES, AVIS.BRUITAGES);
+  for (const b of new Set((f.sons || []).map((x) => x.f))) outils.ecrireWav(path.join(dossier, 'assets/sons', b), outils.normaliser(fabriques[b](f.musique.indicatif), 0.89), true);
+  // La musique : celle du compte (construite sur l'indicatif, une instrumentation par rubrique), l'ancienne « labo », ou aucune.
+  let m;
+  if (f.musique.nom === 'avis') m = outils.normaliser(AVIS.musique({ duree: f.duree + 0.3, rubrique: f.musique.rubrique, indicatif: f.musique.indicatif }), 0.8);
+  else if (f.musique.nom === 'aucune') m = outils.tampon(f.duree + 0.3);
+  else m = outils.normaliser(MUSIQUES_ARRANGEES[f.musique.nom]({ duree: f.duree + 0.3, parties: Array.from({ length: Math.ceil(f.duree / (4 * 60 / 90)) + 1 }, () => 'plein'), coupures: [] }), 0.8);
   outils.ecrireWav(path.join(dossier, 'assets/sons/musique.wav'), m, true);
   // Le mixage est fait ici, en un seul fichier (voix, musique, bruitages), avec un limiteur à -3 dB :
   // laissé au moteur de rendu, le niveau d'ensemble changeait d'une vidéo à l'autre.
   const bruits = f.sons || [];
   const entrees = ['-i', path.join(sons, 'voix.wav'), '-i', path.join(sons, 'musique.wav'), ...bruits.flatMap((b) => ['-i', path.join(sons, b.f)])];
-  const pistes = [`[0:a]volume=${f.voix.volume}[v]`, `[1:a]volume=${f.musique.volume}[m]`, ...bruits.map((b, i) => `[${i + 2}:a]${b.duree ? `atrim=0:${b.duree},afade=t=in:d=0.6,afade=t=out:st=${Math.max(0, b.duree - 0.9).toFixed(3)}:d=0.9,` : ''}volume=${b.v},adelay=${Math.round(b.t * 1000)}:all=1[b${i}]`)];
+  const pistes = [`[0:a]volume=${f.voix.volume}[v]`, `[1:a]volume='${volumeMusique(f.musique)}':eval=frame[m]`, ...bruits.map((b, i) => `[${i + 2}:a]${b.duree ? `atrim=0:${b.duree},afade=t=in:d=0.6,afade=t=out:st=${Math.max(0, b.duree - 0.9).toFixed(3)}:d=0.9,` : ''}volume=${b.v},adelay=${Math.round(b.t * 1000)}:all=1[b${i}]`)];
   const mixage = `${pistes.join(';')};[v][m]${bruits.map((_, i) => `[b${i}]`).join('')}amix=inputs=${2 + bruits.length}:normalize=0:duration=longest,alimiter=limit=0.7:level=disabled,atrim=0:${f.duree},aresample=48000[out]`;
   execFileSync('ffmpeg', ['-v', 'error', '-y', ...entrees, '-filter_complex', mixage, '-map', '[out]', '-c:a', 'pcm_s16le', path.join(sons, 'mixage.wav')]);
 }
 
-module.exports = { html, ecrire, filtreVoix };
+module.exports = { html, ecrire, filtreVoix, volumeMusique };
