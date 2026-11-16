@@ -44,6 +44,10 @@ Un style est une couche posée sur le même contenu (`"theme"` dans l'épisode, 
 
 L'auteur a aimé le premier essai (« ça me plaît ») et veut « des tours, des effets plongeants, des zooms ». Un décor peut avoir une version en volume (`mur3d`, `riziere3d`) : formes simples à facettes, vraie caméra qui se déplace, ombres portées. Elle se choisit avec `--3d` ou `"decors3d": true`. La caméra enchaîne des mouvements calés sur les mots (`"camera"`, voir la passation). À réserver aux plans où le mouvement de caméra apporte quelque chose ; les personnages restent des silhouettes de blocs.
 
+### La 3D dans le style du compte
+
+Depuis le 16 nov., la 3D reprend le papier découpé : couleurs en aplats à trois tons, facettes, contours fins, ombres nettes. La rizière vit (riz en rangs qui ondule, eau qui scintille, paysan à la palanche, buffle, repiqueuse, canards, brume, lumière qui se lève) et une ambiance de campagne passe sous la voix.
+
 ## Mise en page (1080 × 1920)
 
 | Zone | y | Contenu |

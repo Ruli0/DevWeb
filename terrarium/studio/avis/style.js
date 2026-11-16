@@ -23,5 +23,5 @@ module.exports = {
   // Sous-titres : au plus 4 mots et 20 caractères par groupe ; coupure après une ponctuation ou une pause.
   sousTitres: { motsMax: 4, carMax: 20, pause: 0.35, tenue: 0.5 },
   // Montage de la voix : ce qu'on laisse d'un silence, et la marge gardée autour d'une coupe.
-  voix: { respiration: 0.14, marge: 0.05, vitesse: 1.05, volume: 1, musique: 0.16 },
+  voix: { respiration: 0.14, marge: 0.05, vitesse: 1.05, volume: 1, musique: 0.16, ambiance: 0.5 },
 };

@@ -131,3 +131,11 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes mots, après les quatre planches : « J'aime bien le papier découpé mais avec des couleurs plus vives comme le 2. Et j'aime bien aussi l'affichage du texte sur le papier découpé. »
 - **Écarté** : `neon` (dont on garde seulement la vivacité des couleurs), `feutre`, `affiche`. Ils restent dans `studio/avis/themes.js` et se choisissent avec `"theme"`.
 - **Où** : `studio/avis/themes.js` (`decoupe`), valeur par défaut dans `montage.js` et `page.js`.
+
+## 21. La 3D entre dans la chaîne, dans le style papier découpé (16 nov. 2026)
+
+- **Décision** : certains décors ont une version en volume (Three.js), choisie par `--3d` ou `"decors3d": true`. La caméra est pilotée par l'épisode (`"camera"` : tour, spirale, plongée, contre-plongée, zoom, recul, travelling, survol), calée sur les mots. La 3D est rendue en aplats, avec contours et ombres nettes, pour rester dans le style du compte.
+- **Pourquoi** : tes mots : « essayons three.js », « on doit faire le projet pour switcher facilement entre nos différentes versions de style », « on pourrait encore plus jouer sur les effets caméra en faisant des tours, des effets plongeants, des zooms », puis « Ahaha j'aime bien ! Comment améliorer ? ».
+- **Écarté pour l'instant** : des personnages modelés dans un logiciel 3D (il faudrait ouvrir le réseau vers une banque de modèles) ; la 3D pour tous les décors (seuls `mur3d` et `riziere3d` existent).
+- **Coût accepté** : un rendu plus long (4 min pour 20 s en pleine résolution).
+- **Où** : `studio/avis/decors3d.js`, `montage.js` (validation, accents, sons), `scripts/sons-v3.js` (`campagne.wav`).

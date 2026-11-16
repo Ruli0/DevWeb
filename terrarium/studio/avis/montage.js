@@ -177,6 +177,10 @@ function montage(ep, voix) {
       p.camera.forEach((c) => { if (c.a) { c.t = arrondi(Math.max(0, instant(c.a, curseur, ou).t - t0 - 0.15)); delete c.a; } });
       const d3 = DECORS3D[pl.fond] || DECORS3D[`${pl.fond}3d`];
       if (d3 && d3.mouvements) p.camera.forEach((c) => { const [m, cible] = String(c.m).split(':'); if (!d3.mouvements.includes(m) || (cible && !d3.cibles.includes(cible))) erreurs.push(`${ou} : mouvement de caméra « ${c.m} » inconnu. Mouvements : ${d3.mouvements.join(', ')} ; cibles : ${d3.cibles.join(', ')}`); });
+      p.camera.forEach((c) => {
+        if (c.vitesse && !['vif', 'lent'].includes(c.vitesse)) erreurs.push(`${ou} : "vitesse" d’un mouvement de caméra : « vif » ou « lent » (ou rien)`);
+        if (c.force != null && !(c.force >= 0.5 && c.force <= 2)) erreurs.push(`${ou} : "force" d’un mouvement de caméra : entre 0.5 et 2`);
+      });
     }
     def.textes(p).forEach((x) => { const nu = String(x || '').replace(/\*/g, ''); if (nu.length > def.max) erreurs.push(`${ou} : « ${nu} » fait ${nu.length} caractères (au plus ${def.max})`); });
     // Sans consigne, les fonds et les transitions alternent : deux plans voisins n'ont jamais le même fond.
@@ -193,18 +197,31 @@ function montage(ep, voix) {
   const duree = arrondi(dureeVoix + apres);
   plans.forEach((x, i) => { x.d = arrondi((plans[i + 1] ? plans[i + 1].t0 : duree) - x.t0); x.dClip = arrondi(plans[i + 1] ? Math.min(x.d + RECOUVREMENT, duree - x.t0) : x.d);
     // Les mouvements sans ancre se partagent le plan à parts égales.
-    if (x.p.camera) { const n = x.p.camera.length; x.p.camera.forEach((c, k) => { if (c.t == null) c.t = arrondi(k * x.dClip / n); }); x.p.camera.sort((u, v) => u.t - v.t); } if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
+    if (x.p.camera) { const n = x.p.camera.length; x.p.camera.forEach((c, k) => { if (c.t == null) c.t = arrondi(k * x.dClip / n); }); x.p.camera.sort((u, v) => u.t - v.t); }
+    // Décor 3D : les instants des mots forts (la caméra y donne un petit coup de zoom) ; un seul par groupe de mots rapprochés.
+    if (DECORS3D[x.fond]) {
+      x.p.accents = [];
+      mots.forEach((m) => { const ta = arrondi(m.t - x.t0); if (m.fort && ta >= 0 && ta < x.d && !(x.p.accents.length && ta - x.p.accents[x.p.accents.length - 1] < 1)) x.p.accents.push(ta); });
+    } if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
   plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond && x.fond !== 'photo') erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
   if (!plans.length) erreurs.push('aucun plan');
   if (!ep.essai && (duree < 15 || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre 15 et 75 s`);
 
+  // Bruitages : un tic par seconde de compte à rebours et un impact à la fin ; sur un décor 3D, un souffle à chaque
+  // changement de mouvement de caméra et, si le décor en a une, son ambiance pendant tout le plan.
+  const sons = pauses.flatMap((pa) => [...Array.from({ length: Math.round(pa.d) }, (_, i) => ({ f: 'tic.wav', t: arrondi(pa.t + i), v: 0.4 })), { f: 'impact.wav', t: arrondi(pa.t + pa.d - 0.05), v: 0.3 }]);
+  plans.forEach((x) => {
+    const d3 = DECORS3D[x.fond]; if (!d3) return;
+    (x.p.camera || []).slice(1).forEach((c) => sons.push({ f: 'souffle.wav', t: arrondi(x.t0 + c.t), v: 0.22 }));
+    if (d3.ambiance && reglages.ambiance > 0) sons.push({ f: d3.ambiance, t: x.t0, v: reglages.ambiance, duree: x.dClip });
+  });
   const feuille = {
     version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: ep.musique || 'labo', volume: reglages.musique },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
-    pauses, sons: pauses.flatMap((pa) => [...Array.from({ length: Math.round(pa.d) }, (_, i) => ({ f: 'tic.wav', t: arrondi(pa.t + i), v: 0.4 })), { f: 'impact.wav', t: arrondi(pa.t + pa.d - 0.05), v: 0.3 }]),
+    pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,
   };
   return { erreurs, feuille };

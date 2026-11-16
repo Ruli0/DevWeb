@@ -106,7 +106,7 @@ function html(f) {
   // (un dégradé défini dans un plan caché ne s'applique plus).
   const fond = (pl, i) => {
     if (DECORS[pl.fond]) return `<svg class="decor-svg" viewBox="0 0 1080 1920">${DECORS[pl.fond].svg().replace(/(id="|url\(#)([a-z]+-[a-z]+)/g, `$1$2-${i}`)}</svg><div class="voile"></div>`;
-    if (DECORS3D[pl.fond]) return '<canvas class="decor-3d" width="720" height="1280"></canvas><div class="voile"></div>';
+    if (DECORS3D[pl.fond]) return '<canvas class="decor-3d" width="1080" height="1920"></canvas><div class="voile"></div>';
     if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo)}" alt=""><div class="voile"></div>`;
     return '<i class="a"></i><i class="b"></i>';
   };
@@ -189,7 +189,7 @@ function ecrire(f, dossier) {
   // laissé au moteur de rendu, le niveau d'ensemble changeait d'une vidéo à l'autre.
   const bruits = f.sons || [];
   const entrees = ['-i', path.join(sons, 'voix.wav'), '-i', path.join(sons, 'musique.wav'), ...bruits.flatMap((b) => ['-i', path.join(sons, b.f)])];
-  const pistes = [`[0:a]volume=${f.voix.volume}[v]`, `[1:a]volume=${f.musique.volume}[m]`, ...bruits.map((b, i) => `[${i + 2}:a]volume=${b.v},adelay=${Math.round(b.t * 1000)}:all=1[b${i}]`)];
+  const pistes = [`[0:a]volume=${f.voix.volume}[v]`, `[1:a]volume=${f.musique.volume}[m]`, ...bruits.map((b, i) => `[${i + 2}:a]${b.duree ? `atrim=0:${b.duree},afade=t=in:d=0.6,afade=t=out:st=${Math.max(0, b.duree - 0.9).toFixed(3)}:d=0.9,` : ''}volume=${b.v},adelay=${Math.round(b.t * 1000)}:all=1[b${i}]`)];
   const mixage = `${pistes.join(';')};[v][m]${bruits.map((_, i) => `[b${i}]`).join('')}amix=inputs=${2 + bruits.length}:normalize=0:duration=longest,alimiter=limit=0.7:level=disabled,atrim=0:${f.duree},aresample=48000[out]`;
   execFileSync('ffmpeg', ['-v', 'error', '-y', ...entrees, '-filter_complex', mixage, '-map', '[out]', '-c:a', 'pcm_s16le', path.join(sons, 'mixage.wav')]);
 }

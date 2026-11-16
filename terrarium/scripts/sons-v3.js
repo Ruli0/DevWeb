@@ -185,6 +185,19 @@ const BRUITAGES = {
     bruit(b, (x) => 0.2 * enveloppe(x, 0.0004, 0.006), { bas: 3000, haut: 12000, hasard: graine(53), duree: 0.05 });
     return reverbe(b, 0.35);
   },
+  // Campagne : une minute d'ambiance (eau qui clapote, vent léger, oiseaux lointains), pour les décors de plein air.
+  'campagne.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const D = 60, b = tampon(D), h = graine(61);
+    bruit(b, (x) => 0.1 + 0.05 * Math.sin(x * 0.7) + 0.03 * Math.sin(x * 1.9 + 1), { bas: 300, haut: (x) => 1400 + 600 * Math.sin(x * 0.45), hasard: graine(62), duree: D });
+    bruit(b, (x) => 0.05 * (0.5 + 0.5 * Math.sin(x * 0.23)), { bas: 90, haut: 420, hasard: graine(63), duree: D });
+    // Les oiseaux : de courtes notes qui montent, par petits groupes, à des instants fixes.
+    for (let t = 1.2; t < D - 1; t += 1.6 + h() * 2.6) {
+      const base = 2300 + h() * 1900, n = 2 + Math.floor(h() * 3), fort = 0.035 + h() * 0.04;
+      for (let k = 0; k < n; k += 1) sinus(b, (x) => base * (1 + 0.22 * Math.sin(x * 38)) + 500 * x, (x) => fort * enveloppe(x, 0.012, 0.07), t + k * 0.17, 'sin', 0.16);
+    }
+    return reverbe(b, 0.25);
+  },
   // Montée : avant une révélation.
   'montee.wav': () => {
     const { tampon, sinus } = O();

@@ -131,3 +131,21 @@ test('caméra 3D : les mouvements se calent sur leurs ancres, les autres se part
   assert.ok(montage(episode({ plans: plan(['looping']) }), voix).erreurs.some((e) => e.includes('looping')));
   assert.ok(montage(episode({ plans: plan(['zoom:licorne']) }), voix).erreurs.some((e) => e.includes('licorne')));
 });
+
+test('caméra 3D : nouveaux mouvements, réglages, coups de zoom sur les mots forts, souffles et ambiance', () => {
+  const plan = (camera) => [{ plan: 'visuel', fond: 'riziere3d', camera }, { plan: 'fin', apres: 3, fond: 'nuit', texte: 'z' }];
+  const ok = montage(episode({ forts: ['clarté'], plans: plan([{ m: 'spirale', vitesse: 'lent' }, { m: 'travelling:paysan', a: 'compte' }, { m: 'contre-plongee:cabane', a: "l'impro", vitesse: 'vif', force: 1.4 }, 'recul']) }), voix);
+  assert.deepStrictEqual(ok.erreurs, []);
+  const p0 = ok.feuille.plans[0];
+  assert.strictEqual(p0.p.accents.length, 1);
+  assert.ok(p0.p.accents[0] >= 0 && p0.p.accents[0] < p0.d);
+  assert.strictEqual(ok.feuille.sons.filter((s) => s.f === 'souffle.wav').length, 3);
+  const amb = ok.feuille.sons.find((s) => s.f === 'campagne.wav');
+  assert.ok(amb && amb.duree === p0.dClip);
+  assert.ok(!montage(episode({ reglages: { ambiance: 0 }, plans: plan(['tour']) }), voix).feuille.sons.some((s) => s.f === 'campagne.wav'));
+  assert.ok(montage(episode({ plans: plan([{ m: 'tour', vitesse: 'turbo' }]) }), voix).erreurs.some((e) => e.includes('vitesse')));
+  assert.ok(montage(episode({ plans: plan([{ m: 'tour', force: 9 }]) }), voix).erreurs.some((e) => e.includes('force')));
+  const mur = montage(episode({ plans: [{ plan: 'visuel', fond: 'mur3d', camera: ['contre-plongee:grimpeur', 'zoom:prise'] }, { plan: 'fin', apres: 3, fond: 'nuit', texte: 'z' }] }), voix);
+  assert.deepStrictEqual(mur.erreurs, []);
+  assert.ok(montage(episode({ plans: [{ plan: 'visuel', fond: 'mur3d', camera: ['zoom:buffle'] }, { plan: 'fin', apres: 3, fond: 'nuit', texte: 'z' }] }), voix).erreurs.some((e) => e.includes('buffle')));
+});

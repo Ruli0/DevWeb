@@ -13,6 +13,8 @@ _Dernière mise à jour : 15 novembre 2026._
 | A5 | Photos et vidéos de l'auteur comme fonds (escalade) | Toi puis Claude | à faire |
 | A6 | Décor « escalade » et six gestes dessinés | Claude | fait (maquette) |
 | A6c | Format « énigme » : pause, compte à rebours, décor `salon` ; épisode `enigme-thermometre` envoyé | Claude | fait, en attente de ton avis |
+| A6d | 3D : `mur3d`, `riziere3d`, caméra pilotée, aspect papier découpé | Claude | fait, en attente de ton avis |
+| A6e | 3D pour la cave, le théâtre et le salon ; personnages modelés | Claude | à faire si tu le veux |
 | A6b | Décor « relations », signature sonore | Claude | à faire |
 | A7 | Publier, relever les chiffres | Toi | à faire |
 
