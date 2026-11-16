@@ -188,7 +188,11 @@ test('accroche : des conseils, jamais des erreurs ; ouverture vive par défaut',
 
 test('signature sonore : indicatif, musique qui suit la voix, bruitages des décors', () => {
   const plans = [{ plan: 'titre', fond: 'cave', texte: 'x' }, { plan: 'visuel', a: "l'impro", fond: 'scene', question: { texte: 'Et *après* ?', apres: 3 } }];
-  const { erreurs, feuille } = montage(episode({ plans }), voix);
+  // Par défaut, l'ancienne musique et pas d'indicatif (l'auteur n'a pas aimé la musique du compte) ; elle reste disponible à la demande.
+  const defaut = montage(episode({ plans }), voix).feuille;
+  assert.strictEqual(defaut.musique.nom, 'labo');
+  assert.ok(!defaut.sons.some((s) => /indicatif/.test(s.f)));
+  const { erreurs, feuille } = montage(episode({ plans, musique: 'avis' }), voix);
   assert.deepStrictEqual(erreurs, []);
   const noms = feuille.sons.map((s) => s.f);
   assert.ok(noms.includes('indicatif-court.wav') && noms.includes('indicatif.wav'));
@@ -236,6 +240,10 @@ test('personnage récurrent : poses par décor, visage au-dessus des sous-titres
   assert.deepStrictEqual(partout.erreurs, []);
   assert.strictEqual(partout.feuille.plans[0].p.personnage, 'grimpe');
   assert.strictEqual(partout.feuille.plans[1].p.personnage, undefined);
+  // Pas trop souvent : avec "personnage": true, seulement le premier et le dernier décor qui lui font une place.
+  const trois = montage(episode({ personnage: true, plans: [{ plan: 'visuel', fond: 'cave' }, { plan: 'visuel', a: 'la clarté', fond: 'scene' }, { plan: 'visuel', a: "l'impro", fond: 'robot' }] }), voix).feuille;
+  assert.deepStrictEqual(trois.plans.map((x) => x.p.personnage), ['reflechit', undefined, 'montre']);
+  assert.ok(montage(episode({ plans: [{ plan: 'visuel', fond: 'cave', personnage: 'debout' }, { plan: 'visuel', a: "l'impro", fond: 'scene', personnage: 'salue' }] }), voix).feuille.conseils.some((c) => c.includes('personnage')));
   assert.strictEqual(montage(episode({ personnage: true, plans: [{ plan: 'visuel', fond: 'mur', personnage: false }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix).feuille.plans[0].p.personnage, undefined);
   assert.ok(montage(episode({ allure: 'pirate' }), voix).erreurs.some((e) => e.includes('allure')));
 });

@@ -26,7 +26,10 @@ module.exports = {
   // musique : son volume sous la voix ; musiqueSeule : quand l'auteur se tait ; bruitages : multiplicateur (0 pour les couper).
   voix: { respiration: 0.14, marge: 0.05, vitesse: 1.05, volume: 1, musique: 0.16, musiqueSeule: 0.42, ambiance: 0.5, bruitages: 1 },
   // L'indicatif du compte (scripts/sons-avis.js) : A, B ou C. À fixer quand l'auteur aura choisi à l'oreille.
+  // La musique par défaut. « avis » (la musique du compte, avec l'indicatif) a été essayée le 16 nov. : l'auteur ne l'aime pas.
+  // On est revenu à « labo ». Ne pas remettre « avis » par défaut sans son accord.
+  musique: 'labo',
   indicatif: 'A',
-  // L'allure du personnage récurrent (studio/avis/personnage.js) : bonnet, casquette ou boucles. À fixer quand l'auteur aura choisi.
+  // L'allure du personnage récurrent (studio/avis/personnage.js). L'auteur a choisi le bonnet (« le personnage 1 », 16 nov.).
   personnage: 'bonnet',
 };

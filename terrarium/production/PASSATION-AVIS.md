@@ -59,11 +59,12 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 14 | Bulle de rubrique retirée ; question de fin en étiquette dans le décor (`"question"`) ; 3D revenue à l'aspect doux par défaut ; `riziere-3d-v3` envoyée | « Comment faire de meilleurs hooks pour la rétention ? Et est-ce que je peux passer la main à Opus pour faire les vidéos ? » |
 | 15 | Guide `ACCROCHES.md`, conseils d'accroche dans le montage, ouverture plus vive, `--accroche`, `scripts/installer.sh`, passation nettoyée ; essai à blanc réussi (dossier propre → vidéo de l'énigme rendue en suivant la section 0) | « Comment aller plus loin dans la création artistique, l'attractivité ? » → quatre pistes proposées, toutes retenues : signature sonore, personnage récurrent, plan-séquence avec les mots dans le décor, ses images en collage |
 | 16 | Lot 1 (son) : trois indicatifs à choisir (A, B, C), musique du compte par rubrique, musique qui baisse sous la voix, bruitages des décors ; énigme renvoyée avec ce son | **en attente : quel indicatif ?** (A en attendant, `indicatif` dans `style.js`) |
-| 17 | Lot 2 (personnage) : trois allures au choix (bonnet, casquette, boucles), sept poses, une place dans six décors ; planches et maquette d'escalade envoyées | **en attente : quelle allure ?** (`bonnet` en attendant, `personnage` dans `style.js`) |
+| 17 | Lot 2 (personnage) : trois allures au choix (bonnet, casquette, boucles), sept poses, une place dans six décors ; planches et maquette d'escalade envoyées | « Je n'aime pas la musique. Le personnage 1, mais il ne faut pas qu'il reste trop souvent à l'écran » |
+| 18 | Musique revenue à « Labo » par défaut, sans indicatif ; allure `bonnet` fixée ; le personnage n'apparaît qu'au premier et au dernier décor ; énigme renvoyée | en attente (ce qu'il n'aime pas dans la musique n'est pas encore connu) |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
-Ce qu'il ne faut pas reproposer : la bulle de rubrique en haut de l'image (retirée le 16 nov.) ; un écran de fin « Et toi ? » séparé (la question se pose dans le décor du dernier plan) ; la 3D en aplats avec contours comme aspect par défaut (« c'était plus joli avant ») ; une voix de synthèse comme solution par défaut (la voix clonée a été essayée à sa demande : la réserver au dépannage) ; le terrarium ; l'infographie sobre seule ; **une barre de progression** (« pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas », retirée le 15 nov.) ; du texte à l'écran en plus des sous-titres.
+Ce qu'il ne faut pas reproposer : la bulle de rubrique en haut de l'image (retirée le 16 nov.) ; un écran de fin « Et toi ? » séparé (la question se pose dans le décor du dernier plan) ; la 3D en aplats avec contours comme aspect par défaut (« c'était plus joli avant ») ; une voix de synthèse comme solution par défaut (la voix clonée a été essayée à sa demande : la réserver au dépannage) ; le terrarium ; l'infographie sobre seule ; **la musique du compte et son indicatif comme réglage par défaut (« Je n'aime pas la musique », 16 nov.) ; le personnage à l'écran plus de 40 % du temps ; une barre de progression** (« pour les prochaines vidéos ne mets pas de barre de progression, je n'aime pas », retirée le 15 nov.) ; du texte à l'écran en plus des sous-titres.
 
 ## 3. Fabriquer une vidéo, de bout en bout
 
@@ -228,23 +229,25 @@ L'auteur a demandé si sa voix pouvait dire un texte nouveau. Un essai de 8 s a 
 Tout est dans `scripts/sons-avis.js`, synthétisé et reproductible.
 
 - **L'indicatif** : un motif de quatre notes. Trois propositions (`A` cloche qui monte, `B` corde qui rebondit, `C` bois qui répond). Le choix se fixe dans `studio/avis/style.js` (`indicatif`) ; un épisode peut le changer (`"indicatif": "B"`). Deux notes sur la première image, le motif entier quand la voix se tait.
-- **La musique** (`"musique": "avis"`, le défaut) : la même mélodie et les mêmes accords pour tout le compte, une instrumentation par rubrique (`RUBRIQUES`). `"musique": "labo"` rend l'ancienne, `"aucune"` la coupe.
+- **Non retenue par défaut** : l'auteur a écouté et n'aime pas cette musique (il n'a pas dit si c'est la mélodie, les timbres ou l'idée même). Le défaut est donc revenu à `labo`, sans indicatif (`musique` dans `style.js`). Lui demander ce qui gêne avant d'en proposer une autre ; le modèle ne pouvant pas écouter, proposer plutôt deux ou trois extraits très différents que retoucher à l'aveugle.
+- **La musique du compte** (`"musique": "avis"`, à la demande) : la même mélodie et les mêmes accords pour tout le compte, une instrumentation par rubrique (`RUBRIQUES`). `"musique": "labo"` est le défaut, `"aucune"` la coupe.
 - **Elle suit la voix** : le montage calcule les « creux » (les moments où l'auteur parle, `feuille.musique.creux`) ; `volumeMusique()` dans `page.js` en fait une expression pour ffmpeg : `reglages.musique` (0,16) sous la voix, `reglages.musiqueSeule` (0,42) dans les silences.
 - **Les bruitages** : un décor déclare ses sons (`sons: [{ f, t, v, boucle }]` dans `decors.js` ou `decors3d.js`) ; une illustration qui surgit fait un « pop ». `"reglages": { "bruitages": 0 }` les coupe.
 - **Écouter sans vidéo** : `node scripts/sons-avis.js <dossier>` écrit tous les sons.
 - Mesuré sur l'énigme : −15 LUFS avant rendu ; la musique remonte pendant le compte à rebours et sur la question de fin. **Personne n'a écouté** avant l'auteur.
-- Reste à faire pour ce lot : appliquer son choix d'indicatif ; ajuster les timbres selon ses retours.
+- Ce qui reste de ce lot dans toutes les vidéos : la musique qui baisse sous la voix (elle s'applique aussi à `labo`) et les bruitages des décors.
 
 ## 6 quater. Le personnage récurrent (lot 2 du plan « aller plus loin », 16 nov. 2026)
 
 Un double stylisé de l'auteur, en papier découpé, le même dans chaque vidéo : `studio/avis/personnage.js`.
 
-- **Dans l'épisode** : `"personnage": true` (il apparaît dans chaque décor qui lui a fait une place, dans la pose par défaut du décor), ou sur un plan `"personnage": "salue"` ; `"personnage": false` sur un plan l'enlève. `"allure"` change son allure pour un épisode.
-- **Allures** : `bonnet` (défaut provisoire), `casquette`, `boucles`. Le choix de l'auteur se fixe dans `style.js` (`personnage`).
+- **Pas trop souvent** (demande de l'auteur) : avec `"personnage": true`, il n'apparaît que dans le premier et le dernier décor qui lui font une place ; le montage donne un conseil s'il est à l'écran plus de 40 % du temps.
+- **Dans l'épisode** : `"personnage": true` (pose par défaut du décor), ou sur un plan `"personnage": "salue"` ; `"personnage": false` sur un plan l'enlève. `"allure"` change son allure pour un épisode.
+- **Allure** : `bonnet`, choisie par l'auteur (« le personnage 1 »). `casquette` et `boucles` restent dans le code.
 - **Poses** : `debout`, `salue`, `montre`, `reflechit`, `marche`, `assis`, `grimpe`. Une pose est une liste d'angles (`POSES`) : en ajouter une coûte une ligne.
 - **Places** (`PLACES`) : `cave`, `robot`, `scene`, `mur`, `salon`, `riziere`. Règle vérifiée par un test : le centre de la tête reste au-dessus de y 1200, pour que les sous-titres ne passent jamais sur le visage. Quand il est là, le figurant du décor (classe `figurant` : la silhouette de la cave, le grimpeur du mur) est caché.
 - **Piège** : ne jamais l'animer avec les propriétés `x`, `y`, `rotation` ou `svgOrigin` de GSAP (elles se repèrent dans l'image entière et décalent un dessin placé par un groupe parent : il se retrouvait 300 pixels trop haut). Tout passe par l'attribut `transform` (`attr: { transform: 'rotate(9)' }`), chaque membre étant dessiné autour de son articulation.
-- **Reste à faire** : sa version 3D (dans `mur3d` et `riziere3d`, comme cible de caméra `moi`) ; la pose `assis` ressemble plus à un accroupi ; appliquer l'allure choisie.
+- **Reste à faire** : sa version 3D (dans `mur3d` et `riziere3d`, comme cible de caméra `moi`) ; la pose `assis` ressemble plus à un accroupi.
 
 ## 7. Le script resserré que l'auteur doit réenregistrer
 

@@ -153,3 +153,11 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes questions : « Comment faire de meilleurs hooks pour la rétention ? » et « Est-ce que je peux passer la main à Opus pour faire les vidéos ? ».
 - **Limite assumée** : aucune donnée d'audience ; les seuils (12 mots, 4 s, 45 s) sont des points de départ à corriger avec tes chiffres.
 - **Vérifié** : essai à blanc depuis un dossier propre, jusqu'au MP4 de l'énigme.
+
+## 24. Le personnage au bonnet, avec parcimonie ; la musique du compte écartée (16 nov. 2026)
+
+- **Décision** : le personnage récurrent a l'allure « bonnet » et n'apparaît, par défaut, qu'à l'ouverture et à la fin d'une vidéo. La musique du compte et son indicatif ne sont plus le réglage par défaut : retour à « Labo ».
+- **Pourquoi** : tes mots : « Je n'aime pas la musique. Le personnage 1, mais il ne faut pas qu'il reste trop souvent à l'écran. »
+- **Gardé** : la musique qui baisse quand tu parles, les bruitages des décors.
+- **Ouvert** : ce qui te déplaît dans la musique (mélodie, sonorité, ou le fait qu'il y en ait une). Tant que ce n'est pas clair, on ne propose pas une nouvelle musique à l'aveugle.
+- **Où** : `studio/avis/style.js` (`musique`, `personnage`), `montage.js`.

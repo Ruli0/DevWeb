@@ -17,8 +17,8 @@ _Dernière mise à jour : 15 novembre 2026._
 | A6e | 3D pour la cave, le théâtre et le salon ; personnages modelés | Claude | à faire si tu le veux |
 | A8 | Accroches : guide, conseils automatiques, ouverture vive | Claude | fait |
 | A9 | Passation à un autre modèle : installation en une commande, essai à blanc | Claude | fait |
-| B1 | Signature sonore : indicatif, musique du compte, bruitages | Claude, puis ton choix d'indicatif | fait, choix en attente |
-| B2 | Personnage récurrent (ton double stylisé) | Claude, puis ton choix d'allure | 2D fait, choix en attente ; version 3D à faire |
+| B1 | Son : musique sous la voix, bruitages ; musique du compte écartée (« je n'aime pas la musique ») | Claude | fait ; nouvelle musique seulement si tu dis ce qui gêne |
+| B2 | Personnage récurrent (ton double stylisé) | Claude | 2D fait (bonnet, peu présent) ; version 3D à faire |
 | B3 | Plan-séquence 3D, mots dans le décor, lumière selon l'émotion | Claude | à faire |
 | B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |
 | A6b | Décor « relations » | Claude | à faire |

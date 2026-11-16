@@ -158,6 +158,8 @@ function montage(ep, voix) {
     if (retire(i)) erreurs.push(`${ou} : l’ancre « ${ancre} » tombe dans un passage retiré`);
     return { i, t: h(voix.mots[i].d) };
   };
+  const avecPlace = (ep.plans || []).map((pl, n) => (PERSO.PLACES[pl.fond] && pl.personnage === undefined ? n : -1)).filter((n) => n >= 0);
+  const premierAvecPlace = avecPlace[0], dernierAvecPlace = avecPlace[avecPlace.length - 1];
   const plans = [];
   let curseur = 0, apres = 0;
   (ep.plans || []).forEach((pl, n) => {
@@ -193,7 +195,8 @@ function montage(ep, voix) {
     // Le personnage récurrent : "personnage": "salue" sur un plan, ou "personnage": true dans l'épisode (pose par défaut de chaque décor).
     // "personnage": false sur un plan l'enlève. Il ne se tient que dans les décors qui lui ont fait une place.
     {
-      const place = PERSO.PLACES[pl.fond], voulu = pl.personnage !== undefined ? pl.personnage : (ep.personnage ? true : false);
+      // L'auteur ne veut pas le voir trop souvent : avec "personnage": true, il n'apparaît que dans le premier et le dernier décor qui lui font une place.
+      const place = PERSO.PLACES[pl.fond], voulu = pl.personnage !== undefined ? pl.personnage : (ep.personnage ? (n === premierAvecPlace || n === dernierAvecPlace) : false);
       delete p.personnage;
       if (voulu && !place) { if (pl.personnage) erreurs.push(`${ou} : le personnage n’a pas de place dans le décor « ${pl.fond} ». Décors possibles : ${Object.keys(PERSO.PLACES).join(', ')}`); }
       else if (voulu) {
@@ -252,7 +255,7 @@ function montage(ep, voix) {
   });
   // L'indicatif du compte : deux notes sur la première image, le motif entier quand la voix se tait.
   const sansMusique = ep.musique === 'aucune';
-  if (!sansMusique && ep.musique !== 'labo') { sons.push({ f: 'indicatif-court.wav', t: 0, v: 0.5 }); if (duree - dureeVoix > 1.5) sons.push({ f: 'indicatif.wav', t: arrondi(dureeVoix + 0.15), v: 0.6 }); }
+  if ((ep.musique || S.musique) === 'avis') { sons.push({ f: 'indicatif-court.wav', t: 0, v: 0.5 }); if (duree - dureeVoix > 1.5) sons.push({ f: 'indicatif.wav', t: arrondi(dureeVoix + 0.15), v: 0.6 }); }
   // La musique suit la voix : basse quand l'auteur parle (« creux »), plus forte dans les silences.
   const creux = [];
   groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
@@ -261,7 +264,7 @@ function montage(ep, voix) {
     version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
-    musique: { nom: sansMusique ? 'aucune' : (ep.musique || 'avis'), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux },
+    musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,
@@ -281,6 +284,8 @@ function conseils(f, mots) {
   if (phrase.length > 12 || duree > 4) c.push(`la première phrase fait ${phrase.length} mots et ${duree.toFixed(1).replace('.', ',')} s : une accroche tient en 12 mots et 4 s`);
   const p0 = f.plans[0];
   if (UNIS.includes(p0.fond) && !p0.p.illu) c.push('le premier plan est un fond uni sans illustration : ouvre sur un décor ou un dessin');
+  const present = f.plans.filter((x) => x.p.personnage).reduce((n, x) => n + x.d, 0);
+  if (present > 0.4 * f.duree) c.push(`le personnage est à l’écran ${Math.round(100 * present / f.duree)} % du temps : l’auteur ne veut pas le voir trop souvent (au plus 40 %)`);
   if (f.duree > 45) c.push(`la vidéo dure ${Math.round(f.duree)} s : au-delà de 45 s, peu de gens vont au bout (à vérifier sur tes chiffres)`);
   return c;
 }
