@@ -17,7 +17,7 @@ _Dernière mise à jour : 15 novembre 2026._
 | A6e | 3D pour la cave, le théâtre et le salon ; personnages modelés | Claude | à faire si tu le veux |
 | A8 | Accroches : guide, conseils automatiques, ouverture vive | Claude | fait |
 | A9 | Passation à un autre modèle : installation en une commande, essai à blanc | Claude | fait |
-| B1 | Son : musique sous la voix, bruitages ; musique du compte écartée (« je n'aime pas la musique ») | Claude, puis ton choix | trois musiques vivantes proposées (funk, électro, acoustique), choix en attente |
+| B1 | Son : musique sous la voix, bruitages ; musique du compte écartée (« je n'aime pas la musique ») | Claude, puis ton choix | électro house (complète ou nue) proposée après ton retour « juste la basse », choix en attente |
 | B2 | Personnage récurrent (ton double stylisé) | Claude | 2D fait (bonnet, peu présent) ; version 3D à faire |
 | B3 | Plan-séquence 3D, mots dans le décor, lumière selon l'émotion | Claude | à faire |
 | B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |

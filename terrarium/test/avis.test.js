@@ -247,3 +247,24 @@ test('personnage récurrent : poses par décor, visage au-dessus des sous-titres
   assert.strictEqual(montage(episode({ personnage: true, plans: [{ plan: 'visuel', fond: 'mur', personnage: false }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix).feuille.plans[0].p.personnage, undefined);
   assert.ok(montage(episode({ allure: 'pirate' }), voix).erreurs.some((e) => e.includes('allure')));
 });
+
+test('électro house : acceptée, reproductible, portée par la basse, le plein tombe à l’instant demandé', () => {
+  const sons = require('../scripts/sons-avis.js');
+  ['house', 'house-nue'].forEach((m) => assert.deepStrictEqual(montage(episode({ musique: m }), voix).erreurs, []));
+  const f = montage(episode({ musique: 'house', forts: ['clarté'] }), voix).feuille;
+  const clarte = f.groupes.flatMap((g) => g.mots).find((m) => m.fort);
+  assert.strictEqual(f.musique.plein, Math.max(2, clarte.t));
+  const rms = (b, a, z) => { let s = 0; for (let i = Math.round(a * 44100); i < Math.round(z * 44100); i += 1) s += b[i] * b[i]; return Math.sqrt(s / ((z - a) * 44100)); };
+  // Plein à 8 s : l'entrée (basse filtrée) dure jusqu'à 4 s, puis deux mesures de montée.
+  const { basse, reste } = sons.house({ duree: 14, plein: 8, pistes: true });
+  assert.ok(rms(reste, 1, 3) < 0.2 * rms(reste, 9, 13), 'avant la montée, presque pas de batterie');
+  const eclat = (b, a2, z) => { let t = 0; for (let i = Math.round(a2 * 44100); i < Math.round(z * 44100); i += 1) t += (b[i] - b[i - 1]) ** 2; return t; };
+  assert.ok(eclat(basse, 9, 11) > 2 * eclat(basse, 1, 3), 'la basse est étouffée au début et s’ouvre au moment du plein');
+  assert.ok(reste.every((v) => Number.isFinite(v)) && basse.every((v) => Number.isFinite(v)), 'aucun nombre invalide');
+  // La basse porte le morceau : hors des coups de grosse caisse (contretemps), elle domine tout le reste.
+  const pas = 60 / 124 / 4, contretemps = (b) => { let s = 0; for (let k = 0; k < 8; k += 1) s += rms(b, 8 + (k * 4 + 2) * pas + 0.03, 8 + (k * 4 + 2) * pas + 0.1); return s; };
+  assert.ok(contretemps(basse) > contretemps(reste), 'la basse est l’élément le plus fort à contretemps');
+  const a = sons.vive('house', { duree: 6, plein: 2 }), b2 = sons.vive('house', { duree: 6, plein: 2 });
+  assert.deepStrictEqual(Array.from(a.slice(90000, 92000)), Array.from(b2.slice(90000, 92000)));
+  assert.ok(a.every((v) => Number.isFinite(v)));
+});

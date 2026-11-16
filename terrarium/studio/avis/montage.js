@@ -100,7 +100,7 @@ function montage(ep, voix) {
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
   if (ep.allure && !PERSO.ALLURES[ep.allure]) erreurs.push(`"allure" : une parmi ${Object.keys(PERSO.ALLURES).join(', ')}`);
-  if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique'].includes(ep.musique)) erreurs.push('"musique" : labo, funk, electro, acoustique, avis ou aucune');
+  if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique', 'house', 'house-nue'].includes(ep.musique)) erreurs.push('"musique" : labo, house, house-nue, funk, electro, acoustique, avis ou aucune');
   if (ep.indicatif && !['A', 'B', 'C'].includes(ep.indicatif)) erreurs.push('"indicatif" : A, B ou C');
   if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
   if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');
@@ -264,7 +264,9 @@ function montage(ep, voix) {
     version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
-    musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux },
+    musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
+      // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.
+      plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)) },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,
