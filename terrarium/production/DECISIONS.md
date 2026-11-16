@@ -124,3 +124,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Écarté** : des images générées (aucun outil gratuit dans la session, et le reproche « trop IA » resterait) ; des banques d'images (réseau fermé, à rouvrir si tu le veux).
 - **Reste ouvert** : tes propres photos et vidéos en fond (`"fond": "photo"`), sans doute le meilleur remède.
 - **Où** : `studio/avis/decors.js`, `lecteur.js`, `production/PASSATION-AVIS.md`.
+
+## 20. Le style du compte : papier découpé aux couleurs vives (16 nov. 2026)
+
+- **Décision** : le thème `decoupe` devient le style par défaut de toutes les vidéos « avis » : cadre crème, calques du décor avec une ombre nette, couleurs saturées, sous-titres sur une étiquette de papier posée de travers (Bricolage Grotesque), mot en cours dans la couleur de la rubrique.
+- **Pourquoi** : tes mots, après les quatre planches : « J'aime bien le papier découpé mais avec des couleurs plus vives comme le 2. Et j'aime bien aussi l'affichage du texte sur le papier découpé. »
+- **Écarté** : `neon` (dont on garde seulement la vivacité des couleurs), `feutre`, `affiche`. Ils restent dans `studio/avis/themes.js` et se choisissent avec `"theme"`.
+- **Où** : `studio/avis/themes.js` (`decoupe`), valeur par défaut dans `montage.js` et `page.js`.

@@ -3,7 +3,7 @@
  * Un thème : description, polices (fichiers de studio/polices/), css(f, c) ajouté après le style de base,
  * mot(f, c) : l'aspect d'un mot de sous-titre quand il est dit (« actif »), après (« dit ») et avant (« pale »),
  * filtre (facultatif) : un filtre SVG ajouté à la page.
- * Choix dans l'épisode : "theme": "decoupe". Sans rien : « base ».
+ * Sans "theme" dans l'épisode : « decoupe », le style du compte. Les autres restent disponibles ("theme": "neon"…).
  */
 'use strict';
 const police = (famille, fichier, poids = 400) => `@font-face{font-family:'${famille}';font-weight:${poids};src:url(assets/polices/${fichier}) format('woff2');font-display:block}`;
@@ -15,13 +15,14 @@ module.exports = {
     css: () => '',
     mot: (f, c) => ({ pale: 0.4, actif: { backgroundColor: f.accent, color: c.fond }, dit: { backgroundColor: 'rgba(0,0,0,0)', color: c.texte }, fort: f.accent }),
   },
+  // LE STYLE DU COMPTE, choisi par l'auteur le 16 nov. 2026 (« le papier découpé mais avec des couleurs plus vives comme le néon »).
   // Papier découpé : cadre crème, calques avec une ombre nette, étiquettes de papier posées de travers.
   decoupe: {
     description: 'Papier découpé : cadre crème autour de l’image, calques du décor avec une ombre nette, sous-titres sur une étiquette de papier un peu de travers.',
     polices: ['bricolage-grotesque-latin-800-normal.woff2'],
     css: (f, c) => `${police('Bricolage Grotesque', 'bricolage-grotesque-latin-800-normal.woff2', 800)}
 #root::after { content: ''; position: absolute; inset: 0; border: 26px solid ${c.texte}; z-index: 97; pointer-events: none; box-shadow: inset 0 0 0 3px ${c.fond}22, inset 0 0 90px #00000055; }
-.decor-svg { filter: saturate(.92) contrast(1.04); }
+.decor-svg, .photo-img { filter: saturate(1.4) contrast(1.12); }
 .decor-svg .milieu, .decor-svg .pres { filter: drop-shadow(0 16px 0 #00000040); }
 .illu { filter: drop-shadow(8px 10px 0 #00000030); }
 .grand, .moyen { font-family: 'Bricolage Grotesque'; font-weight: 800; letter-spacing: -.035em; }

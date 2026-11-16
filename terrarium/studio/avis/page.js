@@ -97,7 +97,7 @@ em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0
 .st .fort { color: ${acc}; }
 .grain { z-index: 99; }
 /* --- thème « ${f.theme} » --- */
-${THEMES[f.theme || 'base'].css(f, c)}`;
+${THEMES[f.theme || 'decoupe'].css(f, c)}`;
 }
 
 function html(f) {
@@ -111,7 +111,7 @@ function html(f) {
   const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
-  const theme = THEMES[f.theme || 'base'];
+  const theme = THEMES[f.theme || 'decoupe'];
   propre.mot = theme.mot(f, S.couleurs);
   return `<!doctype html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=1920">
@@ -165,7 +165,7 @@ function ecrire(f, dossier) {
   fs.writeFileSync(path.join(dossier, 'index.html'), html(f));
   fs.writeFileSync(path.join(dossier, 'feuille.json'), `${JSON.stringify(f, null, 1)}\n`);
   for (const g of PLUGINS) fs.copyFileSync(path.join(RACINE, 'node_modules/gsap/dist', g), path.join(dossier, 'assets', g));
-  for (const p of THEMES[f.theme || 'base'].polices) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));
+  for (const p of THEMES[f.theme || 'decoupe'].polices) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));
   for (const poids of Object.values(S.polices.fichiers)) for (const p of Object.values(poids)) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));
   // Les photos de l'auteur (fond « photo ») : videos/medias/ → assets/medias/.
   f.plans.filter((pl) => pl.fond === 'photo').forEach((pl) => {
