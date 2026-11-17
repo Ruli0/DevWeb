@@ -69,6 +69,7 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 24 | Épisode `agriculteur-ia` (37 s, vraie voix) : décors `champ` et `supermarche`, illustrations `rayons` et `copies` ; envoyé | « Est-ce que tu penses que tu peux générer des vidéos avec le ASCII art ? » |
 | 25 | Aspect 3D `ascii` et `ascii-vert` : la scène écrite en caractères ; deux essais sur la rizière envoyés | « En réalité je n'aime pas le style ASCII. Propose d'autres palettes et je choisis ! » |
 | 26 | ASCII retiré du code ; six palettes de couleurs proposées (`vive`, `pastel`, `coucher`, `ocean`, `retro`, `cobalt`), une planche par palette sur cinq scènes de `agriculteur-ia` | **en attente : laquelle ?** (le défaut reste `vive`) |
+| 27 | (sans demande) | « J'adore le visuel du paysan de dos ! » : le paysan du décor `champ` (chapeau de paille, fourche, vu de dos, au premier plan) est le visuel qu'il préfère jusqu'ici ; en faire un modèle pour les prochains décors (un sujet de dos, grand, au premier plan, devant le paysage) |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 

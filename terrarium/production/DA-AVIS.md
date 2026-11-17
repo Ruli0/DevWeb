@@ -19,6 +19,10 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 **Une mascotte** revient d'une vidéo à l'autre : un petit hibou de verre (transparent, liseré blanc, reflets, grands yeux), qui vole sur place juste au-dessus des sous-titres. L'auteur l'a préféré à un personnage humain. Il se montre peu : à l'ouverture et à la fin. **Le son** : une house régulière et sobre (grosse caisse, charley, basse ronde, sans effets), validée par l'auteur ; elle baisse quand il parle, et les décors ont leurs bruitages.
 
+## Ce que l'auteur préfère jusqu'ici
+
+Le paysan de dos du décor `champ` (« J'adore le visuel du paysan de dos », 17 nov.) : un personnage vu de dos, grand, au premier plan, qui regarde le paysage. À reprendre pour d'autres décors (un grimpeur de dos devant la voie, un développeur de dos devant ses écrans comme dans `cave`) plutôt que de multiplier les détails.
+
 ## Peu de texte
 
 Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop d'informations (retour de l'auteur, 15 nov.). La plupart des plans sont donc sans texte (`visuel`). Au plus trois textes par vidéo : l'accroche, un mot fort au moment clé, la question de fin. L'en-tête ne garde que la rubrique. Dans une vidéo en liste, un compteur très court est permis (`"repere": "Mains 1/3"`).
