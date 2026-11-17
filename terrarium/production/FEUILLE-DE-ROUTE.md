@@ -22,7 +22,8 @@ _Dernière mise à jour : 15 novembre 2026._
 | B3 | Plan-séquence 3D, mots dans le décor, lumière selon l'émotion | Claude | à faire |
 | B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |
 | A10 | Vidéo « L'agriculteur et le supermarché » sur ta nouvelle prise | Claude | fait, en attente de ton avis |
-| A11 | Essai d'ASCII art sur les décors 3D (couleur et terminal vert) | Claude | fait, en attente de ton avis |
+| A11 | Essai d'ASCII art sur les décors 3D | Claude | fait puis écarté par l'auteur |
+| A12 | Six palettes de couleurs à choisir | Claude, puis ton choix | fait, choix en attente |
 | A6b | Décor « relations » | Claude | à faire |
 | A7 | Publier, relever les chiffres | Toi | à faire |
 

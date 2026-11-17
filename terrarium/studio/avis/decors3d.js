@@ -4,8 +4,7 @@
  * où t est le temps écoulé dans le plan, d sa durée, et p les paramètres du plan ("camera", "accents").
  * Tout se calcule à partir de t (pas de minuterie, pas de hasard : les positions viennent d'un générateur à graine fixe),
  * donc la même image sort toujours au même instant, quel que soit l'ordre du rendu.
- * Aspects : « doux » (par défaut, celui que l'auteur préfère), « decoupe » (aplats, contours, ombres nettes),
- * « ascii » et « ascii-vert » (la scène écrite en caractères).
+ * Deux aspects : « doux » (par défaut, celui que l'auteur préfère) et « decoupe » (aplats, contours, ombres nettes).
  * Côté Node, seules les descriptions servent ; THREE n'existe que dans la page.
  */
 (function (racine, fabrique) {
@@ -84,46 +83,15 @@
   // Deux aspects, au choix de l'épisode ("aspect3d") : « doux » (par défaut : facettes éclairées en dégradé, ombres douces)
   // ou « decoupe » (aplats à trois tons, contours, ombres nettes).
   let ASPECT = 'doux';
-  // L'aspect « ascii » (et « ascii-vert ») : la scène est calculée sur une petite toile cachée, une case par caractère, puis
-  // chaque case est écrite sur la toile visible sous la forme d'un caractère choisi selon sa luminosité.
-  // Tout est synchrone (lecture des pixels de la toile 3D) : la même image sort toujours au même instant.
-  const RAMPE = ' .:-=+*#%@', CASE = 24;   // des caractères assez gros pour rester lisibles sur un téléphone, après la compression
   function rendu(canvas, fond, aspect) {
-    const ascii = String(aspect || '').startsWith('ascii');
     ASPECT = aspect === 'decoupe' ? 'decoupe' : 'doux';
     const T = THREE;
-    const cols = Math.round(canvas.width / CASE), rangs = Math.round(canvas.height / CASE);
-    const toile3d = ascii ? Object.assign(document.createElement('canvas'), { width: cols, height: rangs }) : canvas;
-    const r = new T.WebGLRenderer({ canvas: toile3d, antialias: true, preserveDrawingBuffer: true });
-    r.setPixelRatio(1); r.setSize(toile3d.width, toile3d.height, false);
+    const r = new T.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+    r.setPixelRatio(1); r.setSize(canvas.width, canvas.height, false);
     r.shadowMap.enabled = true; r.shadowMap.type = ASPECT === 'decoupe' ? T.BasicShadowMap : T.PCFSoftShadowMap;
     const scene = new T.Scene(); scene.background = new T.Color(fond); scene.fog = new T.Fog(fond, 18, 46);
     const camera = new T.PerspectiveCamera(42, canvas.width / canvas.height, 0.1, 200);
-    let afficher = () => r.render(scene, camera);
-    if (ascii) {
-      canvas.classList.add('ascii');
-      const vert = aspect === 'ascii-vert';
-      const lecture = Object.assign(document.createElement('canvas'), { width: cols, height: rangs }).getContext('2d', { willReadFrequently: true });
-      const ecran = canvas.getContext('2d');
-      afficher = () => {
-        r.render(scene, camera);
-        lecture.drawImage(toile3d, 0, 0);
-        const px = lecture.getImageData(0, 0, cols, rangs).data;
-        ecran.fillStyle = '#06080b'; ecran.fillRect(0, 0, canvas.width, canvas.height);
-        ecran.font = `400 ${Math.round(CASE * 1.25)}px 'JetBrains Mono', monospace`; ecran.textBaseline = 'middle'; ecran.textAlign = 'center';
-        for (let y = 0; y < rangs; y += 1) for (let x = 0; x < cols; x += 1) {
-          const i = (y * cols + x) * 4, R = px[i], G = px[i + 1], B = px[i + 2];
-          // La luminosité est étirée (les scènes sont plutôt sombres) pour utiliser toute la rampe de caractères.
-          const lum = Math.min(1, Math.max(0, ((0.299 * R + 0.587 * G + 0.114 * B) / 255 - 0.06) / 0.7)) ** 0.75;
-          const car = RAMPE[Math.min(RAMPE.length - 1, Math.floor(lum * RAMPE.length))];
-          if (car === ' ') continue;
-          if (vert) ecran.fillStyle = `rgba(70,255,130,${(0.5 + 0.5 * lum).toFixed(2)})`;
-          else { const k = 250 / Math.max(40, R, G, B); ecran.fillStyle = `rgb(${Math.min(255, Math.round(R * k))},${Math.min(255, Math.round(G * k))},${Math.min(255, Math.round(B * k))})`; }
-          ecran.fillText(car, x * CASE + CASE / 2, y * CASE + CASE / 2);
-        }
-      };
-    }
-    return { T, r, scene, camera, afficher };
+    return { T, r, scene, camera, afficher: () => r.render(scene, camera) };
   }
   // Les aplats : une rampe à trois tons (ombre, demi-teinte, lumière) partagée par toutes les matières.
   let rampe = null;

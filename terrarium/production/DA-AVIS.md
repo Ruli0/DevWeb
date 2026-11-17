@@ -48,9 +48,12 @@ Un style est une couche posée sur le même contenu (`"theme"` dans l'épisode, 
 
 L'auteur a aimé le premier essai (« ça me plaît ») et veut « des tours, des effets plongeants, des zooms ». Un décor peut avoir une version en volume (`mur3d`, `riziere3d`) : formes simples à facettes, vraie caméra qui se déplace, ombres portées. Elle se choisit avec `--3d` ou `"decors3d": true`. La caméra enchaîne des mouvements calés sur les mots (`"camera"`, voir la passation). À réserver aux plans où le mouvement de caméra apporte quelque chose ; les personnages restent des silhouettes de blocs.
 
+### Les palettes de couleurs
+
+Six palettes existent (`studio/avis/palettes.js`) : `vive` (l'actuelle, par défaut), `pastel`, `coucher`, `ocean`, `retro`, `cobalt` (deux encres). L'auteur choisit (17 nov.) ; en attendant, `vive` reste le défaut. Elles changent les fonds unis, les accents par rubrique et, par un étalonnage, tous les décors.
+
 ### L'aspect de la 3D
 
-Un essai d'ASCII art existe depuis le 16 nov. (`--aspect=ascii` en couleur, `ascii-vert` façon terminal) : la scène 3D est écrite en caractères, les sous-titres restent en texte normal. C'est une piste pour la rubrique code et IA ; l'auteur ne l'a pas encore jugée.
 
 Par défaut, la 3D est « douce » : facettes éclairées en dégradé, ombres douces. L'aspect en aplats avec contours (`decoupe`) a été essayé le 16 nov. ; l'auteur a préféré l'aspect d'avant. Il reste disponible avec `--aspect=decoupe`. La rizière vit (riz en rangs qui ondule, eau qui scintille, paysan à la palanche, buffle, repiqueuse, canards, brume, lumière qui se lève) et une ambiance de campagne passe sous la voix.
 

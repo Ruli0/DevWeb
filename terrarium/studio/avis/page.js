@@ -11,6 +11,7 @@ const PLANS = require('./plans.js');
 const ILLUS = require('./illustrations.js');
 const DECORS = require('./decors.js');
 const THEMES = require('./themes.js');
+const PAL = require('./palettes.js');
 const DECORS3D = require('./decors3d.js');
 const PERSO = require('./personnage.js');
 
@@ -24,7 +25,8 @@ const PLUGINS = ['gsap.min.js', 'SplitText.min.js', 'DrawSVGPlugin.min.js'];
 const GRAIN = '<svg class="grain" width="1080" height="1920"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter><rect width="100%" height="100%" filter="url(#g)" opacity="0.1"/></svg>';
 
 function css(f) {
-  const c = S.couleurs, P = S.polices, acc = f.accent;
+  const pal = PAL.PALETTES[f.palette] || PAL.PALETTES[S.palette];
+  const c = pal.couleurs, P = S.polices, acc = f.accent;
   const fontes = Object.entries(P.fichiers).flatMap(([fam, poids]) => Object.entries(poids).map(([w, fichier]) =>
     `@font-face{font-family:'${fam}';font-weight:${w};font-style:${/italic/.test(fichier) ? 'italic' : 'normal'};src:url(assets/polices/${fichier}) format('woff2');font-display:block}`)).join('\n');
   return `${fontes}
@@ -36,7 +38,7 @@ function css(f) {
 .plan.papier { --bg: ${c.texte}; --fg: ${c.fond}; --ac: ${acc}; }
 .plan.accent { --bg: ${acc}; --fg: ${c.fond}; --ac: #ffffff; }
 .plan.decor, .plan.photo { --bg: ${c.fond}; --fg: ${c.texte}; --ac: ${acc}; }
-${Object.entries(Object.assign({}, DECORS, DECORS3D)).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n} { --ac: ${d.accent}; }`).join('\n')}
+${/* Chaque décor a son accent ; sauf avec une autre palette que l'originale, où l'accent de la palette prime. */ (f.palette || S.palette) !== 'vive' ? '' : Object.entries(Object.assign({}, DECORS, DECORS3D)).filter(([, d]) => d.accent).map(([n, d]) => `.plan.${n} { --ac: ${d.accent}; }`).join('\n')}
 .decor-svg, .photo-img, .decor-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
 .photo-img { object-fit: cover; transform-origin: 50% 50%; }
 /* Le voile : le haut du décor est assombri pour que le texte du plan reste lisible. */
@@ -102,7 +104,9 @@ em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0
 .st .fort { color: ${acc}; }
 .grain { z-index: 99; }
 /* --- thème « ${f.theme} » --- */
-${THEMES[f.theme || 'decoupe'].css(f, c)}`;
+${THEMES[f.theme || 'decoupe'].css(f, c)}
+/* --- palette « ${f.palette || S.palette} » : l'étalonnage des décors --- */
+${PAL.regle(pal)}`;
 }
 
 function html(f) {
@@ -121,14 +125,15 @@ function html(f) {
   const propre = JSON.parse(JSON.stringify(f));
   const troisD = f.plans.some((pl) => DECORS3D[pl.fond]);
   const theme = THEMES[f.theme || 'decoupe'];
-  propre.mot = theme.mot(f, S.couleurs);
+  const palette = PAL.PALETTES[f.palette] || PAL.PALETTES[S.palette];
+  propre.mot = theme.mot(f, palette.couleurs);
   return `<!doctype html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080, height=1920">
 <title>${esc(f.titre)}</title>
 ${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}${troisD ? '<script src="assets/three.min.js"></script>' : ''}
 <style>${css(f)}</style></head>
 <body>
-${theme.filtre || ''}
+${theme.filtre || ''}${palette.etalonnage && palette.etalonnage.echelle ? PAL.filtreEchelle(palette.etalonnage.echelle) : ''}
 <div id="root" data-composition-id="${f.id}" data-start="0" data-duration="${f.duree}" data-width="1080" data-height="1920" data-fps="60">
 ${plans}
  <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="3">

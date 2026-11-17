@@ -13,6 +13,7 @@ const DECORS = require('./decors.js');
 const UNIS = ['nuit', 'papier', 'accent'];                       // les fonds unis, qui alternent quand rien n'est précisé
 const DECORS3D = require('./decors3d.js');
 const PERSO = require('./personnage.js');
+const { PALETTES } = require('./palettes.js');
 const FONDS = [...UNIS, ...Object.keys(DECORS), ...Object.keys(DECORS3D), 'photo'];        // + les décors illustrés + une photo de l'auteur
 const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
 const RECOUVREMENT = 0.6;   // un plan reste affiché sous le suivant pendant sa transition
@@ -103,7 +104,9 @@ function montage(ep, voix) {
   if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique', 'house', 'house-nue', 'house-plate'].includes(ep.musique)) erreurs.push('"musique" : labo, house-plate, house, house-nue, funk, electro, acoustique, avis ou aucune');
   if (ep.indicatif && !['A', 'B', 'C'].includes(ep.indicatif)) erreurs.push('"indicatif" : A, B ou C');
   if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
-  if (ep.aspect3d && !['doux', 'decoupe', 'ascii', 'ascii-vert'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : doux, decoupe, ascii ou ascii-vert');
+  if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');
+  if (ep.palette && !PALETTES[ep.palette]) erreurs.push(`"palette" : une parmi ${Object.keys(PALETTES).join(', ')}`);
+  const pal = PALETTES[ep.palette] || PALETTES[S.palette];
   const rub = S.rubriques[ep.rubrique];
   if (!rub) erreurs.push(`"rubrique" : une parmi ${Object.keys(S.rubriques).join(', ')}`);
   if (!voix) { erreurs.push(`la voix manque : python3 scripts/voix.py <enregistrement> ${ep.voix || ep.id}`); return { erreurs, feuille: null }; }
@@ -261,8 +264,8 @@ function montage(ep, voix) {
   groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
 
   const feuille = {
-    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ['decoupe', 'ascii', 'ascii-vert'].includes(ep.aspect3d) ? ep.aspect3d : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
-    rubrique: rub ? rub.nom : '', accent: rub ? rub.accent : '#fff', fond: S.couleurs.fond, texte: S.couleurs.texte,
+    version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
+    rubrique: rub ? rub.nom : '', palette: PALETTES[ep.palette] ? ep.palette : S.palette, accent: rub ? (pal.accents[ep.rubrique] || rub.accent) : '#fff', fond: pal.couleurs.fond, texte: pal.couleurs.texte,
     duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
       // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.

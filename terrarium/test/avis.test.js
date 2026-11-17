@@ -165,7 +165,6 @@ test('question de fin dans le décor : elle prolonge le dernier plan, et seuleme
   assert.strictEqual(montage(episode({ aspect3d: 'decoupe' }), voix).feuille.aspect3d, 'decoupe');
   assert.strictEqual(montage(episode(), voix).feuille.aspect3d, 'doux');
   assert.ok(montage(episode({ aspect3d: 'flou' }), voix).erreurs.some((e) => e.includes('aspect3d')));
-  ['ascii', 'ascii-vert'].forEach((a) => { const r = montage(episode({ aspect3d: a, decors3d: true, plans: [{ plan: 'visuel', fond: 'riziere' }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix); assert.deepStrictEqual(r.erreurs, []); assert.strictEqual(r.feuille.aspect3d, a); assert.ok(page.html(r.feuille).includes('three.min.js')); });
 });
 
 test('accroche : des conseils, jamais des erreurs ; ouverture vive par défaut', () => {
@@ -305,4 +304,36 @@ test('tous les épisodes « avis » du dépôt se montent sans erreur', () => {
     const v = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix', ep.voix || ep.id, 'mots.json'), 'utf8'));
     assert.deepStrictEqual(montage(ep, v).erreurs, [], ep.id);
   });
+});
+
+test('palettes : acceptées, jetons et étalonnage dans la page, contraste lisible, défaut inchangé', () => {
+  const { PALETTES, contraste } = require('../studio/avis/palettes.js');
+  const S = require('../studio/avis/style.js');
+  const page = require('../studio/avis/page.js');
+  assert.deepStrictEqual(Object.keys(PALETTES), ['vive', 'pastel', 'coucher', 'ocean', 'retro', 'cobalt']);
+  // Sans palette : celle d'origine, avec les couleurs de style.js, et rien de filtré.
+  const base = montage(episode(), voix).feuille;
+  assert.strictEqual(base.palette, 'vive');
+  assert.strictEqual(base.fond, S.couleurs.fond);
+  assert.strictEqual(base.accent, S.rubriques.travail.accent);
+  assert.ok(!page.html(base).includes('.deco, .illu { filter'));
+  assert.deepStrictEqual(montage(episode({ palette: 'vive' }), voix).feuille, base);
+  Object.entries(PALETTES).forEach(([nom, p]) => {
+    const f = montage(episode({ palette: nom }), voix).feuille;
+    assert.strictEqual(f.palette, nom);
+    assert.strictEqual(f.fond, p.couleurs.fond);
+    assert.strictEqual(f.texte, p.couleurs.texte);
+    assert.strictEqual(f.accent, p.accents.travail);
+    const html = page.html(f);
+    assert.ok(html.includes(p.couleurs.fond));
+    // Contraste : le texte se lit sur le fond, et chaque accent aussi (sous-titres actifs, étiquettes, mots forts).
+    assert.ok(contraste(p.couleurs.texte, p.couleurs.fond) >= 7, `${nom} : texte`);
+    Object.entries(p.accents).forEach(([r, a]) => assert.ok(contraste(a, p.couleurs.fond) >= 3, `${nom} : accent ${r}`));
+    Object.keys(S.rubriques).forEach((r) => assert.ok(p.accents[r], `${nom} : accent manquant pour ${r}`));
+    if (p.etalonnage) assert.ok(html.includes('.deco, .illu { filter:'));
+  });
+  // L'échelle de couleurs de « cobalt » est un filtre SVG défini une fois ; les autres étalonnages sont des filtres CSS.
+  assert.ok(page.html(montage(episode({ palette: 'cobalt' }), voix).feuille).includes('<filter id="etalonnage"'));
+  assert.ok(!page.html(montage(episode({ palette: 'pastel' }), voix).feuille).includes('<filter id="etalonnage"'));
+  assert.ok(montage(episode({ palette: 'arc-en-ciel' }), voix).erreurs.some((e) => e.includes('palette')));
 });

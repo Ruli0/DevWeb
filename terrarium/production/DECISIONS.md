@@ -174,3 +174,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Décision** : `house-plate` (boucle régulière, grosse caisse, charley, basse ronde) est la musique de toutes les vidéos. Le hibou est transparent comme du verre, petit, et vole sur place juste au-dessus des sous-titres.
 - **Pourquoi** : tes mots : « La musique est parfaite. Fais le hibou couleur verre transparent et plus petit. »
 - **Où** : `studio/avis/style.js` (`musique`), `studio/avis/personnage.js` (`hibou`, `placer`).
+
+## 27. L'ASCII est écarté ; des palettes à choisir (17 nov. 2026)
+
+- **Décision** : l'aspect ASCII (essayé le 16 nov.) est retiré du code. À la place, six palettes de couleurs sont proposées sur des planches ; le défaut reste la palette actuelle jusqu'à ton choix.
+- **Pourquoi** : tes mots : « En réalité je n'aime pas le style ASCII. Propose d'autres palettes et je choisis ! »
+- **Écarté** : le rendu en caractères, en couleur comme en vert.
+- **Où** : `studio/avis/palettes.js`, `--palette=` dans `scripts/video.js`, `"palette"` dans l'épisode.
