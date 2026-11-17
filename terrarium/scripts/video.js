@@ -5,6 +5,8 @@
 //   npm run video -- <id> --theme=neon --3d   (chaîne « avis ») autre style, décors en 3D quand ils existent
 //   npm run video -- <id> --musique=funk       (chaîne « avis ») labo, funk, electro, acoustique, avis ou aucune
 //   npm run video -- <id> --palette=cobalt     (chaîne « avis ») vive, pastel, coucher, ocean, retro ou cobalt
+//   npm run video -- <id> --publier           (chaîne « avis ») rendu final en 60 i/s, <id>-final.mp4 et publication.md
+//   npm run video -- <id> --controle          (chaîne « avis ») regarde cinq instants par plan : texte coupé, visage caché, plan vide
 //   npm run video -- <id> --accroche          (chaîne « avis ») seulement les trois premières secondes, en quatre images
 // Sortie : videos/studio/<id>/ (index.html, feuille.json, apercu.png, <id>.mp4)
 'use strict';
@@ -59,6 +61,18 @@ if (AVIS && option('--accroche')) {
   const globaux = execSync('npm root -g').toString().trim();
   const r = spawnSync('node', [path.join(RACINE, 'scripts/apercu.js'), path.join(dossier, 'index.html'), path.join(dossier, 'accroche.png'), '0', '0.7', '1.5', '3'], { stdio: 'inherit', env: { ...process.env, NODE_PATH: globaux } });
   process.exit(r.status || 0);
+}
+
+if (AVIS && option('--publier')) {
+  // Rendu final en 60 images par seconde et fiche de publication (scripts/publier.js) ; refusé s'il reste quelque chose à écrire.
+  const r = spawnSync('node', [path.join(RACINE, 'scripts/publier.js'), id], { stdio: 'inherit' });
+  process.exit(r.status || 0);
+}
+
+if (AVIS && option('--controle')) {
+  // Le contrôle automatique de l'image (scripts/controle.js) : cinq instants par plan, une liste de points à regarder.
+  const globaux = execSync('npm root -g').toString().trim();
+  spawnSync('node', [path.join(RACINE, 'scripts/controle.js'), dossier], { stdio: 'inherit', env: { ...process.env, NODE_PATH: globaux } });
 }
 
 if (!option('--sans-apercu')) {

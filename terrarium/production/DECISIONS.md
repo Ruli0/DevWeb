@@ -195,3 +195,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tu as envoyé ta première photo (Fontainebleau). Une photo de téléphone porte souvent sa position ; le dépôt GitHub n'est peut-être pas privé.
 - **Ouvert** : à quel traitement tu donnes la préférence (fond, autocollant, ou les deux) ; si le dépôt est privé (la photo pourrait alors y être enregistrée, pour qu'une session neuve la retrouve).
 - **Où** : `.gitignore`, `scripts/decouper.py`, `studio/avis/page.js`, `montage.js`, `lecteur.js`.
+
+## 30. Contrôle de l'image et kit de publication (17 nov. 2026)
+
+- **Décision** : `--controle` signale sans bloquer (texte hors zone sûre, sur le visage du hibou, illisible, plan vide) ; `--publier` rend en 60 i/s et écrit `publication.md`, mais refuse tant qu'une clé `"_a_ecrire"` ou une voix maquette subsiste.
+- **Pourquoi** : le modèle ne peut ni écouter ni tout regarder ; ces garde-fous évitent d'envoyer une vidéo avec une question de fin provisoire.
+- **Écarté** : bloquer sur le contrôle d'image (trop de faux positifs possibles).
+- **Où** : `scripts/controle.js`, `scripts/publier.js`, `scripts/video.js`.

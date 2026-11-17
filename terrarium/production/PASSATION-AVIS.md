@@ -91,6 +91,7 @@ HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # →
 # 2. L'épisode : node scripts/brouillon.js <id> (premier jet) puis retouche à la main ; videos/episodes/<id>.json ("version": 4). Modèle : agriculteur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
+npm run video -- <id> --controle   # contrôle automatique : texte hors zone, sur le hibou, illisible, plan vide (captures dans videos/studio/<id>/controle/)
 npm test                         # tous verts
 # 4. Le rendu (le CLI HyperFrames est installé hors du dépôt par scripts/installer.sh)
 cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell \
@@ -101,6 +102,7 @@ cd videos/studio/<id> && HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium_head
 - Un rendu de 57 s en 30 images par seconde prend environ 3 minutes. Le rendu final se fera en 60 (`--fps 60`), une fois le montage validé.
 - Envoyer le MP4 à l'auteur comme fichier. Les MP4 et `videos/studio/` ne vont pas dans le dépôt ; `videos/voix/<id>/` y va (c'est la source).
 - Avant d'envoyer : recompresser un MP4 lourd avec `ffmpeg -i <id>.mp4 -c:v libx264 -crf 18 -preset slow -c:a copy <id>-envoi.mp4` (pas plus fort : l'auteur voit la dégradation).
+- **Version à publier** : `npm run video -- <id> --publier` rend en 60 images par seconde, recompresse (crf 18) en `videos/studio/<id>/<id>-final.mp4` et écrit `publication.md` (texte, hashtags, commentaire à épingler, rappels, accroches de rechange). Refus tant qu'il reste une clé `"_a_ecrire"` (question de fin, publication) ou une voix maquette. Compter environ 45 s pour 9 s de vidéo.
 - Lint : `hyperframes lint --json <chemin de la composition>` : 0 erreur attendue ; les avertissements « sub-composition » et « track too dense » sont connus et sans effet.
 
 ### Préparer les visuels avant la voix (maquette)
@@ -320,11 +322,11 @@ RNNoise (débruitage), Whisper par faster-whisper (transcription), ffmpeg (coupe
 Par ordre d'effet, ce qui a été dit à l'auteur quand il a demandé comment améliorer l'outil « au global » :
 
 1. **Publier et mesurer** : rien n'est en ligne ; tous les réglages sont des paris.
-2. **De l'enregistrement à la vidéo en une étape** : aujourd'hui l'épisode s'écrit à la main après lecture de la transcription. Une commande qui propose un premier épisode (découpage en plans, décors, mots forts, accroche) ferait gagner le plus de temps.
+2. **De l'enregistrement à la vidéo en une étape** (fait : `brouillon.js`) : aujourd'hui l'épisode s'écrit à la main après lecture de la transcription. Une commande qui propose un premier épisode (découpage en plans, décors, mots forts, accroche) ferait gagner le plus de temps.
 3. **La musique** : cinq versions synthétisées refusées ou à moitié acceptées. Le modèle ne peut pas écouter ; de vrais morceaux libres de droits choisis par l'auteur (il faudrait ouvrir le réseau vers une banque de sons) régleraient le problème plus sûrement.
 4. **Ses propres images** (photos, courtes vidéos), surtout pour l'escalade.
 5. **Moins d'options** : cinq thèmes, deux aspects 3D, sept musiques ; retirer ce qu'il a écarté une fois ses choix stables.
-6. **Un contrôle automatique de l'image** avant envoi (texte coupé, visage sous les sous-titres, plan vide), et le rendu final en 60 images par seconde.
+6. (fait : `--controle`, `--publier`) **Un contrôle automatique de l'image** avant envoi (texte coupé, visage sous les sous-titres, plan vide), et le rendu final en 60 images par seconde.
 
 ## 9. La suite, par ordre d'intérêt
 

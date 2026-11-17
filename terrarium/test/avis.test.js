@@ -428,3 +428,43 @@ test('brouillon : un épisode proposé depuis les mots d’une voix se monte san
   assert.notStrictEqual(r.status, 0);
   assert.ok(/existe déjà/.test(r.stderr));
 });
+
+test('contrôle de l’image : signale un texte qui déborde, ne signale rien sur une vidéo propre', async (t) => {
+  const { execSync } = require('node:child_process');
+  const os = require('node:os');
+  try { process.env.NODE_PATH = execSync('npm root -g').toString().trim(); require('node:module').Module._initPaths(); require.resolve('playwright'); } catch { t.skip('Playwright introuvable'); return; }
+  const { controle } = require('../scripts/controle.js');
+  const page = require('../studio/avis/page.js');
+  const racine = path.join(__dirname, '..');
+  const v = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix/pov-paysan/mots.json'), 'utf8'));
+  const base = JSON.parse(fs.readFileSync(path.join(racine, 'videos/episodes/pov-paysan.json'), 'utf8'));
+  const fabriquer = (ep, nom) => { const { erreurs, feuille } = montage(ep, v); assert.deepStrictEqual(erreurs, []); const d = fs.mkdtempSync(path.join(os.tmpdir(), `${nom}-`)); page.ecrire(feuille, d); return d; };
+  // Une vidéo propre : rien à signaler.
+  const propre = fabriquer(Object.assign({}, base, { id: 'test-propre', musique: 'aucune' }), 'propre');
+  assert.deepStrictEqual(await controle(propre, { sortie: path.join(propre, 'c'), instants: [0.5] }), []);
+  // Un mot de 25 lettres en très gros titre : il sort de l'écran.
+  const casse = fabriquer(Object.assign({}, base, { id: 'test-casse', musique: 'aucune', plans: [Object.assign({}, base.plans[0], { texte: 'Anticonstitutionnellement', taille: 'geant' }), ...base.plans.slice(1)] }), 'casse');
+  const alertes = await controle(casse, { sortie: path.join(casse, 'c'), instants: [0.5] });
+  assert.ok(alertes.some((a) => /coupé|déborde/.test(a.msg)), JSON.stringify(alertes));
+  assert.ok(alertes.every((a) => fs.existsSync(path.join(casse, a.capture))), 'une capture par problème');
+});
+
+test('kit de publication : refus tant qu’il reste à écrire, rappels, fiche complète', () => {
+  const { preparer } = require('../scripts/publier.js');
+  const racine = path.join(__dirname, '..');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(racine, f), 'utf8'));
+  // Un épisode complet avec une voix générée : rien ne bloque, rappel du signalement IA, fiche avec le commentaire à épingler.
+  const pov = preparer(lire('videos/episodes/pov-paysan.json'), lire('videos/voix/pov-paysan/mots.json'));
+  assert.deepStrictEqual(pov.bloquants, []);
+  assert.ok(pov.rappels.some((r) => r.includes('généré par IA')));
+  assert.ok(pov.fiche.includes('## Commentaire à épingler') && pov.fiche.includes('Mais qui les cultive ? 👇') && pov.fiche.includes('#pov'));
+  // Une voix maquette bloque ; la question et la publication « à écrire » aussi.
+  assert.ok(preparer(lire('videos/episodes/escalade-techniques.json'), lire('videos/voix/escalade-techniques/mots.json')).bloquants.some((b) => b.includes('maquette')));
+  const { brouillon } = require('../scripts/brouillon.js');
+  const b = preparer(brouillon(lire('videos/voix/agriculteur-ia/mots.json'), { id: 'x' }), lire('videos/voix/agriculteur-ia/mots.json'));
+  assert.ok(b.bloquants.some((x) => x.includes('question de fin')) && b.bloquants.some((x) => x.includes('publication')));
+  // La photo de l'auteur et un sujet d'opinion donnent leurs rappels.
+  const esc = lire('videos/episodes/escalade-techniques.json');
+  assert.ok(preparer(esc, { mots: [] }).rappels.some((r) => r.includes('photo')));
+  assert.ok(preparer(lire('videos/episodes/agriculteur-ia.json'), lire('videos/voix/agriculteur-ia/mots.json')).rappels.some((r) => r.includes('ton avis')));
+});
