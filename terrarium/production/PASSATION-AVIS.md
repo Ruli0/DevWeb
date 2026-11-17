@@ -73,6 +73,7 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 27 | (sans demande) | « J'adore le visuel du paysan de dos ! » : le paysan du décor `champ` (chapeau de paille, fourche, vu de dos, au premier plan) est le visuel qu'il préfère jusqu'ici ; en faire un modèle pour les prochains décors (un sujet de dos, grand, au premier plan, devant le paysage) |
 | 28 | Palette `coucher` par défaut ; plus aucun texte penché (sous-titres, question de fin, titres) ; mots à venir à 50 % au lieu de 32 % ; planche avant/après et `agriculteur-ia` renvoyée | « J'aime la palette 3. Maintenant il faut revoir comment on affiche le texte. Le fait que ça soit penché rend le texte difficile à lire. » ; puis « J'aime bien c'est cool ! » |
 | 29 | **Première vraie photo** : l'auteur à Fontainebleau, assis sur un bloc après l'escalade. Fond `photo` (cadrage, mode naturel), `scripts/decouper.py` (détourage), collage en autocollant ; dernier plan de `escalade-techniques` en photo ; quatre traitements montrés | « C'est une photo de moi à Fontainebleau qui a fini l'escalade » ; en attente du choix du traitement |
+| 30 | Un texte seul, sans voix : « Pov t'es un paysan et tu te rends compte qu'il y a déjà des légumes au supermarché et que tu peux prendre ta retraite. Tu vois l'ironie dans ce texte ? Fais des propositions de vidéos » → maquette `pov-paysan` (11 s) + propositions | en attente de son choix et de sa voix |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 

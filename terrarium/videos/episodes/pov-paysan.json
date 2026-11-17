@@ -1,0 +1,20 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "pov-paysan",
+  "essai": true,
+  "titre": "POV : t'es un paysan",
+  "rubrique": "travail",
+  "numero": 5,
+  "voix": "pov-paysan",
+  "forts": ["paysan", "supermarché", "retraite"],
+  "plans": [
+    { "plan": "titre", "fond": "champ", "personnage": true, "texte": "POV : t'es *paysan*" },
+    { "plan": "visuel", "a": "y a déjà", "fond": "supermarche" },
+    { "plan": "visuel", "a": "et que tu peux", "fond": "champ", "question": { "texte": "Mais qui les *cultive* ?", "apres": 3 } }
+  ],
+  "publication": {
+    "texte": "POV : t'es un paysan et tu te rends compte qu'il y a déjà des légumes au supermarché. Tu peux prendre ta retraite. (Mais qui les cultive ?)",
+    "hashtags": ["#pov", "#humour", "#ia", "#developpeur", "#code"]
+  }
+}

@@ -39,6 +39,7 @@ Note-toi les idées au fil de l'eau (un mémo vocal de dix secondes suffit) : c'
 |---|---|---|---|---|
 | T1 | Développeur : à quoi on sert encore, maintenant que l'IA code ? | Avis | cave, robot, scène | fait (voix à refaire) |
 | T0 | Pourquoi cultiver des légumes quand le supermarché en est plein ? (l'IA qui finit par apprendre sur elle-même) | Avis par analogie | champ, supermarché, robot | fait |
+| T0b | POV : t'es un paysan, il y a déjà des légumes au supermarché, tu peux prendre ta retraite (l'ironie : qui les cultive ?) | POV humoristique | champ, supermarché | maquette |
 | T2 | Conseil ou grand groupe : où ton poste survivra-t-il à l'IA ? | Duel | cave, robot | idée |
 | T3 | J'ai demandé à l'IA de faire mon travail pendant une journée. Voilà ce qu'il restait pour moi. | Histoire | cave, robot | idée |
 | T4 | La compétence qu'on ne t'apprend pas en école d'ingénieur : expliquer simplement. | Avis | scène | idée |
