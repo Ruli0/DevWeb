@@ -14,7 +14,7 @@ Puis, pour une vidéo à partir d'un enregistrement de l'auteur (il arrive en pi
 
 ```bash
 HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>   # voix débruitée et transcrite → videos/voix/<id>/
-# lire videos/voix/<id>/mots.json, puis écrire videos/episodes/<id>.json (modèle : enigme-thermometre.json)
+node scripts/brouillon.js <id>            # propose videos/episodes/<id>.json ; lire mots.json, retoucher l'épisode (modèle : agriculteur-ia.json)
 npm run video -- <id>                     # composition, conseils d'accroche, planche d'aperçu à regarder
 npm run video -- <id> --accroche          # les trois premières secondes en quatre images
 # rendu : la commande exacte est affichée à la fin de scripts/installer.sh ; envoyer le MP4 comme fichier
@@ -31,6 +31,8 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 - des réponses **courtes**, en français ; un MP4 envoyé à chaque étape ; dire ce qui n'a pas pu être vérifié (le son : le modèle ne peut pas écouter).
 
 À lire ensuite selon le besoin : `ACCROCHES.md` (les deux premières secondes), `IDEES-VIDEOS.md` (sujets), `DA-AVIS.md` (direction artistique), et le skill `avis`.
+
+**Gagner du temps : un premier montage automatique.** Après `voix.py`, `node scripts/brouillon.js <id> [--rubrique=travail]` écrit un épisode proposé dans `videos/episodes/<id>.json` (**jamais d'écrasement** : si le fichier existe, il refuse ; `--sortie=` écrit ailleurs pour comparer). Il coupe les plans aux fins de phrase, virgules et pauses (4 à 7 s chacun, coupe au milieu d'une phrase sans ponctuation), choisit les décors par mots-clés (`studio/avis/sujets.js` : supermarché, champ, robot, cave, mur, scène, salon, rizière ; sinon fonds unis qui alternent, avec un avertissement « aucun décor reconnu »), propose au plus quatre mots forts, un titre d'accroche de six mots, les corrections « Tchad GPT → ChatGPT » et « 10% → 10 % », le hibou sur le premier plan, et une question de fin (celle de la voix si elle en pose une, sinon `"Et toi ?"` marquée `"_a_ecrire": true`). Il monte ensuite le résultat et imprime erreurs et conseils. **Ce n'est qu'un brouillon** : relire, choisir les décors et illustrations manquants, écrire la question et `"publication"`. Les clés `_conseil` et `_a_ecrire` sont ignorées par le montage ; les retirer une fois traitées.
 
 ## 1. Où on en est
 
@@ -86,7 +88,7 @@ Ce qu'il ne faut pas reproposer : la bulle de rubrique en haut de l'image (retir
 cd terrarium && bash scripts/installer.sh                    # une fois par session
 # 1. La voix : débruitage (RNNoise), transcription mot par mot (Whisper « medium »), silences
 HF_HUB_DISABLE_XET=1 python3 scripts/voix.py <enregistrement.m4a> <id>     # → videos/voix/<id>/propre.flac et mots.json
-# 2. L'épisode : videos/episodes/<id>.json ("version": 4). Modèle : valeur-ia.json
+# 2. L'épisode : node scripts/brouillon.js <id> (premier jet) puis retouche à la main ; videos/episodes/<id>.json ("version": 4). Modèle : agriculteur-ia.json
 # 3. La composition et la planche d'aperçu (une image par plan)
 npm run video -- <id>            # regarder videos/studio/<id>/apercu.png
 npm test                         # tous verts
@@ -192,6 +194,8 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`), `"fond"`, `"illu"` (facultati
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
 | `personnage.js` | Le personnage récurrent : allures, poses, places dans les décors | Node et page |
 | `scripts/sons-avis.js` | L'indicatif, la musique par rubrique, les bruitages | Node |
+| `scripts/brouillon.js` | Propose un épisode depuis les mots d'une voix (premier montage automatique) | Node |
+| `studio/avis/sujets.js` | Mots-clés → décors, mots vides, mots d'appui (pour le brouillon) | Node |
 | `scripts/decouper.py` | Détoure une photo (autocollant du collage) | Python |
 | `scripts/installer.sh` | Prépare une session neuve | shell |
 | `test/avis.test.js` | Les tests du montage (une quinzaine) | Node |

@@ -397,3 +397,34 @@ test('voix générée : le montage rappelle de la signaler', () => {
   assert.ok(montage(episode(), generee).feuille.conseils.some((c) => c.includes('générée par IA')));
   assert.ok(!montage(episode(), voix).feuille.conseils.some((c) => c.includes('générée par IA')));
 });
+
+test('brouillon : un épisode proposé depuis les mots d’une voix se monte sans erreur', () => {
+  const { brouillon } = require('../scripts/brouillon.js');
+  const racine = path.join(__dirname, '..');
+  ['agriculteur-ia', 'enigme-thermometre', 'valeur-ia', 'pov-paysan'].forEach((id) => {
+    const v = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix', id, 'mots.json'), 'utf8'));
+    const ep = brouillon(v, { id, rubrique: 'travail' });
+    const r = montage(ep, v);
+    assert.deepStrictEqual(r.erreurs, [], id);
+    assert.ok(ep.plans.length >= (v.duree < 15 ? 2 : 3) && ep.plans.length <= 12, `${id} : ${ep.plans.length} plans`);
+    ep.plans.forEach((p, i) => { assert.ok(p.fond, `${id} plan ${i + 1} : pas de fond`); if (i) assert.notStrictEqual(p.fond, ep.plans[i - 1].fond, `${id} : deux fonds identiques à la suite`); });
+    r.feuille.plans.forEach((p) => assert.ok(p.d >= 1.2, `${id} : plan trop court`));
+    // Un titre d'accroche et une question de fin (à écrire si la voix n'en pose pas).
+    assert.strictEqual(ep.plans[0].plan, 'titre');
+    assert.ok(ep.plans[ep.plans.length - 1].question && ep.plans[ep.plans.length - 1].question.texte);
+    assert.ok(ep.plans.filter((p) => p.personnage).length <= 1, `${id} : le hibou ne vient qu'à l'ouverture`);
+    assert.ok((ep.forts || []).length <= 4);
+  });
+  // Les sujets reconnus : le champ et le supermarché pour l'agriculteur, la cave pour le code.
+  const v = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix/agriculteur-ia/mots.json'), 'utf8'));
+  const fonds = brouillon(v, { id: 'x' }).plans.map((p) => p.fond);
+  assert.ok(fonds.includes('supermarche') && fonds.includes('robot') && fonds.includes('cave'), fonds.join());
+  // « Tchad, GPT » est corrigé en « ChatGPT » à l'affichage.
+  const w = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix/valeur-ia/mots.json'), 'utf8'));
+  assert.ok(Object.values(brouillon(w, { id: 'y' }).corrections).includes('ChatGPT,'));
+  // Jamais d'écrasement : le script refuse si l'épisode existe.
+  const { spawnSync } = require('node:child_process');
+  const r = spawnSync('node', [path.join(racine, 'scripts/brouillon.js'), 'valeur-ia'], { encoding: 'utf8' });
+  assert.notStrictEqual(r.status, 0);
+  assert.ok(/existe déjà/.test(r.stderr));
+});

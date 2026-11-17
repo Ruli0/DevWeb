@@ -25,6 +25,11 @@ _Dernière mise à jour : 15 novembre 2026._
 | A11 | Essai d'ASCII art sur les décors 3D | Claude | fait puis écarté par l'auteur |
 | A12 | Six palettes de couleurs : `coucher` choisie | Claude | fait |
 | A13 | Texte toujours droit, mots à venir plus lisibles | Claude | fait, en attente de ton avis |
+| C1 | Premier montage automatique (brouillon d'épisode) | Claude | fait |
+| C2 | Contrôle automatique de l'image | Claude | à faire |
+| C3 | Kit de publication et rendu final | Claude | à faire |
+| C4 | Ménage : retirer ce que l'auteur a écarté | Claude | à faire |
+| C5 | Mesurer : suivi des chiffres après publication | Toi (publier) puis Claude | en attente |
 | A6b | Décor « relations » | Claude | à faire |
 | A7 | Publier, relever les chiffres | Toi | à faire |
 

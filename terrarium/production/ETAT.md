@@ -25,6 +25,7 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Six palettes de couleurs (`--palette=`), `coucher` choisie par l'auteur ; texte toujours droit | `studio/avis/palettes.js`, `themes.js`, `lecteur.js` |
 | Photos de l'auteur : fond `photo`, détourage local (`scripts/decouper.py`), collage en autocollant ; première photo (Fontainebleau) sur la maquette d'escalade | `studio/avis/page.js`, `scripts/decouper.py`, `videos/medias/` (hors dépôt) |
 | Voix clonée de l'auteur utilisable sur demande (`scripts/voix-clonee.py`), signalée comme générée par IA ; première vidéo : `pov-paysan` | `scripts/voix-clonee.py`, `videos/voix/pov-paysan/` |
+| Premier montage automatique d'un épisode depuis les mots (`scripts/brouillon.js`) | `scripts/brouillon.js`, `studio/avis/sujets.js` |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
 
