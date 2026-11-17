@@ -22,7 +22,7 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Session neuve prête en une commande (essai à blanc réussi) | `scripts/installer.sh`, `PASSATION-AVIS.md` section 0 |
 | Son : musique `house-plate` (validée) qui baisse sous la voix, bruitages des décors | `scripts/sons-avis.js`, `studio/avis/montage.js`, `page.js` |
 | Mascotte : un petit hibou de verre en 2D, sept poses, six décors, à l'ouverture et à la fin seulement | `studio/avis/personnage.js` |
-| Six palettes de couleurs au choix (`--palette=`), choix de l'auteur en attente | `studio/avis/palettes.js` |
+| Six palettes de couleurs (`--palette=`), `coucher` choisie par l'auteur ; texte toujours droit | `studio/avis/palettes.js`, `themes.js`, `lecteur.js` |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
 

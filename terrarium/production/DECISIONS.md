@@ -181,3 +181,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes mots : « En réalité je n'aime pas le style ASCII. Propose d'autres palettes et je choisis ! »
 - **Écarté** : le rendu en caractères, en couleur comme en vert.
 - **Où** : `studio/avis/palettes.js`, `--palette=` dans `scripts/video.js`, `"palette"` dans l'épisode.
+
+## 28. Palette « coucher de soleil » et texte toujours droit (17 nov. 2026)
+
+- **Décision** : `coucher` est la palette de toutes les vidéos. Plus aucun texte n'est incliné (étiquettes de sous-titres, question de fin, mots des titres), ni au repos ni à l'arrivée ; les mots à venir d'un sous-titre passent de 32 % à 50 % d'opacité.
+- **Pourquoi** : tes mots : « J'aime la palette 3. […] Le fait que ça soit penché rend le texte difficile à lire. »
+- **Écarté** : l'alternance de pente d'une étiquette à l'autre, qui donnait un effet « papier posé de travers ».
+- **Où** : `studio/avis/style.js` (`palette`), `themes.js`, `lecteur.js` ; un test interdit toute rotation sur du texte.

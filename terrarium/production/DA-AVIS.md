@@ -10,7 +10,7 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 
 - **Rien en haut de l'image** : ni barre de progression (« je n'aime pas », 15 nov.), ni bulle de rubrique (retirée le 16 nov.). La rubrique ne se voit plus que par la couleur d'accent.
 - **Typographie** : Inter Tight 700 (titres, sous-titres), Instrument Serif italique pour le mot fort (`*mot*`), JetBrains Mono pour les étiquettes.
-- **Sous-titres** : une étiquette sombre vers y 1300, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
+- **Sous-titres** : une étiquette de papier horizontale vers y 1300, au plus 4 mots ; le mot en cours est dans une pastille de la couleur de la rubrique, les mots à venir sont pâles, les mots forts restent en couleur.
 - **Couleur de rubrique** : travail `#5b8cff`, escalade `#ff8a3d`, relations `#ff5d7a`, énigme `#a78bfa`, voyage `#3fbf8f`.
 - **Fin** : une question au spectateur, sur une étiquette de papier posée dans le décor du dernier plan. Pas d'écran « Et toi ? » séparé.
 - Du grain sur toute l'image.
@@ -22,6 +22,10 @@ L'auteur parle librement (travail, escalade, relations) et enregistre sa voix au
 ## Ce que l'auteur préfère jusqu'ici
 
 Le paysan de dos du décor `champ` (« J'adore le visuel du paysan de dos », 17 nov.) : un personnage vu de dos, grand, au premier plan, qui regarde le paysage. À reprendre pour d'autres décors (un grimpeur de dos devant la voie, un développeur de dos devant ses écrans comme dans `cave`) plutôt que de multiplier les détails.
+
+## Le texte est toujours droit
+
+Les sous-titres sont sur une étiquette de papier horizontale, sans inclinaison ni rotation, y compris à l'arrivée ; même règle pour la question de fin et les titres (« Le fait que ça soit penché rend le texte difficile à lire »). Les mots à venir sont à moitié effacés (50 %), le mot en cours est dans une pastille de la couleur d'accent.
 
 ## Peu de texte
 
@@ -54,7 +58,7 @@ L'auteur a aimé le premier essai (« ça me plaît ») et veut « des tours, de
 
 ### Les palettes de couleurs
 
-Six palettes existent (`studio/avis/palettes.js`) : `vive` (l'actuelle, par défaut), `pastel`, `coucher`, `ocean`, `retro`, `cobalt` (deux encres). L'auteur choisit (17 nov.) ; en attendant, `vive` reste le défaut. Elles changent les fonds unis, les accents par rubrique et, par un étalonnage, tous les décors.
+Six palettes existent (`studio/avis/palettes.js`) : `vive` (l'ancienne), `pastel`, `coucher`, `ocean`, `retro`, `cobalt` (deux encres). **L'auteur a choisi `coucher` (« J'aime la palette 3 », 17 nov.)** : c'est le défaut. Elles changent les fonds unis, les accents par rubrique et, par un étalonnage, tous les décors.
 
 ### L'aspect de la 3D
 

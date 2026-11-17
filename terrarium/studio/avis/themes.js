@@ -1,4 +1,5 @@
 /*
+ * RÈGLE : aucun texte n'est jamais penché (« Le fait que ça soit penché rend le texte difficile à lire », 17 nov.) : ni au repos, ni à l'arrivée.
  * Les styles (« thèmes ») de la chaîne « avis » : une couche posée sur le même contenu, pour donner au compte un style reconnaissable.
  * Un thème : description, polices (fichiers de studio/polices/), css(f, c) ajouté après le style de base,
  * mot(f, c) : l'aspect d'un mot de sous-titre quand il est dit (« actif »), après (« dit ») et avant (« pale »),
@@ -29,9 +30,9 @@ module.exports = {
 .grand, .moyen { font-family: 'Bricolage Grotesque'; font-weight: 800; letter-spacing: -.035em; }
 .question p { font-family: 'Bricolage Grotesque'; font-weight: 800; }
 .st div { background: ${c.texte}; color: ${c.fond}; border: 0; border-radius: 10px; box-shadow: 9px 9px 0 ${c.fond}; font-family: 'Bricolage Grotesque'; font-weight: 800; padding: 14px 20px 18px; }
-.st:nth-child(odd) div { transform: rotate(-1.6deg); } .st:nth-child(even) div { transform: rotate(1.4deg); }
 .st span { border-radius: 8px; }`,
-    mot: (f, c) => ({ pale: 0.32, actif: { backgroundColor: f.accent, color: c.fond }, dit: { backgroundColor: 'rgba(0,0,0,0)', color: c.fond }, fort: c.fond }),
+    // Les mots à venir sont à moitié effacés (0,5) : à 0,32 ils se lisaient mal sur le papier crème.
+    mot: (f, c) => ({ pale: 0.5, actif: { backgroundColor: f.accent, color: c.fond }, dit: { backgroundColor: 'rgba(0,0,0,0)', color: c.fond }, fort: c.fond }),
   },
   // Néon : image plus sombre et plus contrastée, grosses capitales sans étiquette, cernées de noir, le mot en cours s'allume.
   neon: {
@@ -59,9 +60,8 @@ em { font: inherit; color: var(--ac); }
 .grand, .moyen { font-family: 'Caveat Brush'; font-weight: 400; letter-spacing: 0; line-height: 1; }
 .grand { font-size: 136px; } .grand.geant { font-size: 210px; }
 em { font: inherit; color: var(--ac); }
-.tete b { font-family: 'Caveat Brush'; font-size: 38px; letter-spacing: .02em; text-transform: none; background: ${c.texte}; color: ${c.fond}; transform: rotate(-2deg); }
+.tete b { font-family: 'Caveat Brush'; font-size: 38px; letter-spacing: .02em; text-transform: none; background: ${c.texte}; color: ${c.fond}; }
 .st div { background: ${c.texte}; color: ${c.fond}; border: 0; border-radius: 6px; box-shadow: 0 10px 0 #00000033; font: 400 96px/1 'Caveat Brush'; letter-spacing: 0; padding: 14px 26px 20px; }
-.st:nth-child(odd) div { transform: rotate(-1.2deg); } .st:nth-child(even) div { transform: rotate(1deg); }
 .st span { border-radius: 4px; padding: 0 .12em 4px; }`,
     mot: (f, c) => ({ pale: 0.3, actif: { backgroundColor: '#ffe45c', color: c.fond }, dit: { backgroundColor: 'rgba(0,0,0,0)', color: c.fond }, fort: c.fond }),
   },

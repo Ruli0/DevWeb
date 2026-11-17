@@ -23,7 +23,8 @@ _Dernière mise à jour : 15 novembre 2026._
 | B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |
 | A10 | Vidéo « L'agriculteur et le supermarché » sur ta nouvelle prise | Claude | fait, en attente de ton avis |
 | A11 | Essai d'ASCII art sur les décors 3D | Claude | fait puis écarté par l'auteur |
-| A12 | Six palettes de couleurs à choisir | Claude, puis ton choix | fait, choix en attente |
+| A12 | Six palettes de couleurs : `coucher` choisie | Claude | fait |
+| A13 | Texte toujours droit, mots à venir plus lisibles | Claude | fait, en attente de ton avis |
 | A6b | Décor « relations » | Claude | à faire |
 | A7 | Publier, relever les chiffres | Toi | à faire |
 

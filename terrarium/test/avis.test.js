@@ -311,13 +311,16 @@ test('palettes : acceptées, jetons et étalonnage dans la page, contraste lisib
   const S = require('../studio/avis/style.js');
   const page = require('../studio/avis/page.js');
   assert.deepStrictEqual(Object.keys(PALETTES), ['vive', 'pastel', 'coucher', 'ocean', 'retro', 'cobalt']);
-  // Sans palette : celle d'origine, avec les couleurs de style.js, et rien de filtré.
+  // Sans palette demandée : celle de style.js, « coucher » depuis le choix de l'auteur ; « vive » (l'origine) reste sélectionnable
+  // et reprend exactement les couleurs de style.js, sans rien filtrer.
   const base = montage(episode(), voix).feuille;
-  assert.strictEqual(base.palette, 'vive');
-  assert.strictEqual(base.fond, S.couleurs.fond);
-  assert.strictEqual(base.accent, S.rubriques.travail.accent);
-  assert.ok(!page.html(base).includes('.deco, .illu { filter'));
-  assert.deepStrictEqual(montage(episode({ palette: 'vive' }), voix).feuille, base);
+  assert.strictEqual(S.palette, 'coucher');
+  assert.strictEqual(base.palette, 'coucher');
+  assert.deepStrictEqual(montage(episode({ palette: 'coucher' }), voix).feuille, base);
+  const vive = montage(episode({ palette: 'vive' }), voix).feuille;
+  assert.strictEqual(vive.fond, S.couleurs.fond);
+  assert.strictEqual(vive.accent, S.rubriques.travail.accent);
+  assert.ok(!page.html(vive).includes('.deco, .illu { filter'));
   Object.entries(PALETTES).forEach(([nom, p]) => {
     const f = montage(episode({ palette: nom }), voix).feuille;
     assert.strictEqual(f.palette, nom);
@@ -336,4 +339,20 @@ test('palettes : acceptées, jetons et étalonnage dans la page, contraste lisib
   assert.ok(page.html(montage(episode({ palette: 'cobalt' }), voix).feuille).includes('<filter id="etalonnage"'));
   assert.ok(!page.html(montage(episode({ palette: 'pastel' }), voix).feuille).includes('<filter id="etalonnage"'));
   assert.ok(montage(episode({ palette: 'arc-en-ciel' }), voix).erreurs.some((e) => e.includes('palette')));
+});
+
+test('texte toujours droit : aucune inclinaison sur un sous-titre, une question ou un titre', () => {
+  const page = require('../studio/avis/page.js');
+  const THEMES = require('../studio/avis/themes.js');
+  const plans = [{ plan: 'titre', fond: 'cave', texte: 'x' }, { plan: 'visuel', a: "l'impro", fond: 'scene', question: { texte: 'Et *après* ?', apres: 3 } }];
+  Object.keys(THEMES).forEach((nom) => {
+    const html = page.html(montage(episode({ theme: nom, plans }), voix).feuille);
+    // Dans le CSS : aucune règle de texte avec une rotation (les règles .st, .question, .grand, .moyen, .kicker, .repere, .conclusion).
+    const regles = html.match(/[^{}]+\{[^{}]*\}/g) || [];
+    regles.filter((r) => /(^|[\s,])\.(st|question|grand|moyen|kicker|repere|conclusion|tete)\b/.test(r.split('{')[0])).forEach((r) => assert.ok(!/rotate\(|skew/.test(r), `${nom} : texte incliné par ${r.slice(0, 80)}`));
+  });
+  // Dans le lecteur : ni les mots d'un titre, ni les sous-titres, ni la question ne reçoivent de rotation.
+  const lecteur = fs.readFileSync(path.join(__dirname, '../studio/avis/lecteur.js'), 'utf8');
+  ['sp.words', 'c.ft(question', 'c.ft(el, { opacity: 0, scale: 0.8'].forEach((marque) => lecteur.split('\n').filter((l) => l.includes(marque)).forEach((l) => assert.ok(!/rotation/.test(l), `rotation sur : ${l.trim().slice(0, 80)}`)));
+  assert.strictEqual(THEMES.decoupe.mot({ accent: '#fff' }, { fond: '#000', texte: '#fff' }).pale, 0.5);
 });

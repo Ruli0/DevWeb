@@ -34,6 +34,7 @@ module.exports = {
   // L'allure du personnage récurrent (studio/avis/personnage.js). L'auteur a choisi le bonnet (« le personnage 1 », 16 nov.).
   // Puis : « Je verrais plus un hibou qu'un personnage pour la référence » : la mascotte est le hibou.
   personnage: 'hibou',
-  // La palette de couleurs (studio/avis/palettes.js) : vive, pastel, coucher, ocean, retro ou cobalt. « vive » est la palette d'origine.
-  palette: 'vive',
+  // La palette de couleurs (studio/avis/palettes.js) : vive (l'origine), pastel, coucher, ocean, retro ou cobalt.
+  // L'auteur a choisi « coucher » (« J'aime la palette 3 », 17 nov.).
+  palette: 'coucher',
 };

@@ -24,8 +24,9 @@
           const morceaux = em.children.length ? [...em.children] : [em];
           morceaux.forEach((m) => { const r = m.getBoundingClientRect(); const k = Math.round(r.bottom); const g = (rangs[k] = rangs[k] || { x0: r.left, x1: r.right, y: r.bottom }); g.x0 = Math.min(g.x0, r.left); g.x1 = Math.max(g.x1, r.right); });
         });
-        if (!c.direct) gsap.set(sp.words, { yPercent: 115, rotation: 5 });
-        if (!c.direct) c.ft(sp.words, { yPercent: 115, rotation: 5 }, { yPercent: 0, rotation: 0, duration: 0.5, ease: 'power3.out', stagger: 0.045, transformOrigin: '0% 100%' }, t);
+        // Aucune rotation sur du texte : les mots montent droit depuis leur masque.
+        if (!c.direct) gsap.set(sp.words, { yPercent: 115 });
+        if (!c.direct) c.ft(sp.words, { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: 'power3.out', stagger: 0.045 }, t);
         const fin = t + 0.5 + 0.045 * sp.words.length;
         Object.values(rangs).forEach((g, k) => {
           const trait = document.createElement('i'); trait.className = 'trait';
@@ -72,7 +73,7 @@
         c.direct = false;
         // La question de fin : une étiquette de papier posée dans le décor du dernier plan, à la place des sous-titres.
         const question = el.querySelector('.question');
-        if (question) { gsap.set(question, { opacity: 0 }); c.ft(question, { opacity: 0, scale: 0.7, y: 40, rotation: -6 }, { opacity: 1, scale: 1, y: 0, rotation: -2, duration: 0.45, ease: 'back.out(2)' }, pl.t0 + pl.p.question.t); }
+        if (question) { gsap.set(question, { opacity: 0 }); c.ft(question, { opacity: 0, scale: 0.7, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: 'back.out(2)' }, pl.t0 + pl.p.question.t); }
         const illu = el.querySelector('.illu');
         if (illu) {
           A.illus[pl.p.illu].jouer(c, illu, pl.p, pl.t0 + retard + 0.15, pl.d - retard - 0.15);
@@ -90,7 +91,7 @@
         gsap.set(el, { opacity: 0 });
         // Le premier sous-titre est là dès la première image (la vignette de la vidéo porte déjà les premiers mots).
         if (i === 0 && g.t0 < 0.6) gsap.set(el, { opacity: 1 });
-        else c.ft(el, { opacity: 0, scale: 0.8, y: 26, rotation: i % 2 ? 2 : -2 }, { opacity: 1, scale: 1, y: 0, rotation: 0, duration: 0.2, ease: 'back.out(2.2)' }, Math.max(0, g.t0 - 0.06));
+        else c.ft(el, { opacity: 0, scale: 0.8, y: 26 }, { opacity: 1, scale: 1, y: 0, duration: 0.2, ease: 'back.out(2.2)' }, Math.max(0, g.t0 - 0.06));
         [...el.firstElementChild.children].forEach((m, k) => {
           const mot = g.mots[k], t = Math.max(0, mot.t - 0.03);
           const tFin = Math.min(fin, g.mots[k + 1] ? g.mots[k + 1].t - 0.03 : fin);
