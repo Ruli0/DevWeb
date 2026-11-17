@@ -28,6 +28,7 @@ _Dernière mise à jour : 15 novembre 2026._
 | C1 | Premier montage automatique (brouillon d'épisode) | Claude | fait |
 | C2 | Contrôle automatique de l'image (`--controle`) | Claude | fait |
 | C3 | Kit de publication et rendu final (`--publier`) | Claude | fait |
+| C6 | Prompteur pour enregistrer sa voix (`/prompteur`) | Claude | fait ; micro et envoi à vérifier sur ton téléphone |
 | C4 | Ménage : retirer ce que l'auteur a écarté | Claude | à faire |
 | C5 | Mesurer : suivi des chiffres après publication | Toi (publier) puis Claude | en attente |
 | A6b | Décor « relations » | Claude | à faire |

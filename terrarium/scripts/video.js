@@ -63,6 +63,12 @@ if (AVIS && option('--accroche')) {
   process.exit(r.status || 0);
 }
 
+if (AVIS && option('--prompteur')) {
+  // Le prompteur de l'épisode (scripts/prompteur.js) : page à publier avec le skill « prompteur ».
+  const r = spawnSync('node', [path.join(RACINE, 'scripts/prompteur.js'), id], { stdio: 'inherit' });
+  process.exit(r.status || 0);
+}
+
 if (AVIS && option('--publier')) {
   // Rendu final en 60 images par seconde et fiche de publication (scripts/publier.js) ; refusé s'il reste quelque chose à écrire.
   const r = spawnSync('node', [path.join(RACINE, 'scripts/publier.js'), id], { stdio: 'inherit' });

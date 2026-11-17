@@ -202,3 +202,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : le modèle ne peut ni écouter ni tout regarder ; ces garde-fous évitent d'envoyer une vidéo avec une question de fin provisoire.
 - **Écarté** : bloquer sur le contrôle d'image (trop de faux positifs possibles).
 - **Où** : `scripts/controle.js`, `scripts/publier.js`, `scripts/video.js`.
+
+## 31. Le prompteur est un Artifact (17 nov. 2026)
+
+- **Décision** : page hébergée (Artifact) générée par `scripts/prompteur.js`, appelée par `/prompteur` ; défilement au rythme de 150 mots par minute réglable ; enregistrement dans la page si le micro est accordé, sinon dépôt d'un fichier Dictaphone ; l'audio part dans `assets` sous un type mp4 ou webm.
+- **Pourquoi** : le conteneur n'est pas joignable depuis le téléphone ; un Artifact l'est.
+- **Écarté** : serveur local (injoignable), dictée (`dictation`) qui ne rend que du texte.
+- **Ouvert** : le micro dans le cadre de l'Artifact n'a pas été éprouvé sur un téléphone.

@@ -468,3 +468,14 @@ test('kit de publication : refus tant qu’il reste à écrire, rappels, fiche c
   assert.ok(preparer(esc, { mots: [] }).rappels.some((r) => r.includes('photo')));
   assert.ok(preparer(lire('videos/episodes/agriculteur-ia.json'), lire('videos/voix/agriculteur-ia/mots.json')).rappels.some((r) => r.includes('ton avis')));
 });
+
+test('prompteur : une ligne par phrase, emphase retirée, données sûres, aucun script externe', () => {
+  const { construire, lignes } = require('../scripts/prompteur.js');
+  const l = lignes('Je pense que *l’IA* ne te remplacera pas, mais quelqu’un qui s’en sert mieux que toi, si, et ça change tout. Et toi ?');
+  assert.ok(l.length >= 3 && l.every((x) => !x.includes('*') && x.split(' ').length <= 12));
+  assert.strictEqual(l[l.length - 1], 'Et toi ?');
+  const { html } = construire({ id: 'x', texte: 'Bonjour </script><b>. Fin.' });
+  assert.ok(!html.includes('</script><b>') && !/<script[^>]+src=/.test(html));
+  assert.ok(html.includes('"vitesse":150'));
+  assert.throws(() => construire({ id: 'x', texte: '  ' }));
+});
