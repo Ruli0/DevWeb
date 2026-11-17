@@ -16,7 +16,7 @@
     { "plan": "visuel", "a": "Un : la carre", "fond": "nuit", "illu": "carre", "repere": "Pieds 1/3" },
     { "plan": "visuel", "a": "Deux : l'adhérence", "fond": "papier", "illu": "adherence", "repere": "Pieds 2/3", "moment": { "a": "talon bas" } },
     { "plan": "visuel", "a": "Trois : le crochet", "fond": "nuit", "illu": "talon", "repere": "Pieds 3/3" },
-    { "plan": "visuel", "a": "Laquelle", "fond": "mur", "question": { "texte": "Dis-le en *commentaire*.", "apres": 2.5 } }
+    { "plan": "visuel", "a": "Laquelle", "fond": "photo", "photo": { "fichier": "fontainebleau.jpg", "cadrage": 0.48 }, "question": { "texte": "Dis-le en *commentaire*.", "apres": 2.5 } }
   ],
   "publication": {
     "texte": "3 techniques de mains, 3 techniques de pieds : réglette, pince, aplat, carre, adhérence, crochet talon. Laquelle tu maîtrises le moins ?",

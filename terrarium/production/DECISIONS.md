@@ -188,3 +188,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes mots : « J'aime la palette 3. […] Le fait que ça soit penché rend le texte difficile à lire. »
 - **Écarté** : l'alternance de pente d'une étiquette à l'autre, qui donnait un effet « papier posé de travers ».
 - **Où** : `studio/avis/style.js` (`palette`), `themes.js`, `lecteur.js` ; un test interdit toute rotation sur du texte.
+
+## 29. Les photos de l'auteur : hors du dépôt, sans métadonnées, détourées en local (17 nov. 2026)
+
+- **Décision** : les photos vivent dans `videos/medias/`, ignoré par git ; elles sont copiées sans métadonnées (position GPS) ; le détourage tourne en local (BiRefNet lite, MIT) : la photo ne quitte pas la machine.
+- **Pourquoi** : tu as envoyé ta première photo (Fontainebleau). Une photo de téléphone porte souvent sa position ; le dépôt GitHub n'est peut-être pas privé.
+- **Ouvert** : à quel traitement tu donnes la préférence (fond, autocollant, ou les deux) ; si le dépôt est privé (la photo pourrait alors y être enregistrée, pour qu'une session neuve la retrouve).
+- **Où** : `.gitignore`, `scripts/decouper.py`, `studio/avis/page.js`, `montage.js`, `lecteur.js`.

@@ -27,6 +27,10 @@ Le paysan de dos du décor `champ` (« J'adore le visuel du paysan de dos », 17
 
 Les sous-titres sont sur une étiquette de papier horizontale, sans inclinaison ni rotation, y compris à l'arrivée ; même règle pour la question de fin et les titres (« Le fait que ça soit penché rend le texte difficile à lire »). Les mots à venir sont à moitié effacés (50 %), le mot en cours est dans une pastille de la couleur d'accent.
 
+## L'auteur en vrai
+
+Une photo de l'auteur (Fontainebleau, assis sur un bloc après une séance d'escalade) sert de fond ou d'autocollant. C'est le contrepoids à l'aspect « dessiné par une machine » : à placer aux moments d'émotion et en fin de vidéo, avec la question posée en haut. Le visage n'est jamais recouvert (sous-titres à partir de y 1300 ; pas de hibou sur un plan photo). Les photos restent hors du dépôt.
+
 ## Peu de texte
 
 Le spectateur lit déjà les sous-titres : un second texte à l'écran fait trop d'informations (retour de l'auteur, 15 nov.). La plupart des plans sont donc sans texte (`visuel`). Au plus trois textes par vidéo : l'accroche, un mot fort au moment clé, la question de fin. L'en-tête ne garde que la rubrique. Dans une vidéo en liste, un compteur très court est permis (`"repere": "Mains 1/3"`).

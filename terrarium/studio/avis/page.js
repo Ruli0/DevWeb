@@ -64,6 +64,14 @@ ${/* Chaque décor a son accent ; sauf avec une autre palette que l'originale, o
 /* Le personnage récurrent : au-dessus du décor, avec l'ombre nette du papier découpé. */
 .perso-svg { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; filter: drop-shadow(6px 8px 0 #00000030); }
 .avec-perso .figurant, .avec-perso .corde { display: none; }
+/* Le collage : un autocollant. Un contour blanc épais (huit ombres sans flou), puis une ombre nette. */
+.collage { position: absolute; z-index: 6; height: auto; transform-origin: 50% 100%; filter: drop-shadow(7px 0 0 #fff) drop-shadow(-7px 0 0 #fff) drop-shadow(0 7px 0 #fff) drop-shadow(0 -7px 0 #fff) drop-shadow(5px 5px 0 #fff) drop-shadow(-5px 5px 0 #fff) drop-shadow(5px -5px 0 #fff) drop-shadow(-5px -5px 0 #fff) drop-shadow(14px 16px 0 #00000055); }
+/* Sur une photo, la question passe en haut : en bas, elle cacherait l'auteur (le zoom le place entre y 900 et 1350). */
+.plan.photo .question { top: 300px; }
+/* Un autocollant remplace le figurant du décor (le grimpeur, la corde). */
+.avec-collage .figurant, .avec-collage .corde { display: none; }
+/* Une photo « naturelle » garde ses couleurs : ni l'étalonnage de la palette, ni les couleurs vives du thème. */
+.plan.naturel .deco, .plan.naturel .photo-img { filter: none; }
 /* La question de fin : une grande étiquette de papier dans le décor, à la place des sous-titres. */
 .question { position: absolute; left: 60px; width: 880px; top: 1180px; text-align: center; transform-origin: 50% 50%; }
 .question p { display: inline-block; background: ${c.texte}; color: ${c.fond}; font: 700 92px/1.06 '${P.titre}'; letter-spacing: -.025em; padding: 26px 36px 32px; border-radius: 14px; box-shadow: 12px 12px 0 ${c.fond}; }
@@ -115,12 +123,14 @@ function html(f) {
   const fond = (pl, i) => {
     if (DECORS[pl.fond]) return `<svg class="decor-svg" viewBox="0 0 1080 1920">${DECORS[pl.fond].svg().replace(/(id="|url\(#)([a-z]+-[a-z]+)/g, `$1$2-${i}`)}</svg><div class="voile"></div>`;
     if (DECORS3D[pl.fond]) return '<canvas class="decor-3d" width="1080" height="1920"></canvas><div class="voile"></div>';
-    if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo)}" alt=""><div class="voile"></div>`;
+    if (pl.fond === 'photo') return `<img class="photo-img" src="assets/medias/${esc(pl.p.photo.fichier)}" alt="" style="object-position: ${Math.round(pl.p.photo.cadrage * 100)}% 50%; transform-origin: ${Math.round(pl.p.photo.cadrage * 100)}% 85%"><div class="voile"></div>`;
     return '<i class="a"></i><i class="b"></i>';
   };
   // Le personnage : un calque posé sur le décor, à la place que le décor lui a faite. Le figurant du décor est alors caché.
   const perso = (pl) => { const pl0 = PERSO.PLACES[pl.fond] && PERSO.placer(f.allure, PERSO.PLACES[pl.fond]); return pl.p.personnage && pl0 ? `<svg class="perso-svg" viewBox="0 0 1080 1920"><g transform="translate(${pl0.x} ${pl0.y}) scale(${pl0.taille})">${PERSO.svg(pl.p.personnage, f.allure)}</g></svg>` : ''; };
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}${pl.p.personnage ? ' avec-perso' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}${perso(pl)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  // Le collage : des photos détourées posées sur le décor, avec un contour blanc et une ombre nette (un autocollant). Jamais inclinées.
+  const collage = (pl) => (pl.p.collage || []).map((co) => { const w = Math.round(1080 * (co.taille || 0.45)); return `<img class="collage" src="assets/medias/${esc(co.image)}" alt="" style="left:${Math.round(co.x - w / 2)}px; top:${Math.round(co.y)}px; width:${w}px">`; }).join('');
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}${pl.p.personnage ? ' avec-perso' : ''}${pl.fond === 'photo' && pl.p.photo.naturel ? ' naturel' : ''}${(pl.p.collage || []).length ? ' avec-collage' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}${perso(pl)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${collage(pl)}${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
   const troisD = f.plans.some((pl) => DECORS3D[pl.fond]);
@@ -182,6 +192,13 @@ function volumeMusique(mu) {
   return `${mu.seule}-${(mu.seule - mu.volume).toFixed(3)}*min(1,${creux.join('+')})`;
 }
 
+// Les photos de l'auteur ne sont pas dans le dépôt (voir .gitignore) : un fichier absent est une erreur claire, pas un plantage.
+function copierMedia(nom, dossier) {
+  const source = path.join(RACINE, 'videos/medias', nom);
+  if (!fs.existsSync(source)) throw new Error(`la photo « ${nom} » manque dans videos/medias/ : elle n'est pas dans le dépôt, redemande-la à l'auteur (voir production/PASSATION-AVIS.md)`);
+  fs.copyFileSync(source, path.join(dossier, 'assets/medias', nom));
+}
+
 function ecrire(f, dossier) {
   fs.mkdirSync(path.join(dossier, 'assets/sons'), { recursive: true });
   fs.mkdirSync(path.join(dossier, 'assets/polices'), { recursive: true });
@@ -194,8 +211,9 @@ function ecrire(f, dossier) {
   // Les photos de l'auteur (fond « photo ») : videos/medias/ → assets/medias/.
   f.plans.filter((pl) => pl.fond === 'photo').forEach((pl) => {
     fs.mkdirSync(path.join(dossier, 'assets/medias'), { recursive: true });
-    fs.copyFileSync(path.join(RACINE, 'videos/medias', pl.p.photo), path.join(dossier, 'assets/medias', pl.p.photo));
+    copierMedia(pl.p.photo.fichier, dossier);
   });
+  f.plans.forEach((pl) => (pl.p.collage || []).forEach((co) => { fs.mkdirSync(path.join(dossier, 'assets/medias'), { recursive: true }); copierMedia(co.image, dossier); }));
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
   const { MUSIQUES_ARRANGEES, outils } = require('../../scripts/build-sons.js');
   const { BRUITAGES } = require('../../scripts/sons-v3.js');

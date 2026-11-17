@@ -69,6 +69,7 @@ Note-toi les idées au fil de l'eau (un mémo vocal de dix secondes suffit) : c'
 | E9 | Tomber, ça s'apprend. 3 étapes pour ne plus avoir peur de la chute. | Liste | mur | idée |
 | E10 | Tes chaussons sont trop petits (ou trop grands). Comment savoir. | Avis | mur | idée |
 | E11 | L'assureur : la personne dont on ne parle jamais. | Avis | mur | idée |
+| E13 | « Fini la voie, assis sur le bloc » : ce qu'on ressent après une séance, et ce que ça m'apprend (photo de Fontainebleau) | Histoire | photo | idée |
 | E12 | Grimper en falaise après la salle : ce qui change tout. | Histoire | (à dessiner : falaise) | idée |
 
 ## Relations

@@ -7,3 +7,7 @@ essais/*/sortie/
 videos/studio/
 essais/textes/*.png
 essais/psycho-styles/*.png
+
+# Les photos et vidéos personnelles de l'auteur : jamais dans le dépôt tant qu'il n'a pas confirmé qu'il est privé
+videos/medias/*
+!videos/medias/.gitkeep

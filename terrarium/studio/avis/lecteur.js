@@ -58,7 +58,10 @@
         else c.ft(el.querySelector('.contenu'), { scale: 1.06 }, { scale: 1, duration: 0.6, ease: 'power3.out' }, pl.t0 + retard);
         const decor = el.querySelector('.decor-svg'), photo = el.querySelector('.photo-img');
         if (decor) A.decors[pl.fond].jouer(c, decor, pl.t0, pl.dClip);
-        if (photo) c.ft(photo, { scale: 1.04, xPercent: -1.5 * (i % 2 ? 1 : -1) }, { scale: 1.16, xPercent: 1.5 * (i % 2 ? 1 : -1), duration: pl.dClip, ease: 'none' }, pl.t0);
+        // Le zoom lent part du sujet (« cadrage », en bas de la photo) : un cadrage de 1,22 à 1,32 remonte l'auteur
+        // entre y 900 et 1350, au-dessus des sous-titres, et il ne s'en éloigne pas.
+        if (photo) c.ft(photo, { scale: 1.22 }, { scale: 1.32, duration: pl.dClip, ease: 'none' }, pl.t0);
+        el.querySelectorAll('.collage').forEach((img, k) => { gsap.set(img, { opacity: 0 }); c.ft(img, { opacity: 0, scale: 0.4, y: 80 }, { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: 'back.out(2.2)' }, pl.t0 + pl.p.collage[k].t); });
         // Décor 3D : dessiné à chaque image, à partir du temps écoulé dans le plan.
         const toile = el.querySelector('.decor-3d');
         if (toile) scenes3d.push({ t0: pl.t0, d: pl.dClip, scene: A.decors3d[pl.fond].creer(toile, pl.p, f.aspect3d) });

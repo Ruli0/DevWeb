@@ -170,7 +170,21 @@ function montage(ep, voix) {
     const ou = `plan ${n + 1} (${pl.plan})`;
     if (!def) { erreurs.push(`${ou} : inconnu. Plans possibles : ${Object.keys(PLANS).join(', ')}`); return; }
     const p = JSON.parse(JSON.stringify(pl)); delete p.plan; delete p.a; delete p.apres; delete p.fond; delete p.transition;
-    if (pl.fond === 'photo' && !p.photo) erreurs.push(`${ou} : le fond « photo » demande "photo": "fichier.jpg" (dans videos/medias/)`);
+    // La photo de l'auteur : "photo": "fichier.jpg", ou { "fichier", "cadrage" (0 à 1 : la partie horizontale gardée, 0,5 = le centre),
+    // "naturel" : vrai pour garder les couleurs de la photo, sans l'étalonnage de la palette }. Les fichiers sont dans videos/medias/.
+    if (pl.fond === 'photo') {
+      const ph = typeof p.photo === 'string' ? { fichier: p.photo } : (p.photo || {});
+      if (!ph.fichier || !/^[\w.-]+\.(jpe?g|png|webp)$/i.test(ph.fichier)) erreurs.push(`${ou} : le fond « photo » demande "photo": "fichier.jpg" (un fichier de videos/medias/)`);
+      if (ph.cadrage != null && !(ph.cadrage >= 0 && ph.cadrage <= 1)) erreurs.push(`${ou} : "cadrage" de la photo : entre 0 et 1`);
+      p.photo = { fichier: ph.fichier, cadrage: ph.cadrage == null ? 0.5 : ph.cadrage, naturel: !!ph.naturel };
+    }
+    // Le collage : des photos détourées (scripts/decouper.py) posées sur le décor, chacune arrivant sur un mot.
+    (p.collage || []).forEach((co, k) => {
+      if (!co.image || !/^[\w.-]+\.png$/i.test(co.image)) erreurs.push(`${ou} : collage ${k + 1} : "image" doit être un PNG détouré de videos/medias/`);
+      if (![co.x, co.y].every((v) => Number.isFinite(v))) erreurs.push(`${ou} : collage ${k + 1} : "x" et "y" (en pixels, image de 1080 × 1920) sont nécessaires`);
+      if (co.taille != null && !(co.taille >= 0.1 && co.taille <= 1.5)) erreurs.push(`${ou} : collage ${k + 1} : "taille" (largeur en part de 1080) : entre 0.1 et 1.5`);
+    });
+    
     if (p.illu && !ILLUS[p.illu]) erreurs.push(`${ou} : illustration « ${p.illu} » inconnue. Possibles : ${Object.keys(ILLUS).join(', ')}`);
     if (pl.fond && !FONDS.includes(pl.fond)) erreurs.push(`${ou} : "fond" : un parmi ${FONDS.join(', ')}`);
     if (pl.transition && !TRANSITIONS.includes(pl.transition)) erreurs.push(`${ou} : "transition" : une parmi ${TRANSITIONS.join(', ')}`);
@@ -178,6 +192,7 @@ function montage(ep, voix) {
     if (pl.apres) { t0 = dureeVoix + apres; apres += pl.apres; p._duree = pl.apres; } else if (n === 0) t0 = 0;
     else { const r = instant(pl.a || '', curseur, ou); curseur = r.i; t0 = Math.max(0, r.t - 0.12); }
     // Les ancres internes (éléments d'une liste, bascule…) deviennent des instants relatifs au plan.
+    (p.collage || []).forEach((co) => { if (co.a) { co.t = arrondi(Math.max(0, instant(co.a, curseur, ou).t - t0 - 0.1)); delete co.a; } else co.t = 0.4; });
     def.ancres(p).forEach(([objet, champ]) => {
       if (!objet || !objet[champ]) return;
       objet.t = arrondi(Math.max(0, instant(objet[champ], curseur, ou).t - t0 - 0.1));

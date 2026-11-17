@@ -356,3 +356,38 @@ test('texte toujours droit : aucune inclinaison sur un sous-titre, une question 
   ['sp.words', 'c.ft(question', 'c.ft(el, { opacity: 0, scale: 0.8'].forEach((marque) => lecteur.split('\n').filter((l) => l.includes(marque)).forEach((l) => assert.ok(!/rotation/.test(l), `rotation sur : ${l.trim().slice(0, 80)}`)));
   assert.strictEqual(THEMES.decoupe.mot({ accent: '#fff' }, { fond: '#000', texte: '#fff' }).pale, 0.5);
 });
+
+test('photo de l’auteur : options validées, fichier copié, fichier absent signalé, collage validé, photo sans position GPS', () => {
+  const page = require('../studio/avis/page.js');
+  const racine = path.join(__dirname, '..');
+  const photo = path.join(racine, 'videos/medias/fontainebleau.jpg');
+  const plan = (extra) => [Object.assign({ plan: 'visuel', fond: 'photo' }, extra), { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }];
+  // Un fichier seul ou un objet ; le cadrage vaut 0,5 par défaut.
+  const seul = montage(episode({ plans: plan({ photo: 'a.jpg' }) }), voix);
+  assert.deepStrictEqual(seul.erreurs, []);
+  assert.deepStrictEqual(seul.feuille.plans[0].p.photo, { fichier: 'a.jpg', cadrage: 0.5, naturel: false });
+  assert.strictEqual(montage(episode({ plans: plan({ photo: { fichier: 'a.jpg', cadrage: 0.48, naturel: true } }) }), voix).feuille.plans[0].p.photo.cadrage, 0.48);
+  // Refus : pas de fichier, un nom de chemin, un cadrage hors limites.
+  assert.ok(montage(episode({ plans: plan({}) }), voix).erreurs.some((e) => e.includes('photo')));
+  assert.ok(montage(episode({ plans: plan({ photo: '../secret.jpg' }) }), voix).erreurs.some((e) => e.includes('photo')));
+  assert.ok(montage(episode({ plans: plan({ photo: { fichier: 'a.jpg', cadrage: 2 } }) }), voix).erreurs.some((e) => e.includes('cadrage')));
+  // La page : cadrage dans le style, « naturel » retire les filtres ; un fichier absent donne une erreur qui dit quoi faire.
+  const html = page.html(montage(episode({ plans: plan({ photo: { fichier: 'a.jpg', cadrage: 0.48, naturel: true } }) }), voix).feuille);
+  assert.ok(html.includes('object-position: 48% 50%') && html.includes(' naturel'));
+  const absente = montage(episode({ plans: plan({ photo: 'absente.jpg' }) }), voix).feuille;
+  assert.throws(() => page.ecrire(absente, fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'avis-'))), /redemande-la à l'auteur/);
+  // Le collage : une image PNG, une position, une ancre trouvée.
+  const co = (x) => montage(episode({ plans: [{ plan: 'visuel', fond: 'mur', collage: [x] }, { plan: 'titre', a: "l'impro", fond: 'nuit', texte: 'y' }] }), voix);
+  const bon = co({ image: 'a.png', x: 540, y: 470, taille: 0.5, a: 'la clarté' });
+  assert.deepStrictEqual(bon.erreurs, []);
+  assert.ok(bon.feuille.plans[0].p.collage[0].t >= 0 && bon.feuille.plans[0].p.collage[0].a === undefined);
+  assert.ok(page.html(bon.feuille).includes('class="collage"'));
+  assert.ok(co({ image: 'a.jpg', x: 1, y: 1 }).erreurs.some((e) => e.includes('PNG')));
+  assert.ok(co({ image: 'a.png', y: 1 }).erreurs.some((e) => e.includes('"x" et "y"')));
+  assert.ok(co({ image: 'a.png', x: 1, y: 1, taille: 5 }).erreurs.some((e) => e.includes('taille')));
+  // Vie privée : le fichier copié ne porte aucune position GPS ni aucun bloc de métadonnées (la photo n'est pas dans le dépôt : on ne
+  // teste que si elle est là).
+  if (fs.existsSync(photo)) { const o = fs.readFileSync(photo); assert.strictEqual(o.indexOf('GPS'), -1, 'position GPS'); assert.strictEqual(o.indexOf('Exif'), -1, 'métadonnées Exif'); }
+  // Elle n'est pas versionnée : le .gitignore protège videos/medias/.
+  assert.ok(/^videos\/medias\/\*$/m.test(fs.readFileSync(path.join(racine, '.gitignore'), 'utf8')));
+});

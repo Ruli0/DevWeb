@@ -71,7 +71,8 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 | 25 | Aspect 3D `ascii` et `ascii-vert` : la scène écrite en caractères ; deux essais sur la rizière envoyés | « En réalité je n'aime pas le style ASCII. Propose d'autres palettes et je choisis ! » |
 | 26 | ASCII retiré du code ; six palettes de couleurs proposées (`vive`, `pastel`, `coucher`, `ocean`, `retro`, `cobalt`), une planche par palette sur cinq scènes de `agriculteur-ia` | **en attente : laquelle ?** (le défaut reste `vive`) |
 | 27 | (sans demande) | « J'adore le visuel du paysan de dos ! » : le paysan du décor `champ` (chapeau de paille, fourche, vu de dos, au premier plan) est le visuel qu'il préfère jusqu'ici ; en faire un modèle pour les prochains décors (un sujet de dos, grand, au premier plan, devant le paysage) |
-| 28 | Palette `coucher` par défaut ; plus aucun texte penché (sous-titres, question de fin, titres) ; mots à venir à 50 % au lieu de 32 % ; planche avant/après et `agriculteur-ia` renvoyée | « J'aime la palette 3. Maintenant il faut revoir comment on affiche le texte. Le fait que ça soit penché rend le texte difficile à lire. » |
+| 28 | Palette `coucher` par défaut ; plus aucun texte penché (sous-titres, question de fin, titres) ; mots à venir à 50 % au lieu de 32 % ; planche avant/après et `agriculteur-ia` renvoyée | « J'aime la palette 3. Maintenant il faut revoir comment on affiche le texte. Le fait que ça soit penché rend le texte difficile à lire. » ; puis « J'aime bien c'est cool ! » |
+| 29 | **Première vraie photo** : l'auteur à Fontainebleau, assis sur un bloc après l'escalade. Fond `photo` (cadrage, mode naturel), `scripts/decouper.py` (détourage), collage en autocollant ; dernier plan de `escalade-techniques` en photo ; quatre traitements montrés | « C'est une photo de moi à Fontainebleau qui a fini l'escalade » ; en attente du choix du traitement |
 
 Demandes constantes : **réponses courtes**, tout en français, savoir si **tout est gratuit** (oui, voir section 8).
 
@@ -189,6 +190,7 @@ Un plan : `"plan"` (`visuel`, `titre`, `rebours`), `"fond"`, `"illu"` (facultati
 | `scripts/maquette-voix.js` | Voix muette estimée depuis un script, pour monter les visuels avant l'enregistrement | Node |
 | `personnage.js` | Le personnage récurrent : allures, poses, places dans les décors | Node et page |
 | `scripts/sons-avis.js` | L'indicatif, la musique par rubrique, les bruitages | Node |
+| `scripts/decouper.py` | Détoure une photo (autocollant du collage) | Python |
 | `scripts/installer.sh` | Prépare une session neuve | shell |
 | `test/avis.test.js` | Les tests du montage (une quinzaine) | Node |
 
@@ -297,6 +299,15 @@ RNNoise (débruitage), Whisper par faster-whisper (transcription), ffmpeg (coupe
 
 `production/IDEES-VIDEOS.md` : une méthode pour trouver des idées, les formats disponibles, et une soixantaine d'idées par rubrique avec leur statut. Le tenir à jour : marquer ce qui est fait, ajouter les idées de l'auteur, noter ce que les chiffres disent après publication.
 
+## 8 quater. Les photos de l'auteur (16-17 nov. 2026)
+
+- **Où elles vivent** : `videos/medias/`, **hors du dépôt** (`.gitignore`). Une session neuve doit les redemander ; le montage donne une erreur qui le dit. À ne les versionner qu'après avoir demandé à l'auteur si le dépôt `Ruli0/DevWeb` est privé.
+- **Vie privée** : toute photo est copiée avec `ffmpeg -map_metadata -1` (une photo de téléphone porte souvent sa position GPS). Un test vérifie qu'elle n'a ni GPS ni Exif. Ne jamais envoyer une photo brute à un service externe : le détourage se fait en local.
+- **Fond `photo`** : `"fond": "photo", "photo": { "fichier": "fontainebleau.jpg", "cadrage": 0.48, "naturel": false }` (ou le nom du fichier seul). `cadrage` : la part horizontale gardée (0 à 1) ; le zoom lent part du bas de la photo pour garder l'auteur entre y 900 et 1350, au-dessus des sous-titres ; `naturel` : garde les couleurs de la photo (sans l'étalonnage de la palette). Sur une photo, la **question de fin passe en haut** (sinon elle cache le sujet) ; pas de hibou.
+- **Détourage** : `python3 scripts/decouper.py <photo> <sortie.png>`. Modèle BiRefNet lite en ONNX (licence MIT, 224 Mo téléchargés depuis `huggingface.co`, exécuté en local sur le processeur ; ~20 s par photo). `pip install onnxruntime pillow`. Met `HF_HUB_DISABLE_XET=1` avant l'import (déjà fait dans le script). Sur la photo de Fontainebleau le résultat est propre (cheveux, baskets, capuche) ; quelques herbes restent sous les chaussures.
+- **Collage** : `"collage": [{ "image": "fontainebleau-decoupe.png", "x": 540, "y": 470, "taille": 0.55, "a": "mots" }]` sur un plan : l'image détourée arrive sur son mot avec un rebond, un contour blanc épais et une ombre nette (un autocollant), jamais inclinée. Elle remplace le figurant du décor (grimpeur, corde).
+- **À demander à l'auteur** : le dépôt est-il privé ? d'autres photos ou courtes vidéos (escalade, bureau, voyage) ? quel traitement préfère-t-il ?
+
 ## 8 ter. Améliorer l'outil dans son ensemble (réponse donnée à l'auteur le 16 nov.)
 
 Par ordre d'effet, ce qui a été dit à l'auteur quand il a demandé comment améliorer l'outil « au global » :
@@ -312,7 +323,7 @@ Par ordre d'effet, ce qui a été dit à l'auteur quand il a demandé comment am
 
 1. **Monter les voix que l'auteur enverra** (trois épisodes en attente), en soignant l'accroche (`ACCROCHES.md`), puis rendre en 60 images par seconde une fois le montage validé.
 2. **Publier, puis relever les chiffres** dans `videos/resultats.csv` (rétention à 3 secondes, visionnage complet, commentaires) : sans mesure, on règle à l'aveugle.
-3. **Photos et vidéos de l'auteur** comme fonds (escalade surtout) : le meilleur remède au reproche « ça fait trop IA ». Le fond `photo` existe ; il n'a servi que sur une image de test. La vidéo en fond reste à faire.
+3. **Photos et vidéos de l'auteur** (voir 8 quater) : une première photo est utilisée ; demander d'autres photos, et des courtes vidéos (le fond vidéo reste à faire).
 4. Versions 3D de la cave, du théâtre et du salon ; un décor pour la rubrique « relations » ; faire relire les dessins d'escalade par l'auteur, qui pratique.
 5. Une signature sonore propre au compte (la musique est encore « Labo », de la V3).
 6. Si l'auteur valide la voix clonée : la brancher dans la chaîne (un texte → une vidéo), avec le signalement « généré par IA ».

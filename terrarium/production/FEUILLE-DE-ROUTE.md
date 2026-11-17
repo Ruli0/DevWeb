@@ -20,7 +20,7 @@ _Dernière mise à jour : 15 novembre 2026._
 | B1 | Son : musique sous la voix, bruitages ; musique du compte écartée (« je n'aime pas la musique ») | Claude | fait : house « plate » à basse ronde, validée (« la musique est parfaite ») |
 | B2 | Mascotte : un petit hibou de verre | Claude | 2D fait, peu présent ; version 3D à faire |
 | B3 | Plan-séquence 3D, mots dans le décor, lumière selon l'émotion | Claude | à faire |
-| B4 | Tes photos en collage | Toi (photos) puis Claude | à faire |
+| B4 | Tes photos en collage | Toi (photos) puis Claude | commencé : première photo, trois traitements ; choix et autres photos en attente |
 | A10 | Vidéo « L'agriculteur et le supermarché » sur ta nouvelle prise | Claude | fait, en attente de ton avis |
 | A11 | Essai d'ASCII art sur les décors 3D | Claude | fait puis écarté par l'auteur |
 | A12 | Six palettes de couleurs : `coucher` choisie | Claude | fait |
