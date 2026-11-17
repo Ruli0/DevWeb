@@ -7,6 +7,7 @@
   "rubrique": "travail",
   "numero": 5,
   "voix": "pov-paysan",
+  "corrections": { "0": "POV,", "1": "t'es", "2": "" },
   "forts": ["paysan", "supermarché", "retraite"],
   "plans": [
     { "plan": "titre", "fond": "champ", "personnage": true, "texte": "POV : t'es *paysan*" },

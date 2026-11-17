@@ -290,6 +290,7 @@ function montage(ep, voix) {
     mots: mots.length, groupes, plans, publication: ep.publication || null,
   };
   feuille.conseils = conseils(feuille, mots);
+  if (voix.generee) feuille.conseils.push('la voix est générée par IA (voix clonée de l’auteur) : à signaler à la publication (la case « contenu généré par IA » de TikTok) ; sa vraie voix reste préférable');
   return { erreurs, feuille };
 }
 

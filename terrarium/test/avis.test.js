@@ -391,3 +391,9 @@ test('photo de l’auteur : options validées, fichier copié, fichier absent si
   // Elle n'est pas versionnée : le .gitignore protège videos/medias/.
   assert.ok(/^videos\/medias\/\*$/m.test(fs.readFileSync(path.join(racine, '.gitignore'), 'utf8')));
 });
+
+test('voix générée : le montage rappelle de la signaler', () => {
+  const generee = Object.assign({}, voix, { generee: true });
+  assert.ok(montage(episode(), generee).feuille.conseils.some((c) => c.includes('générée par IA')));
+  assert.ok(!montage(episode(), voix).feuille.conseils.some((c) => c.includes('générée par IA')));
+});
