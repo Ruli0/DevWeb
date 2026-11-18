@@ -1,0 +1,57 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "futur-assistant",
+  "titre": "Ton assistant décide avant toi",
+  "rubrique": "travail",
+  "numero": 7,
+  "voix": "futur-assistant",
+  "forts": [
+    "2040",
+    "toi",
+    "phrase",
+    "tromper"
+  ],
+  "plans": [
+    {
+      "plan": "titre",
+      "fond": "nuit",
+      "personnage": false,
+      "texte": "En 2040, ton assistant *saura*"
+    },
+    {
+      "plan": "visuel",
+      "fond": "robot",
+      "a": "Pratique. Mais si",
+      "personnage": false
+    },
+    {
+      "plan": "titre",
+      "fond": "nuit",
+      "a": "je garde une",
+      "personnage": false,
+      "texte": "Le droit de se *tromper*"
+    }
+  ],
+  "publication": {
+    "texte": "En 2040, ton assistant saura ce que tu veux avant toi. Pratique… mais que reste-t-il de ton choix ? Moi, je garde le droit de me tromper.",
+    "hashtags": [
+      "#futur",
+      "#ia",
+      "#assistant",
+      "#tech",
+      "#reflexion"
+    ],
+    "commentaire": "Tu lui laisserais quoi décider ? 👇"
+  },
+  "pauses": [
+    {
+      "apres": "avant toi.",
+      "duree": 0.5
+    },
+    {
+      "apres": "Pratique.",
+      "duree": 0.5
+    }
+  ]
+}
