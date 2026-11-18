@@ -479,3 +479,19 @@ test('prompteur : une ligne par phrase, emphase retirée, données sûres, aucun
   assert.ok(html.includes('"vitesse":150'));
   assert.throws(() => construire({ id: 'x', texte: '  ' }));
 });
+
+test('orbe de voix : niveaux bornés, haute dans un mot, basse dans un silence, retirée par "orbe": false', () => {
+  const ORBE = require('../studio/avis/orbe.js');
+  const mots = [{ m: 'a', t: 1, f: 1.6 }, { m: 'b', t: 3, f: 3.4 }];
+  const n = ORBE.niveaux(mots, 5, 30);
+  assert.ok(n.every((v) => Number.isInteger(v) && v >= 0 && v <= 99));
+  assert.ok(n[Math.round(1.3 * 30)] > 60 && n[Math.round(2.6 * 30)] < 8 && n[0] === 0);
+  assert.deepStrictEqual(ORBE.niveaux(mots, 5, 30), n);
+  const { montage } = require('../studio/avis/montage.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const ep = lire('videos/episodes/pov-paysan.json'), voix = lire('videos/voix/pov-paysan/mots.json');
+  const f = montage(ep, voix).feuille;
+  assert.ok(f.orbe && f.orbe.niveaux.length > 100 && f.orbe.cache.length === 1, 'cachée seulement dans le plan de la question');
+  assert.strictEqual(montage({ ...ep, orbe: false }, voix).feuille.orbe, undefined);
+  assert.ok(/orbe-corps/.test(ORBE.svg({ clair: '#fff', fond: '#000', a: '#f90', b: '#f60', c: '#f06' })));
+});

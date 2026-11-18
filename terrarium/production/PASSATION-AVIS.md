@@ -28,6 +28,7 @@ npm run video -- <id> --accroche          # les trois premières secondes en qua
 - rien en haut de l'image (ni barre de progression, ni bulle de rubrique) ;
 - pas d'écran « Et toi ? » : la question de fin se pose dans le décor du dernier plan (`"question"`) ;
 - sous-titres bas (y 1300), pour ne pas couvrir le sujet ;
+- une **orbe de verre** aux couleurs de la palette, au-dessus des sous-titres (y ≈ 1130), qui pulse quand la voix parle (`studio/avis/orbe.js`, niveau déduit des mots) ; `"orbe": false` dans l'épisode ou dans un plan la retire ; elle s'efface seule dans le plan de la question de fin ;
 - des réponses **courtes**, en français ; un MP4 envoyé à chaque étape ; dire ce qui n'a pas pu être vérifié (le son : le modèle ne peut pas écouter).
 
 **Enregistrer sa voix sur un texte : le prompteur.** `/prompteur <id | texte>` (skill `prompteur`, `scripts/prompteur.js`) publie une page (Artifact, capacités `assets` et `downloads`) où le texte défile ; l'auteur l'ouvre sur son téléphone. Le micro n'est pas garanti dans la page (le cadre le refuse sans capacité dédiée) : sinon il enregistre avec Dictaphone et dépose le fichier. L'audio est déposé sous un type vidéo (mp4 ou webm), car `assets` n'accepte pas l'audio ; je le relis avec `Artifact read` et `ffmpeg`. Non vérifié : le micro réel et l'envoi depuis un téléphone.

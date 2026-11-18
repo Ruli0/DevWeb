@@ -209,3 +209,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : le conteneur n'est pas joignable depuis le téléphone ; un Artifact l'est.
 - **Écarté** : serveur local (injoignable), dictée (`dictation`) qui ne rend que du texte.
 - **Ouvert** : le micro dans le cadre de l'Artifact n'a pas été éprouvé sur un téléphone.
+
+## 32. Une orbe de verre qui suit la voix (18 nov. 2026)
+
+- **Décision** : orbe (sphère dégradée, halo, reflet, étincelles) au-dessus des sous-titres, aux couleurs de la palette ; son niveau vient des instants des mots (attaque 80 ms, descente 250 ms), appliqué par un tween piloté par le temps. Retirée par `"orbe": false`, absente du plan de la question.
+- **Pourquoi** : tu as montré l'orbe d'un assistant vocal ; elle montre qui parle sans texte de plus.
+- **Écarté** : mesure de l'amplitude audio (les mots suffisent et restent exacts après les coupes) ; bleu de la photo (tu as choisi la palette coucher).
+- **Ouvert** : elle recouvre le centre de certains décors (le paysan de dos) ; à juger sur pièce.

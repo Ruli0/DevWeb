@@ -13,6 +13,7 @@ const DECORS = require('./decors.js');
 const UNIS = ['nuit', 'papier', 'accent'];                       // les fonds unis, qui alternent quand rien n'est précisé
 const DECORS3D = require('./decors3d.js');
 const PERSO = require('./personnage.js');
+const ORBE = require('./orbe.js');
 const { PALETTES } = require('./palettes.js');
 const FONDS = [...UNIS, ...Object.keys(DECORS), ...Object.keys(DECORS3D), 'photo'];        // + les décors illustrés + une photo de l'auteur
 const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
@@ -289,6 +290,10 @@ function montage(ep, voix) {
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,
   };
+  // L'orbe de voix : "orbe": false dans l'épisode la retire partout, dans un plan elle disparaît pendant ce plan ; elle s'efface aussi dans le plan de la question de fin.
+  if (ep.orbe !== false && S.orbe !== false) {
+    feuille.orbe = { pas: 30, niveaux: ORBE.niveaux(mots, duree, 30), cache: plans.map((x, i) => (((ep.plans[i] || {}).orbe === false || (ep.plans[i] || {}).question) ? [x.t0, arrondi(x.t0 + x.d)] : null)).filter(Boolean) };
+  }
   feuille.conseils = conseils(feuille, mots);
   if (voix.generee) feuille.conseils.push('la voix est générée par IA (voix clonée de l’auteur) : à signaler à la publication (la case « contenu généré par IA » de TikTok) ; sa vraie voix reste préférable');
   return { erreurs, feuille };

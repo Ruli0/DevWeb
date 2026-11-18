@@ -37,4 +37,6 @@ module.exports = {
   // La palette de couleurs (studio/avis/palettes.js) : vive (l'origine), pastel, coucher, ocean, retro ou cobalt.
   // L'auteur a choisi « coucher » (« J'aime la palette 3 », 17 nov.).
   palette: 'coucher',
+  // L'orbe de verre au-dessus des sous-titres, qui s'anime quand la voix parle (studio/avis/orbe.js). Demandée le 18 nov. 2026, aux couleurs de la palette.
+  orbe: true,
 };

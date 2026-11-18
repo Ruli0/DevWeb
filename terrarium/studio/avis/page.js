@@ -14,6 +14,7 @@ const THEMES = require('./themes.js');
 const PAL = require('./palettes.js');
 const DECORS3D = require('./decors3d.js');
 const PERSO = require('./personnage.js');
+const ORBE = require('./orbe.js');
 
 const RACINE = path.join(__dirname, '../..');
 const lire = (f) => fs.readFileSync(path.join(RACINE, f), 'utf8');
@@ -103,6 +104,7 @@ em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0
 .jauge span { font: 400 32px '${P.mono}'; opacity: .7; letter-spacing: .04em; }
 .fleche { position: absolute; left: 0; top: 0; color: var(--fg); }
 /* Sous-titres : dans une étiquette sombre, lisibles sur tous les fonds. */
+#orbe { position: absolute; z-index: 90; left: 340px; top: 930px; width: 400px; height: 400px; overflow: visible; pointer-events: none; }
 #st { position: absolute; z-index: 95; left: 50px; width: 910px; top: 1300px; height: 220px; }
 .st { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
 .st div { display: inline-block; background: ${c.fond}; color: ${c.texte}; padding: 16px 22px 20px; border-radius: 30px; font: 700 82px/1.05 '${P.titre}'; letter-spacing: -.02em; box-shadow: 0 14px 44px #00000066; white-space: nowrap; }
@@ -146,6 +148,7 @@ ${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}${troisD ? 
 ${theme.filtre || ''}${palette.etalonnage && palette.etalonnage.echelle ? PAL.filtreEchelle(palette.etalonnage.echelle) : ''}
 <div id="root" data-composition-id="${f.id}" data-start="0" data-duration="${f.duree}" data-width="1080" data-height="1920" data-fps="60">
 ${plans}
+ ${f.orbe ? `<svg id="orbe" class="clip" viewBox="0 0 400 400" data-start="0" data-duration="${f.duree}" data-track-index="4">${ORBE.svg({ clair: palette.couleurs.texte, fond: palette.couleurs.fond, a: palette.accents.voyage, b: palette.accents.travail, c: palette.accents.relations })}</svg>` : ''}
  <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="3">
    ${st}
  </div>
@@ -157,6 +160,7 @@ ${lire('studio/avis/plans.js')}
 ${lire('studio/avis/illustrations.js')}
 ${lire('studio/avis/decors.js')}
 ${lire('studio/avis/personnage.js')}
+${f.orbe ? lire('studio/avis/orbe.js') : ''}
 ${troisD ? lire('studio/avis/decors3d.js') : ''}
 ${lire('studio/avis/lecteur.js')}
 (function () {

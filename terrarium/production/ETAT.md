@@ -28,6 +28,7 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Premier montage automatique d'un épisode depuis les mots (`scripts/brouillon.js`) | `scripts/brouillon.js`, `studio/avis/sujets.js` |
 | Contrôle automatique de l'image (`--controle`) | `scripts/controle.js` |
 | Rendu final 60 i/s et fiche de publication (`--publier`) | `scripts/publier.js` |
+| Orbe de verre animée par la voix (`"orbe"`) | `studio/avis/orbe.js` |
 | Prompteur (Artifact) pour enregistrer la voix (`--prompteur`, skill `prompteur`) | `scripts/prompteur.js` |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |
 | Maquette muette `escalade-techniques` (37 s) : décor `mur`, six gestes dessinés | `scripts/maquette-voix.js`, `videos/episodes/escalade-techniques.json` |
