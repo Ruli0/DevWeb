@@ -292,7 +292,7 @@ function montage(ep, voix) {
   };
   // L'orbe de voix : "orbe": false dans l'épisode la retire partout, dans un plan elle disparaît pendant ce plan ; elle s'efface aussi dans le plan de la question de fin.
   if (ep.orbe !== false && S.orbe !== false) {
-    feuille.orbe = { pas: 30, niveaux: ORBE.niveaux(mots, duree, 30), cache: plans.map((x, i) => (((ep.plans[i] || {}).orbe === false || (ep.plans[i] || {}).question) ? [x.t0, arrondi(x.t0 + x.d)] : null)).filter(Boolean) };
+    feuille.orbe = { couleurs: { clair: pal.couleurs.texte, a: pal.accents.voyage, b: pal.accents.travail, c: pal.accents.relations }, pas: 30, niveaux: ORBE.niveaux(mots, duree, 30), cache: plans.map((x, i) => (((ep.plans[i] || {}).orbe === false || (ep.plans[i] || {}).question) ? [x.t0, arrondi(x.t0 + x.d)] : null)).filter(Boolean) };
   }
   feuille.conseils = conseils(feuille, mots);
   if (voix.generee) feuille.conseils.push('la voix est générée par IA (voix clonée de l’auteur) : à signaler à la publication (la case « contenu généré par IA » de TikTok) ; sa vraie voix reste préférable');

@@ -104,7 +104,7 @@ em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0
 .jauge span { font: 400 32px '${P.mono}'; opacity: .7; letter-spacing: .04em; }
 .fleche { position: absolute; left: 0; top: 0; color: var(--fg); }
 /* Sous-titres : dans une étiquette sombre, lisibles sur tous les fonds. */
-#orbe { position: absolute; z-index: 90; left: 340px; top: 930px; width: 400px; height: 400px; overflow: visible; pointer-events: none; }
+#orbe { position: absolute; z-index: 90; left: 90px; top: 550px; width: 900px; height: 900px; pointer-events: none; }
 #st { position: absolute; z-index: 95; left: 50px; width: 910px; top: 1300px; height: 220px; }
 .st { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
 .st div { display: inline-block; background: ${c.fond}; color: ${c.texte}; padding: 16px 22px 20px; border-radius: 30px; font: 700 82px/1.05 '${P.titre}'; letter-spacing: -.02em; box-shadow: 0 14px 44px #00000066; white-space: nowrap; }
@@ -148,7 +148,7 @@ ${PLUGINS.map((p) => `<script src="assets/${p}"></script>`).join('')}${troisD ? 
 ${theme.filtre || ''}${palette.etalonnage && palette.etalonnage.echelle ? PAL.filtreEchelle(palette.etalonnage.echelle) : ''}
 <div id="root" data-composition-id="${f.id}" data-start="0" data-duration="${f.duree}" data-width="1080" data-height="1920" data-fps="60">
 ${plans}
- ${f.orbe ? `<svg id="orbe" class="clip" viewBox="0 0 400 400" data-start="0" data-duration="${f.duree}" data-track-index="4">${ORBE.svg({ clair: palette.couleurs.texte, fond: palette.couleurs.fond, a: palette.accents.voyage, b: palette.accents.travail, c: palette.accents.relations })}</svg>` : ''}
+ ${f.orbe ? `<canvas id="orbe" class="clip" width="900" height="900" data-start="0" data-duration="${f.duree}" data-track-index="4"></canvas>` : ''}
  <div id="st" class="clip" data-start="0" data-duration="${f.dureeVoix}" data-track-index="3">
    ${st}
  </div>
@@ -206,8 +206,6 @@ function copierMedia(nom, dossier) {
 function ecrire(f, dossier) {
   fs.mkdirSync(path.join(dossier, 'assets/sons'), { recursive: true });
   fs.mkdirSync(path.join(dossier, 'assets/polices'), { recursive: true });
-  fs.writeFileSync(path.join(dossier, 'index.html'), html(f));
-  fs.writeFileSync(path.join(dossier, 'feuille.json'), `${JSON.stringify(f, null, 1)}\n`);
   if (f.plans.some((pl) => DECORS3D[pl.fond])) fs.copyFileSync(path.join(RACINE, 'node_modules/three/build/three.min.js'), path.join(dossier, 'assets/three.min.js'));
   for (const g of PLUGINS) fs.copyFileSync(path.join(RACINE, 'node_modules/gsap/dist', g), path.join(dossier, 'assets', g));
   for (const p of THEMES[f.theme || 'decoupe'].polices) fs.copyFileSync(path.join(RACINE, 'studio/polices', p), path.join(dossier, 'assets/polices', p));
@@ -219,6 +217,18 @@ function ecrire(f, dossier) {
   });
   f.plans.forEach((pl) => (pl.p.collage || []).forEach((co) => { fs.mkdirSync(path.join(dossier, 'assets/medias'), { recursive: true }); copierMedia(co.image, dossier); }));
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
+  // L'orbe suit le vrai rythme de la voix montée : on mesure son énergie, 60 fois par seconde (repli : les mots, déjà dans la feuille).
+  if (f.orbe) {
+    try {
+      const brut = execFileSync('ffmpeg', ['-v', 'error', '-i', path.join(dossier, 'assets/sons/voix.wav'), '-ac', '1', '-ar', '8000', '-f', 's16le', '-'], { maxBuffer: 1 << 28 });
+      const ech = new Float32Array(brut.length >> 1); for (let i = 0; i < ech.length; i += 1) ech[i] = brut.readInt16LE(i * 2) / 32768;
+      const n = ORBE.niveauxAudio(ech, 8000, 60);
+      while (n.length < Math.ceil(f.duree * 60) + 1) n.push(0);
+      f.orbe.pas = 60; f.orbe.niveaux = n; f.orbe.source = 'voix';
+    } catch (e) { f.orbe.source = 'mots'; }
+  }
+  fs.writeFileSync(path.join(dossier, 'index.html'), html(f));
+  fs.writeFileSync(path.join(dossier, 'feuille.json'), `${JSON.stringify(f, null, 1)}\n`);
   const { MUSIQUES_ARRANGEES, outils } = require('../../scripts/build-sons.js');
   const { BRUITAGES } = require('../../scripts/sons-v3.js');
   const sons = path.join(dossier, 'assets/sons');

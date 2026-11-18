@@ -493,5 +493,18 @@ test('orbe de voix : niveaux bornés, haute dans un mot, basse dans un silence, 
   const f = montage(ep, voix).feuille;
   assert.ok(f.orbe && f.orbe.niveaux.length > 100 && f.orbe.cache.length === 1, 'cachée seulement dans le plan de la question');
   assert.strictEqual(montage({ ...ep, orbe: false }, voix).feuille.orbe, undefined);
-  assert.ok(/orbe-corps/.test(ORBE.svg({ clair: '#fff', fond: '#000', a: '#f90', b: '#f60', c: '#f06' })));
+  // Le niveau mesuré sur l'audio : fort pendant un son, bas pendant le silence, identique d'un calcul à l'autre.
+  const taux = 8000, ech = Float32Array.from({ length: taux * 3 }, (_, i) => (i > taux && i < taux * 1.5 ? 0.4 * Math.sin(i * 0.3) : 0.0005 * Math.sin(i)));
+  const na = ORBE.niveauxAudio(ech, taux, 60);
+  assert.ok(na[Math.round(1.3 * 60)] > 70 && na[Math.round(2.5 * 60)] < 10 && na.every((v) => v >= 0 && v <= 99));
+  assert.deepStrictEqual(ORBE.niveauxAudio(ech, taux, 60), na);
+  // Le dessin est déterministe : deux appels au même instant tracent la même chose.
+  const trace = (n, t) => {
+    const o = [], degrade = () => ({ addColorStop: (a, b) => o.push(b) });
+    const ctx = new Proxy({}, { get: (c, k) => (/^create/.test(k) ? degrade : (...args) => { o.push(k + args.join(',')); }), set: (c, k, v) => { o.push(k + v); return true; } });
+    ORBE.dessiner(ctx, n, t, { clair: '#fff0dc', a: '#ffd45c', b: '#ff9a5c', c: '#ff5d7a' });
+    return o.join('|');
+  };
+  assert.strictEqual(trace(0.5, 3.3), trace(0.5, 3.3));
+  assert.notStrictEqual(trace(0.1, 3.3), trace(0.9, 3.3));
 });

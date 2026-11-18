@@ -1,0 +1,26 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "essai-orbe",
+  "essai": true,
+  "titre": "Essai de l'orbe",
+  "rubrique": "travail",
+  "numero": 6,
+  "voix": "pov-paysan",
+  "corrections": {
+    "0": "POV,",
+    "1": "t'es",
+    "2": ""
+  },
+  "forts": [
+    "paysan",
+    "supermarché",
+    "retraite"
+  ],
+  "plans": [
+    {
+      "plan": "visuel",
+      "fond": "nuit"
+    }
+  ]
+}

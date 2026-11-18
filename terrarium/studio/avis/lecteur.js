@@ -107,9 +107,10 @@
       });
       // L'orbe de voix : un niveau par 1/30 s, interpolé ; elle disparaît pendant les plans qui la refusent.
       const orbe = f.orbe && document.getElementById('orbe');
+      const ctxOrbe = orbe && orbe.getContext('2d');
       const majOrbe = (t) => {
         const x = Math.min(f.orbe.niveaux.length - 1, Math.max(0, t * f.orbe.pas)), i = Math.floor(x), j = Math.min(i + 1, f.orbe.niveaux.length - 1);
-        A.orbe.appliquer(orbe, (f.orbe.niveaux[i] + (f.orbe.niveaux[j] - f.orbe.niveaux[i]) * (x - i)) / 99, t);
+        A.orbe.dessiner(ctxOrbe, (f.orbe.niveaux[i] + (f.orbe.niveaux[j] - f.orbe.niveaux[i]) * (x - i)) / 99, t, f.orbe.couleurs);
         orbe.style.opacity = f.orbe.cache.some((p) => t >= p[0] - 0.15 && t <= p[1]) ? 0 : 1;
       };
       if (orbe) majOrbe(0);

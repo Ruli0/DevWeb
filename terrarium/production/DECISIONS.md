@@ -216,3 +216,7 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tu as montré l'orbe d'un assistant vocal ; elle montre qui parle sans texte de plus.
 - **Écarté** : mesure de l'amplitude audio (les mots suffisent et restent exacts après les coupes) ; bleu de la photo (tu as choisi la palette coucher).
 - **Ouvert** : elle recouvre le centre de certains décors (le paysan de dos) ; à juger sur pièce.
+
+### Mise à jour du 18 nov. (même décision)
+
+- L'orbe est maintenant dessinée sur un canevas (halo lumineux, nappes de lumière dans le verre, 150 particules en gravitation : plus elles sont près, plus elles vont vite, et la voix les repousse). Son niveau vient désormais de l'énergie réelle de la voix montée, mesurée 60 fois par seconde (`niveauxAudio`), avec repli sur les mots. L'essai se fait sur `essai-orbe` (fond `nuit`, voix de `pov-paysan`).
