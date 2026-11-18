@@ -1,9 +1,9 @@
 /*
- * L'orbe de la chaîne « avis » : une sphère de verre lumineuse, posée au-dessus des sous-titres, entourée d'un halo et de particules
+ * L'orbe de la chaîne « avis » : une goutte de verre organique lumineuse, posée au-dessus des sous-titres, entourée d'un halo et de particules
  * qui gravitent autour d'elle (comme des petites planètes : plus elles sont près, plus elles vont vite). Elle bat au rythme de la voix.
  *   niveaux(mots, duree, pas)         repli : niveau de voix (0 à 99) déduit des mots affichés
  *   niveauxAudio(echantillons, taux, pas)  le niveau mesuré sur la voix montée (enveloppe, attaque 35 ms, descente 140 ms)
- *   dessiner(ctx, n, t, couleurs)     dessine l'orbe sur un canevas 900 × 900 pour le niveau n (0 à 1) à l'instant t
+ *   dessiner(ctx, n, t, couleurs)     dessine l'orbe sur un canevas 900 × 900 pour le niveau n (0 à 1) à l'instant t ; la sphère est une goutte organique dont le contour ondule
  * Tout est une fonction de t et de n : ni minuterie, ni répétition infinie ; la « dispersion » des particules vient d'une fonction
  * de hachage de leur numéro, donc deux rendus sont identiques.
  */
@@ -52,6 +52,22 @@
     ctx.fillStyle = `rgba(${couleur},${Math.min(1, alpha).toFixed(3)})`; ctx.beginPath(); ctx.arc(x, y, taille, 0, 6.2832); ctx.fill();
   }
 
+  // Le contour organique : une somme de quelques ondulations lentes (2 à 5 lobes) dont l'amplitude grandit avec la voix, comme une goutte vivante.
+  const LOBES = [[2, 0.5, 0.0, 0.05], [3, -0.7, 1.7, 0.045], [4, 0.9, 3.1, 0.03], [5, -1.2, 4.4, 0.02]];
+  function rayon(a, t, n, Rs) {
+    let d = 0;
+    for (const [k, w, ph, amp] of LOBES) d += amp * (0.55 + 1.15 * n) * Math.sin(k * a + w * t * (1 + 1.2 * n) + ph);
+    return Rs * (1 + d);
+  }
+  function chemin(ctx, cx, cy, t, n, Rs, echelle = 1) {
+    const N = 72, pts = [];
+    for (let i = 0; i < N; i += 1) { const a = (i / N) * 6.2832, r = rayon(a, t, n, Rs) * echelle; pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
+    ctx.beginPath();
+    ctx.moveTo((pts[N - 1][0] + pts[0][0]) / 2, (pts[N - 1][1] + pts[0][1]) / 2);
+    for (let i = 0; i < N; i += 1) { const p = pts[i], q = pts[(i + 1) % N]; ctx.quadraticCurveTo(p[0], p[1], (p[0] + q[0]) / 2, (p[1] + q[1]) / 2); }
+    ctx.closePath();
+  }
+
   function rvb(h) { const v = parseInt(h.slice(1), 16); return `${(v >> 16) & 255},${(v >> 8) & 255},${v & 255}`; }
 
   function dessiner(ctx, n, t, c) {
@@ -88,22 +104,22 @@
 
     // La sphère : un corps en dégradé, des nappes de lumière qui y dérivent, un bord lumineux, un reflet.
     ctx.globalCompositeOperation = 'source-over';
-    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rs, 0, 6.2832); ctx.clip();
+    ctx.save(); chemin(ctx, cx, cy, t, n, Rs); ctx.clip();
     g = ctx.createRadialGradient(cx - Rs * 0.34, cy - Rs * 0.4, 0, cx, cy, Rs * 1.28);
     g.addColorStop(0, `rgb(${L})`); g.addColorStop(0.22, `rgb(${A})`); g.addColorStop(0.62, `rgb(${B})`); g.addColorStop(1, `rgb(${C})`);
-    ctx.fillStyle = g; ctx.fillRect(cx - Rs, cy - Rs, Rs * 2, Rs * 2);
+    ctx.fillStyle = g; ctx.fillRect(cx - Rs * 1.5, cy - Rs * 1.5, Rs * 3, Rs * 3);
     ctx.globalCompositeOperation = 'lighter';
     const nappes = [[A, 0.0, 0.9], [L, 2.1, 1.3], [C, 4.2, 0.7]];
     nappes.forEach(([col, ph, w], i) => {
       const amp = Rs * (0.22 + 0.26 * n), x = cx + amp * Math.sin(t * 0.8 * w + ph), y = cy + amp * Math.cos(t * 0.6 * w + ph * 1.3), r = Rs * (0.55 + 0.2 * n);
       const gg = ctx.createRadialGradient(x, y, 0, x, y, r);
       gg.addColorStop(0, `rgba(${col},${(0.26 + 0.12 * n).toFixed(3)})`); gg.addColorStop(1, `rgba(${col},0)`);
-      ctx.fillStyle = gg; ctx.fillRect(cx - Rs, cy - Rs, Rs * 2, Rs * 2);
+      ctx.fillStyle = gg; ctx.fillRect(cx - Rs * 1.5, cy - Rs * 1.5, Rs * 3, Rs * 3);
     });
     ctx.globalCompositeOperation = 'source-over';
-    g = ctx.createRadialGradient(cx, cy, Rs * 0.62, cx, cy, Rs);
+    g = ctx.createRadialGradient(cx, cy, Rs * 0.62, cx, cy, Rs * 1.1);
     g.addColorStop(0, `rgba(${L},0)`); g.addColorStop(0.8, `rgba(${L},${(0.18 + 0.2 * n).toFixed(3)})`); g.addColorStop(1, `rgba(${L},${(0.6 + 0.2 * n).toFixed(3)})`);
-    ctx.fillStyle = g; ctx.fillRect(cx - Rs, cy - Rs, Rs * 2, Rs * 2);
+    ctx.fillStyle = g; ctx.fillRect(cx - Rs * 1.5, cy - Rs * 1.5, Rs * 3, Rs * 3);
     // Le reflet de verre en haut à gauche.
     ctx.save(); ctx.translate(cx - Rs * 0.38 + 6 * Math.sin(t * 0.5), cy - Rs * 0.46); ctx.rotate(-0.6); ctx.scale(1, 0.55);
     g = ctx.createRadialGradient(0, 0, 0, 0, 0, Rs * 0.42); g.addColorStop(0, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)');
@@ -112,10 +128,9 @@
 
     ctx.globalCompositeOperation = 'lighter';
     poser(true);
-    // Un éclat de lumière sur le bord quand la voix monte.
-    g = ctx.createRadialGradient(cx, cy, Rs * 0.96, cx, cy, Rs * 1.12);
-    g.addColorStop(0, `rgba(${L},${(0.14 * n).toFixed(3)})`); g.addColorStop(1, `rgba(${L},0)`);
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, Rs * 1.12, 0, 6.2832); ctx.fill();
+    // Le bord lumineux suit la forme : un trait fin et un voile de lumière qui s'intensifie avec la voix.
+    chemin(ctx, cx, cy, t, n, Rs); ctx.lineWidth = 2.5; ctx.strokeStyle = `rgba(${L},${(0.45 + 0.35 * n).toFixed(3)})`; ctx.stroke();
+    chemin(ctx, cx, cy, t, n, Rs, 1.03); ctx.lineWidth = 9 + 10 * n; ctx.strokeStyle = `rgba(${A},${(0.12 + 0.18 * n).toFixed(3)})`; ctx.stroke();
     ctx.restore();
   }
 
