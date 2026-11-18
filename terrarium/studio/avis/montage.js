@@ -290,9 +290,22 @@ function montage(ep, voix) {
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,
   };
-  // L'orbe de voix : "orbe": false dans l'épisode la retire partout, dans un plan elle disparaît pendant ce plan ; elle s'efface aussi dans le plan de la question de fin.
+  // L'orbe de voix : "orbe": false dans l'épisode la retire partout ; dans un plan, elle disparaît pendant ce plan. Par plan : un nom d'emplacement
+  // (milieu, gauche, droite, haut-gauche, haut-droite, bas-gauche, bas-droite) ou { x, y, taille } ; sans réglage, l'emplacement vient du décor.
   if (ep.orbe !== false && S.orbe !== false) {
-    feuille.orbe = { couleurs: { clair: pal.couleurs.texte, a: pal.accents.voyage, b: pal.accents.travail, c: pal.accents.relations }, pas: 30, niveaux: ORBE.niveaux(mots, duree, 30), cache: plans.map((x, i) => (((ep.plans[i] || {}).orbe === false || (ep.plans[i] || {}).question) ? [x.t0, arrondi(x.t0 + x.d)] : null)).filter(Boolean) };
+    (ep.plans || []).forEach((pl, i) => {
+      const o = pl.orbe, ou = `plan ${i + 1}`;
+      if (o === undefined || o === false) return;
+      if (typeof o === 'string') { if (!ORBE.SPOTS[o]) erreurs.push(`${ou} : "orbe" « ${o} » inconnu. Possibles : ${Object.keys(ORBE.SPOTS).join(', ')}, ou { "x", "y", "taille" }, ou false`); }
+      else if (typeof o === 'object' && o) { if (!(o.x >= 120 && o.x <= 960 && o.y >= 380 && o.y <= 1290)) erreurs.push(`${ou} : "orbe" { x, y } hors de la zone sûre (x 120 à 960, y 380 à 1290)`); if (o.taille !== undefined && !(o.taille >= 0.3 && o.taille <= 1.3)) erreurs.push(`${ou} : "orbe" "taille" entre 0,3 et 1,3`); }
+      else erreurs.push(`${ou} : "orbe" : un nom d'emplacement, { x, y, taille } ou false`);
+    });
+    const regles = plans.map((x, i) => Object.assign({ t0: x.t0, fond: x.fond, question: !!(ep.plans[i] || {}).question, illu: !!(ep.plans[i] || {}).illu, geant: (ep.plans[i] || {}).taille === 'geant' }, { orbe: (ep.plans[i] || {}).orbe }));
+    feuille.orbe = {
+      couleurs: { clair: pal.couleurs.texte, a: pal.accents.voyage, b: pal.accents.travail, c: pal.accents.relations },
+      pas: 30, niveaux: ORBE.niveaux(mots, duree, 30), trajet: ORBE.trajet(regles),
+      cache: plans.map((x, i) => ((ep.plans[i] || {}).orbe === false ? [x.t0, arrondi(x.t0 + x.d)] : null)).filter(Boolean),
+    };
   }
   feuille.conseils = conseils(feuille, mots);
   if (voix.generee) feuille.conseils.push('la voix est générée par IA (voix clonée de l’auteur) : à signaler à la publication (la case « contenu généré par IA » de TikTok) ; sa vraie voix reste préférable');

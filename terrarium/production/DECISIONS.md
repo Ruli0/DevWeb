@@ -220,3 +220,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 ### Mise à jour du 18 nov. (même décision)
 
 - L'orbe est maintenant dessinée sur un canevas (halo lumineux, nappes de lumière dans le verre, 150 particules en gravitation : plus elles sont près, plus elles vont vite, et la voix les repousse). Son niveau vient désormais de l'énergie réelle de la voix montée, mesurée 60 fois par seconde (`niveauxAudio`), avec repli sur les mots. L'essai se fait sur `essai-orbe` (fond `nuit`, voix de `pov-paysan`).
+
+## 33. L'orbe se déplace et bouge plus doucement (18 nov. 2026)
+
+- **Décision** : un emplacement par plan (`orbe.trajet` : milieu, ou garée en haut à droite selon le décor, la question, l'illustration ou un titre géant), glissement de 0,9 s à la transition ; réglable par plan. Niveau de voix lissé en deux passes (montée 0,12 s, descente 0,45 s), ondulation et particules plus lentes, vitesse indépendante de la voix : seule l'amplitude suit.
+- **Pourquoi** : au centre elle cachait la tête du robot ou le sujet du décor, et elle battait chaque syllabe (« trop rapide et nerveux »).
+- **Écarté** : la cacher dans le plan de la question (elle se gare à côté) ; un réglage de fluidité (valeurs fixes).
+- **Où** : `studio/avis/orbe.js` (`SPOTS`, `PLACES_ORBE`, `trajet`, `position`), `montage.js`, `lecteur.js`, `scripts/controle.js`.

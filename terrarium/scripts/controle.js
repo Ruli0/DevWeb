@@ -61,6 +61,9 @@ async function controle(dossier, { sortie = path.join(dossier, 'controle'), inst
         // Un mot plus large que sa ligne : le masque de la ligne le coupe, ou il sort de l'écran.
         out.coupes = [];
         document.querySelectorAll('.ligne').forEach((e) => { if (!e.textContent.trim() || !visible(e)) return; if (e.scrollWidth > e.clientWidth + 2) { const r = boite(e); out.coupes.push({ txt: e.textContent.trim().slice(0, 40), r: { x: r.x, y: r.y, width: Math.max(r.width, e.scrollWidth), height: r.height } }); } });
+        // L'orbe : sa sphère (et son halo proche) comme boîte, d'après la taille actuelle du calque.
+        const ob = document.getElementById('orbe');
+        if (ob && visible(ob)) { const r = ob.getBoundingClientRect(), k = r.width / 900, rayon = 118 * 1.3 * k; out.orbe = { x: r.x + r.width / 2 - rayon, y: r.y + r.height / 2 - rayon, width: 2 * rayon, height: 2 * rayon }; }
         const el = [...document.querySelectorAll('.perso.hibou')].find(visible);
         if (el) out.hibou = boite(el);
         return out;
@@ -73,6 +76,10 @@ async function controle(dossier, { sortie = path.join(dossier, 'controle'), inst
       });
       for (let a = 0; a < lecture.textes.length; a += 1) for (let b = a + 1; b < lecture.textes.length; b += 1) {
         if (recoupe(lecture.textes[a].r, lecture.textes[b].r)) problemes.push({ cadre: lecture.textes[a].r, msg: `« ${lecture.textes[a].txt} » et « ${lecture.textes[b].txt} » se recouvrent` });
+      }
+      if (lecture.orbe) {
+        lecture.textes.forEach((x) => { if (recoupe(lecture.orbe, x.r)) problemes.push({ cadre: lecture.orbe, msg: `l’orbe recouvre « ${x.txt} »` }); });
+        if (lecture.hibou && recoupe(lecture.orbe, lecture.hibou)) problemes.push({ cadre: lecture.orbe, msg: 'l’orbe recouvre le hibou' });
       }
       if (lecture.hibou) {
         const tete = { x: lecture.hibou.x, y: lecture.hibou.y, width: lecture.hibou.width, height: lecture.hibou.height * 0.45 };

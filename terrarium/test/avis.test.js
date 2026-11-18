@@ -491,12 +491,13 @@ test('orbe de voix : niveaux bornés, haute dans un mot, basse dans un silence, 
   const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
   const ep = lire('videos/episodes/pov-paysan.json'), voix = lire('videos/voix/pov-paysan/mots.json');
   const f = montage(ep, voix).feuille;
-  assert.ok(f.orbe && f.orbe.niveaux.length > 100 && f.orbe.cache.length === 1, 'cachée seulement dans le plan de la question');
+  assert.ok(f.orbe && f.orbe.niveaux.length > 100 && f.orbe.cache.length === 0 && f.orbe.trajet.length === 3, 'un emplacement par plan, jamais cachée d’office');
+  assert.ok(f.orbe.trajet[2].x > 700, 'garée sur le côté dans le plan de la question');
   assert.strictEqual(montage({ ...ep, orbe: false }, voix).feuille.orbe, undefined);
   // Le niveau mesuré sur l'audio : fort pendant un son, bas pendant le silence, identique d'un calcul à l'autre.
   const taux = 8000, ech = Float32Array.from({ length: taux * 3 }, (_, i) => (i > taux && i < taux * 1.5 ? 0.4 * Math.sin(i * 0.3) : 0.0005 * Math.sin(i)));
   const na = ORBE.niveauxAudio(ech, taux, 60);
-  assert.ok(na[Math.round(1.3 * 60)] > 70 && na[Math.round(2.5 * 60)] < 10 && na.every((v) => v >= 0 && v <= 99));
+  assert.ok(na[Math.round(1.5 * 60)] > 70 && na[Math.round(2.95 * 60)] < 10 && na.every((v) => v >= 0 && v <= 99));
   assert.deepStrictEqual(ORBE.niveauxAudio(ech, taux, 60), na);
   // Le dessin est déterministe : deux appels au même instant tracent la même chose.
   const trace = (n, t) => {
@@ -507,4 +508,28 @@ test('orbe de voix : niveaux bornés, haute dans un mot, basse dans un silence, 
   };
   assert.strictEqual(trace(0.5, 3.3), trace(0.5, 3.3));
   assert.notStrictEqual(trace(0.1, 3.3), trace(0.9, 3.3));
+});
+
+test('orbe : emplacements dans la zone sûre, trajet continu, mouvement lissé, réglages validés', () => {
+  const ORBE = require('../studio/avis/orbe.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  for (const [nom, s] of Object.entries(ORBE.SPOTS)) assert.ok(s.x >= 120 && s.x <= 960 && s.y >= 380 && s.y <= 1170 && s.taille > 0.3, nom);
+  for (const fond of Object.keys(ORBE.PLACES_ORBE)) assert.ok(ORBE.SPOTS[ORBE.PLACES_ORBE[fond]], fond);
+  // Le trajet : fixe pendant un plan, glisse sans saut à la transition.
+  const tr = [{ t: 0, x: 540, y: 960, taille: 1 }, { t: 5, x: 830, y: 640, taille: 0.55 }];
+  assert.deepStrictEqual(ORBE.position(tr, 2), { x: 540, y: 960, taille: 1 });
+  let precedent = ORBE.position(tr, 4.99);
+  for (let t = 5; t <= 6.2; t += 1 / 60) { const p = ORBE.position(tr, t); assert.ok(Math.hypot(p.x - precedent.x, p.y - precedent.y) < 12, 'pas de saut'); precedent = p; }
+  assert.deepStrictEqual(ORBE.position(tr, 7), { x: 830, y: 640, taille: 0.55 });
+  // Les réglages d'un plan : nom, objet, refus des valeurs hors zone.
+  const ep = lire('videos/episodes/futur-assistant.json'), voix = lire('videos/voix/futur-assistant/mots.json');
+  const avec = (o) => { const e = JSON.parse(JSON.stringify(ep)); e.plans[0].orbe = o; return montage(e, voix); };
+  assert.strictEqual(avec('droite').feuille.orbe.trajet[0].x, 810);
+  assert.strictEqual(avec({ x: 400, y: 700, taille: 0.8 }).feuille.orbe.trajet[0].y, 700);
+  assert.ok(avec('coin').erreurs.some((e) => e.includes('orbe')) && avec({ x: 540, y: 100 }).erreurs.some((e) => e.includes('zone sûre')));
+  // Le niveau mesuré varie doucement : jamais plus de 6 points d'un pas à l'autre (60 pas par seconde) sur un son qui s'allume d'un coup.
+  const taux = 8000, ech = Float32Array.from({ length: taux * 3 }, (_, i) => (i > taux && i < taux * 1.4 ? 0.4 * Math.sin(i * 0.3) : 0.0005 * Math.sin(i)));
+  const n = ORBE.niveauxAudio(ech, taux, 60);
+  for (let i = 1; i < n.length; i += 1) assert.ok(Math.abs(n[i] - n[i - 1]) <= 6, `pas ${i} : ${n[i - 1]} → ${n[i]}`);
 });

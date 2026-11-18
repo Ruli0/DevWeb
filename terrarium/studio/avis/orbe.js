@@ -2,7 +2,7 @@
  * L'orbe de la chaîne « avis » : une goutte de verre organique lumineuse, posée au-dessus des sous-titres, entourée d'un halo et de particules
  * qui gravitent autour d'elle (comme des petites planètes : plus elles sont près, plus elles vont vite). Elle bat au rythme de la voix.
  *   niveaux(mots, duree, pas)         repli : niveau de voix (0 à 99) déduit des mots affichés
- *   niveauxAudio(echantillons, taux, pas)  le niveau mesuré sur la voix montée (enveloppe, attaque 35 ms, descente 140 ms)
+ *   niveauxAudio(echantillons, taux, pas)  le niveau mesuré sur la voix montée (enveloppe lissée en deux passes)
  *   dessiner(ctx, n, t, couleurs)     dessine l'orbe sur un canevas 900 × 900 pour le niveau n (0 à 1) à l'instant t ; la sphère est une goutte organique dont le contour ondule
  * Tout est une fonction de t et de n : ni minuterie, ni répétition infinie ; la « dispersion » des particules vient d'une fonction
  * de hachage de leur numéro, donc deux rendus sont identiques.
@@ -16,11 +16,14 @@
   const TAILLE = 900, R = 118, PARTICULES = 150;
   const hash = (k, s) => { const x = Math.sin(k * 127.1 + s * 311.7) * 43758.5453; return x - Math.floor(x); };
 
-  function lisser(brut, pas, attaque, descente) {
+  // Un filtre à une constante de temps pour la montée (attaque) et une autre pour la descente, en secondes.
+  function filtre(brut, pas, attaque, descente) {
     const m = 1 - Math.exp(-1 / (attaque * pas)), d = 1 - Math.exp(-1 / (descente * pas));
     let v = 0;
-    return brut.map((b) => { v += (b - v) * (b > v ? m : d); return Math.round(Math.min(1, Math.max(0, v)) * 99); });
+    return brut.map((b) => { v += (b - v) * (b > v ? m : d); return v; });
   }
+  const entiers = (a) => a.map((v) => Math.round(Math.min(1, Math.max(0, v)) * 99));
+  function lisser(brut, pas, attaque, descente) { return entiers(filtre(brut, pas, attaque, descente)); }
 
   // Repli sans audio : un mot = une bosse de niveau.
   function niveaux(mots, duree, pas = 30) {
@@ -44,7 +47,9 @@
       db[i] = 20 * Math.log10(Math.sqrt(s / Math.max(1, c)) + 1e-6);
     }
     const tri = db.slice().sort((a, b) => a - b), haut = tri[Math.floor(tri.length * 0.95)] || -20, bas = Math.max(haut - 34, -70);
-    return lisser(db.map((v) => Math.pow(Math.min(1, Math.max(0, (v - bas) / Math.max(6, haut - bas))), 1.4)), pas, 0.035, 0.14);
+    const brut = db.map((v) => Math.pow(Math.min(1, Math.max(0, (v - bas) / Math.max(6, haut - bas))), 1.4));
+    // Deux passes : la première suit le phrasé (montée 0,12 s, descente 0,45 s), la seconde arrondit les angles. L'orbe respire avec la voix, elle ne bat pas chaque syllabe.
+    return entiers(filtre(filtre(brut, pas, 0.12, 0.45), pas, 0.12, 0.2));
   }
 
   function particule(ctx, x, y, taille, alpha, couleur) {
@@ -53,10 +58,10 @@
   }
 
   // Le contour organique : une somme de quelques ondulations lentes (2 à 5 lobes) dont l'amplitude grandit avec la voix, comme une goutte vivante.
-  const LOBES = [[2, 0.5, 0.0, 0.05], [3, -0.7, 1.7, 0.045], [4, 0.9, 3.1, 0.03], [5, -1.2, 4.4, 0.02]];
+  const LOBES = [[2, 0.34, 0.0, 0.05], [3, -0.45, 1.7, 0.042], [4, 0.55, 3.1, 0.026], [5, -0.7, 4.4, 0.016]];
   function rayon(a, t, n, Rs) {
     let d = 0;
-    for (const [k, w, ph, amp] of LOBES) d += amp * (0.55 + 1.15 * n) * Math.sin(k * a + w * t * (1 + 1.2 * n) + ph);
+    for (const [k, w, ph, amp] of LOBES) d += amp * (0.5 + 0.85 * n) * Math.sin(k * a + w * t + ph);
     return Rs * (1 + d);
   }
   function chemin(ctx, cx, cy, t, n, Rs, echelle = 1) {
@@ -68,11 +73,39 @@
     ctx.closePath();
   }
 
+  // Où se pose l'orbe (centre en pixels de la vidéo, taille relative) : au milieu sous un titre, « garée » sur un côté quand le décor a un sujet
+  // au centre. Jamais au-dessus de y 380 (interface de TikTok) ni dans la bande des sous-titres (à partir de y 1290).
+  const SPOTS = {
+    milieu: { x: 540, y: 960, taille: 1 }, gauche: { x: 270, y: 900, taille: 0.7 }, droite: { x: 810, y: 900, taille: 0.7 },
+    'haut-gauche': { x: 250, y: 640, taille: 0.55 }, 'haut-droite': { x: 830, y: 640, taille: 0.55 },
+    'bas-gauche': { x: 250, y: 1120, taille: 0.55 }, 'bas-droite': { x: 830, y: 1120, taille: 0.55 },
+  };
+  // Par fond de plan : le spot choisi d'office (voir la planche de chaque décor). Défaut : en haut à droite, petite.
+  const PLACES_ORBE = { nuit: 'milieu', papier: 'milieu', accent: 'milieu', robot: 'haut-droite', defaut: 'haut-droite' };
+  function emplacement(plan) {
+    const o = plan.orbe;
+    if (o && typeof o === 'object') return { x: o.x, y: o.y, taille: o.taille === undefined ? 0.7 : o.taille };
+    const nom = typeof o === 'string' ? o : plan.geant ? 'bas-droite' : ((plan.question || plan.illu) ? 'haut-droite' : PLACES_ORBE[plan.fond] || PLACES_ORBE.defaut);
+    return Object.assign({}, SPOTS[nom]);
+  }
+  // Le trajet : une position par plan, atteinte en glissant. plans : [{ t0, orbe?, fond, question? }].
+  const GLISSE = 0.9;
+  function trajet(plans) {
+    return plans.filter((p) => p.orbe !== false).map((p) => Object.assign({ t: p.t0 }, emplacement(p)));
+  }
+  const doux = (u) => u * u * (3 - 2 * u);
+  function position(tr, t) {
+    if (!tr.length) return { x: 540, y: 960, taille: 1 };
+    let k = 0; while (k + 1 < tr.length && t >= tr[k + 1].t) k += 1;
+    const c = tr[k], p = k ? tr[k - 1] : c, u = k ? doux(Math.min(1, Math.max(0, (t - c.t) / GLISSE))) : 1;
+    return { x: p.x + (c.x - p.x) * u, y: p.y + (c.y - p.y) * u, taille: p.taille + (c.taille - p.taille) * u };
+  }
+
   function rvb(h) { const v = parseInt(h.slice(1), 16); return `${(v >> 16) & 255},${(v >> 8) & 255},${v & 255}`; }
 
   function dessiner(ctx, n, t, c) {
     const cx = TAILLE / 2, cy = TAILLE / 2, A = rvb(c.a), B = rvb(c.b), C = rvb(c.c), L = rvb(c.clair);
-    const Rs = R * (1 + 0.09 * n + 0.02 * Math.sin(t * 1.5) * (1 - n));
+    const Rs = R * (1 + 0.09 * n + 0.02 * Math.sin(t * 1.0) * (1 - n));
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, TAILLE, TAILLE);
     ctx.globalCompositeOperation = 'lighter';
     // Le halo : un grand voile doux et une couronne serrée autour de la sphère.
@@ -87,15 +120,15 @@
     const poser = (devant) => {
       for (let k = 0; k < PARTICULES; k += 1) {
         const h = (s) => hash(k, s);
-        const orbite = Rs * (1.32 + 1.75 * Math.pow(h(1), 1.5)), vitesse = 0.9 * Math.pow(Rs / orbite, 1.5), phase = h(2) * 6.2832;
-        const ecrase = 0.22 + 0.6 * h(3), tilt = (h(4) - 0.5) * 1.5, poussee = 1 + 0.3 * n * (0.4 + h(5));
+        const orbite = Rs * (1.32 + 1.75 * Math.pow(h(1), 1.5)), vitesse = 0.58 * Math.pow(Rs / orbite, 1.5), phase = h(2) * 6.2832;
+        const ecrase = 0.22 + 0.6 * h(3), tilt = (h(4) - 0.5) * 1.5, poussee = 1 + 0.2 * n * (0.4 + h(5));
         for (let j = 0; j < 4; j += 1) {
           const a = phase + vitesse * (t - j * 0.035), rr = orbite * poussee;
           const lx = rr * Math.cos(a), ly = rr * ecrase * Math.sin(a), z = Math.sin(a);
           if ((z > 0) !== devant) continue;
           const x = cx + lx * Math.cos(tilt) - ly * Math.sin(tilt), y = cy + lx * Math.sin(tilt) + ly * Math.cos(tilt);
           const taille = (1.1 + 2.4 * h(6)) * (0.8 + 0.4 * z) * (1 + 0.7 * n) * (1 - j * 0.22);
-          const alpha = (0.28 + 0.6 * h(7)) * (0.62 + 0.38 * z) * (0.5 + 0.5 * n) * (1 - j * 0.28) * (0.8 + 0.2 * Math.sin(t * 2.2 + k));
+          const alpha = (0.28 + 0.6 * h(7)) * (0.62 + 0.38 * z) * (0.5 + 0.5 * n) * (1 - j * 0.28) * (0.8 + 0.2 * Math.sin(t * 1.2 + k));
           particule(ctx, x, y, taille, alpha, h(8) > 0.55 ? L : (h(8) > 0.25 ? A : B));
         }
       }
@@ -111,7 +144,7 @@
     ctx.globalCompositeOperation = 'lighter';
     const nappes = [[A, 0.0, 0.9], [L, 2.1, 1.3], [C, 4.2, 0.7]];
     nappes.forEach(([col, ph, w], i) => {
-      const amp = Rs * (0.22 + 0.26 * n), x = cx + amp * Math.sin(t * 0.8 * w + ph), y = cy + amp * Math.cos(t * 0.6 * w + ph * 1.3), r = Rs * (0.55 + 0.2 * n);
+      const amp = Rs * (0.22 + 0.26 * n), x = cx + amp * Math.sin(t * 0.45 * w + ph), y = cy + amp * Math.cos(t * 0.34 * w + ph * 1.3), r = Rs * (0.55 + 0.2 * n);
       const gg = ctx.createRadialGradient(x, y, 0, x, y, r);
       gg.addColorStop(0, `rgba(${col},${(0.26 + 0.12 * n).toFixed(3)})`); gg.addColorStop(1, `rgba(${col},0)`);
       ctx.fillStyle = gg; ctx.fillRect(cx - Rs * 1.5, cy - Rs * 1.5, Rs * 3, Rs * 3);
@@ -121,7 +154,7 @@
     g.addColorStop(0, `rgba(${L},0)`); g.addColorStop(0.8, `rgba(${L},${(0.18 + 0.2 * n).toFixed(3)})`); g.addColorStop(1, `rgba(${L},${(0.6 + 0.2 * n).toFixed(3)})`);
     ctx.fillStyle = g; ctx.fillRect(cx - Rs * 1.5, cy - Rs * 1.5, Rs * 3, Rs * 3);
     // Le reflet de verre en haut à gauche.
-    ctx.save(); ctx.translate(cx - Rs * 0.38 + 6 * Math.sin(t * 0.5), cy - Rs * 0.46); ctx.rotate(-0.6); ctx.scale(1, 0.55);
+    ctx.save(); ctx.translate(cx - Rs * 0.38 + 6 * Math.sin(t * 0.3), cy - Rs * 0.46); ctx.rotate(-0.6); ctx.scale(1, 0.55);
     g = ctx.createRadialGradient(0, 0, 0, 0, 0, Rs * 0.42); g.addColorStop(0, 'rgba(255,255,255,.85)'); g.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, Rs * 0.42, 0, 6.2832); ctx.fill(); ctx.restore();
     ctx.restore();
@@ -134,5 +167,5 @@
     ctx.restore();
   }
 
-  return { niveaux, niveauxAudio, dessiner, TAILLE };
+  return { niveaux, niveauxAudio, dessiner, TAILLE, SPOTS, PLACES_ORBE, emplacement, trajet, position, GLISSE };
 });
