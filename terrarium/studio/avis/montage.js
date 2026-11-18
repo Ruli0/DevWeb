@@ -187,6 +187,7 @@ function montage(ep, voix) {
     });
     
     if (p.illu && !ILLUS[p.illu]) erreurs.push(`${ou} : illustration « ${p.illu} » inconnue. Possibles : ${Object.keys(ILLUS).join(', ')}`);
+    if (def.valider) def.valider(p).forEach((e) => erreurs.push(`${ou} : ${e}`));
     if (pl.fond && !FONDS.includes(pl.fond)) erreurs.push(`${ou} : "fond" : un parmi ${FONDS.join(', ')}`);
     if (pl.transition && !TRANSITIONS.includes(pl.transition)) erreurs.push(`${ou} : "transition" : une parmi ${TRANSITIONS.join(', ')}`);
     let t0;

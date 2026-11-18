@@ -227,3 +227,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : au centre elle cachait la tête du robot ou le sujet du décor, et elle battait chaque syllabe (« trop rapide et nerveux »).
 - **Écarté** : la cacher dans le plan de la question (elle se gare à côté) ; un réglage de fluidité (valeurs fixes).
 - **Où** : `studio/avis/orbe.js` (`SPOTS`, `PLACES_ORBE`, `trajet`, `position`), `montage.js`, `lecteur.js`, `scripts/controle.js`.
+
+## 34. Un format « jeu » : le mot fléché (18 nov. 2026)
+
+- **Décision** : plan `grille` : trois mots qui se croisent révélés toutes les 5 s environ (facile, moyen, difficile), définitions écrites dans des cartes numérotées avec flèche et dites par l'orbe, barre à trois paliers (singe, homme classique, Molière) sous la grille, au-dessus des sous-titres ; orbe garée à droite de la grille ; voix clonée d'abord.
+- **Pourquoi** : ton idée du 18 nov. ; un jeu invite à commenter son score et se répète en série.
+- **Écarté** : la barre en haut (ta règle « rien en haut ») ; la définition dans la case seule (trop petite à 80 px) : des cartes à droite, numérotées comme les cases de départ.
+- **Piège** : les pauses ne s'insèrent qu'aux silences réels de la voix ; il faut en créer dans une voix générée.

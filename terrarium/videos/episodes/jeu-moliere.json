@@ -1,0 +1,96 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-moliere",
+  "titre": "As-tu la plume de Molière ?",
+  "rubrique": "enigme",
+  "numero": 8,
+  "voix": "jeu-moliere",
+  "forts": [
+    "Molière",
+    "mieux"
+  ],
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "orbe": {
+        "x": 820,
+        "y": 930,
+        "taille": 0.55
+      },
+      "mots": [
+        {
+          "texte": "PLUME",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Elle écrit à l’encre",
+            "a": "premier mot"
+          },
+          "reponse": {
+            "a": "plume. Deuxième"
+          }
+        },
+        {
+          "texte": "POÈTE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Il fait des vers",
+            "a": "deuxième mot"
+          },
+          "reponse": {
+            "a": "poète. Dernier"
+          }
+        },
+        {
+          "texte": "MOLIÈRE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Auteur du Malade imaginaire",
+            "a": "dernier mot"
+          },
+          "reponse": {
+            "a": "Molière, tu les"
+          }
+        }
+      ],
+      "titre": "As-tu la plume de *Molière* ?"
+    }
+  ],
+  "publication": {
+    "texte": "As-tu la plume de Molière ? Trois mots qui se croisent : si tu les trouves tous, tu t'exprimes mieux que lui. Dis-moi ton score en commentaire.",
+    "hashtags": [
+      "#motsfleches",
+      "#moliere",
+      "#francais",
+      "#quiz",
+      "#culture"
+    ],
+    "commentaire": "Singe, homme classique ou Molière ? Ton score en commentaire 👇"
+  },
+  "pauses": [
+    {
+      "apres": "lui.",
+      "duree": 0.5
+    },
+    {
+      "apres": "l'encre",
+      "duree": 2.7
+    },
+    {
+      "apres": "vers",
+      "duree": 2.7
+    },
+    {
+      "apres": "imaginaire",
+      "duree": 2.7
+    }
+  ]
+}

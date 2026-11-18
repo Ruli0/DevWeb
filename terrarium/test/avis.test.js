@@ -533,3 +533,26 @@ test('orbe : emplacements dans la zone sûre, trajet continu, mouvement lissé, 
   const n = ORBE.niveauxAudio(ech, taux, 60);
   for (let i = 1; i < n.length; i += 1) assert.ok(Math.abs(n[i] - n[i - 1]) <= 6, `pas ${i} : ${n[i - 1]} → ${n[i]}`);
 });
+
+test('jeu de mots fléchés : croisements vérifiés, révélations toutes les 5 s, trois paliers', () => {
+  const G = require('../studio/avis/grille.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const mots = [{ texte: 'PLUME', sens: 'h', ligne: 1, colonne: 1 }, { texte: 'POÈTE', sens: 'v', ligne: 1, colonne: 1 }, { texte: 'MOLIÈRE', sens: 'v', ligne: 1, colonne: 4 }];
+  const g = G.construire(mots);
+  assert.deepStrictEqual(g.erreurs, []);
+  assert.strictEqual(g.cases.length, 15);
+  assert.deepStrictEqual(g.cases.find((x) => x.l === 1 && x.c === 1).nums, [1, 2], 'P commun : deux départs');
+  assert.ok(G.construire([mots[0], { ...mots[1], texte: 'XOÈTE' }]).erreurs.some((e) => e.includes('tombe sur')));
+  assert.ok(G.construire([mots[0], { texte: 'ARBRE', sens: 'h', ligne: 2, colonne: 1 }]).erreurs.some((e) => e.includes('collés')));
+  assert.ok(G.construire([mots[0], { texte: 'ARBRE', sens: 'h', ligne: 5, colonne: 1 }]).erreurs.some((e) => e.includes('croise aucun')));
+  const ep = lire('videos/episodes/jeu-moliere.json'), voix = lire('videos/voix/jeu-moliere/mots.json');
+  const r = montage(ep, voix);
+  assert.deepStrictEqual(r.erreurs, []);
+  const rev = r.feuille.plans[0].p.mots.map((m) => m.reponse.t);
+  assert.ok(rev[1] - rev[0] > 4.3 && rev[1] - rev[0] < 5.7 && rev[2] - rev[1] > 4.3 && rev[2] - rev[1] < 5.7, `révélations espacées d'environ 5 s : ${rev}`);
+  r.feuille.plans[0].p.mots.forEach((m) => assert.ok(m.indice.t < m.reponse.t, 'la définition précède la réponse'));
+  const faux = JSON.parse(JSON.stringify(ep)); faux.plans[0].mots.pop();
+  assert.ok(montage(faux, voix).erreurs.some((e) => e.includes('trois mots')));
+  for (const f of ['singe', 'classique', 'moliere']) assert.ok(G.figure(f).includes('<svg'));
+});

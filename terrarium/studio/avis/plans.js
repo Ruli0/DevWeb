@@ -9,6 +9,7 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
   const q = (el, s) => el.querySelector(s), qa = (el, s) => [...el.querySelectorAll(s)];
+  const GR = typeof require === 'function' ? require('./grille.js') : (typeof self !== 'undefined' ? self : this).Avis.grille;
   const kicker = (p, u) => (p.kicker ? `<div class="kicker">${u.esc(p.kicker)}</div>` : '');
 
   return {
@@ -98,6 +99,54 @@
           c.ft(s, { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.5)' }, tc + i);
           c.ft(s, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.7, duration: 0.18, ease: 'power2.in' }, tc + i + 0.8);
           c.ft(boite, { scale: 1.06 }, { scale: 1, duration: 0.35, ease: 'power2.out' }, tc + i);
+        });
+      },
+    },
+    // Le jeu de mots fléchés : trois mots qui se croisent, révélés un par un sur leur ancre, avec la barre singe → homme classique → Molière.
+    grille: {
+      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a" }, "reponse": { "a" } }] (trois mots qui se croisent, du plus facile au plus dur) ; "stades": trois noms de palier. "indice.a" : où la définition est dite ; "reponse.a" : où le mot est dit et révélé.',
+      max: 60,
+      ancres: (p) => (p.mots || []).flatMap((m) => [[m.indice, 'a'], [m.reponse, 'a']]),
+      textes: (p) => [p.titre, ...(p.mots || []).map((m) => m.indice && m.indice.texte)],
+      valider(p) {
+        const e = GR.construire(p.mots).erreurs.slice();
+        if ((p.mots || []).length !== 3) e.push('le jeu prévoit trois mots qui se croisent');
+        (p.mots || []).forEach((m, k) => { if (!m.indice || !m.indice.texte || !m.indice.a) e.push(`mot ${k + 1} : "indice": { "texte", "a" }`); if (!m.reponse || !m.reponse.a) e.push(`mot ${k + 1} : "reponse": { "a" } (le mot dit par l’orbe)`); });
+        return e;
+      },
+      dessin: (p, u) => {
+        const g = GR.construire(p.mots), st = p.stades || ['Singe', 'Homme classique', 'Molière'], fig = ['singe', 'classique', 'moliere'], xs = [60, 480, 900];
+        const cases = g.cases.map((x) => `<div class="case" data-m="${x.mots.join(' ')}" style="left:${x.c * GR.PAS}px;top:${x.l * GR.PAS}px"><i></i>${x.nums.length ? `<b>${x.nums.join('·')}</b>` : ''}<em>${u.esc(x.lettre)}</em></div>`).join('');
+        const cartes = p.mots.map((m, k) => `<div class="carte"><span>${k + 1}${m.sens === 'h' ? '→' : '↓'}</span>${u.esc(m.indice.texte)}</div>`).join('');
+        const paliers = st.map((nom, i) => `<div class="palier" style="left:${xs[i]}px">${GR.figure(fig[i])}<p>${u.esc(nom)}</p></div>`).join('');
+        return `${p.titre ? `<p class="jeu-titre">${u.md(p.titre)}</p>` : ''}<div class="grille">${cases}</div><div class="cartes">${cartes}</div><div class="barre"><div class="rail"><i></i></div>${paliers}</div>`;
+      },
+      jouer(c, el, p, t0) {
+        const cases = qa(el, '.case'), cartes = qa(el, '.carte'), paliers = qa(el, '.palier'), rail = q(el, '.rail i');
+        if (q(el, '.jeu-titre')) c.lignes(q(el, '.jeu-titre'), t0 + 0.05);
+        gsap.set(qa(el, '.case em'), { opacity: 0 }); gsap.set(cartes, { opacity: 0 }); gsap.set(rail, { scaleX: 0 });
+        gsap.set(paliers[0], { opacity: 1, scale: 1 }); gsap.set([paliers[1], paliers[2]], { opacity: 0.35, scale: 0.85 });
+        c.ft(cases, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out', stagger: 0.025 }, t0 + 0.1);
+        c.ft(q(el, '.barre'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, t0 + 0.4);
+        const niveaux = [0.5, 0.75, 1];
+        p.mots.forEach((m, k) => {
+          const ti = t0 + m.indice.t, tr = t0 + m.reponse.t;
+          c.ft(cartes[k], { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, ti);
+          c.ft(cartes[k], { opacity: 1 }, { opacity: 0.5, duration: 0.4 }, tr + 0.9);
+          // Les lettres du mot, dans l'ordre de lecture, tombent l'une après l'autre ; les cases du mot s'allument.
+          const siennes = cases.filter((x) => x.dataset.m.split(' ').includes(String(k)));
+          siennes.forEach((cell, i) => {
+            c.ft(q(cell, 'em'), { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(2)' }, tr + i * 0.14);
+            c.ft(q(cell, 'i'), { opacity: 0 }, { opacity: 0.55, duration: 0.2 }, tr + i * 0.14);
+            c.ft(q(cell, 'i'), { opacity: 0.55 }, { opacity: 0.18, duration: 0.5 }, tr + i * 0.14 + 0.25);
+          });
+          const tb = tr + siennes.length * 0.14 + 0.1;
+          c.ft(rail, { scaleX: k ? niveaux[k - 1] : 0 }, { scaleX: niveaux[k], duration: 0.8, ease: 'power2.inOut' }, tb);
+          const monte = k === 0 ? 1 : k === 2 ? 2 : -1;
+          if (monte > 0) {
+            c.ft(paliers[monte], { opacity: 0.35, scale: 0.85 }, { opacity: 1, scale: 1.1, duration: 0.5, ease: 'back.out(2)' }, tb + 0.4);
+            c.ft(paliers[monte - 1], { opacity: 1, scale: 1 }, { opacity: 0.5, scale: 0.9, duration: 0.4 }, tb + 0.4);
+          }
         });
       },
     },

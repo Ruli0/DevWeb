@@ -102,6 +102,8 @@ Pour cette rubrique, parler de situations et de ce que tu en penses, sans te pr�
 | G6 | Un nénuphar double de taille chaque jour et couvre l'étang en 30 jours. Quel jour en couvre-t-il la moitié ? | Énigme | rizière | idée |
 | G7 | Qu'est-ce qui est plus lourd : un kilo de plumes ou un kilo de plomb ? (et pourquoi on hésite) | Énigme | — | idée |
 | G8 | Série « énigme du lundi » : une par semaine, la réponse en commentaire épinglé. | Série | — | idée |
+| G9 | « As-tu la plume de Molière ? » : mot fléché de trois mots, barre singe → homme classique → Molière. | Jeu (grille) | nuit + orbe | fait (voix clonée) |
+| G10 | Même format, autres thèmes : mots d'escalade (prise, dalle, réglette), mots d'IA (modèle, jeton, agent), mots de voyage. | Jeu (grille) | nuit + orbe | idée |
 
 Pour les énigmes G2 à G7, la réponse attendue est connue et se vérifie par le calcul : la vérifier avant d'enregistrer, et l'écrire dans la description. Éviter d'annoncer un pourcentage de réussite inventé (« seuls 10 % ») : une accroche comme « La plupart des gens se trompent » dit la même chose sans faux chiffre.
 

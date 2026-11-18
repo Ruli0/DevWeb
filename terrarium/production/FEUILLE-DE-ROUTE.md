@@ -30,6 +30,7 @@ _Dernière mise à jour : 15 novembre 2026._
 | C3 | Kit de publication et rendu final (`--publier`) | Claude | fait |
 | C6 | Prompteur pour enregistrer sa voix (`/prompteur`) | Claude | fait ; micro et envoi à vérifier sur ton téléphone |
 | C7 | Orbe de voix animée au-dessus des sous-titres | Claude | fait, en attente de ton avis (taille, rythme) |
+| C8 | Format jeu : mot fléché de trois mots, barre à trois paliers, l'orbe qui parle | Claude | fait (`jeu-moliere`), en attente de ton avis |
 | C4 | Ménage : retirer ce que l'auteur a écarté | Claude | à faire |
 | C5 | Mesurer : suivi des chiffres après publication | Toi (publier) puis Claude | en attente |
 | A6b | Décor « relations » | Claude | à faire |

@@ -15,6 +15,7 @@ const PAL = require('./palettes.js');
 const DECORS3D = require('./decors3d.js');
 const PERSO = require('./personnage.js');
 const ORBE = require('./orbe.js');
+const GRILLE = require('./grille.js');
 
 const RACINE = path.join(__dirname, '../..');
 const lire = (f) => fs.readFileSync(path.join(RACINE, f), 'utf8');
@@ -105,6 +106,7 @@ em { font: italic 400 1.1em/0.9 '${P.fort}'; color: var(--ac); letter-spacing: 0
 .fleche { position: absolute; left: 0; top: 0; color: var(--fg); }
 /* Sous-titres : dans une étiquette sombre, lisibles sur tous les fonds. */
 #orbe { position: absolute; z-index: 90; left: 0; top: 0; width: 900px; height: 900px; pointer-events: none; transform-origin: 450px 450px; }
+${f.plans.some((x) => x.id === 'grille') ? GRILLE.css(c, P) : ''}
 #st { position: absolute; z-index: 95; left: 50px; width: 910px; top: 1300px; height: 220px; }
 .st { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
 .st div { display: inline-block; background: ${c.fond}; color: ${c.texte}; padding: 16px 22px 20px; border-radius: 30px; font: 700 82px/1.05 '${P.titre}'; letter-spacing: -.02em; box-shadow: 0 14px 44px #00000066; white-space: nowrap; }
@@ -132,7 +134,7 @@ function html(f) {
   const perso = (pl) => { const pl0 = PERSO.PLACES[pl.fond] && PERSO.placer(f.allure, PERSO.PLACES[pl.fond]); return pl.p.personnage && pl0 ? `<svg class="perso-svg" viewBox="0 0 1080 1920"><g transform="translate(${pl0.x} ${pl0.y}) scale(${pl0.taille})">${PERSO.svg(pl.p.personnage, f.allure)}</g></svg>` : ''; };
   // Le collage : des photos détourées posées sur le décor, avec un contour blanc et une ombre nette (un autocollant). Jamais inclinées.
   const collage = (pl) => (pl.p.collage || []).map((co) => { const w = Math.round(1080 * (co.taille || 0.45)); return `<img class="collage" src="assets/medias/${esc(co.image)}" alt="" style="left:${Math.round(co.x - w / 2)}px; top:${Math.round(co.y)}px; width:${w}px">`; }).join('');
-  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}${pl.p.personnage ? ' avec-perso' : ''}${pl.fond === 'photo' && pl.p.photo.naturel ? ' naturel' : ''}${(pl.p.collage || []).length ? ' avec-collage' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}${perso(pl)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${collage(pl)}${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
+  const plans = f.plans.map((pl, i) => `  <div id="plan-${i}" class="plan clip ${pl.fond}${DECORS[pl.fond] || DECORS3D[pl.fond] ? ' decor' : ''}${pl.id === 'visuel' ? ' sans-texte' : ''}${pl.id === 'grille' ? ' jeu' : ''}${pl.p.personnage ? ' avec-perso' : ''}${pl.fond === 'photo' && pl.p.photo.naturel ? ' naturel' : ''}${(pl.p.collage || []).length ? ' avec-collage' : ''}" style="z-index:${i + 1}" data-start="${pl.t0}" data-duration="${pl.dClip}" data-track-index="${1 + (i % 2)}"><div class="deco">${fond(pl, i)}${perso(pl)}</div><div class="contenu"><div class="cadre">${PLANS[pl.id].dessin(pl.p, u)}</div>${collage(pl)}${pl.p.question ? `<div class="question"><p>${u.md(pl.p.question.texte)}</p></div>` : ''}${pl.p.illu ? `<svg class="illu" viewBox="0 0 940 400">${ILLUS[pl.p.illu].svg(pl.p)}</svg>` : ''}</div></div>`).join('\n');
   const st = f.groupes.map((g, i) => `<div class="st" id="st-${i}"><div>${g.mots.map((m) => `<span${m.fort ? ' class="fort"' : ''}>${u.esc(m.m)}</span>`).join('')}</div></div>`).join('\n   ');
   const propre = JSON.parse(JSON.stringify(f));
   const troisD = f.plans.some((pl) => DECORS3D[pl.fond]);
@@ -156,6 +158,7 @@ ${plans}
  <audio id="son" class="clip" src="assets/sons/mixage.wav" data-start="0" data-duration="${f.duree}" data-track-index="5" data-volume="1"></audio>
 </div>
 <script>
+${lire('studio/avis/grille.js')}
 ${lire('studio/avis/plans.js')}
 ${lire('studio/avis/illustrations.js')}
 ${lire('studio/avis/decors.js')}
