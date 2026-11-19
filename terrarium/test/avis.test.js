@@ -594,3 +594,29 @@ test('jeu : une lueur (halo et reflet intérieur) par case, coupée par "lueur":
   const sans = JSON.parse(JSON.stringify(ep)); sans.plans[0].lueur = false;
   assert.deepStrictEqual(montage(sans, voix).erreurs, []);
 });
+
+test('jeu de culture : cinq mots, six croisements, une réponse toutes les 10 s, barre jusqu\'au dernier palier', () => {
+  const G = require('../studio/avis/grille.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const page = require('../studio/avis/page.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const ep = lire('videos/episodes/jeu-culture.json'), voix = lire('videos/voix/jeu-culture/mots.json');
+  const mots = ep.plans[0].mots, g = G.construire(mots);
+  assert.deepStrictEqual(g.erreurs, []);
+  assert.strictEqual(mots.length, 5);
+  assert.ok(g.lignes <= 8 && g.colonnes <= 8 && g.cases.filter((c) => c.mots.length > 1).length >= 6, 'au moins six croisements');
+  mots.forEach((_, k) => assert.ok(g.cases.filter((c) => c.mots.length > 1 && c.mots.includes(k)).length >= 2, `le mot ${k + 1} en croise deux autres`));
+  const r = montage(ep, voix);
+  assert.deepStrictEqual(r.erreurs, []);
+  assert.ok(r.feuille.duree <= 75);
+  const rep = r.feuille.plans[0].p.mots.map((m) => m.reponse.t);
+  for (let k = 1; k < 5; k += 1) assert.ok(Math.abs(rep[k] - rep[k - 1] - 10) < 0.15, `10 s entre les réponses ${k} et ${k + 1} : ${rep}`);
+  const html = page.html(r.feuille).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.strictEqual((html.match(/class="carte"/g) || []).length, 5);
+  assert.ok(html.includes('class="cartes dense"'));
+  for (let w = 0; w < 5; w += 1) assert.strictEqual((html.match(new RegExp(`data-w="${w}"`, 'g')) || []).length, 10, `dix chiffres dans la tranche ${w + 1}`);
+  assert.ok(html.includes('Académicien') && G.figure('academicien').includes('<svg') && G.figure('hugo').includes('<svg'));
+  // Le mot de trop est refusé, avec les six mots c'est accepté.
+  const sept = JSON.parse(JSON.stringify(ep)); sept.plans[0].mots.push(sept.plans[0].mots[0], sept.plans[0].mots[1]);
+  assert.ok(montage(sept, voix).erreurs.some((e) => e.includes('à six mots')));
+});

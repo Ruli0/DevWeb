@@ -95,7 +95,7 @@
             "fin": "fois"
           },
           "reponse": {
-            "a": "conte. Dernier"
+            "a": "compte. Dernier"
           }
         },
         {
@@ -125,5 +125,13 @@
       "#culture"
     ],
     "commentaire": "Singe, académicien ou Hugo ? Ton score en commentaire 👇"
+  },
+  "corrections": {
+    "21": "",
+    "33": "",
+    "46": "",
+    "58": "",
+    "70": "",
+    "60": "conte."
   }
 }

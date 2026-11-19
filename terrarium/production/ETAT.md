@@ -28,7 +28,7 @@ Le cap de la branche `claude/busy-feynman-m0q7yp` : la voix de l'auteur d'abord.
 | Premier montage automatique d'un épisode depuis les mots (`scripts/brouillon.js`) | `scripts/brouillon.js`, `studio/avis/sujets.js` |
 | Contrôle automatique de l'image (`--controle`) | `scripts/controle.js` |
 | Rendu final 60 i/s et fiche de publication (`--publier`) | `scripts/publier.js` |
-| Jeu de mots fléchés (plan `grille`) : cadence, minuteur, révélation animée, musique Rêverie, `voix-silences.py` | `studio/avis/grille.js` |
+| Jeu de mots fléchés (plan `grille`) : cadence, minuteur, révélation animée, musique Rêverie, `voix-silences.py` ; 3 à 6 mots (`jeu-moliere`, `jeu-culture`) | `studio/avis/grille.js` |
 | Orbe de verre animée par la voix (`"orbe"`) | `studio/avis/orbe.js` |
 | Prompteur (Artifact) pour enregistrer la voix (`--prompteur`, skill `prompteur`) | `scripts/prompteur.js` |
 | Mixage en un seul fichier, limiteur à −3 dB | `studio/avis/page.js` |

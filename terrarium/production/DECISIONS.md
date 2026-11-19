@@ -247,3 +247,9 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Décision** : pendant la tranche d'un mot, ses cases vides (hors croisements déjà révélés) s'illuminent en vague puis respirent ; la carte de l'indice est entourée d'un liseré ; tout s'éteint juste avant les étincelles de la révélation.
 - **Pourquoi** : « sinon on ne sait pas où regarder pour commencer ».
 - **Où** : `studio/avis/plans.js` (plan `grille`), `studio/avis/grille.js` (style).
+
+## 37. Deuxième grille : cinq mots, six croisements, 10 s par mot (20 nov. 2026)
+
+- **Décision** : `jeu-culture` (langue et littérature) : ROMAN, TEXTE, PIÈCE, CONTE, PROSE (le dernier, « Monsieur Jourdain en faisait sans le savoir », fait écho à Molière) ; grille 5 × 6 trouvée par une recherche en échelle ; 10 s par mot pour tenir 57 s ; paliers Singe → Académicien → Hugo.
+- **Pourquoi** : ta demande de plus de mots et de croisements ; 5 × 15 s dépasserait les 75 s.
+- **Écarté** : un solveur général sur des grilles denses (rendues illisibles par des mots collés) ; l'adaptation de la taille des cases (inutile pour une grille 5 × 6).
