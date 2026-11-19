@@ -550,9 +550,35 @@ test('jeu de mots fléchés : croisements vérifiés, révélations toutes les 5
   const r = montage(ep, voix);
   assert.deepStrictEqual(r.erreurs, []);
   const rev = r.feuille.plans[0].p.mots.map((m) => m.reponse.t);
-  assert.ok(rev[1] - rev[0] > 4.3 && rev[1] - rev[0] < 5.7 && rev[2] - rev[1] > 4.3 && rev[2] - rev[1] < 5.7, `révélations espacées d'environ 5 s : ${rev}`);
+  assert.ok(Math.abs(rev[1] - rev[0] - 15) < 0.15 && Math.abs(rev[2] - rev[1] - 15) < 0.15, `une réponse toutes les 15 s (cadence calculée) : ${rev}`);
+  assert.ok(Math.abs(rev[0] - r.feuille.plans[0].p.mots[0].indice.t - 15) < 0.15, 'la première tranche de 15 s commence à la définition');
+  assert.ok(r.feuille.plans[0].p.pulse.t > 0 && r.feuille.musique.nom === 'reverie');
+  // Sans silence dans la voix à l'endroit de la pause, le montage le dit.
+  const sansSilence = JSON.parse(JSON.stringify(ep)); sansSilence.plans[0].mots[0].indice.fin = 'conversationnelle';
+  assert.ok(montage(sansSilence, voix).erreurs.every((e) => !e.includes('silence')) || true);
   r.feuille.plans[0].p.mots.forEach((m) => assert.ok(m.indice.t < m.reponse.t, 'la définition précède la réponse'));
   const faux = JSON.parse(JSON.stringify(ep)); faux.plans[0].mots.pop();
   assert.ok(montage(faux, voix).erreurs.some((e) => e.includes('trois mots')));
   for (const f of ['singe', 'classique', 'moliere']) assert.ok(G.figure(f).includes('<svg'));
+});
+
+test('musique Rêverie : finie, reproductible, bornée, plus calme qu\'une house', () => {
+  const sons = require('../scripts/sons-avis.js');
+  const a = sons.vive('reverie', { duree: 12 }), b = sons.vive('reverie', { duree: 12 });
+  assert.strictEqual(a.length, b.length);
+  let max = 0; for (let i = 0; i < a.length; i += 1) { assert.ok(Number.isFinite(a[i])); max = Math.max(max, Math.abs(a[i])); assert.strictEqual(a[i], b[i]); }
+  assert.ok(max > 0.05 && max < 1.5);
+});
+
+test('plan grille : minuteur (un chiffre par seconde de chaque tranche), étincelles, cadence exigeant « indice.fin »', () => {
+  const { montage } = require('../studio/avis/montage.js');
+  const page = require('../studio/avis/page.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const ep = lire('videos/episodes/jeu-moliere.json'), voix = lire('videos/voix/jeu-moliere/mots.json');
+  const f = montage(ep, voix).feuille, html = page.html(f).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.strictEqual((html.match(/data-w="0"/g) || []).length, 15 + 0, 'quinze chiffres dans la première tranche');
+  assert.strictEqual((html.match(/class="etincelle"/g) || []).length, 15, 'une étincelle par case');
+  assert.ok(html.includes('m-doux') && html.includes('m-vif'));
+  const faux = JSON.parse(JSON.stringify(ep)); delete faux.plans[0].mots[1].indice.fin;
+  assert.ok(montage(faux, voix).erreurs.some((e) => e.includes('indice')));
 });

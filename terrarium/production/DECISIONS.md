@@ -234,3 +234,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : ton idée du 18 nov. ; un jeu invite à commenter son score et se répète en série.
 - **Écarté** : la barre en haut (ta règle « rien en haut ») ; la définition dans la case seule (trop petite à 80 px) : des cartes à droite, numérotées comme les cases de départ.
 - **Piège** : les pauses ne s'insèrent qu'aux silences réels de la voix ; il faut en créer dans une voix générée.
+
+## 35. Jeu v2 : cadence de 15 s, minuteur, musique originale (19 nov. 2026)
+
+- **Décision** : une réponse toutes les 15 s (silences calculés par le montage), minuteur discret par tranche, révélation lettre par lettre avec étincelles venues de l'orbe, courte intro (« indicateur de ton intelligence conversationnelle »), musique originale « Rêverie ».
+- **Pourquoi** : ta demande du 19 nov. ; 15 s laissent réellement le temps de chercher.
+- **Écarté** : utiliser *Call it what you like* (protégé par des droits d'auteur, et je ne peux pas écouter) : une ambiance originale à la place ; tu peux ajouter le morceau voulu depuis la bibliothèque de TikTok à la publication.
+- **Réserve** : la formule « indicateur de l'intelligence conversationnelle » n'a pas de source ; à présenter comme un jeu (rappel dans `publication.md`).

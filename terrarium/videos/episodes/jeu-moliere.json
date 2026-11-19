@@ -8,6 +8,7 @@
   "voix": "jeu-moliere",
   "forts": [
     "Molière",
+    "intelligence",
     "mieux"
   ],
   "plans": [
@@ -28,10 +29,11 @@
           "colonne": 1,
           "indice": {
             "texte": "Elle écrit à l’encre",
-            "a": "premier mot"
+            "a": "premier mot",
+            "fin": "l'encre"
           },
           "reponse": {
-            "a": "plume. Deuxième"
+            "a": "plumes. Deuxième"
           }
         },
         {
@@ -41,10 +43,11 @@
           "colonne": 1,
           "indice": {
             "texte": "Il fait des vers",
-            "a": "deuxième mot"
+            "a": "deuxième mot",
+            "fin": "vers"
           },
           "reponse": {
-            "a": "poète. Dernier"
+            "a": "poètes. Dernier"
           }
         },
         {
@@ -54,18 +57,23 @@
           "colonne": 4,
           "indice": {
             "texte": "Auteur du Malade imaginaire",
-            "a": "dernier mot"
+            "a": "dernier mot",
+            "fin": "imaginaire"
           },
           "reponse": {
-            "a": "Molière, tu les"
+            "a": "Molières. Tu les"
           }
         }
       ],
-      "titre": "As-tu la plume de *Molière* ?"
+      "titre": "As-tu la plume de *Molière* ?",
+      "cadence": 15,
+      "pulse": {
+        "a": "Voyons jusqu'où"
+      }
     }
   ],
   "publication": {
-    "texte": "As-tu la plume de Molière ? Trois mots qui se croisent : si tu les trouves tous, tu t'exprimes mieux que lui. Dis-moi ton score en commentaire.",
+    "texte": "As-tu la plume de Molière ? Trois mots croisés, 15 secondes par mot : jusqu'où vas-tu arriver ? Singe, homme classique ou Molière ? Ton score en commentaire.",
     "hashtags": [
       "#motsfleches",
       "#moliere",
@@ -75,22 +83,19 @@
     ],
     "commentaire": "Singe, homme classique ou Molière ? Ton score en commentaire 👇"
   },
-  "pauses": [
-    {
-      "apres": "lui.",
-      "duree": 0.5
-    },
-    {
-      "apres": "l'encre",
-      "duree": 2.7
-    },
-    {
-      "apres": "vers",
-      "duree": 2.7
-    },
-    {
-      "apres": "imaginaire",
-      "duree": 2.7
-    }
-  ]
+  "corrections": {
+    "26": "c'est",
+    "27": "plume.",
+    "35": "c'est",
+    "36": "poète.",
+    "43": "c'est",
+    "44": "Molière.",
+    "47": "avais",
+    "48": ""
+  },
+  "musique": "reverie",
+  "reglages": {
+    "musique": 0.25,
+    "musiqueSeule": 0.8
+  }
 }
