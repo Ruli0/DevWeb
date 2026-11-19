@@ -63,6 +63,10 @@
 .jeu .case { position: absolute; width: ${CASE}px; height: ${CASE}px; background: #fff7ec; border-radius: 14px; box-shadow: 0 6px 0 #00000055; overflow: hidden; }
 .jeu .case i { position: absolute; inset: 0; background: var(--ac); opacity: 0; }
 .jeu .case u { position: absolute; left: 50%; top: 50%; width: 70px; height: 70px; margin: -35px 0 0 -35px; border-radius: 50%; border: 4px solid var(--ac); box-sizing: border-box; opacity: 0; }
+.jeu .halo { position: absolute; width: ${CASE}px; height: ${CASE}px; border-radius: 14px; box-shadow: 0 0 26px 12px var(--ac); opacity: 0; }
+.jeu .case s { position: absolute; inset: 0; border-radius: 14px; box-shadow: inset 0 0 20px 6px var(--ac); background: radial-gradient(circle, #ffffff00 40%, #ffffff55 100%); opacity: 0; }
+.jeu .case b { transform-origin: 0 0; }
+.jeu .carte { outline: 0 solid var(--ac); outline-offset: -2px; }
 .jeu .etincelle { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle, #fff 0 25%, ${'#ffd45c'} 55%, #ff9a5c00 100%); box-shadow: 0 0 18px 6px #ffb03b99; pointer-events: none; z-index: 5; }
 .jeu .minuteur { position: absolute; left: 936px; top: 290px; width: 84px; height: 84px; }
 .jeu .minuteur svg { position: absolute; inset: 0; transform: rotate(-90deg); }

@@ -582,3 +582,15 @@ test('plan grille : minuteur (un chiffre par seconde de chaque tranche), étince
   const faux = JSON.parse(JSON.stringify(ep)); delete faux.plans[0].mots[1].indice.fin;
   assert.ok(montage(faux, voix).erreurs.some((e) => e.includes('indice')));
 });
+
+test('jeu : une lueur (halo et reflet intérieur) par case, coupée par "lueur": false', () => {
+  const { montage } = require('../studio/avis/montage.js');
+  const page = require('../studio/avis/page.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const ep = lire('videos/episodes/jeu-moliere.json'), voix = lire('videos/voix/jeu-moliere/mots.json');
+  const html = page.html(montage(ep, voix).feuille).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.strictEqual((html.match(/class="halo"/g) || []).length, 15);
+  assert.strictEqual((html.match(/<s><\/s>/g) || []).length, 15);
+  const sans = JSON.parse(JSON.stringify(ep)); sans.plans[0].lueur = false;
+  assert.deepStrictEqual(montage(sans, voix).erreurs, []);
+});

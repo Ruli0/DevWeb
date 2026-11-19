@@ -105,7 +105,7 @@
     // Le jeu de mots fléchés : trois mots qui se croisent, révélés un par un sur leur ancre, avec la barre singe → homme classique → Molière
     // et un petit minuteur par tranche (« cadence » : une réponse toutes les N secondes, calculée par le montage).
     grille: {
-      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a", "fin" }, "reponse": { "a" } }] (trois mots qui se croisent, du plus facile au plus dur) ; "cadence": 15 (une réponse toutes les 15 s : "indice.fin" = la phrase après laquelle commence le silence de réflexion) ; "titre" : l’accroche en haut ; "pulse": { "a" } : l’instant où la barre pulse (intro) ; "stades" : trois noms de palier.',
+      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a", "fin" }, "reponse": { "a" } }] (trois mots qui se croisent, du plus facile au plus dur) ; "cadence": 15 (une réponse toutes les 15 s : "indice.fin" = la phrase après laquelle commence le silence de réflexion) ; "titre" : l’accroche en haut ; "lueur": false coupe la lueur des cases du mot cherché ; "pulse": { "a" } : l’instant où la barre pulse (intro) ; "stades" : trois noms de palier.',
       max: 60,
       ancres: (p) => [[p.pulse, 'a'], ...(p.mots || []).flatMap((m) => [[m.indice, 'a'], [m.reponse, 'a']])],
       textes: (p) => [p.titre, ...(p.mots || []).map((m) => m.indice && m.indice.texte)],
@@ -125,7 +125,7 @@
         // Le point de départ des étincelles : l'orbe (son emplacement dans ce plan).
         let ox = 820, oy = 930;
         try { const e = require('./orbe.js').emplacement({ orbe: p.orbe, fond: 'nuit' }); ox = e.x; oy = e.y; } catch (err) { /* page : pas de require */ }
-        const cases = g.cases.map((x) => `<div class="case" data-m="${x.mots.join(' ')}" data-cx="${60 + x.c * GR.PAS + GR.CASE / 2}" data-cy="${390 + x.l * GR.PAS + GR.CASE / 2}" style="left:${x.c * GR.PAS}px;top:${x.l * GR.PAS}px"><i></i><u></u>${x.nums.length ? `<b>${x.nums.join('·')}</b>` : ''}<em>${u.esc(x.lettre)}</em></div>`).join('');
+        const cases = g.cases.map((x) => `<div class="halo" style="left:${x.c * GR.PAS}px;top:${x.l * GR.PAS}px"></div><div class="case" data-m="${x.mots.join(' ')}" data-cx="${60 + x.c * GR.PAS + GR.CASE / 2}" data-cy="${390 + x.l * GR.PAS + GR.CASE / 2}" style="left:${x.c * GR.PAS}px;top:${x.l * GR.PAS}px"><i></i><u></u><s></s>${x.nums.length ? `<b>${x.nums.join('·')}</b>` : ''}<em>${u.esc(x.lettre)}</em></div>`).join('');
         const cartes = p.mots.map((m, k) => `<div class="carte"><span>${k + 1}${m.sens === 'h' ? '→' : '↓'}</span>${u.esc(m.indice.texte)}</div>`).join('');
         const paliers = st.map((nom, i) => `<div class="palier" style="left:${xs[i]}px">${GR.figure(fig[i])}<p>${u.esc(nom)}</p></div>`).join('');
         // Le minuteur : une tranche par mot (de la définition à la réponse, puis de réponse en réponse) ; un chiffre par seconde restante.
@@ -139,7 +139,7 @@
         const cases = qa(el, '.case'), cartes = qa(el, '.carte'), paliers = qa(el, '.palier'), rail = q(el, '.rail i'), grille = q(el, '.grille');
         const ox = +grille.dataset.ox, oy = +grille.dataset.oy, sparks = qa(el, '.etincelle');
         if (q(el, '.jeu-titre')) c.lignes(q(el, '.jeu-titre'), t0 + 0.05);
-        gsap.set(qa(el, '.case em'), { opacity: 0 }); gsap.set(qa(el, '.case u'), { opacity: 0 }); gsap.set(cartes, { opacity: 0 }); gsap.set(rail, { scaleX: 0 }); gsap.set(sparks, { opacity: 0, left: ox - 8, top: oy - 8 });
+        gsap.set(qa(el, '.case em'), { opacity: 0 }); gsap.set(qa(el, '.case u'), { opacity: 0 }); gsap.set(qa(el, '.case s'), { opacity: 0 }); gsap.set(qa(el, '.halo'), { opacity: 0 }); gsap.set(cartes, { opacity: 0 }); gsap.set(rail, { scaleX: 0 }); gsap.set(sparks, { opacity: 0, left: ox - 8, top: oy - 8 });
         gsap.set(paliers[0], { opacity: 1, scale: 1 }); gsap.set([paliers[1], paliers[2]], { opacity: 0.35, scale: 0.85 });
         c.ft(cases, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out', stagger: 0.025 }, t0 + 0.1);
         c.ft(q(el, '.barre'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, t0 + 0.4);
@@ -168,6 +168,21 @@
           const ti = t0 + m.indice.t, tr = t0 + m.reponse.t;
           c.ft(cartes[k], { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, ti);
           c.ft(cartes[k], { opacity: 1 }, { opacity: 0.5, duration: 0.4 }, tr + 1.4);
+          // Pendant la recherche, les cases du mot s'illuminent doucement, la case de départ en tête, puis respirent jusqu'à la réponse.
+          const siennes0 = cases.filter((x) => x.dataset.m.split(' ').includes(String(k)) && !deja.has(x));
+          if (p.lueur !== false) {
+            const te = tr - 0.05;
+            c.ft(cartes[k], { outlineWidth: 0 }, { outlineWidth: 3, duration: 0.4 }, ti);
+            c.ft(cartes[k], { outlineWidth: 3 }, { outlineWidth: 0, duration: 0.3 }, te);
+            siennes0.forEach((cell, i) => {
+              const lueurs = [q(cell, 's'), cell.previousElementSibling], base = i === 0 ? 0.85 : 0.5, bas = base * 0.45, ta = ti + 0.3 + i * 0.12;
+              c.ft(lueurs, { opacity: 0 }, { opacity: base, duration: 0.6, ease: 'power2.out' }, ta);
+              if (i === 0 && q(cell, 'b')) { c.ft(q(cell, 'b'), { scale: 1 }, { scale: 1.7, duration: 0.3, ease: 'power2.out' }, ta); c.ft(q(cell, 'b'), { scale: 1.7 }, { scale: 1, duration: 0.4, ease: 'power2.inOut' }, ta + 0.3); }
+              let v = base, tc = ta + 0.7, bas1 = true;
+              while (tc + 0.8 <= te - 0.1) { const v2 = bas1 ? bas : base; c.ft(lueurs, { opacity: v }, { opacity: v2, duration: 0.8, ease: 'sine.inOut' }, tc); v = v2; bas1 = !bas1; tc += 0.8; }
+              c.ft(lueurs, { opacity: v }, { opacity: 0, duration: 0.3 }, Math.max(tc, te - 0.05));
+            });
+          }
           // La révélation : pour chaque lettre, une étincelle part de l'orbe, la case s'illumine d'une onde, la lettre monte en devenant nette.
           const siennes = cases.filter((x) => x.dataset.m.split(' ').includes(String(k)));
           let tfin = tr;

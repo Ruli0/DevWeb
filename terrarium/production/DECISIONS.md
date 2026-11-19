@@ -241,3 +241,9 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : ta demande du 19 nov. ; 15 s laissent réellement le temps de chercher.
 - **Écarté** : utiliser *Call it what you like* (protégé par des droits d'auteur, et je ne peux pas écouter) : une ambiance originale à la place ; tu peux ajouter le morceau voulu depuis la bibliothèque de TikTok à la publication.
 - **Réserve** : la formule « indicateur de l'intelligence conversationnelle » n'a pas de source ; à présenter comme un jeu (rappel dans `publication.md`).
+
+## 36. Les cases du mot cherché s'illuminent (19 nov. 2026)
+
+- **Décision** : pendant la tranche d'un mot, ses cases vides (hors croisements déjà révélés) s'illuminent en vague puis respirent ; la carte de l'indice est entourée d'un liseré ; tout s'éteint juste avant les étincelles de la révélation.
+- **Pourquoi** : « sinon on ne sait pas où regarder pour commencer ».
+- **Où** : `studio/avis/plans.js` (plan `grille`), `studio/avis/grille.js` (style).
