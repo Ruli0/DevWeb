@@ -40,19 +40,45 @@ def silences(y, seuil_db=-42.0, mini=0.16):
             debut = None
     return out
 
-def transcrire(chemin):
+def transcrire(chemin, sil=None, invite=None):
+    """Transcription mot par mot. Whisper date mal les mots d'une longue piste qui contient de longs blancs (dérive de plusieurs secondes) :
+    on transcrit donc chaque PHRASE séparément (les plages de parole entre deux silences d'au moins 0,3 s) et on remet les dates à l'échelle de la piste.
+    invite : un texte (le script) qui aide Whisper à retrouver les bons mots (réponses courtes, noms propres)."""
     from faster_whisper import WhisperModel
     modele = WhisperModel('medium', device='cpu', compute_type='int8')
     audio = decoder(chemin, 16000).astype(np.float32) / 32768
-    segments, _ = modele.transcribe(audio, language='fr', word_timestamps=True)
+    duree = len(audio) / 16000
+    blancs = [(a, b) for a, b in (sil or []) if b - a >= 0.3]
+    zones, depart = [], 0.0
+    for a, b in blancs + [(duree, duree)]:
+        if a - depart >= 0.12: zones.append((max(0.0, depart - 0.08), min(duree, a + 0.08)))
+        depart = b
+    if not blancs: zones = [(0.0, duree)]
     mots = []
-    for s in segments:
-        for w in s.words:
-            # Whisper sépare « l » et « 'ère » : on recolle ce qui n'est pas précédé d'une espace.
-            if mots and not w.word.startswith(' '):
-                mots[-1]['m'] += w.word; mots[-1]['f'] = round(w.end, 2)
-            else:
-                mots.append({'m': w.word.strip(), 'd': round(w.start, 2), 'f': round(w.end, 2)})
+    for z0, z1 in zones:
+        morceau = audio[int(z0 * 16000):int(z1 * 16000)]
+        segments, _ = modele.transcribe(morceau, language='fr', word_timestamps=True, initial_prompt=invite, condition_on_previous_text=False)
+        for sg in segments:
+            for w in sg.words:
+                d, f = round(w.start + z0, 2), round(w.end + z0, 2)
+                # Whisper sépare « l » et « 'ère » : on recolle ce qui n'est pas précédé d'une espace.
+                if mots and not w.word.startswith(' '):
+                    mots[-1]['m'] += w.word; mots[-1]['f'] = f
+                else:
+                    mots.append({'m': w.word.strip(), 'd': d, 'f': f})
+    return dedoublonner(mots)
+
+def dedoublonner(mots):
+    """Whisper répète parfois une phrase quand un blanc suit (« Académicien ou singe ? Académicien ou singe ? ») : on retire le premier bloc d'une répétition
+    immédiate de 1 à 4 mots."""
+    import re
+    norm = lambda w: re.sub(r'[^a-z0-9àâäéèêëîïôöùûüç]', '', w['m'].lower())
+    i = 0
+    while i < len(mots):
+        for n in (4, 3, 2, 1):
+            if i + 2 * n <= len(mots) and all(norm(mots[i + k]) == norm(mots[i + n + k]) for k in range(n)) and any(norm(mots[i + k]) for k in range(n)):
+                del mots[i:i + n]; i -= 1; break
+        i += 1
     return mots
 
 def main():
@@ -62,8 +88,11 @@ def main():
     os.makedirs(dossier, exist_ok=True)
     y = debruiter(decoder(source, SR))
     sf.write(os.path.join(dossier, 'propre.flac'), y, SR)
-    mots = transcrire(source)
-    donnees = {'duree': round(len(y) / SR, 2), 'mots': mots, 'silences': silences(y)}
+    sil = silences(y)
+    script = os.path.join(dossier, '..', '..', 'scripts', ident + '.txt')
+    invite = open(script, encoding='utf-8').read().strip() if os.path.exists(script) else None
+    mots = transcrire(source, sil, invite)
+    donnees = {'duree': round(len(y) / SR, 2), 'mots': mots, 'silences': sil}
     with open(os.path.join(dossier, 'mots.json'), 'w') as f:
         f.write('{\n "duree": %s,\n "mots": [\n  %s\n ],\n "silences": %s\n}\n' % (
             donnees['duree'], ',\n  '.join(json.dumps(m, ensure_ascii=False) for m in mots), json.dumps(donnees['silences'])))

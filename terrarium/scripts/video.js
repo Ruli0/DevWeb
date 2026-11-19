@@ -79,6 +79,7 @@ if (AVIS && option('--controle')) {
   // Le contrôle automatique de l'image (scripts/controle.js) : cinq instants par plan, une liste de points à regarder.
   const globaux = execSync('npm root -g').toString().trim();
   spawnSync('node', [path.join(RACINE, 'scripts/controle.js'), dossier], { stdio: 'inherit', env: { ...process.env, NODE_PATH: globaux } });
+  spawnSync('node', [path.join(RACINE, 'scripts/verifier-voix.js'), id], { stdio: 'inherit' });
 }
 
 if (!option('--sans-apercu')) {

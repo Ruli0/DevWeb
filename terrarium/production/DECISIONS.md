@@ -273,3 +273,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Décision** : retour aux décors `plage` et `livres` ; ajout d'animations d'ambiance (vagues qui bougent derrière, crabe qui sort de l'écran, dauphin qui saute ; souris, livres qui sautent, avion en papier pour les livres), programmées à des instants fixes. Les six maquettes plus sobres restent dans le code, non utilisées.
 - **Pourquoi** : « je préférais les décors d'avant » ; l'animation donne la vie sans changer le style.
 - **Écarté** : lier les animations à la voix (inutile, et cela compliquerait les ancres) ; des boucles infinies (interdites par le moteur).
+
+## 41. La réponse n'est jamais affichée avant la voix (22 nov. 2026)
+
+- **Décision** : marge de 0,5 s entre la fin de la phrase de réponse et la première lettre ; dates de mots recalées sur les silences ; transcription phrase par phrase (Whisper dérivait de plusieurs secondes sur une piste à longs blancs) avec le script comme amorce ; vérification du mot dit, de la définition et de l'isolement de la réponse au montage ; `verifier-voix.js` sur le signal réel, bloquant à la publication ; `voix-choisir.py` pour choisir et couper les prises.
+- **Pourquoi** : « ça affiche la réponse avant [la voix] » : la lettre se posait 0,5 s après le début du « c'est », donc pendant la prononciation, et les dates de mots étaient parfois fausses.
+- **Écarté** : décaler seulement les étincelles (la lettre restait trop tôt) ; faire confiance aux dates Whisper sans les confronter au signal.
+- **Limite** : je ne peux pas écouter la voix ; la mesure se fait sur l'énergie du signal. Les deux anciens jeux ne passent pas ces contrôles et sont marqués `"voixVerifiee": false`.

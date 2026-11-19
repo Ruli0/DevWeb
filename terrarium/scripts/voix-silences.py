@@ -31,7 +31,8 @@ def main():
     if auto:
         for i in range(len(mots) - 1):
             if i in indices or not re.search(r'[.?!]$', mots[i]['m']): continue
-            if mots[i + 1]['d'] - mots[i]['f'] >= 0.3: continue
+            milieu = (mots[i]['f'] + mots[i + 1]['d']) / 2
+            if any(b - a >= 0.3 and a - 0.05 <= milieu <= b + 0.05 for a, b in d.get('silences', [])): continue   # un vrai blanc existe déjà (mesuré sur le signal)
             coupes.append(((mots[i]['f'] + mots[i + 1]['d']) / 2, auto))
     coupes.sort()
     pts = [0] + [c for c, _ in coupes] + [d['duree'] + 0.5]; filtres = []; liens = []

@@ -748,3 +748,60 @@ test('décors animés : crabe, dauphin, nuages, souris, livres sauteurs, avion ;
     assert.ok(Math.abs(v1 - v2) > 5, `les vagues bougent : ${v1} → ${v2}`);
   } finally { await nav.close(); }
 });
+
+test('voix des jeux : recalage des mots dans un silence, horaires après la voix, vérifications du montage', () => {
+  const { recaler, finParole } = require('../studio/avis/recalage.js');
+  const G = require('../studio/avis/grille.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  // Un mot daté dans un silence est ramené à la fin du silence ; un mot hors silence ne bouge pas ; la voix d'origine n'est pas modifiée.
+  const v = { duree: 10, silences: [[2, 3], [5, 5.2]], mots: [{ m: 'a', d: 1, f: 1.5 }, { m: 'cest', d: 2.5, f: 2.7 }, { m: 'coco', d: 2.7, f: 3.4 }, { m: 'b', d: 5.05, f: 5.15 }] };
+  const r = recaler(v);
+  assert.deepStrictEqual(r.mots.map((m) => m.d), [1, 3, 3, 5.05], 'silence court (0,2 s) : le mot ne bouge pas');
+  assert.ok(r.mots.every((m) => m.f >= m.d + 0.05) && v.mots[1].d === 2.5);
+  // La fin de la phrase de réponse : le début du silence suivant si elle est isolée.
+  const iso = finParole({ duree: 20, silences: [[16.9, 17.5]] }, { d: 16.3, f: 16.6 });
+  assert.deepStrictEqual(iso, { fin: 16.9, isolee: true });
+  assert.strictEqual(finParole({ duree: 20, silences: [] }, { d: 16.3, f: 16.4 }).isolee, false);
+  // La première lettre se pose au plus tôt 0,5 s après la fin de la phrase dite.
+  assert.ok(G.horaires(10, 4, 10.8).pose[0] >= 10.8 + G.LETTRE.apresVoix - 1e-9 && G.horaires(10, 4, 10.8).depart < G.horaires(10, 4, 10.8).pose[0]);
+  assert.strictEqual(G.horaires(10, 4, 0).pose[0], 10.5);
+  // Le montage vérifie la voix : mot de la grille, définition sans la réponse, rien d'autre avant la réponse.
+  const ep = lire('videos/episodes/jeu-plage.json'), voix = lire('videos/voix/jeu-plage/mots.json');
+  assert.deepStrictEqual(montage(ep, voix).erreurs, []);
+  const faux = JSON.parse(JSON.stringify(ep)); faux.plans[0].mots[0].texte = 'COCOS';
+  assert.ok(montage(faux, voix).erreurs.some((e) => e.includes('la voix dit') && e.includes('la grille attend')));
+  const entendu = JSON.parse(JSON.stringify(faux)); entendu.plans[0].mots[0].reponse.entendu = 'coco';
+  assert.ok(!montage(entendu, voix).erreurs.some((e) => e.includes('la voix dit')), '« entendu » assume la différence');
+  const dans = JSON.parse(JSON.stringify(ep)); dans.plans[0].mots[1].indice.a = 'il brille'; dans.plans[0].mots[1].reponse.a = 'plage. C\'est';
+  assert.ok(montage(dans, voix).erreurs.some((e) => e.includes('dit avant la réponse') || e.includes('la voix dit')));
+  const nu = JSON.parse(JSON.stringify(voix)); nu.silences = nu.silences.filter(([a, b]) => b - a < 0.3 || a < 15);
+  assert.ok(montage(ep, nu).erreurs.some((e) => e.includes('n\'est pas séparée')) || montage(ep, nu).erreurs.length > 0, 'sans silence après la réponse : erreur');
+});
+
+test('vérification sur le signal : réussite si la lettre suit la voix, échec si elle la précède, sous-titre dans un silence détecté', () => {
+  const { verifier, segmentsParole } = require('../scripts/verifier-voix.js');
+  const taux = 16000, ech = new Float32Array(taux * 20);
+  const parole = (a, b) => { for (let i = Math.floor(a * taux); i < Math.floor(b * taux); i += 1) ech[i] = 0.3 * Math.sin(i * 0.2); };
+  parole(1, 4); parole(14, 14.8); parole(15.6, 18);
+  const seg = segmentsParole(ech, taux);
+  assert.ok(seg.length === 3 && Math.abs(seg[1][0] - 14) < 0.05 && Math.abs(seg[1][1] - 14.8) < 0.05, JSON.stringify(seg));
+  const mots = [{ texte: 'COCO', sens: 'h', ligne: 1, colonne: 4 }, { texte: 'SOLEIL', sens: 'v', ligne: 0, colonne: 7 }, { texte: 'CORAIL', sens: 'v', ligne: 1, colonne: 4 }, { texte: 'MANGROVE', sens: 'h', ligne: 3, colonne: 0 }, { texte: 'ARCHIPEL', sens: 'h', ligne: 5, colonne: 0 }];
+  const feuille = (t, f, groupes) => ({ plans: [{ id: 'grille', t0: 0, p: { cadence: 10, mots: mots.map((m, k) => ({ ...m, reponse: { t: k === 0 ? t : 40 + k, f: k === 0 ? f : 41 + k } })) } }], groupes });
+  const bon = verifier(feuille(14, 14.8, [{ t0: 14.0, mots: [{ m: 'c\'est' }] }]), ech, taux).problemes.filter((p) => p.startsWith('mot 1'));
+  assert.deepStrictEqual(bon, [], 'lettres après la phrase : rien à signaler');
+  const mauvais = verifier(feuille(14, 14.1, []), ech, taux).problemes.filter((p) => p.startsWith('mot 1'));
+  assert.ok(mauvais.some((p) => p.includes('avant la voix') || p.includes('moins de')), 'lettre avant la fin de la voix : signalée');
+  const sousTitre = verifier(feuille(14, 14.8, [{ t0: 10, mots: [{ m: 'oups' }] }]), ech, taux).problemes;
+  assert.ok(sousTitre.some((p) => p.includes('sous-titre') && p.includes('silence')));
+});
+
+test('voix des jeux récents : aucune réponse avant la voix (signal réel), montage sans erreur', () => {
+  const { verifier, lirePiste } = require('../scripts/verifier-voix.js');
+  for (const id of ['jeu-plage', 'jeu-langue']) {
+    const f = path.join(__dirname, '..', 'videos/studio', id);
+    if (!fs.existsSync(path.join(f, 'feuille.json')) || !fs.existsSync(path.join(f, 'assets/sons/voix.wav'))) continue;   // composition non construite
+    const r = verifier(JSON.parse(fs.readFileSync(path.join(f, 'feuille.json'), 'utf8')), lirePiste(path.join(f, 'assets/sons/voix.wav')), 16000);
+    assert.deepStrictEqual(r.problemes, [], id);
+  }
+});

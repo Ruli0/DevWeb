@@ -187,8 +187,9 @@
           // Pendant la recherche, les cases du mot s'illuminent doucement, la case de départ en tête, puis respirent jusqu'à la réponse.
           const siennes = cases.filter((x) => x.dataset.m.split(' ').includes(String(k)));
           const siennes0 = siennes.filter((x) => !deja.has(x));
+          const H = GR.horaires(tr, siennes0.length, t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
           if (p.lueur !== false) {
-            const te = tr - 0.05;
+            const te = H.depart - 0.05;
             siennes0.forEach((cell, i) => {
               const lueurs = [q(cell, 's'), cell.previousElementSibling], base = i === 0 ? 0.85 : 0.5, bas = base * 0.45, ta = ti + 0.3 + i * 0.12;
               c.ft(lueurs, { opacity: 0 }, { opacity: base, duration: 0.6, ease: 'power2.out' }, ta);
@@ -199,10 +200,9 @@
             });
           }
           // La révélation : une étincelle part de l'orbe vers chaque case neuve, la case s'illumine d'une onde, la lettre monte en devenant nette.
-          const H = GR.horaires(tr, siennes0.length);
           siennes0.forEach((cell, j) => {
             deja.add(cell);
-            const tl = tr + j * GR.LETTRE.ecart, ta = H.pose[j];
+            const ta = H.pose[j], tl = ta - GR.LETTRE.vol;
             const sp = sparks[cases.indexOf(cell)], dx = +cell.dataset.cx - ox, dy = +cell.dataset.cy - oy;
             c.ft(sp, { opacity: 0, x: 0, y: 0, scale: 1 }, { opacity: 1, duration: 0.08 }, tl);
             c.ft(sp, { x: 0 }, { x: dx, duration: GR.LETTRE.vol, ease: 'power1.in' }, tl);

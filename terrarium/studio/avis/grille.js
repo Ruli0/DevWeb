@@ -91,12 +91,14 @@
   }
   // Les couleurs de papier des mots, dans l'ordre de révélation (palette « coucher »).
   const COULEURS = ['#ff9a5c', '#ffd45c', '#4fd1c5', '#c46bff', '#ff5d7a', '#7fb2ff'];
-  // L'horaire d'un mot révélé : une lettre nouvelle toutes les 0,22 s après la réponse, posée 0,5 s plus tard (le vol de l'étincelle).
+  // L'horaire d'un mot révélé : une lettre nouvelle toutes les 0,22 s, posée 0,5 s après le départ de son étincelle, la première après la voix.
   // Le même calcul sert à l'image et au son. nouvelles : le nombre de cases du mot pas encore révélées par un mot précédent.
-  const LETTRE = { ecart: 0.22, vol: 0.5 };
-  function horaires(tr, nouvelles) {
-    const pose = Array.from({ length: nouvelles }, (_, j) => tr + j * LETTRE.ecart + LETTRE.vol);
-    return { pose, fin: nouvelles ? pose[nouvelles - 1] : tr + LETTRE.vol };
+  const LETTRE = { ecart: 0.22, vol: 0.5, apresVoix: 0.5 };
+  // La première lettre ne se pose jamais avant que la voix ait fini de dire la réponse (fMot : fin de la phrase de réponse, + 0,5 s : même un son en retard de 0,3 s sur l'image arrive avant).
+  function horaires(tr, nouvelles, fMot) {
+    const premiere = Math.max(tr + LETTRE.vol, (fMot || 0) + LETTRE.apresVoix);
+    const pose = Array.from({ length: nouvelles }, (_, j) => premiere + j * LETTRE.ecart);
+    return { pose, depart: premiere - LETTRE.vol, fin: nouvelles ? pose[nouvelles - 1] : premiere };
   }
   // Les cases nouvelles de chaque mot, dans l'ordre de lecture.
   function nouvelles(g, n) {

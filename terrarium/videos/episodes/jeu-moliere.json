@@ -28,7 +28,8 @@
             "fin": "l'encre"
           },
           "reponse": {
-            "a": "plumes. Deuxième"
+            "a": "plumes. Deuxième",
+            "entendu": "plumes"
           }
         },
         {
@@ -42,7 +43,8 @@
             "fin": "vers"
           },
           "reponse": {
-            "a": "poètes. Dernier"
+            "a": "poètes. Dernier",
+            "entendu": "poètes"
           }
         },
         {
@@ -56,7 +58,8 @@
             "fin": "imaginaire"
           },
           "reponse": {
-            "a": "Molières. Tu les"
+            "a": "Molières. Tu les",
+            "entendu": "Molières"
           }
         }
       ],
@@ -64,7 +67,8 @@
       "cadence": 15,
       "pulse": {
         "a": "Voyons jusqu'où"
-      }
+      },
+      "voixVerifiee": false
     }
   ],
   "publication": {

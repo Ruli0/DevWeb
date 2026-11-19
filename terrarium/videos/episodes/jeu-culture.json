@@ -90,7 +90,8 @@
             "fin": "fois"
           },
           "reponse": {
-            "a": "compte. Dernier"
+            "a": "compte. Dernier",
+            "entendu": "compte"
           }
         },
         {
@@ -107,7 +108,8 @@
             "a": "prose. Académicien"
           }
         }
-      ]
+      ],
+      "voixVerifiee": false
     }
   ],
   "publication": {

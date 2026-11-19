@@ -61,6 +61,12 @@ if (require.main === module) {
   const dossier = path.join(racine, 'videos/studio', id);
   const r0 = preparer(ep, voix);
   if (r0.bloquants.length) { console.error(`Rendu final refusé pour « ${id} » :\n  - ${r0.bloquants.join('\n  - ')}`); process.exit(1); }
+  // Les jeux de mots fléchés : la réponse ne doit jamais être affichée avant la voix (vérifié sur le signal sonore, voir scripts/verifier-voix.js).
+  if ((ep.plans || []).some((p) => p.plan === 'grille')) {
+    const v = spawnSync('node', [path.join(__dirname, 'verifier-voix.js'), id], { encoding: 'utf8' });
+    process.stdout.write(v.stdout || ''); process.stderr.write(v.stderr || '');
+    if (v.status) { console.error(`Rendu final refusé pour « ${id} » : la voix et l'image ne sont pas synchronisées (voir ci-dessus).`); process.exit(1); }
+  }
   let rendu = null;
   if (!process.argv.includes('--sans-rendu')) {
     if (!fs.existsSync(path.join(dossier, 'index.html'))) { console.error(`composition absente : npm run video -- ${id}`); process.exit(1); }

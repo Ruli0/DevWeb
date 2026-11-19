@@ -14,6 +14,7 @@ const UNIS = ['nuit', 'papier', 'accent'];                       // les fonds un
 const DECORS3D = require('./decors3d.js');
 const PERSO = require('./personnage.js');
 const ORBE = require('./orbe.js');
+const { recaler, finParole } = require('./recalage.js');
 const { PALETTES } = require('./palettes.js');
 const FONDS = [...UNIS, ...Object.keys(DECORS), ...Object.keys(DECORS3D), 'photo'];        // + les décors illustrés + une photo de l'auteur
 const TRANSITIONS = ['cercle', 'volet', 'biseau', 'rideau'];
@@ -96,8 +97,9 @@ function sousTitres(mots, r) {
   return groupes;
 }
 
-function montage(ep, voix) {
+function montage(ep, voixBrute) {
   const erreurs = [];
+  const voix = recaler(voixBrute);   // dates de mots recalées sur la parole réelle (voir recalage.js)
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
@@ -130,6 +132,21 @@ function montage(ep, voix) {
     const k = garde.findIndex(([, b]) => b >= fin - 0.05);
     if (k < 0) { erreurs.push(`"pauses" : « ${pa.apres} » tombe dans un passage retiré`); return; }
     pausesVoix.push({ k, d: pa.duree });
+  });
+  // Vérifications du jeu de mots fléchés : la voix doit dire le mot de la grille, ne pas le dire dans la définition, et rien d'autre avant la réponse.
+  const sans = (x) => cle(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  (ep.plans || []).forEach((pl, n) => {
+    if (pl.plan !== 'grille') return;
+    (pl.mots || []).forEach((m, k) => {
+      const ou = `plan ${n + 1}, mot ${k + 1} (${m.texte})`, rep = m.reponse || {}, ind = m.indice || {};
+      const iRep = chercher(voix.mots, rep.a || ''), iInd = chercher(voix.mots, ind.a || '');
+      if (iRep < 0 || iInd < 0) return;   // ancres introuvables : déjà signalé
+      const attendu = sans(m.texte), dit = sans(voix.mots[iRep].m);
+      if (dit !== attendu && sans(rep.entendu || '') !== dit) erreurs.push(`${ou} : la voix dit « ${voix.mots[iRep].m} », la grille attend « ${m.texte} » : réécoute la prise (mot mal prononcé ?) ; si seule la transcription se trompe, déclare "entendu": "${voix.mots[iRep].m}" dans "reponse"`);
+      for (let i = iInd; i < iRep; i += 1) if (sans(voix.mots[i].m) === attendu) { erreurs.push(`${ou} : le mot « ${m.texte} » est dit avant la réponse (mot ${i}) : la définition ne doit pas contenir la réponse`); break; }
+      if (pl.voixVerifiee !== false && !finParole(voix, voix.mots[iRep]).isolee) erreurs.push(`${ou} : la phrase de réponse n'est pas séparée de la suite par un silence : relance scripts/voix-silences.py avec --auto, puis scripts/voix.py`);
+      if (ind.fin) { const iFin = chercher(voix.mots, ind.fin, iInd); if (iFin >= 0) { const apres = iFin + cle(ind.fin).split(/\s+/).length; if (iRep - apres > 2) erreurs.push(`${ou} : la voix dit ${iRep - apres} mots entre la fin de la définition (« ${ind.fin} ») et la réponse : seulement « c'est » est attendu`); } }
+    });
   });
   // La cadence du jeu de mots fléchés : "cadence": 15 sur le plan « grille » = une réponse toutes les 15 s. Le montage calcule la durée du silence
   // de réflexion de chaque mot (après "indice.fin") pour que la réponse tombe pile ; il faut donc un vrai silence dans la voix à cet endroit.
@@ -181,7 +198,7 @@ function montage(ep, voix) {
     const i = chercher(voix.mots, ancre, depuis);
     if (i < 0) { erreurs.push(`${ou} : l’ancre « ${ancre} » est introuvable dans la voix (après le mot ${depuis})`); return { i: depuis, t: 0 }; }
     if (retire(i)) erreurs.push(`${ou} : l’ancre « ${ancre} » tombe dans un passage retiré`);
-    return { i, t: h(voix.mots[i].d) };
+    return { i, t: h(voix.mots[i].d), f: h(finParole(voix, voix.mots[i]).fin) };
   };
   const avecPlace = (ep.plans || []).map((pl, n) => (PERSO.PLACES[pl.fond] && pl.personnage === undefined ? n : -1)).filter((n) => n >= 0);
   const premierAvecPlace = avecPlace[0], dernierAvecPlace = avecPlace[avecPlace.length - 1];
@@ -218,7 +235,9 @@ function montage(ep, voix) {
     (p.collage || []).forEach((co) => { if (co.a) { co.t = arrondi(Math.max(0, instant(co.a, curseur, ou).t - t0 - 0.1)); delete co.a; } else co.t = 0.4; });
     def.ancres(p).forEach(([objet, champ]) => {
       if (!objet || !objet[champ]) return;
-      objet.t = arrondi(Math.max(0, instant(objet[champ], curseur, ou).t - t0 - 0.1));
+      const r = instant(objet[champ], curseur, ou);
+      objet.t = arrondi(Math.max(0, r.t - t0 - 0.1));
+      objet.f = arrondi(Math.max(objet.t, r.f - t0 - 0.1));   // la fin de la phrase qui commence sur l'ancre (pour ne rien montrer avant que la voix ait fini de le dire)
     });
     // Les mouvements de caméra (décors 3D) : "camera": ["tour", { "m": "zoom:paysan", "a": "le paysan" }]. Une ancre fixe le début du mouvement.
     if (p.camera) {
@@ -301,7 +320,7 @@ function montage(ep, voix) {
   plans.filter((x) => x.id === 'grille').forEach((x) => {
     const G = require('./grille.js'), g = G.construire(x.p.mots), neuves = G.nouvelles(g, x.p.mots.length);
     x.p.mots.forEach((m, k) => {
-      const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length);
+      const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length, x.t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
       H.pose.forEach((t, j) => sons.push({ f: `lettre-${Math.min(8, j + 1)}.wav`, t: arrondi(t - 0.02), v: arrondi(0.3 * reglages.bruitages) }));
       sons.push({ f: 'trouve.wav', t: arrondi(H.fin + 0.12), v: arrondi(0.34 * reglages.bruitages) });
       [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));

@@ -123,9 +123,5 @@
     ],
     "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
   },
-  "corrections": {
-    "6": "Cinq",
-    "8": "dix",
-    "45": ""
-  }
+  "corrections": {}
 }
