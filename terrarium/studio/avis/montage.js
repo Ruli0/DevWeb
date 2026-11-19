@@ -26,6 +26,7 @@ const cle = (m) => String(m).toLowerCase().replace(/[’']/g, "'").replace(/[.,;
 // Cherche une suite de mots (« ancre ») dans la transcription, à partir de l'indice `depuis`. Renvoie l'indice du premier mot, ou -1.
 function chercher(mots, ancre, depuis = 0) {
   const a = cle(ancre).split(/\s+/).filter(Boolean);
+  if (!a.length) return -1;
   for (let i = depuis; i + a.length <= mots.length; i += 1) if (a.every((x, k) => cle(mots[i + k].m) === x)) return i;
   return -1;
 }
@@ -97,9 +98,14 @@ function sousTitres(mots, r) {
   return groupes;
 }
 
-function montage(ep, voixBrute) {
+function montage(ep, voixFournie) {
   const erreurs = [];
-  const voix = recaler(voixBrute);   // dates de mots recalées sur la parole réelle (voir recalage.js)
+  // Un jeu muet (plan « grille » avec "muet") n'a pas de voix : la ligne de temps est fabriquée ici (accroche, intro, une tranche par mot).
+  const planMuet = (ep.plans || []).find((x) => x.plan === 'grille' && x.muet);
+  const reglageMuet = planMuet ? Object.assign({ intro: 5, cadence: 10 }, planMuet.muet) : null;
+  const voixBrute = reglageMuet ? { duree: reglageMuet.intro + (planMuet.mots || []).length * reglageMuet.cadence + (reglageMuet.fin == null ? 4 : reglageMuet.fin), mots: [], silences: [], maquette: true, muet: true } : voixFournie;
+  if (!voixBrute) erreurs.push('la voix est introuvable (videos/voix/<id>/mots.json) : prépare-la avec scripts/voix.py, ou fais un jeu muet (plan « grille » avec "muet")');
+  const voix = recaler(voixBrute || { duree: 1, mots: [], silences: [] });   // dates de mots recalées sur la parole réelle (voir recalage.js)
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
@@ -114,6 +120,7 @@ function montage(ep, voixBrute) {
   if (!rub) erreurs.push(`"rubrique" : une parmi ${Object.keys(S.rubriques).join(', ')}`);
   if (!voix) { erreurs.push(`la voix manque : python3 scripts/voix.py <enregistrement> ${ep.voix || ep.id}`); return { erreurs, feuille: null }; }
   const reglages = Object.assign({}, S.voix, ep.reglages || {});
+  if (reglageMuet) reglages.vitesse = 1;   // pas de voix à accélérer : les instants de la ligne de temps sont des instants de la vidéo
 
   // 1. Les passages retirés, donnés par leurs premiers et derniers mots.
   const retraits = [];
@@ -136,7 +143,7 @@ function montage(ep, voixBrute) {
   // Vérifications du jeu de mots fléchés : la voix doit dire le mot de la grille, ne pas le dire dans la définition, et rien d'autre avant la réponse.
   const sans = (x) => cle(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   (ep.plans || []).forEach((pl, n) => {
-    if (pl.plan !== 'grille') return;
+    if (pl.plan !== 'grille' || pl.muet) return;
     (pl.mots || []).forEach((m, k) => {
       const ou = `plan ${n + 1}, mot ${k + 1} (${m.texte})`, rep = m.reponse || {}, ind = m.indice || {};
       const iRep = chercher(voix.mots, rep.a || ''), iInd = chercher(voix.mots, ind.a || '');
@@ -151,7 +158,7 @@ function montage(ep, voixBrute) {
   // La cadence du jeu de mots fléchés : "cadence": 15 sur le plan « grille » = une réponse toutes les 15 s. Le montage calcule la durée du silence
   // de réflexion de chaque mot (après "indice.fin") pour que la réponse tombe pile ; il faut donc un vrai silence dans la voix à cet endroit.
   (ep.plans || []).forEach((pl, n) => {
-    if (pl.plan !== 'grille' || !pl.cadence) return;
+    if (pl.plan !== 'grille' || !pl.cadence || pl.muet) return;
     let limite = null;
     (pl.mots || []).forEach((m, k) => {
       const ou = `plan ${n + 1}, mot ${k + 1}`, ind = m.indice || {}, rep = m.reponse || {};
@@ -233,7 +240,12 @@ function montage(ep, voixBrute) {
     else { const r = instant(pl.a || '', curseur, ou); curseur = r.i; t0 = Math.max(0, r.t - 0.12); }
     // Les ancres internes (éléments d'une liste, bascule…) deviennent des instants relatifs au plan.
     (p.collage || []).forEach((co) => { if (co.a) { co.t = arrondi(Math.max(0, instant(co.a, curseur, ou).t - t0 - 0.1)); delete co.a; } else co.t = 0.4; });
-    def.ancres(p).forEach(([objet, champ]) => {
+    if (pl.plan === 'grille' && pl.muet) {
+      // Jeu muet : la tranche du mot k va de intro + k × cadence à intro + (k + 1) × cadence ; la réponse tombe sur le zéro du minuteur.
+      (p.mots || []).forEach((m, k) => { if (m.indice && m.reponse) { m.indice.t = arrondi(reglageMuet.intro + k * reglageMuet.cadence); m.reponse.t = arrondi(reglageMuet.intro + (k + 1) * reglageMuet.cadence); m.reponse.f = m.reponse.t; } });
+      if (p.pulse) p.pulse.t = arrondi(Math.max(0, reglageMuet.intro - 1.5));
+      p.muetCfg = reglageMuet; delete p.muet;
+    } else     def.ancres(p).forEach(([objet, champ]) => {
       if (!objet || !objet[champ]) return;
       const r = instant(objet[champ], curseur, ou);
       objet.t = arrondi(Math.max(0, r.t - t0 - 0.1));
@@ -317,6 +329,7 @@ function montage(ep, voixBrute) {
   const sansMusique = ep.musique === 'aucune';
   if ((ep.musique || S.musique) === 'avis') { sons.push({ f: 'indicatif-court.wav', t: 0, v: 0.5 }); if (duree - dureeVoix > 1.5) sons.push({ f: 'indicatif.wav', t: arrondi(dureeVoix + 0.15), v: 0.6 }); }
   // Les bruitages du jeu de mots fléchés : un « tac » par lettre posée, un accord quand le mot est trouvé, un tic par seconde sur les trois dernières secondes.
+  plans.filter((x) => x.id === 'grille' && x.p.muetCfg).forEach((x) => x.p.mots.forEach((m) => sons.push({ f: 'indice.wav', t: arrondi(x.t0 + m.indice.t + (m.indice.t > 6 ? 0.7 : -0.1)), v: arrondi(0.3 * reglages.bruitages) })));
   plans.filter((x) => x.id === 'grille').forEach((x) => {
     const G = require('./grille.js'), g = G.construire(x.p.mots), neuves = G.nouvelles(g, x.p.mots.length);
     x.p.mots.forEach((m, k) => {
@@ -333,10 +346,10 @@ function montage(ep, voixBrute) {
   const feuille = {
     version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', palette: PALETTES[ep.palette] ? ep.palette : S.palette, accent: rub ? (pal.accents[ep.rubrique] || rub.accent) : '#fff', fond: pal.couleurs.fond, texte: pal.couleurs.texte,
-    duree, dureeVoix, voix: { id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
+    duree, dureeVoix, voix: { muet: !!reglageMuet, id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
       // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.
-      plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)) },
+      plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? 96 : undefined, muet: !!reglageMuet },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,

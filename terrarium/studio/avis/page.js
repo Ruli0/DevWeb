@@ -220,9 +220,11 @@ function ecrire(f, dossier) {
     copierMedia(pl.p.photo.fichier, dossier);
   });
   f.plans.forEach((pl) => (pl.p.collage || []).forEach((co) => { fs.mkdirSync(path.join(dossier, 'assets/medias'), { recursive: true }); copierMedia(co.image, dossier); }));
-  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
+  // Un jeu muet n'a pas de voix : une piste silencieuse de la durée de la vidéo.
+  if (f.voix.muet) execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=mono', '-t', String(f.duree), '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
+  else execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
   // L'orbe suit le vrai rythme de la voix montée : on mesure son énergie, 60 fois par seconde (repli : les mots, déjà dans la feuille).
-  if (f.orbe) {
+  if (f.orbe && !f.voix.muet) {
     try {
       const brut = execFileSync('ffmpeg', ['-v', 'error', '-i', path.join(dossier, 'assets/sons/voix.wav'), '-ac', '1', '-ar', '8000', '-f', 's16le', '-'], { maxBuffer: 1 << 28 });
       const ech = new Float32Array(brut.length >> 1); for (let i = 0; i < ech.length; i += 1) ech[i] = brut.readInt16LE(i * 2) / 32768;
@@ -242,10 +244,20 @@ function ecrire(f, dossier) {
   // La musique : celle du compte (construite sur l'indicatif, une instrumentation par rubrique), l'ancienne « labo », ou aucune.
   let m;
   if (f.musique.nom === 'avis') m = outils.normaliser(AVIS.musique({ duree: f.duree + 0.3, rubrique: f.musique.rubrique, indicatif: f.musique.indicatif }), 0.8);
-  else if (AVIS.VIVES[f.musique.nom]) m = outils.normaliser(AVIS.vive(f.musique.nom, { duree: f.duree + 0.3, plein: f.musique.plein }), 0.8);
+  else if (AVIS.VIVES[f.musique.nom]) m = outils.normaliser(AVIS.vive(f.musique.nom, { duree: f.duree + 0.3, plein: f.musique.plein, tempo: f.musique.tempo }), 0.8);
   else if (f.musique.nom === 'aucune') m = outils.tampon(f.duree + 0.3);
   else m = outils.normaliser(MUSIQUES_ARRANGEES[f.musique.nom]({ duree: f.duree + 0.3, parties: Array.from({ length: Math.ceil(f.duree / (4 * 60 / 90)) + 1 }, () => 'plein'), coupures: [] }), 0.8);
   outils.ecrireWav(path.join(dossier, 'assets/sons/musique.wav'), m, true);
+  // Sans voix, l'orbe bat sur la musique : son niveau vient de l'énergie de la piste de musique (lissée comme celle d'une voix).
+  if (f.orbe && f.voix.muet) {
+    const brut = execFileSync('ffmpeg', ['-v', 'error', '-i', path.join(dossier, 'assets/sons/musique.wav'), '-ac', '1', '-ar', '8000', '-f', 's16le', '-'], { maxBuffer: 1 << 28 });
+    const ech = new Float32Array(brut.length >> 1); for (let i = 0; i < ech.length; i += 1) ech[i] = brut.readInt16LE(i * 2) / 32768;
+    const n = ORBE.niveauxAudio(ech, 8000, 60);
+    while (n.length < Math.ceil(f.duree * 60) + 1) n.push(0);
+    f.orbe.pas = 60; f.orbe.niveaux = n; f.orbe.source = 'musique';
+    fs.writeFileSync(path.join(dossier, 'index.html'), html(f));
+    fs.writeFileSync(path.join(dossier, 'feuille.json'), `${JSON.stringify(f, null, 1)}\n`);
+  }
   // Le mixage est fait ici, en un seul fichier (voix, musique, bruitages), avec un limiteur à -3 dB :
   // laissé au moteur de rendu, le niveau d'ensemble changeait d'une vidéo à l'autre.
   const bruits = f.sons || [];

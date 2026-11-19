@@ -136,6 +136,8 @@
 .jeu .scotch { position: absolute; width: 130px; height: 38px; background: repeating-linear-gradient(45deg, #ffd45ce6 0 11px, #ff9a5ce6 11px 22px); opacity: .92; }
 .jeu .scotch.s1 { left: 214px; top: 300px; transform: rotate(-6deg); }
 .jeu .scotch.s2 { left: 910px; top: 440px; transform: rotate(5deg); }
+.jeu .indices p small { position: absolute; left: 150px; top: 12px; font: 800 21px '${P.titre}'; letter-spacing: .08em; text-transform: uppercase; color: #d1603d; }
+.jeu .indices p.i-intro, .jeu .indices p.i-fin { font-size: 38px; }
 .jeu .indices p { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; padding: 0 135px 0 40px; font: 800 46px/1.06 '${P.titre}'; letter-spacing: -.02em; color: #2a1a14; }
 .jeu .minuteur { position: absolute; left: 920px; top: 344px; width: 84px; height: 84px; }
 .jeu .minuteur svg { position: absolute; inset: 0; transform: rotate(-90deg); }

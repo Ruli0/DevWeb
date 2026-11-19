@@ -26,7 +26,7 @@ function segmentsParole(ech, taux, { pas = 0.02, bas = 32, comble = 0.12, mini =
 function verifier(feuille, ech, taux) {
   const problemes = [], seg = segmentsParole(ech, taux);
   const G = require('../studio/avis/grille.js');
-  feuille.plans.filter((x) => x.id === 'grille').forEach((x) => {
+  feuille.plans.filter((x) => x.id === 'grille' && !x.p.muetCfg).forEach((x) => {
     const g = G.construire(x.p.mots), neuves = G.nouvelles(g, x.p.mots.length);
     x.p.mots.forEach((m, k) => {
       const tr = x.t0 + m.reponse.t, H = G.horaires(tr, neuves[k].length, x.t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f)), ou = `mot ${k + 1} (${m.texte})`;
@@ -65,6 +65,7 @@ if (require.main === module) {
   const f = path.join(dossier, 'feuille.json'), v = path.join(dossier, 'assets/sons/voix.wav');
   if (!fs.existsSync(f) || !fs.existsSync(v)) { console.error(`composition absente : npm run video -- ${id}`); process.exit(1); }
   const feuille = JSON.parse(fs.readFileSync(f, 'utf8'));
+  if (feuille.voix && feuille.voix.muet) { console.log('Vérification de la voix : jeu muet, rien à vérifier.'); process.exit(0); }
   if (!feuille.plans.some((x) => x.id === 'grille') && !(feuille.groupes || []).length) { console.log('Vérification de la voix : rien à vérifier.'); process.exit(0); }
   const r = verifier(feuille, lirePiste(v), 16000);
   if (!r.problemes.length) console.log(`Vérification de la voix (${id}) : la réponse n'est jamais affichée avant la voix, aucun sous-titre dans un silence.`);

@@ -18,6 +18,7 @@ function preparer(ep, voix, { rendu } = {}) {
   aEcrire(ep.publication, 'le texte de publication');
   if (ep.publication && !nu(ep.publication.texte) && !ep.publication._a_ecrire) bloquants.push('le texte de publication est vide');
   if (voix && voix.maquette) bloquants.push('la voix est une maquette muette : enregistre ta voix (ou génère-la) avant le rendu final');
+  if (voix && voix.muet) rappels.push('Version muette : aucune voix, donc pas de mention « contenu généré par IA » à cocher. Ajoute un son de la bibliothèque de TikTok si tu veux de la musique plus connue.');
   if (voix && voix.generee) rappels.push('Voix générée par IA : coche « contenu généré par IA » à la publication. Ta vraie voix reste préférable.');
   if ((ep.plans || []).some((p) => p.fond === 'photo' || (p.collage || []).length)) rappels.push('Ta photo apparaît dans la vidéo : vérifie que tu es d’accord pour la montrer, et qu’elle ne révèle rien de privé (lieu, plaque, visage d’un tiers).');
   if (['travail', 'relations'].includes(ep.rubrique)) rappels.push('Sujet d’opinion : présente-le comme ton avis, sans chiffre ni source que tu n’as pas vérifiés.');
@@ -57,12 +58,13 @@ if (require.main === module) {
   if (!id) { console.error('Usage : node scripts/publier.js <id> [--sans-rendu]'); process.exit(1); }
   const racine = path.join(__dirname, '..');
   const ep = JSON.parse(fs.readFileSync(path.join(racine, 'videos/episodes', `${id}.json`), 'utf8'));
-  const voix = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix', ep.voix || id, 'mots.json'), 'utf8'));
+  const muet = (ep.plans || []).some((p) => p.plan === 'grille' && p.muet);
+  const voix = muet ? { muet: true } : JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix', ep.voix || id, 'mots.json'), 'utf8'));
   const dossier = path.join(racine, 'videos/studio', id);
   const r0 = preparer(ep, voix);
   if (r0.bloquants.length) { console.error(`Rendu final refusé pour « ${id} » :\n  - ${r0.bloquants.join('\n  - ')}`); process.exit(1); }
   // Les jeux de mots fléchés : la réponse ne doit jamais être affichée avant la voix (vérifié sur le signal sonore, voir scripts/verifier-voix.js).
-  if ((ep.plans || []).some((p) => p.plan === 'grille')) {
+  if ((ep.plans || []).some((p) => p.plan === 'grille' && !p.muet)) {
     const v = spawnSync('node', [path.join(__dirname, 'verifier-voix.js'), id], { encoding: 'utf8' });
     process.stdout.write(v.stdout || ''); process.stderr.write(v.stderr || '');
     if (v.status) { console.error(`Rendu final refusé pour « ${id} » : la voix et l'image ne sont pas synchronisées (voir ci-dessus).`); process.exit(1); }

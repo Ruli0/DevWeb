@@ -280,3 +280,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : « ça affiche la réponse avant [la voix] » : la lettre se posait 0,5 s après le début du « c'est », donc pendant la prononciation, et les dates de mots étaient parfois fausses.
 - **Écarté** : décaler seulement les étincelles (la lettre restait trop tôt) ; faire confiance aux dates Whisper sans les confronter au signal.
 - **Limite** : je ne peux pas écouter la voix ; la mesure se fait sur l'énergie du signal. Les deux anciens jeux ne passent pas ces contrôles et sont marqués `"voixVerifiee": false`.
+
+## 42. Jeu muet et première semaine de publication (22 nov. 2026)
+
+- **Décision** : un mode muet pour les jeux (texte, musique, bruitages, orbe sur la musique) pour comparer avec la version parlée ; puis publier avant de développer davantage (`PLAN-PUBLICATION.md`).
+- **Pourquoi** : tu as demandé si ça marche sans voix ; beaucoup regardent sans le son, et rien n'est encore publié : tous les choix de la chaîne sont des paris. Ma réserve : on s'était éloigné de ta valeur ajoutée (ta voix, tes opinions).
+- **Écarté** : continuer le polissage des décors et des animations sans chiffres.
+- **Règle** : plus de nouvelles fonctions de montage avant le premier relevé à 48 h, sauf correction de bug.

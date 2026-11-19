@@ -224,9 +224,9 @@ VIVES['house-nue'] = { nom: 'Électro house, basse et grosse caisse seules', tem
 // --- « Rêverie » : l'ambiance du jeu de mots fléchés (18 nov. 2026, demandée « dans l'esprit de Call it what you like »). ------------
 // Une musique originale, onirique et mi-lente : des nappes chaudes sur quatre accords (fa maj7, la m7, ré m7, do maj7), un arpège de cloches
 // doux, une basse ronde et rare, un pouls feutré (grosse caisse sourde, petit claquement). Aucune mélodie ni suite d'accords du morceau cité.
-function reverie({ duree = 30 } = {}) {
+function reverie({ duree = 30, tempo = 92 } = {}) {
   const { tampon, sinus, bruit, enveloppe, graine } = O();
-  const tempo = 92, temps = 60 / tempo, mesure = 4 * temps, b = tampon(duree);
+  const temps = 60 / tempo, mesure = 4 * temps, b = tampon(duree);
   const SUITE = [[53, 57, 60, 64], [57, 60, 64, 67], [50, 53, 57, 60], [48, 52, 55, 59]];
   const ARPEGE = [0, 1, 2, 3, 2, 1, 2, 3];
   for (let m = 0; m * mesure < duree; m += 1) {
@@ -242,9 +242,9 @@ function reverie({ duree = 30 } = {}) {
 }
 VIVES.reverie = { nom: 'Rêverie (onirique, mi-lente, pour le jeu de mots fléchés)', tempo: 92, fabrique: (o) => reverie(o) };
 
-function vive(style = 'funk', { duree = 30, plein } = {}) {
+function vive(style = 'funk', { duree = 30, plein, tempo } = {}) {
   const { tampon } = O();
-  if (VIVES[style] && VIVES[style].fabrique) return VIVES[style].fabrique(Object.assign({ duree }, plein == null ? {} : { plein }));
+  if (VIVES[style] && VIVES[style].fabrique) return VIVES[style].fabrique(Object.assign({ duree }, plein == null ? {} : { plein }, tempo == null ? {} : { tempo }));
   const v = VIVES[style] || VIVES.funk, pas = 60 / v.tempo / 4, b = tampon(duree);
   for (let m = 0; m * 16 * pas < duree; m += 1) v.jouer(b, m, m * 16 * pas, pas, ACCORDS[m % 4], 200 + m * 50);
   return reverbe(b, 0.14);
@@ -270,6 +270,13 @@ const BRUITAGES = {
     bruit(b, (x) => 0.55 * enveloppe(x, 0.0005, 0.012), { bas: 900, haut: 4800, debut: 0, hasard: graine(150 + r), duree: 0.06 });
     return reverbe(b, 0.12);
   }])),
+  // Un nouvel indice arrive (jeu muet) : deux notes douces qui montent.
+  'indice.wav': () => {
+    const { tampon } = O();
+    const b = tampon(0.9);
+    [76, 83].forEach((n, i) => TIMBRES.cloche(b, note(n), i * 0.11, 0.3, 0.6));
+    return reverbe(b, 0.2);
+  },
   'trouve.wav': () => {
     const { tampon } = O();
     const b = tampon(1.6);

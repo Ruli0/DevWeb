@@ -1,0 +1,104 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-plage-muet",
+  "titre": "Plus malin qu'un Robinson ? (muet)",
+  "rubrique": "voyage",
+  "numero": 12,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "palier": 2,
+      "decor": "plage",
+      "titre": "Plus malin qu'un *Robinson* ?",
+      "stades": [
+        "Touriste",
+        "Marin",
+        "Robinson"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "COCO",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Le fruit du cocotier"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "SOLEIL",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 7,
+          "indice": {
+            "texte": "Il brille sur la plage"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "CORAIL",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "L'animal qui construit les récifs"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "MANGROVE",
+          "sens": "h",
+          "ligne": 3,
+          "colonne": 0,
+          "indice": {
+            "texte": "Forêt d'arbres les pieds dans l'eau salée"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ARCHIPEL",
+          "sens": "h",
+          "ligne": 5,
+          "colonne": 0,
+          "indice": {
+            "texte": "Ensemble d'îles proches"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 5,
+        "cadence": 10,
+        "texteIntro": "Les mots fléchés mesurent ton intelligence conversationnelle. Jusqu'où vas-tu ?",
+        "texteFin": "Touriste ou Robinson ? Ton score en commentaire"
+      },
+      "pulse": {}
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? Cinq mots croisés sur la plage et les îles, dix secondes par mot : touriste, marin ou Robinson ? Ton score en commentaire.",
+    "hashtags": [
+      "#motsfleches",
+      "#plage",
+      "#iles",
+      "#quiz",
+      "#vacances"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  }
+}

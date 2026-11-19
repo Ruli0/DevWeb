@@ -301,7 +301,8 @@ test('tous les épisodes « avis » du dépôt se montent sans erreur', () => {
   const liste = fs.readdirSync(dossier).filter((f) => f.endsWith('.json') && !f.endsWith('.sources.json')).map((f) => JSON.parse(fs.readFileSync(path.join(dossier, f), 'utf8'))).filter((e) => e.version === 4);
   assert.ok(liste.length >= 5);
   liste.forEach((ep) => {
-    const v = JSON.parse(fs.readFileSync(path.join(racine, 'videos/voix', ep.voix || ep.id, 'mots.json'), 'utf8'));
+    const f = path.join(racine, 'videos/voix', ep.voix || ep.id, 'mots.json');
+    const v = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null;   // un jeu muet n'a pas de voix
     assert.deepStrictEqual(montage(ep, v).erreurs, [], ep.id);
   });
 });
@@ -612,7 +613,7 @@ test('jeu de culture : cinq mots, six croisements, une réponse toutes les 10 s,
   const rep = r.feuille.plans[0].p.mots.map((m) => m.reponse.t);
   for (let k = 1; k < 5; k += 1) assert.ok(Math.abs(rep[k] - rep[k - 1] - 10) < 0.15, `10 s entre les réponses ${k} et ${k + 1} : ${rep}`);
   const html = page.html(r.feuille).replace(/<script[\s\S]*?<\/script>/g, '');
-  assert.strictEqual((html.match(/<div class="indices">(.*?)<\/div>/s) || ['', ''])[1].split('<p>').length - 1, 5, 'cinq indices dans le bandeau');
+  assert.strictEqual((html.match(/<div class="indices">(.*?)<\/div>/s) || ['', ''])[1].split('<p class="i-ind">').length - 1, 5, 'cinq indices dans le bandeau');
   for (let w = 0; w < 5; w += 1) assert.strictEqual((html.match(new RegExp(`data-w="${w}"`, 'g')) || []).length, 10, `dix chiffres dans la tranche ${w + 1}`);
   assert.ok(html.includes('Académicien') && G.figure('academicien').includes('<svg') && G.figure('hugo').includes('<svg'));
   // Le mot de trop est refusé, avec les six mots c'est accepté.
@@ -804,4 +805,29 @@ test('voix des jeux récents : aucune réponse avant la voix (signal réel), mon
     const r = verifier(JSON.parse(fs.readFileSync(path.join(f, 'feuille.json'), 'utf8')), lirePiste(path.join(f, 'assets/sons/voix.wav')), 16000);
     assert.deepStrictEqual(r.problemes, [], id);
   }
+});
+
+test('jeu muet : sans voix ni sous-titres, une tranche de 10 s par mot, intro et fin en texte, orbe sur la musique', () => {
+  const { montage } = require('../studio/avis/montage.js');
+  const page = require('../studio/avis/page.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const ep = lire('videos/episodes/jeu-plage-muet.json');
+  assert.strictEqual(ep.voix, null);
+  const r = montage(ep, null);   // aucune voix fournie
+  assert.deepStrictEqual(r.erreurs, []);
+  const f = r.feuille, m = f.plans[0].p.mots;
+  assert.strictEqual(f.groupes.length, 0, 'pas de sous-titres');
+  assert.strictEqual(f.duree, 5 + 5 * 10 + 4);
+  assert.deepStrictEqual(m.map((x) => x.reponse.t), [15, 25, 35, 45, 55]);
+  assert.deepStrictEqual(m.map((x) => x.indice.t), [5, 15, 25, 35, 45]);
+  assert.strictEqual(f.musique.tempo, 96, '4 mesures = 10 s : la réponse tombe sur un temps fort');
+  assert.strictEqual(f.sons.filter((x) => x.f === 'indice.wav').length, 5);
+  assert.strictEqual(f.sons.filter((x) => x.f === 'tic-jeu.wav').length, 15);
+  const html = page.html(f).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.ok(html.includes('class="i-intro"') && html.includes('class="i-fin"') && html.includes('Mot 3/5'));
+  assert.ok(montage({ ...ep, plans: [{ ...ep.plans[0], muet: undefined }] }, null).erreurs.some((e) => e.includes('voix est introuvable')), 'sans « muet », la voix reste obligatoire');
+  const sons = require('../scripts/sons-avis.js');
+  const a = sons.vive('reverie', { duree: 12, tempo: 96 }), b = sons.vive('reverie', { duree: 12, tempo: 96 });
+  assert.strictEqual(a.length, b.length); for (let i = 0; i < a.length; i += 1) assert.ok(Number.isFinite(a[i]) && a[i] === b[i]);
+  const ind = sons.BRUITAGES['indice.wav'](); assert.ok(ind.length > 0 && Array.from(ind).every(Number.isFinite));
 });
