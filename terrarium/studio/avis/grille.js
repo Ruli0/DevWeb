@@ -145,11 +145,13 @@
 .jeu .m-nb span { grid-area: 1 / 1; font: 800 36px '${P.titre}'; color: #2a1a14; font-variant-numeric: tabular-nums; }
 .jeu .tampon { position: absolute; left: 740px; top: 436px; padding: 6px 20px 8px; border: 5px solid #d62e4f; border-radius: 12px; color: #d62e4f; font: 800 34px '${P.titre}'; letter-spacing: .08em; background: #fff6e8; opacity: 0; transform-origin: 50% 50%; }
 .jeu .barre { position: absolute; left: 60px; top: 1448px; width: 960px; height: 150px; }
-.jeu .rail { position: absolute; left: 60px; right: 60px; top: 40px; height: 14px; border-radius: 7px; background: #ffffff30; overflow: hidden; }
+.jeu .strip { position: absolute; left: -22px; top: -16px; width: 1004px; height: 156px; filter: drop-shadow(6px 7px 0 #00000066); }
+.jeu .strip .pap { background: #fff6e8; }
+.jeu .rail { position: absolute; left: 60px; right: 60px; top: 40px; height: 14px; border-radius: 7px; background: #2a1a1426; overflow: hidden; }
 .jeu .rail i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, #ff9a5c, #ffd45c, #ff5d7a); transform-origin: 0 50%; transform: scaleX(0); }
 .jeu .palier { position: absolute; top: 0; width: 160px; margin-left: -80px; text-align: center; }
 .jeu .palier svg { display: block; margin: 0 auto; width: 84px; height: 84px; filter: drop-shadow(4px 5px 0 #00000066); }
-.jeu .palier p { margin: 2px 0 0; font: 800 26px '${P.titre}'; color: #fff; text-shadow: 2px 3px 0 #00000088; }
+.jeu .palier p { margin: 2px 0 0; font: 800 26px '${P.titre}'; color: #2a1a14; }
 .jeu .etincelle { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, #fff 0 25%, #ffd45c 55%, #ff9a5c00 100%); box-shadow: 0 0 20px 7px #ffb03b99; pointer-events: none; z-index: 5; }`;
   }
 

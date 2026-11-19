@@ -260,3 +260,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tes quatre questions (place, attrait, orbe, difficulté) : la grille n'occupait que la moitié gauche, le fond était uni, il n'y avait aucun bruitage, et les derniers mots étaient les plus faciles (3 lettres déjà visibles).
 - **Écarté** : une main de papier qui écrit ; cahier et crayon ; magazine de mots fléchés (proposés, non retenus : tu as choisi le papier découpé) ; les cinq cartes d'indice empilées.
 - **Limite** : `jeu-moliere` reste un peu en dessous (cases de 77 px, 8 lignes) ; à regrouper en 6 lignes si on le refait.
+
+## 39. Mots fléchés v5 : grille agrandie, décor thématique, jeu plage (21 nov. 2026)
+
+- **Décision** : grille de y 490 à 1260 sur toute la largeur ; barre de progression déplacée sous les sous-titres, sur une bande de papier lisible sur tous les fonds ; décor en papier découpé en bas de l'écran (`livres`, `plage`) ; `jeu-langue` refait ; `jeu-plage` : COCO, SOLEIL, CORAIL, MANGROVE, ARCHIPEL (4, 5, 5, 6, 6 lettres à deviner), paliers Touriste → Marin → Robinson.
+- **Pourquoi** : « grossir la grille, trop de partie inutilisée en bas, un décor sur le thème ».
+- **Écarté** : le mot EAU (la voix clonée le lit « tôt » ou « tout ») et un voilier posé sur le sable (remplacé par un parasol).
+- **Piège** : une voix générée lit mal les mots très courts ; choisir des mots d'au moins quatre lettres pour les jeux.

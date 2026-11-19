@@ -629,9 +629,9 @@ test('jeu v4 : cases à toute la largeur, horaire commun image et son, tension d
   const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
   // Des cases larges pour une grille de 5 × 6, plus petites pour 8 lignes, jamais hors de la largeur utile.
   const g56 = G.construire(lire('videos/episodes/jeu-culture.json').plans[0].mots), d = G.dims(g56);
-  assert.ok(d.caseTaille >= 110 && d.gx >= 90 && d.gx + d.w <= 990, JSON.stringify(d));
+  assert.ok(d.caseTaille >= 110 && d.gx >= 60 && d.gx + d.w <= 1020, JSON.stringify(d));
   const g86 = G.construire(lire('videos/episodes/jeu-moliere.json').plans[0].mots), d2 = G.dims(g86);
-  assert.ok(d2.caseTaille <= 86 && d2.gy + d2.h <= 1130);
+  assert.ok(d2.caseTaille <= 100 && d2.gy + d2.h <= 1260, JSON.stringify(d2));
   // L'horaire : une lettre neuve toutes les 0,22 s, posée 0,5 s après le départ de l'étincelle.
   const h = G.horaires(10, 5);
   assert.deepStrictEqual(h.pose.map((x) => +x.toFixed(2)), [10.5, 10.72, 10.94, 11.16, 11.38]);
@@ -701,4 +701,24 @@ test('jeu v5 : grille agrandie dans y 490-1260, barre sous les sous-titres, déc
   const ep = lire('videos/episodes/jeu-langue.json');
   const html = page.html(montage(ep, lire('videos/voix/jeu-langue/mots.json')).feuille).replace(/<script[\s\S]*?<\/script>/g, '');
   assert.ok(html.includes('class="plume"') && html.includes('fond-papier'));
+});
+
+test('jeu plage : cinq mots de plage et d\'îles, difficulté croissante, six croisements, 10 s entre les réponses, décor plage', () => {
+  const G = require('../studio/avis/grille.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const page = require('../studio/avis/page.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const ep = lire('videos/episodes/jeu-plage.json'), mots = ep.plans[0].mots, g = G.construire(mots), nv = G.nouvelles(g, 5).map((c) => c.length);
+  assert.deepStrictEqual(g.erreurs, []);
+  assert.ok(g.cases.filter((c) => c.mots.length > 1).length >= 6 && g.lignes <= 8 && g.colonnes <= 8);
+  for (let k = 1; k < 5; k += 1) assert.ok(nv[k] >= nv[k - 1] && mots[k].texte.length >= mots[k - 1].texte.length, `non décroissant : ${nv}`);
+  assert.ok(nv[4] - nv[0] >= 2);
+  assert.strictEqual(ep.plans[0].decor, 'plage');
+  const r = montage(ep, lire('videos/voix/jeu-plage/mots.json'));
+  assert.deepStrictEqual(r.erreurs, []);
+  assert.ok(r.feuille.duree <= 75);
+  const rep = r.feuille.plans[0].p.mots.map((x) => x.reponse.t);
+  for (let k = 1; k < 5; k += 1) assert.ok(Math.abs(rep[k] - rep[k - 1] - 10) < 0.15);
+  const html = page.html(r.feuille).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.ok(html.includes('class="soleil"') && html.includes('Touriste') && html.includes('Robinson'));
 });

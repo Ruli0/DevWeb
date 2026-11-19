@@ -141,7 +141,7 @@
         const etincelles = g.cases.map(() => '<i class="etincelle"></i>').join('');
         const indices = p.mots.map((m) => `<p>${u.esc(m.indice.texte)}</p>`).join('');
         const dec = DEC.decor(p.decor), fond = `<svg class="fond-papier" viewBox="0 0 1080 1920" style="--titre:${dec.titre}">${dec.fond}${dec.bas}</svg>`;
-        return `${fond}${p.titre ? `<p class="jeu-titre" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau" style="clip-path:none"><div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div><div class="indices">${indices}</div></div><i class="scotch s1"></i><i class="scotch s2"></i><div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div><div class="tampon">TROUVÉ</div>${minuteur}<div class="barre"><div class="rail"><i></i></div>${paliers}</div>${etincelles}`;
+        return `${fond}${p.titre ? `<p class="jeu-titre" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau" style="clip-path:none"><div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div><div class="indices">${indices}</div></div><i class="scotch s1"></i><i class="scotch s2"></i><div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div><div class="tampon">TROUVÉ</div>${minuteur}<div class="barre"><div class="strip"><div class="pap" style="clip-path:${GR.papier(88, 1004, 156)}"></div></div><div class="rail"><i></i></div>${paliers}</div>${etincelles}`;
       },
       jouer(c, el, p, t0, d) {
         const cases = qa(el, '.case'), indices = qa(el, '.indices p'), paliers = qa(el, '.palier'), rail = q(el, '.rail i'), grille = q(el, '.grille');
