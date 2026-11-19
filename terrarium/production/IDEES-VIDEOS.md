@@ -104,6 +104,7 @@ Pour cette rubrique, parler de situations et de ce que tu en penses, sans te pr�
 | G8 | Série « énigme du lundi » : une par semaine, la réponse en commentaire épinglé. | Série | — | idée |
 | G9 | « As-tu la plume de Molière ? » : mot fléché de trois mots, 15 s par mot, minuteur, barre singe → homme classique → Molière. | Jeu (grille) | nuit + orbe | fait (v2, voix clonée) |
 | G11 | « Plus malin qu'un académicien ? » : cinq mots de culture, six croisements, 10 s par mot, Singe → Académicien → Hugo. | Jeu (grille) | nuit + orbe | fait (voix clonée) |
+| G12 | « Plus malin qu'un académicien ? » v2 : LIRE, TITRE, AUTEUR, PARODIE, VOLTAIRE, difficulté croissante, papier découpé. | Jeu (grille) | nuit + orbe | fait (voix clonée) |
 | G10 | Même format, autres thèmes : mots d'escalade (prise, dalle, réglette), mots d'IA (modèle, jeton, agent), mots de voyage. | Jeu (grille) | nuit + orbe | idée |
 
 Pour les énigmes G2 à G7, la réponse attendue est connue et se vérifie par le calcul : la vérifier avant d'enregistrer, et l'écrire dans la description. Éviter d'annoncer un pourcentage de réussite inventé (« seuls 10 % ») : une accroche comme « La plupart des gens se trompent » dit la même chose sans faux chiffre.

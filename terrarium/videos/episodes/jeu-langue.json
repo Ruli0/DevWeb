@@ -1,0 +1,131 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-langue",
+  "titre": "Plus malin qu'un académicien ?",
+  "rubrique": "enigme",
+  "numero": 10,
+  "voix": "jeu-langue",
+  "forts": [
+    "académicien"
+  ],
+  "musique": "reverie",
+  "reglages": {
+    "musique": 0.25,
+    "musiqueSeule": 0.8
+  },
+  "corrections": {
+    "4": "Cinq",
+    "6": "dix",
+    "13": "Premier",
+    "24": "Deuxième",
+    "34": "Troisième",
+    "44": "Quatrième"
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "cadence": 10,
+      "palier": 2,
+      "titre": "Plus malin qu'un *académicien* ?",
+      "stades": [
+        "Singe",
+        "Académicien",
+        "Voltaire"
+      ],
+      "figures": [
+        "singe",
+        "academicien",
+        "voltaire"
+      ],
+      "pulse": {
+        "a": "Voyons jusqu'où"
+      },
+      "mots": [
+        {
+          "texte": "LIRE",
+          "sens": "h",
+          "ligne": 5,
+          "colonne": 0,
+          "indice": {
+            "texte": "Ce que tu fais avec un roman",
+            "a": "ce que tu fais",
+            "fin": "roman"
+          },
+          "reponse": {
+            "a": "lire. 2ème"
+          }
+        },
+        {
+          "texte": "TITRE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 3,
+          "indice": {
+            "texte": "Il est écrit sur la couverture",
+            "a": "il est écrit",
+            "fin": "couverture"
+          },
+          "reponse": {
+            "a": "titre. 3ème"
+          }
+        },
+        {
+          "texte": "AUTEUR",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Celui qui a écrit le livre",
+            "a": "celui qui a",
+            "fin": "livre"
+          },
+          "reponse": {
+            "a": "auteur. 4ème"
+          }
+        },
+        {
+          "texte": "PARODIE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Imitation drôle d'un texte célèbre",
+            "a": "imitation drôle",
+            "fin": "célèbre"
+          },
+          "reponse": {
+            "a": "parodie. Dernier"
+          }
+        },
+        {
+          "texte": "VOLTAIRE",
+          "sens": "h",
+          "ligne": 3,
+          "colonne": 0,
+          "indice": {
+            "texte": "Il a écrit Candide",
+            "a": "il a écrit Candide",
+            "fin": "Candide"
+          },
+          "reponse": {
+            "a": "Voltaire. Académicien"
+          }
+        }
+      ]
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un académicien ? Cinq mots croisés, dix secondes par mot, de plus en plus durs : singe, académicien ou Voltaire ? Ton score en commentaire.",
+    "hashtags": [
+      "#motsfleches",
+      "#francais",
+      "#litterature",
+      "#quiz",
+      "#culture"
+    ],
+    "commentaire": "Singe, académicien ou Voltaire ? Ton score en commentaire 👇"
+  }
+}

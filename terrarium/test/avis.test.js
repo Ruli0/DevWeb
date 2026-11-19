@@ -612,8 +612,7 @@ test('jeu de culture : cinq mots, six croisements, une réponse toutes les 10 s,
   const rep = r.feuille.plans[0].p.mots.map((m) => m.reponse.t);
   for (let k = 1; k < 5; k += 1) assert.ok(Math.abs(rep[k] - rep[k - 1] - 10) < 0.15, `10 s entre les réponses ${k} et ${k + 1} : ${rep}`);
   const html = page.html(r.feuille).replace(/<script[\s\S]*?<\/script>/g, '');
-  assert.strictEqual((html.match(/class="carte"/g) || []).length, 5);
-  assert.ok(html.includes('class="cartes dense"'));
+  assert.strictEqual((html.match(/<div class="indices">(.*?)<\/div>/s) || ['', ''])[1].split('<p>').length - 1, 5, 'cinq indices dans le bandeau');
   for (let w = 0; w < 5; w += 1) assert.strictEqual((html.match(new RegExp(`data-w="${w}"`, 'g')) || []).length, 10, `dix chiffres dans la tranche ${w + 1}`);
   assert.ok(html.includes('Académicien') && G.figure('academicien').includes('<svg') && G.figure('hugo').includes('<svg'));
   // Le mot de trop est refusé, avec les six mots c'est accepté.
@@ -658,4 +657,24 @@ test('jeu v4 : cases à toute la largeur, horaire commun image et son, tension d
   const html = page.html(f).replace(/<script[\s\S]*?<\/script>/g, '');
   assert.strictEqual((html.match(/class="bandeau"/g) || []).length, 1);
   assert.ok(!html.includes('class="carte"') && html.includes('fond-papier'));
+});
+
+test('jeu de langue : la difficulté monte (lettres à deviner et rareté), cadence de 10 s, cinq mots et six croisements', () => {
+  const G = require('../studio/avis/grille.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const aDeviner = (id) => { const mots = lire(`videos/episodes/${id}.json`).plans[0].mots, g = G.construire(mots); return { g, dev: G.nouvelles(g, mots.length).map((c) => c.length), longueurs: mots.map((m) => m.texte.length) }; };
+  const l = aDeviner('jeu-langue');
+  assert.deepStrictEqual(l.g.erreurs, []);
+  assert.ok(l.g.cases.filter((c) => c.mots.length > 1).length >= 6);
+  for (let k = 1; k < 5; k += 1) assert.ok(l.dev[k] >= l.dev[k - 1] && l.longueurs[k] >= l.longueurs[k - 1], `non décroissant au mot ${k + 1} : ${l.dev} / ${l.longueurs}`);
+  assert.ok(l.dev[4] - l.dev[0] >= 2, 'au moins deux lettres de plus entre le premier et le dernier mot');
+  // Le premier jeu (trois mots) : le dernier mot est plus long à deviner que le premier.
+  const m = aDeviner('jeu-moliere');
+  assert.ok(m.dev[2] > m.dev[0]);
+  const ep = lire('videos/episodes/jeu-langue.json'), r = montage(ep, lire('videos/voix/jeu-langue/mots.json'));
+  assert.deepStrictEqual(r.erreurs, []);
+  assert.ok(r.feuille.duree <= 75);
+  const rep = r.feuille.plans[0].p.mots.map((x) => x.reponse.t);
+  for (let k = 1; k < 5; k += 1) assert.ok(Math.abs(rep[k] - rep[k - 1] - 10) < 0.15);
 });

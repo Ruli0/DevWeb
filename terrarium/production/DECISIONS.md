@@ -253,3 +253,10 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Décision** : `jeu-culture` (langue et littérature) : ROMAN, TEXTE, PIÈCE, CONTE, PROSE (le dernier, « Monsieur Jourdain en faisait sans le savoir », fait écho à Molière) ; grille 5 × 6 trouvée par une recherche en échelle ; 10 s par mot pour tenir 57 s ; paliers Singe → Académicien → Hugo.
 - **Pourquoi** : ta demande de plus de mots et de croisements ; 5 × 15 s dépasserait les 75 s.
 - **Écarté** : un solveur général sur des grilles denses (rendues illisibles par des mots collés) ; l'adaptation de la taille des cases (inutile pour une grille 5 × 6).
+
+## 38. Mots fléchés v4 : plein écran, papier découpé, sons, orbe sous tension, difficulté croissante (20 nov. 2026)
+
+- **Décision** : bandeau d'indice unique, grille pleine largeur, fond de papiers superposés, cases de papier découpé à bords irréguliers, une couleur par mot, tampon, bruitages synthétisés, orbe garée à gauche du bandeau avec une tension dans les trois dernières secondes ; nouvelle grille `jeu-langue` (LIRE, TITRE, AUTEUR, PARODIE, VOLTAIRE) dont les lettres à deviner passent de 4 à 6 ; paliers Singe → Académicien → Voltaire.
+- **Pourquoi** : tes quatre questions (place, attrait, orbe, difficulté) : la grille n'occupait que la moitié gauche, le fond était uni, il n'y avait aucun bruitage, et les derniers mots étaient les plus faciles (3 lettres déjà visibles).
+- **Écarté** : une main de papier qui écrit ; cahier et crayon ; magazine de mots fléchés (proposés, non retenus : tu as choisi le papier découpé) ; les cinq cartes d'indice empilées.
+- **Limite** : `jeu-moliere` reste un peu en dessous (cases de 77 px, 8 lignes) ; à regrouper en 6 lignes si on le refait.
