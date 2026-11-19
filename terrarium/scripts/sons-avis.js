@@ -221,6 +221,27 @@ VIVES.house = { nom: 'Électro house', tempo: 124, fabrique: (o) => house(o) };
 VIVES['house-plate'] = { nom: 'Électro house plate (régulière, sans effets)', tempo: 124, fabrique: (o) => house(Object.assign({}, o, { plate: true })) };
 VIVES['house-nue'] = { nom: 'Électro house, basse et grosse caisse seules', tempo: 124, fabrique: (o) => house(Object.assign({}, o, { nue: true })) };
 
+// --- « Rêverie » : l'ambiance du jeu de mots fléchés (18 nov. 2026, demandée « dans l'esprit de Call it what you like »). ------------
+// Une musique originale, onirique et mi-lente : des nappes chaudes sur quatre accords (fa maj7, la m7, ré m7, do maj7), un arpège de cloches
+// doux, une basse ronde et rare, un pouls feutré (grosse caisse sourde, petit claquement). Aucune mélodie ni suite d'accords du morceau cité.
+function reverie({ duree = 30 } = {}) {
+  const { tampon, sinus, bruit, enveloppe, graine } = O();
+  const tempo = 92, temps = 60 / tempo, mesure = 4 * temps, b = tampon(duree);
+  const SUITE = [[53, 57, 60, 64], [57, 60, 64, 67], [50, 53, 57, 60], [48, 52, 55, 59]];
+  const ARPEGE = [0, 1, 2, 3, 2, 1, 2, 3];
+  for (let m = 0; m * mesure < duree; m += 1) {
+    const t0 = m * mesure, accord = SUITE[m % 4];
+    accord.forEach((n, i) => [1, 1.0035].forEach((d) => sinus(b, () => note(n + 12) * d, (x) => 0.026 * Math.min(1, x / 0.9) * Math.min(1, (mesure + 0.6 - x) / 1.1), t0 - 0.05, 'sin', mesure + 0.6)));
+    basse(b, accord[0] - 24, t0, 3.2 * temps, 0.3); basse(b, accord[0] - 24, t0 + 2.5 * temps, 1.4 * temps, 0.2);
+    [0, 2].forEach((k) => BATTERIE.grosse(b, t0 + k * temps, 0.34));
+    [1, 3].forEach((k) => BATTERIE.mains(b, t0 + k * temps, 0.16, 600 + m * 7 + k));
+    ARPEGE.forEach((i, k) => TIMBRES.cloche(b, note(accord[i] + 24), t0 + k * temps / 2, 0.034 + (k % 2 ? 0 : 0.012), 0.9));
+    bruit(b, (x) => 0.012 * Math.sin(Math.PI * Math.min(1, x / mesure)), { bas: 5000, haut: 12000, debut: t0, hasard: graine(700 + m), duree: mesure });
+  }
+  return reverbe(b, 0.34);
+}
+VIVES.reverie = { nom: 'Rêverie (onirique, mi-lente, pour le jeu de mots fléchés)', tempo: 92, fabrique: (o) => reverie(o) };
+
 function vive(style = 'funk', { duree = 30, plein } = {}) {
   const { tampon } = O();
   if (VIVES[style] && VIVES[style].fabrique) return VIVES[style].fabrique(Object.assign({ duree }, plein == null ? {} : { plein }));

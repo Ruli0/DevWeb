@@ -62,6 +62,16 @@
 .jeu .grille { position: absolute; left: 60px; top: 390px; }
 .jeu .case { position: absolute; width: ${CASE}px; height: ${CASE}px; background: #fff7ec; border-radius: 14px; box-shadow: 0 6px 0 #00000055; overflow: hidden; }
 .jeu .case i { position: absolute; inset: 0; background: var(--ac); opacity: 0; }
+.jeu .case u { position: absolute; left: 50%; top: 50%; width: 70px; height: 70px; margin: -35px 0 0 -35px; border-radius: 50%; border: 4px solid var(--ac); box-sizing: border-box; opacity: 0; }
+.jeu .etincelle { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle, #fff 0 25%, ${'#ffd45c'} 55%, #ff9a5c00 100%); box-shadow: 0 0 18px 6px #ffb03b99; pointer-events: none; z-index: 5; }
+.jeu .minuteur { position: absolute; left: 936px; top: 290px; width: 84px; height: 84px; }
+.jeu .minuteur svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.jeu .minuteur circle { fill: none; stroke-width: 6; }
+.jeu .m-fond { stroke: #ffffff22; }
+.jeu .m-doux { stroke: #ffffff77; stroke-linecap: round; }
+.jeu .m-vif { stroke: var(--ac); stroke-linecap: round; }
+.jeu .m-nb { position: absolute; inset: 0; display: grid; place-items: center; }
+.jeu .m-nb span { grid-area: 1 / 1; font: 700 34px '${P.titre}'; color: ${c.texte}; font-variant-numeric: tabular-nums; }
 .jeu .case b { position: absolute; left: 7px; top: 3px; font: 700 18px '${P.mono}'; color: #2a1a14; opacity: .7; }
 .jeu .case em { position: absolute; inset: 0; display: grid; place-items: center; font: 700 56px '${P.titre}'; font-style: normal; color: #2a1a14; }
 .jeu .cartes { position: absolute; left: 600px; top: 390px; width: 420px; display: flex; flex-direction: column; gap: 22px; }

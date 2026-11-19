@@ -102,7 +102,7 @@ function montage(ep, voix) {
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
   if (ep.allure && !PERSO.ALLURES[ep.allure]) erreurs.push(`"allure" : une parmi ${Object.keys(PERSO.ALLURES).join(', ')}`);
-  if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique', 'house', 'house-nue', 'house-plate'].includes(ep.musique)) erreurs.push('"musique" : labo, house-plate, house, house-nue, funk, electro, acoustique, avis ou aucune');
+  if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique', 'house', 'house-nue', 'house-plate', 'reverie'].includes(ep.musique)) erreurs.push('"musique" : labo, house-plate, reverie, house, house-nue, funk, electro, acoustique, avis ou aucune');
   if (ep.indicatif && !['A', 'B', 'C'].includes(ep.indicatif)) erreurs.push('"indicatif" : A, B ou C');
   if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
   if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');
@@ -130,6 +130,27 @@ function montage(ep, voix) {
     const k = garde.findIndex(([, b]) => b >= fin - 0.05);
     if (k < 0) { erreurs.push(`"pauses" : « ${pa.apres} » tombe dans un passage retiré`); return; }
     pausesVoix.push({ k, d: pa.duree });
+  });
+  // La cadence du jeu de mots fléchés : "cadence": 15 sur le plan « grille » = une réponse toutes les 15 s. Le montage calcule la durée du silence
+  // de réflexion de chaque mot (après "indice.fin") pour que la réponse tombe pile ; il faut donc un vrai silence dans la voix à cet endroit.
+  (ep.plans || []).forEach((pl, n) => {
+    if (pl.plan !== 'grille' || !pl.cadence) return;
+    let limite = null;
+    (pl.mots || []).forEach((m, k) => {
+      const ou = `plan ${n + 1}, mot ${k + 1}`, ind = m.indice || {}, rep = m.reponse || {};
+      const iFin = chercher(voix.mots, ind.fin || ''), iRep = chercher(voix.mots, rep.a || ''), iInd = chercher(voix.mots, ind.a || '');
+      if (iFin < 0 || iRep < 0 || iInd < 0) { erreurs.push(`${ou} : "indice.fin", "indice.a" et "reponse.a" doivent se trouver dans la voix`); return; }
+      const fin = voix.mots[iFin + cle(ind.fin).split(/\s+/).length - 1].f;
+      const kseg = garde.findIndex(([, b]) => b >= fin - 0.05);
+      if (kseg < 0) { erreurs.push(`${ou} : « ${ind.fin} » tombe dans un passage retiré`); return; }
+      if (garde[kseg][1] > voix.mots[iRep].d + 0.05) { erreurs.push(`${ou} : pas de silence dans la voix entre « ${ind.fin} » et la réponse : insère-le avec scripts/voix-silences.py`); return; }
+      const hh = horloge(garde, reglages.vitesse, pausesVoix.concat([{ k: kseg, d: 0 }]));
+      if (limite === null) limite = hh(voix.mots[iInd].d) + pl.cadence;
+      const d = limite - hh(voix.mots[iRep].d);
+      if (d < 0.3) erreurs.push(`${ou} : la voix est trop longue pour ${pl.cadence} s entre l’indice et la réponse (il manque ${(0.3 - d).toFixed(1)} s)`);
+      pausesVoix.push({ k: kseg, d: arrondi(Math.max(0.3, d)) });
+      limite += pl.cadence;
+    });
   });
   const h = horloge(garde, reglages.vitesse, pausesVoix);
   // L'instant où commence chaque pause dans la vidéo.

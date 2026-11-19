@@ -21,6 +21,8 @@ function preparer(ep, voix, { rendu } = {}) {
   if (voix && voix.generee) rappels.push('Voix générée par IA : coche « contenu généré par IA » à la publication. Ta vraie voix reste préférable.');
   if ((ep.plans || []).some((p) => p.fond === 'photo' || (p.collage || []).length)) rappels.push('Ta photo apparaît dans la vidéo : vérifie que tu es d’accord pour la montrer, et qu’elle ne révèle rien de privé (lieu, plaque, visage d’un tiers).');
   if (['travail', 'relations'].includes(ep.rubrique)) rappels.push('Sujet d’opinion : présente-le comme ton avis, sans chiffre ni source que tu n’as pas vérifiés.');
+  if ((ep.plans || []).some((p) => p.plan === 'grille')) rappels.push('Jeu de mots fléchés : présente-le comme un jeu, pas comme un test scientifique (« indicateur de l’intelligence conversationnelle » est une formule de ton, sans source). Invite à commenter son score.');
+  if (ep.musique === 'reverie') rappels.push('Musique « Rêverie » : une musique originale synthétisée. Tu peux la couper (musique « aucune ») et ajouter un son de la bibliothèque de TikTok à la publication (licence couverte par l’appli).');
   rappels.push('Regarde la vidéo une fois en entier, son allumé, sur ton téléphone, avant de publier.');
   const pub = ep.publication || {};
   const question = nu(dernier.question && dernier.question.texte);

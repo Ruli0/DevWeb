@@ -102,45 +102,97 @@
         });
       },
     },
-    // Le jeu de mots fléchés : trois mots qui se croisent, révélés un par un sur leur ancre, avec la barre singe → homme classique → Molière.
+    // Le jeu de mots fléchés : trois mots qui se croisent, révélés un par un sur leur ancre, avec la barre singe → homme classique → Molière
+    // et un petit minuteur par tranche (« cadence » : une réponse toutes les N secondes, calculée par le montage).
     grille: {
-      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a" }, "reponse": { "a" } }] (trois mots qui se croisent, du plus facile au plus dur) ; "stades": trois noms de palier. "indice.a" : où la définition est dite ; "reponse.a" : où le mot est dit et révélé.',
+      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a", "fin" }, "reponse": { "a" } }] (trois mots qui se croisent, du plus facile au plus dur) ; "cadence": 15 (une réponse toutes les 15 s : "indice.fin" = la phrase après laquelle commence le silence de réflexion) ; "titre" : l’accroche en haut ; "pulse": { "a" } : l’instant où la barre pulse (intro) ; "stades" : trois noms de palier.',
       max: 60,
-      ancres: (p) => (p.mots || []).flatMap((m) => [[m.indice, 'a'], [m.reponse, 'a']]),
+      ancres: (p) => [[p.pulse, 'a'], ...(p.mots || []).flatMap((m) => [[m.indice, 'a'], [m.reponse, 'a']])],
       textes: (p) => [p.titre, ...(p.mots || []).map((m) => m.indice && m.indice.texte)],
       valider(p) {
         const e = GR.construire(p.mots).erreurs.slice();
         if ((p.mots || []).length !== 3) e.push('le jeu prévoit trois mots qui se croisent');
-        (p.mots || []).forEach((m, k) => { if (!m.indice || !m.indice.texte || !m.indice.a) e.push(`mot ${k + 1} : "indice": { "texte", "a" }`); if (!m.reponse || !m.reponse.a) e.push(`mot ${k + 1} : "reponse": { "a" } (le mot dit par l’orbe)`); });
+        (p.mots || []).forEach((m, k) => {
+          if (!m.indice || !m.indice.texte || !m.indice.a) e.push(`mot ${k + 1} : "indice": { "texte", "a" }`);
+          if (!m.reponse || !m.reponse.a) e.push(`mot ${k + 1} : "reponse": { "a" } (le mot dit par l’orbe)`);
+          if (p.cadence && !(m.indice && m.indice.fin)) e.push(`mot ${k + 1} : avec "cadence", "indice": { "fin" } est nécessaire (la phrase après laquelle commence la réflexion)`);
+        });
+        if (p.cadence !== undefined && !(p.cadence >= 5 && p.cadence <= 30)) e.push('"cadence" : entre 5 et 30 secondes');
         return e;
       },
       dessin: (p, u) => {
         const g = GR.construire(p.mots), st = p.stades || ['Singe', 'Homme classique', 'Molière'], fig = ['singe', 'classique', 'moliere'], xs = [60, 480, 900];
-        const cases = g.cases.map((x) => `<div class="case" data-m="${x.mots.join(' ')}" style="left:${x.c * GR.PAS}px;top:${x.l * GR.PAS}px"><i></i>${x.nums.length ? `<b>${x.nums.join('·')}</b>` : ''}<em>${u.esc(x.lettre)}</em></div>`).join('');
+        // Le point de départ des étincelles : l'orbe (son emplacement dans ce plan).
+        let ox = 820, oy = 930;
+        try { const e = require('./orbe.js').emplacement({ orbe: p.orbe, fond: 'nuit' }); ox = e.x; oy = e.y; } catch (err) { /* page : pas de require */ }
+        const cases = g.cases.map((x) => `<div class="case" data-m="${x.mots.join(' ')}" data-cx="${60 + x.c * GR.PAS + GR.CASE / 2}" data-cy="${390 + x.l * GR.PAS + GR.CASE / 2}" style="left:${x.c * GR.PAS}px;top:${x.l * GR.PAS}px"><i></i><u></u>${x.nums.length ? `<b>${x.nums.join('·')}</b>` : ''}<em>${u.esc(x.lettre)}</em></div>`).join('');
         const cartes = p.mots.map((m, k) => `<div class="carte"><span>${k + 1}${m.sens === 'h' ? '→' : '↓'}</span>${u.esc(m.indice.texte)}</div>`).join('');
         const paliers = st.map((nom, i) => `<div class="palier" style="left:${xs[i]}px">${GR.figure(fig[i])}<p>${u.esc(nom)}</p></div>`).join('');
-        return `${p.titre ? `<p class="jeu-titre">${u.md(p.titre)}</p>` : ''}<div class="grille">${cases}</div><div class="cartes">${cartes}</div><div class="barre"><div class="rail"><i></i></div>${paliers}</div>`;
+        // Le minuteur : une tranche par mot (de la définition à la réponse, puis de réponse en réponse) ; un chiffre par seconde restante.
+        const debuts = [p.mots[0].indice.t, p.mots[0].reponse.t, p.mots[1].reponse.t], fins = [p.mots[0].reponse.t, p.mots[1].reponse.t, p.mots[2].reponse.t];
+        const chiffres = debuts.map((d, w) => { const n = Math.max(1, Math.round(fins[w] - d)); return Array.from({ length: n }, (_, j) => `<span data-w="${w}" data-j="${j}">${n - j}</span>`).join(''); }).join('');
+        const minuteur = `<div class="minuteur"><svg width="84" height="84" viewBox="0 0 84 84"><circle class="m-fond" cx="42" cy="42" r="34"/><circle class="m-doux" cx="42" cy="42" r="34"/><circle class="m-vif" cx="42" cy="42" r="34"/></svg><div class="m-nb">${chiffres}</div></div>`;
+        const etincelles = g.cases.map(() => '<i class="etincelle"></i>').join('');
+        return `${p.titre ? `<p class="jeu-titre">${u.md(p.titre)}</p>` : ''}<div class="grille" data-ox="${ox}" data-oy="${oy}">${cases}</div><div class="cartes">${cartes}</div>${minuteur}<div class="barre"><div class="rail"><i></i></div>${paliers}</div>${etincelles}`;
       },
       jouer(c, el, p, t0) {
-        const cases = qa(el, '.case'), cartes = qa(el, '.carte'), paliers = qa(el, '.palier'), rail = q(el, '.rail i');
+        const cases = qa(el, '.case'), cartes = qa(el, '.carte'), paliers = qa(el, '.palier'), rail = q(el, '.rail i'), grille = q(el, '.grille');
+        const ox = +grille.dataset.ox, oy = +grille.dataset.oy, sparks = qa(el, '.etincelle');
         if (q(el, '.jeu-titre')) c.lignes(q(el, '.jeu-titre'), t0 + 0.05);
-        gsap.set(qa(el, '.case em'), { opacity: 0 }); gsap.set(cartes, { opacity: 0 }); gsap.set(rail, { scaleX: 0 });
+        gsap.set(qa(el, '.case em'), { opacity: 0 }); gsap.set(qa(el, '.case u'), { opacity: 0 }); gsap.set(cartes, { opacity: 0 }); gsap.set(rail, { scaleX: 0 }); gsap.set(sparks, { opacity: 0, left: ox - 8, top: oy - 8 });
         gsap.set(paliers[0], { opacity: 1, scale: 1 }); gsap.set([paliers[1], paliers[2]], { opacity: 0.35, scale: 0.85 });
         c.ft(cases, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out', stagger: 0.025 }, t0 + 0.1);
         c.ft(q(el, '.barre'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, t0 + 0.4);
-        const niveaux = [0.5, 0.75, 1];
+        // L'intro : la barre pulse une fois (« voyons jusqu'où tu arrives »).
+        if (p.pulse && p.pulse.t != null) { c.ft(paliers[0], { scale: 1 }, { scale: 1.18, duration: 0.35, ease: 'power2.out' }, t0 + p.pulse.t); c.ft(paliers[0], { scale: 1.18 }, { scale: 1, duration: 0.5, ease: 'power2.inOut' }, t0 + p.pulse.t + 0.35); }
+        // Le minuteur : l'anneau se vide, un chiffre par seconde ; il passe en couleur vive pendant les trois dernières secondes.
+        const debuts = [p.mots[0].indice.t, p.mots[0].reponse.t, p.mots[1].reponse.t], fins = [p.mots[0].reponse.t, p.mots[1].reponse.t, p.mots[2].reponse.t];
+        const mn = q(el, '.minuteur'), doux = q(el, '.m-doux'), vif = q(el, '.m-vif'), tour = 213.6;
+        gsap.set(mn, { opacity: 0 }); gsap.set([doux, vif], { attr: { 'stroke-dasharray': tour, 'stroke-dashoffset': 0 } }); gsap.set(vif, { opacity: 0 }); gsap.set(qa(el, '.m-nb span'), { opacity: 0 });
+        c.ft(mn, { opacity: 0 }, { opacity: 0.8, duration: 0.5 }, t0 + debuts[0]);
+        c.ft(mn, { opacity: 0.8 }, { opacity: 0, duration: 0.6 }, t0 + fins[2] + 0.5);
+        debuts.forEach((d, w) => {
+          const n = Math.max(1, Math.round(fins[w] - d)), ts = t0 + d, dur = fins[w] - d;
+          c.ft([doux, vif], { attr: { 'stroke-dashoffset': 0 } }, { attr: { 'stroke-dashoffset': tour }, duration: dur, ease: 'none' }, ts);
+          c.ft(vif, { opacity: 0 }, { opacity: 1, duration: 0.3 }, ts + dur - 3.2);
+          c.ft(vif, { opacity: 1 }, { opacity: 0, duration: 0.2 }, ts + dur + 0.02);
+          qa(el, `.m-nb span[data-w="${w}"]`).forEach((sp, j) => {
+            const tj = ts + j * (dur / n);
+            c.ft(sp, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' }, tj);
+            c.ft(sp, { opacity: 1 }, { opacity: 0, duration: 0.12 }, tj + dur / n - 0.1);
+            if (j >= n - 3) c.ft(mn, { scale: 1.14 }, { scale: 1, duration: 0.4, ease: 'power2.out' }, tj);
+          });
+        });
+        const niveaux = [0.5, 0.75, 1], deja = new Set();
         p.mots.forEach((m, k) => {
           const ti = t0 + m.indice.t, tr = t0 + m.reponse.t;
           c.ft(cartes[k], { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, ti);
-          c.ft(cartes[k], { opacity: 1 }, { opacity: 0.5, duration: 0.4 }, tr + 0.9);
-          // Les lettres du mot, dans l'ordre de lecture, tombent l'une après l'autre ; les cases du mot s'allument.
+          c.ft(cartes[k], { opacity: 1 }, { opacity: 0.5, duration: 0.4 }, tr + 1.4);
+          // La révélation : pour chaque lettre, une étincelle part de l'orbe, la case s'illumine d'une onde, la lettre monte en devenant nette.
           const siennes = cases.filter((x) => x.dataset.m.split(' ').includes(String(k)));
+          let tfin = tr;
           siennes.forEach((cell, i) => {
-            c.ft(q(cell, 'em'), { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(2)' }, tr + i * 0.14);
-            c.ft(q(cell, 'i'), { opacity: 0 }, { opacity: 0.55, duration: 0.2 }, tr + i * 0.14);
-            c.ft(q(cell, 'i'), { opacity: 0.55 }, { opacity: 0.18, duration: 0.5 }, tr + i * 0.14 + 0.25);
+            const tl = tr + i * 0.22, neuf = !deja.has(cell); deja.add(cell);
+            if (!neuf) return;
+            const sp = sparks[cases.indexOf(cell)], dx = +cell.dataset.cx - ox, dy = +cell.dataset.cy - oy;
+            c.ft(sp, { opacity: 0, x: 0, y: 0, scale: 1 }, { opacity: 1, duration: 0.08 }, tl);
+            c.ft(sp, { x: 0 }, { x: dx, duration: 0.5, ease: 'power1.in' }, tl);
+            c.ft(sp, { y: 0 }, { y: dy, duration: 0.5, ease: 'power3.out' }, tl);
+            c.ft(sp, { scale: 1 }, { scale: 0.3, duration: 0.2, ease: 'power2.in' }, tl + 0.35);
+            c.ft(sp, { opacity: 1 }, { opacity: 0, duration: 0.12 }, tl + 0.5);
+            const ta = tl + 0.5;
+            c.ft(q(cell, 'i'), { opacity: 0 }, { opacity: 0.9, duration: 0.14 }, ta);
+            c.ft(q(cell, 'i'), { opacity: 0.9 }, { opacity: 0.2, duration: 0.7, ease: 'power2.out' }, ta + 0.14);
+            c.ft(q(cell, 'u'), { opacity: 0.9, scale: 0.4 }, { opacity: 0, scale: 1.9, duration: 0.6, ease: 'power2.out' }, ta);
+            c.ft(q(cell, 'em'), { opacity: 0, y: 26, scale: 0.55, filter: 'blur(7px)' }, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.5, ease: 'back.out(2.2)' }, ta);
+            tfin = Math.max(tfin, ta + 0.5);
           });
-          const tb = tr + siennes.length * 0.14 + 0.1;
+          // Une vague de lumière balaie le mot complet.
+          siennes.forEach((cell, i) => {
+            c.ft(q(cell, 'em'), { scale: 1 }, { scale: 1.16, duration: 0.18, ease: 'power2.out' }, tfin + 0.15 + i * 0.07);
+            c.ft(q(cell, 'em'), { scale: 1.16 }, { scale: 1, duration: 0.3, ease: 'power2.inOut' }, tfin + 0.33 + i * 0.07);
+          });
+          const tb = tfin + 0.2;
           c.ft(rail, { scaleX: k ? niveaux[k - 1] : 0 }, { scaleX: niveaux[k], duration: 0.8, ease: 'power2.inOut' }, tb);
           const monte = k === 0 ? 1 : k === 2 ? 2 : -1;
           if (monte > 0) {
