@@ -16,11 +16,6 @@
       "plan": "grille",
       "fond": "nuit",
       "personnage": false,
-      "orbe": {
-        "x": 820,
-        "y": 930,
-        "taille": 0.55
-      },
       "mots": [
         {
           "texte": "PLUME",

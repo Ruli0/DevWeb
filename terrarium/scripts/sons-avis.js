@@ -261,6 +261,28 @@ const BRUITAGES = {
     sinus(b, (x) => 420 + 520 * Math.exp(-x * 40), (x) => 0.6 * enveloppe(x, 0.002, 0.05), 0, 'sin', 0.3);
     return reverbe(b, 0.15);
   },
+  // Les bruitages du jeu de mots fléchés : un « tac » de papier posé (la hauteur monte avec le rang de la lettre), le mot trouvé, le tic du minuteur.
+  ...Object.fromEntries([1, 2, 3, 4, 5, 6, 7, 8].map((r) => [`lettre-${r}.wav`, () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(0.4), f = note(66 + 2 * r);
+    sinus(b, () => f, (x) => 0.5 * enveloppe(x, 0.002, 0.07), 0, 'sin', 0.3);
+    sinus(b, () => f * 2.01, (x) => 0.16 * enveloppe(x, 0.001, 0.035), 0, 'sin', 0.2);
+    bruit(b, (x) => 0.55 * enveloppe(x, 0.0005, 0.012), { bas: 900, haut: 4800, debut: 0, hasard: graine(150 + r), duree: 0.06 });
+    return reverbe(b, 0.12);
+  }])),
+  'trouve.wav': () => {
+    const { tampon } = O();
+    const b = tampon(1.6);
+    [72, 76, 79, 84].forEach((n, i) => TIMBRES.cloche(b, note(n), i * 0.06, 0.32, 0.8));
+    return reverbe(b, 0.28);
+  },
+  'tic-jeu.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(0.25);
+    sinus(b, () => 1800, (x) => 0.5 * enveloppe(x, 0.001, 0.02), 0, 'sin', 0.12);
+    bruit(b, (x) => 0.35 * enveloppe(x, 0.0004, 0.008), { bas: 2500, haut: 9000, debut: 0, hasard: graine(170), duree: 0.04 });
+    return b;
+  },
   // Le rideau qui s'ouvre : un long frottement de tissu.
   'rideau.wav': () => {
     const { tampon, bruit, graine } = O();

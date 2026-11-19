@@ -79,13 +79,14 @@
     milieu: { x: 540, y: 960, taille: 1 }, gauche: { x: 270, y: 900, taille: 0.7 }, droite: { x: 810, y: 900, taille: 0.7 },
     'haut-gauche': { x: 250, y: 640, taille: 0.55 }, 'haut-droite': { x: 830, y: 640, taille: 0.55 },
     'bas-gauche': { x: 250, y: 1120, taille: 0.55 }, 'bas-droite': { x: 830, y: 1120, taille: 0.55 },
+    jeu: { x: 150, y: 390, taille: 0.42 },
   };
   // Par fond de plan : le spot choisi d'office (voir la planche de chaque décor). Défaut : en haut à droite, petite.
   const PLACES_ORBE = { nuit: 'milieu', papier: 'milieu', accent: 'milieu', robot: 'haut-droite', defaut: 'haut-droite' };
   function emplacement(plan) {
     const o = plan.orbe;
     if (o && typeof o === 'object') return { x: o.x, y: o.y, taille: o.taille === undefined ? 0.7 : o.taille };
-    const nom = typeof o === 'string' ? o : plan.geant ? 'bas-droite' : ((plan.question || plan.illu) ? 'haut-droite' : PLACES_ORBE[plan.fond] || PLACES_ORBE.defaut);
+    const nom = typeof o === 'string' ? o : plan.grille ? 'jeu' : plan.geant ? 'bas-droite' : ((plan.question || plan.illu) ? 'haut-droite' : PLACES_ORBE[plan.fond] || PLACES_ORBE.defaut);
     return Object.assign({}, SPOTS[nom]);
   }
   // Le trajet : une position par plan, atteinte en glissant. plans : [{ t0, orbe?, fond, question? }].
@@ -101,9 +102,16 @@
     return { x: p.x + (c.x - p.x) * u, y: p.y + (c.y - p.y) * u, taille: p.taille + (c.taille - p.taille) * u };
   }
 
+  // La tension d'un compte à rebours : dans les trois dernières secondes d'une tranche [début, fin], v monte de 0 à 1 et p bat chaque seconde.
+  function tension(liste, t) {
+    for (const [d, f] of liste || []) if (t >= d && t <= f) { const s = t - d; return { v: Math.min(1, s / (f - d)), p: Math.exp(-5 * (s - Math.floor(s))) }; }
+    return { v: 0, p: 0 };
+  }
+
   function rvb(h) { const v = parseInt(h.slice(1), 16); return `${(v >> 16) & 255},${(v >> 8) & 255},${v & 255}`; }
 
-  function dessiner(ctx, n, t, c) {
+  function dessiner(ctx, n0, t, c, tn) {
+    const T = tn || { v: 0, p: 0 }, n = Math.min(1, n0 + 0.2 * T.v + 0.15 * T.p);
     const cx = TAILLE / 2, cy = TAILLE / 2, A = rvb(c.a), B = rvb(c.b), C = rvb(c.c), L = rvb(c.clair);
     const Rs = R * (1 + 0.09 * n + 0.02 * Math.sin(t * 1.0) * (1 - n));
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, TAILLE, TAILLE);
@@ -167,5 +175,5 @@
     ctx.restore();
   }
 
-  return { niveaux, niveauxAudio, dessiner, TAILLE, SPOTS, PLACES_ORBE, emplacement, trajet, position, GLISSE };
+  return { niveaux, niveauxAudio, dessiner, tension, TAILLE, SPOTS, PLACES_ORBE, emplacement, trajet, position, GLISSE };
 });

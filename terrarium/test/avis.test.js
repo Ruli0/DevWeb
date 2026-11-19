@@ -620,3 +620,42 @@ test('jeu de culture : cinq mots, six croisements, une réponse toutes les 10 s,
   const sept = JSON.parse(JSON.stringify(ep)); sept.plans[0].mots.push(sept.plans[0].mots[0], sept.plans[0].mots[1]);
   assert.ok(montage(sept, voix).erreurs.some((e) => e.includes('à six mots')));
 });
+
+test('jeu v4 : cases à toute la largeur, horaire commun image et son, tension de l\'orbe, bruitages du jeu', () => {
+  const G = require('../studio/avis/grille.js');
+  const ORBE = require('../studio/avis/orbe.js');
+  const sons = require('../scripts/sons-avis.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const page = require('../studio/avis/page.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  // Des cases larges pour une grille de 5 × 6, plus petites pour 8 lignes, jamais hors de la largeur utile.
+  const g56 = G.construire(lire('videos/episodes/jeu-culture.json').plans[0].mots), d = G.dims(g56);
+  assert.ok(d.caseTaille >= 110 && d.gx >= 90 && d.gx + d.w <= 990, JSON.stringify(d));
+  const g86 = G.construire(lire('videos/episodes/jeu-moliere.json').plans[0].mots), d2 = G.dims(g86);
+  assert.ok(d2.caseTaille <= 86 && d2.gy + d2.h <= 1130);
+  // L'horaire : une lettre neuve toutes les 0,22 s, posée 0,5 s après le départ de l'étincelle.
+  const h = G.horaires(10, 5);
+  assert.deepStrictEqual(h.pose.map((x) => +x.toFixed(2)), [10.5, 10.72, 10.94, 11.16, 11.38]);
+  assert.strictEqual(G.nouvelles(g56, 5).reduce((n, c) => n + c.length, 0), g56.cases.length, 'chaque case est neuve une seule fois');
+  // La feuille : un son par lettre neuve, le mot trouvé, trois tics ; une tension de l'orbe par tranche ; l'orbe sur le côté du bandeau.
+  const ep = lire('videos/episodes/jeu-culture.json'), voix = lire('videos/voix/jeu-culture/mots.json');
+  const f = montage(ep, voix).feuille;
+  assert.strictEqual(f.sons.filter((x) => /^lettre-/.test(x.f)).length, g56.cases.length);
+  assert.strictEqual(f.sons.filter((x) => x.f === 'trouve.wav').length, 5);
+  assert.strictEqual(f.sons.filter((x) => x.f === 'tic-jeu.wav').length, 15);
+  assert.strictEqual(f.orbe.tensions.length, 5);
+  assert.ok(f.orbe.trajet[0].x < 250 && f.orbe.trajet[0].y < 500, 'orbe garée à gauche du bandeau');
+  const tn = ORBE.tension(f.orbe.tensions, f.orbe.tensions[1][0] + 1.5);
+  assert.ok(tn.v > 0.3 && tn.v < 0.7 && tn.p >= 0 && tn.p <= 1);
+  assert.deepStrictEqual(ORBE.tension(f.orbe.tensions, 0.5), { v: 0, p: 0 });
+  // Les bruitages du jeu sont finis et reproductibles.
+  for (const nom of ['lettre-1.wav', 'lettre-8.wav', 'trouve.wav', 'tic-jeu.wav']) {
+    const a = sons.BRUITAGES[nom](), b = sons.BRUITAGES[nom]();
+    assert.strictEqual(a.length, b.length);
+    for (let i = 0; i < a.length; i += 1) { assert.ok(Number.isFinite(a[i])); assert.strictEqual(a[i], b[i]); }
+  }
+  // La page : un bandeau, une flèche par départ de mot, plus de cartes empilées, le fond en papier.
+  const html = page.html(f).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.strictEqual((html.match(/class="bandeau"/g) || []).length, 1);
+  assert.ok(!html.includes('class="carte"') && html.includes('fond-papier'));
+});

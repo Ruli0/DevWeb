@@ -297,6 +297,16 @@ function montage(ep, voix) {
   // L'indicatif du compte : deux notes sur la première image, le motif entier quand la voix se tait.
   const sansMusique = ep.musique === 'aucune';
   if ((ep.musique || S.musique) === 'avis') { sons.push({ f: 'indicatif-court.wav', t: 0, v: 0.5 }); if (duree - dureeVoix > 1.5) sons.push({ f: 'indicatif.wav', t: arrondi(dureeVoix + 0.15), v: 0.6 }); }
+  // Les bruitages du jeu de mots fléchés : un « tac » par lettre posée, un accord quand le mot est trouvé, un tic par seconde sur les trois dernières secondes.
+  plans.filter((x) => x.id === 'grille').forEach((x) => {
+    const G = require('./grille.js'), g = G.construire(x.p.mots), neuves = G.nouvelles(g, x.p.mots.length);
+    x.p.mots.forEach((m, k) => {
+      const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length);
+      H.pose.forEach((t, j) => sons.push({ f: `lettre-${Math.min(8, j + 1)}.wav`, t: arrondi(t - 0.02), v: arrondi(0.3 * reglages.bruitages) }));
+      sons.push({ f: 'trouve.wav', t: arrondi(H.fin + 0.12), v: arrondi(0.34 * reglages.bruitages) });
+      [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
+    });
+  });
   // La musique suit la voix : basse quand l'auteur parle (« creux »), plus forte dans les silences.
   const creux = [];
   groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
@@ -322,10 +332,11 @@ function montage(ep, voix) {
       else if (typeof o === 'object' && o) { if (!(o.x >= 120 && o.x <= 960 && o.y >= 380 && o.y <= 1290)) erreurs.push(`${ou} : "orbe" { x, y } hors de la zone sûre (x 120 à 960, y 380 à 1290)`); if (o.taille !== undefined && !(o.taille >= 0.3 && o.taille <= 1.3)) erreurs.push(`${ou} : "orbe" "taille" entre 0,3 et 1,3`); }
       else erreurs.push(`${ou} : "orbe" : un nom d'emplacement, { x, y, taille } ou false`);
     });
-    const regles = plans.map((x, i) => Object.assign({ t0: x.t0, fond: x.fond, question: !!(ep.plans[i] || {}).question, illu: !!(ep.plans[i] || {}).illu, geant: (ep.plans[i] || {}).taille === 'geant' }, { orbe: (ep.plans[i] || {}).orbe }));
+    const regles = plans.map((x, i) => Object.assign({ t0: x.t0, fond: x.fond, question: !!(ep.plans[i] || {}).question, illu: !!(ep.plans[i] || {}).illu, grille: (ep.plans[i] || {}).plan === 'grille', geant: (ep.plans[i] || {}).taille === 'geant' }, { orbe: (ep.plans[i] || {}).orbe }));
     feuille.orbe = {
       couleurs: { clair: pal.couleurs.texte, a: pal.accents.voyage, b: pal.accents.travail, c: pal.accents.relations },
       pas: 30, niveaux: ORBE.niveaux(mots, duree, 30), trajet: ORBE.trajet(regles),
+      tensions: plans.flatMap((x) => (x.id === 'grille' ? x.p.mots.map((m) => [arrondi(x.t0 + m.reponse.t - 3), arrondi(x.t0 + m.reponse.t)]) : [])),
       cache: plans.map((x, i) => ((ep.plans[i] || {}).orbe === false ? [x.t0, arrondi(x.t0 + x.d)] : null)).filter(Boolean),
     };
   }
