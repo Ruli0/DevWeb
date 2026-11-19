@@ -678,3 +678,27 @@ test('jeu de langue : la difficulté monte (lettres à deviner et rareté), cade
   const rep = r.feuille.plans[0].p.mots.map((x) => x.reponse.t);
   for (let k = 1; k < 5; k += 1) assert.ok(Math.abs(rep[k] - rep[k - 1] - 10) < 0.15);
 });
+
+test('jeu v5 : grille agrandie dans y 490-1260, barre sous les sous-titres, décors livres et plage, figures de la plage', () => {
+  const G = require('../studio/avis/grille.js');
+  const D = require('../studio/avis/jeu-decors.js');
+  const { montage } = require('../studio/avis/montage.js');
+  const page = require('../studio/avis/page.js');
+  const lire = (f) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+  const g78 = G.construire(lire('videos/episodes/jeu-langue.json').plans[0].mots), d = G.dims(g78);
+  assert.ok(d.caseTaille >= 100, `cases de 100 px et plus pour 7 × 8 : ${d.caseTaille}`);
+  assert.ok(d.gy >= 490 && d.gy + d.h <= 1260 && d.gx >= 60 && d.gx + d.w <= 1020, JSON.stringify(d));
+  // La barre de progression est sous la bande des sous-titres (y 1300 à 1430), le décor remplit le bas.
+  assert.ok(/\.jeu \.barre \{[^}]*top: 14[4-9]\dpx/.test(G.css({ fond: '#000', texte: '#fff' }, { titre: 'X', fort: 'X', mono: 'X' })));
+  for (const nom of ['livres', 'plage']) {
+    const dec = D.decor(nom);
+    assert.ok(dec.fond.includes('class="vague"') && dec.bas.length > 500 && !/NaN|undefined/.test(dec.fond + dec.bas), nom);
+  }
+  assert.ok(D.decor('plage').fond.includes('class="soleil"') && D.decor('livres').bas.includes('class="plume"'));
+  assert.strictEqual(D.decor('inconnu'), D.DECORS.livres);
+  for (const f of ['touriste', 'marin', 'robinson']) assert.ok(G.figure(f).includes('<svg') && !/NaN|undefined/.test(G.figure(f)), f);
+  // La page de jeu-langue embarque son décor.
+  const ep = lire('videos/episodes/jeu-langue.json');
+  const html = page.html(montage(ep, lire('videos/voix/jeu-langue/mots.json')).feuille).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.ok(html.includes('class="plume"') && html.includes('fond-papier'));
+});

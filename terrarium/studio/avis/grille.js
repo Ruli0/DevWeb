@@ -71,10 +71,19 @@
   FIGURES.voltaire = `<path d="M16 76 C2 32 30 6 60 6 C90 6 118 32 104 76 C98 52 86 38 60 38 C34 38 22 52 16 76Z" fill="#f4f0e8"/><circle cx="16" cy="84" r="11" fill="#f4f0e8"/><circle cx="104" cy="84" r="11" fill="#f4f0e8"/>
       <ellipse cx="60" cy="64" rx="23" ry="30" fill="${PEAU}"/><circle cx="51" cy="62" r="3" fill="${ENCRE}"/><circle cx="69" cy="62" r="3" fill="${ENCRE}"/><path d="M44 52 Q51 48 57 52 M63 52 Q69 48 76 52" fill="none" stroke="#9a8f80" stroke-width="2.5" stroke-linecap="round"/>
       <path d="M50 78 Q60 86 72 76" fill="none" stroke="${ENCRE}" stroke-width="3" stroke-linecap="round"/><path d="M40 98 L60 112 L80 98 L72 94 L60 102 L48 94Z" fill="#fff"/>`;
+  FIGURES.touriste = `<ellipse cx="60" cy="40" rx="54" ry="14" fill="#f2c14e"/><path d="M30 40 C30 14 90 14 90 40Z" fill="#f2c14e"/><rect x="30" y="32" width="60" height="9" fill="#e0564a"/>
+      <ellipse cx="60" cy="72" rx="26" ry="30" fill="${PEAU}"/><rect x="38" y="62" width="19" height="12" rx="4" fill="#1d1b19"/><rect x="63" y="62" width="19" height="12" rx="4" fill="#1d1b19"/><rect x="56" y="65" width="8" height="3" fill="#1d1b19"/>
+      <path d="M50 88 Q60 96 70 88" fill="none" stroke="${ENCRE}" stroke-width="3" stroke-linecap="round"/><path d="M30 118 C34 102 48 100 60 104 C72 100 86 102 90 118Z" fill="#ff7a5c"/>`;
+  FIGURES.marin = `<path d="M26 52 C26 14 94 14 94 52Z" fill="#1f3a6e"/><rect x="22" y="48" width="76" height="12" rx="5" fill="#fff6e8"/><circle cx="60" cy="30" r="5" fill="#e8b84a"/>
+      <ellipse cx="60" cy="76" rx="25" ry="28" fill="${PEAU}"/><circle cx="50" cy="72" r="3.5" fill="${ENCRE}"/><circle cx="70" cy="72" r="3.5" fill="${ENCRE}"/><path d="M50 88 Q60 96 70 88" fill="none" stroke="${ENCRE}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M26 118 C30 102 46 100 60 106 C74 100 90 102 94 118Z" fill="#fff6e8"/><path d="M34 110 h52 M30 116 h60" stroke="#1f3a6e" stroke-width="4"/>`;
+  FIGURES.robinson = `<path d="M60 4 L70 34 L100 20 L84 46 L110 52 L80 62 L40 62 L10 52 L36 46 L20 20 L50 34Z" fill="#3fbf6e"/><path d="M60 8 V50" stroke="#2e9e5b" stroke-width="4"/>
+      <ellipse cx="60" cy="70" rx="26" ry="28" fill="${PEAU}"/><path d="M34 74 C32 104 48 116 60 116 C72 116 88 104 86 74 C80 88 72 92 60 92 C48 92 40 88 34 74Z" fill="#6b4a32"/>
+      <circle cx="50" cy="66" r="3.5" fill="${ENCRE}"/><circle cx="70" cy="66" r="3.5" fill="${ENCRE}"/><path d="M52 80 Q60 85 68 80" fill="none" stroke="#e9ab82" stroke-width="3" stroke-linecap="round"/>`;
   const figure = (nom) => `<svg viewBox="0 0 120 120" width="120" height="120">${FIGURES[nom] || ''}</svg>`;
 
-  // La taille des cases s'adapte à la grille : toute la largeur utile (900 px) et la hauteur d'une zone de 620 px, au plus 130 px de pas.
-  const ZONE = { largeur: 900, haut: 500, hauteur: 620, vide: 8 };
+  // La taille des cases s'adapte à la grille : toute la largeur utile (960 px) et la hauteur d'une zone de 770 px (y 490 à 1260), au plus 130 px de pas.
+  const ZONE = { largeur: 960, haut: 490, hauteur: 770, vide: 8 };
   function dims(g) {
     const pas = Math.max(40, Math.floor(Math.min(ZONE.largeur / Math.max(1, g.colonnes), ZONE.hauteur / Math.max(1, g.lignes), 130)));
     const w = g.colonnes * pas - ZONE.vide, h = g.lignes * pas - ZONE.vide;
@@ -109,7 +118,7 @@
     return `
 .jeu .fond-papier { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
 .jeu .fond-papier path { filter: drop-shadow(0 -9px 0 #0000004d); }
-.jeu .jeu-titre { position: absolute; left: 250px; top: 305px; width: 780px; margin: 0; font: 800 58px/1.04 '${P.titre}'; letter-spacing: -.025em; color: ${c.texte}; }
+.jeu .jeu-titre { position: absolute; left: 250px; top: 305px; width: 780px; margin: 0; font: 800 58px/1.04 '${P.titre}'; letter-spacing: -.025em; color: var(--titre, ${c.texte}); text-shadow: 3px 4px 0 #00000055; }
 .jeu .jeu-titre em { font-style: italic; font-family: '${P.fort}'; font-weight: 400; color: #ffd45c; }
 .jeu .grille { position: absolute; }
 .jeu .case { position: absolute; width: var(--case); height: var(--case); filter: drop-shadow(5px 6px 0 #00000066); }
@@ -135,12 +144,12 @@
 .jeu .m-nb { position: absolute; inset: 0; display: grid; place-items: center; }
 .jeu .m-nb span { grid-area: 1 / 1; font: 800 36px '${P.titre}'; color: #2a1a14; font-variant-numeric: tabular-nums; }
 .jeu .tampon { position: absolute; left: 740px; top: 436px; padding: 6px 20px 8px; border: 5px solid #d62e4f; border-radius: 12px; color: #d62e4f; font: 800 34px '${P.titre}'; letter-spacing: .08em; background: #fff6e8; opacity: 0; transform-origin: 50% 50%; }
-.jeu .barre { position: absolute; left: 60px; top: 1146px; width: 960px; height: 150px; }
+.jeu .barre { position: absolute; left: 60px; top: 1448px; width: 960px; height: 150px; }
 .jeu .rail { position: absolute; left: 60px; right: 60px; top: 40px; height: 14px; border-radius: 7px; background: #ffffff30; overflow: hidden; }
 .jeu .rail i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, #ff9a5c, #ffd45c, #ff5d7a); transform-origin: 0 50%; transform: scaleX(0); }
 .jeu .palier { position: absolute; top: 0; width: 160px; margin-left: -80px; text-align: center; }
 .jeu .palier svg { display: block; margin: 0 auto; width: 84px; height: 84px; filter: drop-shadow(4px 5px 0 #00000066); }
-.jeu .palier p { margin: 2px 0 0; font: 800 26px '${P.titre}'; color: ${c.texte}; text-shadow: 0 2px 10px #000a; }
+.jeu .palier p { margin: 2px 0 0; font: 800 26px '${P.titre}'; color: #fff; text-shadow: 2px 3px 0 #00000088; }
 .jeu .etincelle { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, #fff 0 25%, #ffd45c 55%, #ff9a5c00 100%); box-shadow: 0 0 20px 7px #ffb03b99; pointer-events: none; z-index: 5; }`;
   }
 

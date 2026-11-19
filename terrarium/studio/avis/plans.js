@@ -10,6 +10,7 @@
   'use strict';
   const q = (el, s) => el.querySelector(s), qa = (el, s) => [...el.querySelectorAll(s)];
   const GR = typeof require === 'function' ? require('./grille.js') : (typeof self !== 'undefined' ? self : this).Avis.grille;
+  const DEC = typeof require === 'function' ? require('./jeu-decors.js') : (typeof self !== 'undefined' ? self : this).Avis.jeuDecors;
   const kicker = (p, u) => (p.kicker ? `<div class="kicker">${u.esc(p.kicker)}</div>` : '');
 
   return {
@@ -105,7 +106,7 @@
     // Le jeu de mots fléchés : trois mots qui se croisent, révélés un par un sur leur ancre, avec la barre singe → homme classique → Molière
     // et un petit minuteur par tranche (« cadence » : une réponse toutes les N secondes, calculée par le montage).
     grille: {
-      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a", "fin" }, "reponse": { "a" } }] (de trois à six mots qui se croisent, du plus facile au plus dur) ; "palier": le mot après lequel s’allume le palier du milieu (défaut : 1 pour trois mots, 2 au-delà) ; "figures": trois figures parmi singe, classique, moliere, academicien, hugo ; "cadence": 15 (une réponse toutes les 15 s : "indice.fin" = la phrase après laquelle commence le silence de réflexion) ; "titre" : l’accroche en haut ; "lueur": false coupe la lueur des cases du mot cherché ; "pulse": { "a" } : l’instant où la barre pulse (intro) ; "stades" : trois noms de palier.',
+      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a", "fin" }, "reponse": { "a" } }] (de trois à six mots qui se croisent, du plus facile au plus dur) ; "palier": le mot après lequel s’allume le palier du milieu (défaut : 1 pour trois mots, 2 au-delà) ; "figures": trois figures parmi singe, classique, moliere, academicien, hugo ; "cadence": 15 (une réponse toutes les 15 s : "indice.fin" = la phrase après laquelle commence le silence de réflexion) ; "titre" : l’accroche en haut ; "decor": "livres" ou "plage" (fond et scène du bas) ; "lueur": false coupe la lueur des cases du mot cherché ; "pulse": { "a" } : l’instant où la barre pulse (intro) ; "stades" : trois noms de palier.',
       max: 60,
       ancres: (p) => [[p.pulse, 'a'], ...(p.mots || []).flatMap((m) => [[m.indice, 'a'], [m.reponse, 'a']])],
       textes: (p) => [p.titre, ...(p.mots || []).map((m) => m.indice && m.indice.texte)],
@@ -139,16 +140,22 @@
         try { const e = require('./orbe.js').emplacement({ orbe: p.orbe, grille: true, fond: 'nuit' }); ox = e.x; oy = e.y; } catch (err) { /* page : pas de require */ }
         const etincelles = g.cases.map(() => '<i class="etincelle"></i>').join('');
         const indices = p.mots.map((m) => `<p>${u.esc(m.indice.texte)}</p>`).join('');
-        const fond = `<svg class="fond-papier" viewBox="0 0 1080 1920"><path d="M0 560 C170 500 330 620 540 560 S900 500 1080 575 V1920 H0Z" fill="#33165a"/><path d="M0 900 C200 840 380 950 560 895 S900 850 1080 910 V1920 H0Z" fill="#4d1d63"/><path d="M0 1240 C180 1180 400 1290 600 1235 S920 1190 1080 1250 V1920 H0Z" fill="#7a2563"/><path d="M0 1560 C220 1500 420 1600 620 1545 S920 1500 1080 1565 V1920 H0Z" fill="#ff7a5c" opacity=".85"/></svg>`;
-        return `${fond}${p.titre ? `<p class="jeu-titre">${u.md(p.titre)}</p>` : ''}<div class="bandeau" style="clip-path:none"><div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div><div class="indices">${indices}</div></div><i class="scotch s1"></i><i class="scotch s2"></i><div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div><div class="tampon">TROUVÉ</div>${minuteur}<div class="barre"><div class="rail"><i></i></div>${paliers}</div>${etincelles}`;
+        const dec = DEC.decor(p.decor), fond = `<svg class="fond-papier" viewBox="0 0 1080 1920" style="--titre:${dec.titre}">${dec.fond}${dec.bas}</svg>`;
+        return `${fond}${p.titre ? `<p class="jeu-titre" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau" style="clip-path:none"><div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div><div class="indices">${indices}</div></div><i class="scotch s1"></i><i class="scotch s2"></i><div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div><div class="tampon">TROUVÉ</div>${minuteur}<div class="barre"><div class="rail"><i></i></div>${paliers}</div>${etincelles}`;
       },
-      jouer(c, el, p, t0) {
+      jouer(c, el, p, t0, d) {
         const cases = qa(el, '.case'), indices = qa(el, '.indices p'), paliers = qa(el, '.palier'), rail = q(el, '.rail i'), grille = q(el, '.grille');
         const ox = +grille.dataset.ox, oy = +grille.dataset.oy, sparks = qa(el, '.etincelle'), bandeau = q(el, '.bandeau'), tampon = q(el, '.tampon'), scotchs = qa(el, '.scotch');
         const premier = p.mots[0].indice.t, N = p.mots.length, mid = p.palier || (N === 3 ? 1 : 2);
         gsap.set(qa(el, '.case em'), { opacity: 0 }); gsap.set(qa(el, '.case u'), { opacity: 0 }); gsap.set(qa(el, '.case s'), { opacity: 0 }); gsap.set(qa(el, '.halo'), { opacity: 0 });
         gsap.set(indices, { opacity: 0 }); gsap.set([bandeau, ...scotchs], { opacity: 0 }); gsap.set(rail, { scaleX: 0 }); gsap.set(sparks, { opacity: 0, left: ox - 9, top: oy - 9 });
         gsap.set(paliers[0], { opacity: 1, scale: 1 }); gsap.set(paliers.slice(1), { opacity: 0.35, scale: 0.85 });
+        // Le décor : les vagues dérivent lentement, le soleil pulse, la plume hoche la tête à chaque mot trouvé (tout est fini et déterministe).
+        qa(el, '.vague').forEach((v, i) => c.ft(v, { x: i % 2 ? 14 : -14 }, { x: i % 2 ? -14 : 14, duration: d, ease: 'sine.inOut' }, t0));
+        const soleil = q(el, '.soleil');
+        if (soleil) gsap.set(soleil, { svgOrigin: '900 160' });
+        if (q(el, '.plume')) gsap.set(q(el, '.plume'), { svgOrigin: '976 1690' });
+        if (soleil) for (let u = 0; u + 3 <= d; u += 3) { c.ft(soleil, { scale: 1 }, { scale: 1.07, duration: 1.5, ease: 'sine.inOut' }, t0 + u); c.ft(soleil, { scale: 1.07 }, { scale: 1, duration: 1.5, ease: 'sine.inOut' }, t0 + u + 1.5); }
         const titre = q(el, '.jeu-titre');
         if (titre) { c.lignes(titre, t0 + 0.05); c.ft(titre, { opacity: 1 }, { opacity: 0, duration: 0.3 }, t0 + premier - 0.35); }
         c.ft(cases, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out', stagger: 0.025 }, t0 + 0.1);
@@ -217,6 +224,8 @@
             c.ft(q(cell, 'em'), { scale: 1 }, { scale: 1.16, duration: 0.18, ease: 'power2.out' }, H.fin + 0.15 + i * 0.07);
             c.ft(q(cell, 'em'), { scale: 1.16 }, { scale: 1, duration: 0.3, ease: 'power2.inOut' }, H.fin + 0.33 + i * 0.07);
           });
+          const plume = q(el, '.plume');
+          if (plume) { c.ft(plume, { rotation: 0 }, { rotation: -9, duration: 0.18, ease: 'power2.out' }, H.fin + 0.1); c.ft(plume, { rotation: -9 }, { rotation: 0, duration: 0.4, ease: 'power2.inOut' }, H.fin + 0.28); }
           c.ft(tampon, { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, duration: 0.18, ease: 'power3.in' }, H.fin + 0.1);
           c.ft(tampon, { opacity: 1 }, { opacity: 0, duration: 0.35 }, H.fin + 1.3);
           const tb = H.fin + 0.2;

@@ -159,6 +159,7 @@ ${plans}
 </div>
 <script>
 ${lire('studio/avis/grille.js')}
+${lire('studio/avis/jeu-decors.js')}
 ${lire('studio/avis/plans.js')}
 ${lire('studio/avis/illustrations.js')}
 ${lire('studio/avis/decors.js')}
