@@ -1,0 +1,124 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-plage",
+  "titre": "Plus malin qu'un Robinson ?",
+  "rubrique": "voyage",
+  "numero": 11,
+  "voix": "jeu-plage",
+  "forts": [
+    "Robinson"
+  ],
+  "musique": "reverie",
+  "reglages": {
+    "musique": 0.25,
+    "musiqueSeule": 0.8
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "cadence": 10,
+      "palier": 2,
+      "decor": "plage",
+      "titre": "Plus malin qu'un *Robinson* ?",
+      "stades": [
+        "Touriste",
+        "Marin",
+        "Robinson"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "pulse": {
+        "a": "Voyons jusqu'où"
+      },
+      "mots": [
+        {
+          "texte": "COCO",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Le fruit du cocotier",
+            "a": "le fruit",
+            "fin": "cocotier"
+          },
+          "reponse": {
+            "a": "coco. Deuxième"
+          }
+        },
+        {
+          "texte": "SOLEIL",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 7,
+          "indice": {
+            "texte": "Il brille sur la plage",
+            "a": "il brille",
+            "fin": "plage"
+          },
+          "reponse": {
+            "a": "soleil. Troisième"
+          }
+        },
+        {
+          "texte": "CORAIL",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "L'animal qui construit les récifs",
+            "a": "l'animal qui",
+            "fin": "récifs"
+          },
+          "reponse": {
+            "a": "corail. Quatrième"
+          }
+        },
+        {
+          "texte": "MANGROVE",
+          "sens": "h",
+          "ligne": 3,
+          "colonne": 0,
+          "indice": {
+            "texte": "Forêt d'arbres les pieds dans l'eau salée",
+            "a": "forêt d'arbres",
+            "fin": "salée"
+          },
+          "reponse": {
+            "a": "mangrove. Dernier"
+          }
+        },
+        {
+          "texte": "ARCHIPEL",
+          "sens": "h",
+          "ligne": 5,
+          "colonne": 0,
+          "indice": {
+            "texte": "Ensemble d'îles proches",
+            "a": "ensemble d'îles",
+            "fin": "proches"
+          },
+          "reponse": {
+            "a": "archipel. Touriste"
+          }
+        }
+      ]
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? Cinq mots croisés sur la plage et les îles, dix secondes par mot : touriste, marin ou Robinson ? Ton score en commentaire.",
+    "hashtags": [
+      "#motsfleches",
+      "#plage",
+      "#iles",
+      "#quiz",
+      "#vacances"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  }
+}
