@@ -12,16 +12,11 @@
   "musique": "reverie",
   "reglages": {
     "musique": 0.25,
-    "musiqueSeule": 0.8
+    "musiqueSeule": 0.8,
+    "respiration": 0.45,
+    "marge": 0.1
   },
-  "corrections": {
-    "4": "Cinq",
-    "6": "dix",
-    "13": "Premier",
-    "24": "Deuxième",
-    "34": "Troisième",
-    "44": "Quatrième"
-  },
+  "corrections": {},
   "plans": [
     {
       "plan": "grille",
@@ -55,7 +50,7 @@
             "fin": "roman"
           },
           "reponse": {
-            "a": "lire. 2ème"
+            "a": "lire. Deuxième"
           }
         },
         {
@@ -69,7 +64,7 @@
             "fin": "couverture"
           },
           "reponse": {
-            "a": "titre. 3ème"
+            "a": "titre. Troisième"
           }
         },
         {
@@ -83,7 +78,7 @@
             "fin": "livre"
           },
           "reponse": {
-            "a": "auteur. 4ème"
+            "a": "auteur. Quatrième"
           }
         },
         {

@@ -153,7 +153,7 @@
         // Le décor : les vagues dérivent lentement, le soleil pulse, la plume hoche la tête à chaque mot trouvé (tout est fini et déterministe).
         qa(el, '.vague').forEach((v, i) => c.ft(v, { x: i % 2 ? 14 : -14 }, { x: i % 2 ? -14 : 14, duration: d, ease: 'sine.inOut' }, t0));
         const soleil = q(el, '.soleil');
-        if (soleil) gsap.set(soleil, { svgOrigin: '900 160' });
+        if (soleil) gsap.set(soleil, { svgOrigin: soleil.dataset.o || '900 160' });
         if (q(el, '.plume')) gsap.set(q(el, '.plume'), { svgOrigin: '976 1690' });
         if (soleil) for (let u = 0; u + 3 <= d; u += 3) { c.ft(soleil, { scale: 1 }, { scale: 1.07, duration: 1.5, ease: 'sine.inOut' }, t0 + u); c.ft(soleil, { scale: 1.07 }, { scale: 1, duration: 1.5, ease: 'sine.inOut' }, t0 + u + 1.5); }
         const titre = q(el, '.jeu-titre');

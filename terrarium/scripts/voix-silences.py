@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
 Insère de vrais silences dans une voix (typiquement une voix générée, qui n'en a presque pas) après des phrases choisies.
-  python3 scripts/voix-silences.py <voix.wav> <mots.json> <sortie.wav> "<phrase>" ["<phrase>" ...] [--duree=0.7]
+  python3 scripts/voix-silences.py <voix.wav> <mots.json> <sortie.wav> "<phrase>[@durée]" ["<phrase>" ...] [--duree=0.7] [--auto=0.45]
 mots.json : la transcription faite par scripts/voix.py sur ce même fichier. Pour chaque phrase, le silence est posé au milieu du blanc
 entre son dernier mot et le mot suivant. Ensuite, relancer scripts/voix.py sur la sortie : les silences deviennent des coupures sur
 lesquelles le montage peut insérer ses pauses ("pauses", ou "cadence" du jeu de mots fléchés). Voir production/PASSATION-AVIS.md.
+« phrase@0.5 » : une durée propre à ce silence. --auto=0.45 : en plus, un silence de cette durée après chaque fin de phrase (mot terminé par . ? !)
+qui n'a pas déjà un blanc d'au moins 0,3 s ; la voix respire entre les phrases au lieu d'enchaîner (à utiliser avec "respiration": 0.45 dans reglages).
 """
 import json, re, subprocess, sys, unicodedata
 
@@ -15,21 +17,28 @@ def cle(t):
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     duree = next((float(a.split('=')[1]) for a in sys.argv[1:] if a.startswith('--duree=')), 0.7)
+    auto = next((float(a.split('=')[1]) for a in sys.argv[1:] if a.startswith('--auto=')), 0)
     if len(args) < 4: sys.exit(__doc__)
     wav, mots_json, sortie, phrases = args[0], args[1], args[2], args[3:]
-    d = json.load(open(mots_json)); mots = d['mots']; coupes = []
+    d = json.load(open(mots_json)); mots = d['mots']; coupes = []; indices = set()
     for ph in phrases:
+        ph, _, dd = ph.partition('@')
         a = [cle(x) for x in ph.split() if cle(x)]
         i = next((i for i in range(len(mots) - len(a) + 1) if all(cle(mots[i + k]['m']) == a[k] for k in range(len(a)))), -1)
         if i < 0 or i + len(a) >= len(mots): sys.exit(f'phrase introuvable (ou dernière) : {ph}')
         fin = mots[i + len(a) - 1]; suivant = mots[i + len(a)]
-        coupes.append((fin['f'] + suivant['d']) / 2)
+        coupes.append(((fin['f'] + suivant['d']) / 2, float(dd) if dd else duree)); indices.add(i + len(a) - 1)
+    if auto:
+        for i in range(len(mots) - 1):
+            if i in indices or not re.search(r'[.?!]$', mots[i]['m']): continue
+            if mots[i + 1]['d'] - mots[i]['f'] >= 0.3: continue
+            coupes.append(((mots[i]['f'] + mots[i + 1]['d']) / 2, auto))
     coupes.sort()
-    pts = [0] + coupes + [d['duree'] + 0.5]; filtres = []; liens = []
+    pts = [0] + [c for c, _ in coupes] + [d['duree'] + 0.5]; filtres = []; liens = []
     for i in range(len(pts) - 1):
         filtres.append(f"[0:a]atrim={pts[i]}:{pts[i + 1]},asetpts=PTS-STARTPTS[a{i}]"); liens.append(f"[a{i}]")
         if i < len(pts) - 2:
-            filtres.append(f"anullsrc=r=24000:cl=mono,atrim=0:{duree}[s{i}]"); liens.append(f"[s{i}]")
+            filtres.append(f"anullsrc=r=24000:cl=mono,atrim=0:{coupes[i][1]}[s{i}]"); liens.append(f"[s{i}]")
     filtres.append(''.join(liens) + f"concat=n={len(liens)}:v=0:a=1[out]")
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', wav, '-filter_complex', ';'.join(filtres), '-map', '[out]', sortie], check=True)
     print(f'{len(coupes)} silences de {duree} s insérés → {sortie}')

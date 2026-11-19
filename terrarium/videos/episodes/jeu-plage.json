@@ -12,7 +12,9 @@
   "musique": "reverie",
   "reglages": {
     "musique": 0.25,
-    "musiqueSeule": 0.8
+    "musiqueSeule": 0.8,
+    "respiration": 0.45,
+    "marge": 0.1
   },
   "plans": [
     {
