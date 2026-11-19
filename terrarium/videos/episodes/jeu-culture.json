@@ -1,0 +1,129 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-culture",
+  "titre": "Plus malin qu'un académicien ?",
+  "rubrique": "enigme",
+  "numero": 9,
+  "voix": "jeu-culture",
+  "forts": [
+    "académicien",
+    "singe"
+  ],
+  "musique": "reverie",
+  "reglages": {
+    "musique": 0.25,
+    "musiqueSeule": 0.8
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "cadence": 10,
+      "palier": 2,
+      "titre": "Plus malin qu'un *académicien* ?",
+      "stades": [
+        "Singe",
+        "Académicien",
+        "Hugo"
+      ],
+      "figures": [
+        "singe",
+        "academicien",
+        "hugo"
+      ],
+      "orbe": {
+        "x": 300,
+        "y": 985,
+        "taille": 0.55
+      },
+      "pulse": {
+        "a": "Voyons jusqu'où"
+      },
+      "mots": [
+        {
+          "texte": "ROMAN",
+          "sens": "h",
+          "ligne": 2,
+          "colonne": 0,
+          "indice": {
+            "texte": "Un long récit inventé",
+            "a": "premier mot",
+            "fin": "inventé"
+          },
+          "reponse": {
+            "a": "roman. Deuxième"
+          }
+        },
+        {
+          "texte": "TEXTE",
+          "sens": "h",
+          "ligne": 4,
+          "colonne": 0,
+          "indice": {
+            "texte": "Ce que tu lis en ce moment",
+            "a": "deuxième mot",
+            "fin": "moment"
+          },
+          "reponse": {
+            "a": "texte. Troisième"
+          }
+        },
+        {
+          "texte": "PIÈCE",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Elle se joue sur scène, en actes",
+            "a": "troisième mot",
+            "fin": "actes"
+          },
+          "reponse": {
+            "a": "pièce. Quatrième"
+          }
+        },
+        {
+          "texte": "CONTE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 4,
+          "indice": {
+            "texte": "Il commence par « Il était une fois »",
+            "a": "quatrième mot",
+            "fin": "fois"
+          },
+          "reponse": {
+            "a": "conte. Dernier"
+          }
+        },
+        {
+          "texte": "PROSE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Monsieur Jourdain en faisait sans le savoir",
+            "a": "dernier mot",
+            "fin": "savoir"
+          },
+          "reponse": {
+            "a": "prose. Académicien"
+          }
+        }
+      ]
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un académicien ? Cinq mots croisés, dix secondes par mot : singe, académicien ou Victor Hugo ? Ton score en commentaire.",
+    "hashtags": [
+      "#motsfleches",
+      "#francais",
+      "#litterature",
+      "#quiz",
+      "#culture"
+    ],
+    "commentaire": "Singe, académicien ou Hugo ? Ton score en commentaire 👇"
+  }
+}

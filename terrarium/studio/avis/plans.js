@@ -105,13 +105,13 @@
     // Le jeu de mots fléchés : trois mots qui se croisent, révélés un par un sur leur ancre, avec la barre singe → homme classique → Molière
     // et un petit minuteur par tranche (« cadence » : une réponse toutes les N secondes, calculée par le montage).
     grille: {
-      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a", "fin" }, "reponse": { "a" } }] (trois mots qui se croisent, du plus facile au plus dur) ; "cadence": 15 (une réponse toutes les 15 s : "indice.fin" = la phrase après laquelle commence le silence de réflexion) ; "titre" : l’accroche en haut ; "lueur": false coupe la lueur des cases du mot cherché ; "pulse": { "a" } : l’instant où la barre pulse (intro) ; "stades" : trois noms de palier.',
+      description: 'Jeu de mots fléchés : "mots": [{ "texte", "sens": "h"|"v", "ligne", "colonne", "indice": { "texte", "a", "fin" }, "reponse": { "a" } }] (de trois à six mots qui se croisent, du plus facile au plus dur) ; "palier": le mot après lequel s’allume le palier du milieu (défaut : 1 pour trois mots, 2 au-delà) ; "figures": trois figures parmi singe, classique, moliere, academicien, hugo ; "cadence": 15 (une réponse toutes les 15 s : "indice.fin" = la phrase après laquelle commence le silence de réflexion) ; "titre" : l’accroche en haut ; "lueur": false coupe la lueur des cases du mot cherché ; "pulse": { "a" } : l’instant où la barre pulse (intro) ; "stades" : trois noms de palier.',
       max: 60,
       ancres: (p) => [[p.pulse, 'a'], ...(p.mots || []).flatMap((m) => [[m.indice, 'a'], [m.reponse, 'a']])],
       textes: (p) => [p.titre, ...(p.mots || []).map((m) => m.indice && m.indice.texte)],
       valider(p) {
         const e = GR.construire(p.mots).erreurs.slice();
-        if ((p.mots || []).length !== 3) e.push('le jeu prévoit trois mots qui se croisent');
+        if ((p.mots || []).length < 3 || (p.mots || []).length > 6) e.push('le jeu prévoit de trois à six mots qui se croisent');
         (p.mots || []).forEach((m, k) => {
           if (!m.indice || !m.indice.texte || !m.indice.a) e.push(`mot ${k + 1} : "indice": { "texte", "a" }`);
           if (!m.reponse || !m.reponse.a) e.push(`mot ${k + 1} : "reponse": { "a" } (le mot dit par l’orbe)`);
@@ -121,7 +121,7 @@
         return e;
       },
       dessin: (p, u) => {
-        const g = GR.construire(p.mots), st = p.stades || ['Singe', 'Homme classique', 'Molière'], fig = ['singe', 'classique', 'moliere'], xs = [60, 480, 900];
+        const g = GR.construire(p.mots), st = p.stades || ['Singe', 'Homme classique', 'Molière'], fig = p.figures || ['singe', 'classique', 'moliere'], xs = [60, 480, 900];
         // Le point de départ des étincelles : l'orbe (son emplacement dans ce plan).
         let ox = 820, oy = 930;
         try { const e = require('./orbe.js').emplacement({ orbe: p.orbe, fond: 'nuit' }); ox = e.x; oy = e.y; } catch (err) { /* page : pas de require */ }
@@ -129,11 +129,11 @@
         const cartes = p.mots.map((m, k) => `<div class="carte"><span>${k + 1}${m.sens === 'h' ? '→' : '↓'}</span>${u.esc(m.indice.texte)}</div>`).join('');
         const paliers = st.map((nom, i) => `<div class="palier" style="left:${xs[i]}px">${GR.figure(fig[i])}<p>${u.esc(nom)}</p></div>`).join('');
         // Le minuteur : une tranche par mot (de la définition à la réponse, puis de réponse en réponse) ; un chiffre par seconde restante.
-        const debuts = [p.mots[0].indice.t, p.mots[0].reponse.t, p.mots[1].reponse.t], fins = [p.mots[0].reponse.t, p.mots[1].reponse.t, p.mots[2].reponse.t];
+        const debuts = p.mots.map((m, k) => (k ? p.mots[k - 1].reponse.t : m.indice.t)), fins = p.mots.map((m) => m.reponse.t);
         const chiffres = debuts.map((d, w) => { const n = Math.max(1, Math.round(fins[w] - d)); return Array.from({ length: n }, (_, j) => `<span data-w="${w}" data-j="${j}">${n - j}</span>`).join(''); }).join('');
         const minuteur = `<div class="minuteur"><svg width="84" height="84" viewBox="0 0 84 84"><circle class="m-fond" cx="42" cy="42" r="34"/><circle class="m-doux" cx="42" cy="42" r="34"/><circle class="m-vif" cx="42" cy="42" r="34"/></svg><div class="m-nb">${chiffres}</div></div>`;
         const etincelles = g.cases.map(() => '<i class="etincelle"></i>').join('');
-        return `${p.titre ? `<p class="jeu-titre">${u.md(p.titre)}</p>` : ''}<div class="grille" data-ox="${ox}" data-oy="${oy}">${cases}</div><div class="cartes">${cartes}</div>${minuteur}<div class="barre"><div class="rail"><i></i></div>${paliers}</div>${etincelles}`;
+        return `${p.titre ? `<p class="jeu-titre">${u.md(p.titre)}</p>` : ''}<div class="grille" data-ox="${ox}" data-oy="${oy}">${cases}</div><div class="cartes${p.mots.length > 3 ? ' dense' : ''}">${cartes}</div>${minuteur}<div class="barre"><div class="rail"><i></i></div>${paliers}</div>${etincelles}`;
       },
       jouer(c, el, p, t0) {
         const cases = qa(el, '.case'), cartes = qa(el, '.carte'), paliers = qa(el, '.palier'), rail = q(el, '.rail i'), grille = q(el, '.grille');
@@ -146,7 +146,7 @@
         // L'intro : la barre pulse une fois (« voyons jusqu'où tu arrives »).
         if (p.pulse && p.pulse.t != null) { c.ft(paliers[0], { scale: 1 }, { scale: 1.18, duration: 0.35, ease: 'power2.out' }, t0 + p.pulse.t); c.ft(paliers[0], { scale: 1.18 }, { scale: 1, duration: 0.5, ease: 'power2.inOut' }, t0 + p.pulse.t + 0.35); }
         // Le minuteur : l'anneau se vide, un chiffre par seconde ; il passe en couleur vive pendant les trois dernières secondes.
-        const debuts = [p.mots[0].indice.t, p.mots[0].reponse.t, p.mots[1].reponse.t], fins = [p.mots[0].reponse.t, p.mots[1].reponse.t, p.mots[2].reponse.t];
+        const debuts = p.mots.map((m, k) => (k ? p.mots[k - 1].reponse.t : m.indice.t)), fins = p.mots.map((m) => m.reponse.t);
         const mn = q(el, '.minuteur'), doux = q(el, '.m-doux'), vif = q(el, '.m-vif'), tour = 213.6;
         gsap.set(mn, { opacity: 0 }); gsap.set([doux, vif], { attr: { 'stroke-dasharray': tour, 'stroke-dashoffset': 0 } }); gsap.set(vif, { opacity: 0 }); gsap.set(qa(el, '.m-nb span'), { opacity: 0 });
         c.ft(mn, { opacity: 0 }, { opacity: 0.8, duration: 0.5 }, t0 + debuts[0]);
@@ -163,7 +163,9 @@
             if (j >= n - 3) c.ft(mn, { scale: 1.14 }, { scale: 1, duration: 0.4, ease: 'power2.out' }, tj);
           });
         });
-        const niveaux = [0.5, 0.75, 1], deja = new Set();
+        // La barre : le palier du milieu s'allume après le mot « palier » (1 pour trois mots, 2 au-delà), le dernier à la fin.
+        const N = p.mots.length, mid = p.palier || (N === 3 ? 1 : 2), deja = new Set();
+        const niveau = (j) => (j < mid ? 0.5 * j / mid : 0.5 + 0.5 * (j - mid) / (N - mid));
         p.mots.forEach((m, k) => {
           const ti = t0 + m.indice.t, tr = t0 + m.reponse.t;
           c.ft(cartes[k], { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, ti);
@@ -208,8 +210,8 @@
             c.ft(q(cell, 'em'), { scale: 1.16 }, { scale: 1, duration: 0.3, ease: 'power2.inOut' }, tfin + 0.33 + i * 0.07);
           });
           const tb = tfin + 0.2;
-          c.ft(rail, { scaleX: k ? niveaux[k - 1] : 0 }, { scaleX: niveaux[k], duration: 0.8, ease: 'power2.inOut' }, tb);
-          const monte = k === 0 ? 1 : k === 2 ? 2 : -1;
+          c.ft(rail, { scaleX: niveau(k) }, { scaleX: niveau(k + 1), duration: 0.8, ease: 'power2.inOut' }, tb);
+          const monte = k === mid - 1 ? 1 : k === N - 1 ? 2 : -1;
           if (monte > 0) {
             c.ft(paliers[monte], { opacity: 0.35, scale: 0.85 }, { opacity: 1, scale: 1.1, duration: 0.5, ease: 'back.out(2)' }, tb + 0.4);
             c.ft(paliers[monte - 1], { opacity: 1, scale: 1 }, { opacity: 0.5, scale: 0.9, duration: 0.4 }, tb + 0.4);

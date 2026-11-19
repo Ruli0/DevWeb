@@ -29,6 +29,12 @@
         if (ex && i === 0) ex.nums.push(k + 1);
       });
     });
+    // Deux mots dans le même sens ne peuvent pas partager une case (un mot ne s'écrit pas dans un autre).
+    (mots || []).forEach((m, k) => (mots || []).forEach((n, j) => {
+      if (j <= k || m.sens !== n.sens || !['h', 'v'].includes(m.sens)) return;
+      const commun = [...carte.values()].some((x) => x.mots.includes(k) && x.mots.includes(j));
+      if (commun) erreurs.push(`mots ${k + 1} et ${j + 1} : deux mots dans le même sens se chevauchent`);
+    }));
     const cases = [...carte.values()].sort((a, b) => a.l - b.l || a.c - b.c);
     // Deux cases voisines qui n'appartiennent pas au même mot : des mots collés, illisibles dans une grille.
     cases.forEach((a) => cases.forEach((b) => {
@@ -53,6 +59,12 @@
       <path d="M52 78 Q60 84 68 78" fill="none" stroke="${ENCRE}" stroke-width="3" stroke-linecap="round"/><path d="M62 10 C84 -4 108 4 112 26 C96 14 82 16 70 26Z" fill="#ff5d7a"/>
       <path d="M36 96 Q60 114 84 96 L90 106 Q60 124 30 106Z" fill="#fff" stroke="#d9d0c0" stroke-width="2"/>`,
   };
+  FIGURES.academicien = `<path d="M10 40 C24 4 96 4 110 40 C96 30 24 30 10 40Z" fill="#1f2a44"/><path d="M10 40 C24 30 96 30 110 40" fill="none" stroke="#e8b84a" stroke-width="4"/>
+      <ellipse cx="60" cy="68" rx="27" ry="31" fill="${PEAU}"/><circle cx="50" cy="66" r="3.5" fill="${ENCRE}"/><circle cx="70" cy="66" r="3.5" fill="${ENCRE}"/><path d="M52 82 Q60 88 68 82" fill="none" stroke="${ENCRE}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M20 118 C22 96 40 92 60 100 C80 92 98 96 100 118Z" fill="#2f7f5a"/><path d="M42 96 L60 108 L78 96" fill="none" stroke="#e8b84a" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="112" r="3" fill="#e8b84a"/>`;
+  FIGURES.hugo = `<path d="M18 62 C8 24 36 6 60 6 C84 6 112 24 102 62 C96 44 84 34 60 34 C36 34 24 44 18 62Z" fill="#f1eee6"/>
+      <ellipse cx="60" cy="62" rx="27" ry="30" fill="${PEAU}"/><path d="M36 70 C34 98 50 114 60 114 C70 114 86 98 84 70 C78 82 70 84 60 84 C50 84 42 82 36 70Z" fill="#f1eee6"/>
+      <circle cx="50" cy="58" r="3.5" fill="${ENCRE}"/><circle cx="70" cy="58" r="3.5" fill="${ENCRE}"/><path d="M40 48 Q50 43 58 48 M62 48 Q70 43 80 48" fill="none" stroke="#d9d5ca" stroke-width="3" stroke-linecap="round"/>`;
   const figure = (nom) => `<svg viewBox="0 0 120 120" width="120" height="120">${FIGURES[nom] || ''}</svg>`;
 
   function css(c, P) {
@@ -80,6 +92,9 @@
 .jeu .case em { position: absolute; inset: 0; display: grid; place-items: center; font: 700 56px '${P.titre}'; font-style: normal; color: #2a1a14; }
 .jeu .cartes { position: absolute; left: 600px; top: 390px; width: 420px; display: flex; flex-direction: column; gap: 22px; }
 .jeu .carte { background: ${c.fond}; color: ${c.texte}; border: 2px solid #ffffff24; border-radius: 22px; padding: 16px 20px 18px; box-shadow: 0 8px 0 #00000055; font: 700 34px/1.12 '${P.titre}'; letter-spacing: -.01em; }
+.jeu .cartes.dense { gap: 14px; }
+.jeu .cartes.dense .carte { font-size: 29px; padding: 11px 16px 13px; }
+.jeu .cartes.dense .carte span { font-size: 28px; min-width: 36px; }
 .jeu .carte span { display: inline-block; min-width: 40px; margin-right: 8px; color: var(--ac); font: 700 32px '${P.titre}'; }
 .jeu .barre { position: absolute; left: 60px; top: 1084px; width: 960px; height: 190px; }
 .jeu .rail { position: absolute; left: 60px; right: 60px; top: 52px; height: 14px; border-radius: 7px; background: #ffffff30; overflow: hidden; }

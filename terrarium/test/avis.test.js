@@ -558,7 +558,7 @@ test('jeu de mots fléchés : croisements vérifiés, révélations toutes les 5
   assert.ok(montage(sansSilence, voix).erreurs.every((e) => !e.includes('silence')) || true);
   r.feuille.plans[0].p.mots.forEach((m) => assert.ok(m.indice.t < m.reponse.t, 'la définition précède la réponse'));
   const faux = JSON.parse(JSON.stringify(ep)); faux.plans[0].mots.pop();
-  assert.ok(montage(faux, voix).erreurs.some((e) => e.includes('trois mots')));
+  assert.ok(montage(faux, voix).erreurs.some((e) => e.includes('à six mots')));
   for (const f of ['singe', 'classique', 'moliere']) assert.ok(G.figure(f).includes('<svg'));
 });
 
