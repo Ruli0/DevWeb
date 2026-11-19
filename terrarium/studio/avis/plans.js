@@ -150,12 +150,9 @@
         gsap.set(qa(el, '.case em'), { opacity: 0 }); gsap.set(qa(el, '.case u'), { opacity: 0 }); gsap.set(qa(el, '.case s'), { opacity: 0 }); gsap.set(qa(el, '.halo'), { opacity: 0 });
         gsap.set(indices, { opacity: 0 }); gsap.set([bandeau, ...scotchs], { opacity: 0 }); gsap.set(rail, { scaleX: 0 }); gsap.set(sparks, { opacity: 0, left: ox - 9, top: oy - 9 });
         gsap.set(paliers[0], { opacity: 1, scale: 1 }); gsap.set(paliers.slice(1), { opacity: 0.35, scale: 0.85 });
-        // Le décor : les vagues dérivent lentement, le soleil pulse, la plume hoche la tête à chaque mot trouvé (tout est fini et déterministe).
-        qa(el, '.vague').forEach((v, i) => c.ft(v, { x: i % 2 ? 14 : -14 }, { x: i % 2 ? -14 : 14, duration: d, ease: 'sine.inOut' }, t0));
-        const soleil = q(el, '.soleil');
-        if (soleil) gsap.set(soleil, { svgOrigin: soleil.dataset.o || '900 160' });
+        // Le décor : vagues qui se balancent, crabe, dauphin, souris, livres qui sautent, nuages (jeu-decors.js, tout est fini et déterministe).
+        DEC.animer(c, el, p.decor, t0, d);
         if (q(el, '.plume')) gsap.set(q(el, '.plume'), { svgOrigin: '976 1690' });
-        if (soleil) for (let u = 0; u + 3 <= d; u += 3) { c.ft(soleil, { scale: 1 }, { scale: 1.07, duration: 1.5, ease: 'sine.inOut' }, t0 + u); c.ft(soleil, { scale: 1.07 }, { scale: 1, duration: 1.5, ease: 'sine.inOut' }, t0 + u + 1.5); }
         const titre = q(el, '.jeu-titre');
         if (titre) { c.lignes(titre, t0 + 0.05); c.ft(titre, { opacity: 1 }, { opacity: 0, duration: 0.3 }, t0 + premier - 0.35); }
         c.ft(cases, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out', stagger: 0.025 }, t0 + 0.1);

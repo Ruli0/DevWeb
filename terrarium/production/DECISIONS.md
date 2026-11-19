@@ -267,3 +267,9 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : « grossir la grille, trop de partie inutilisée en bas, un décor sur le thème ».
 - **Écarté** : le mot EAU (la voix clonée le lit « tôt » ou « tout ») et un voilier posé sur le sable (remplacé par un parasol).
 - **Piège** : une voix générée lit mal les mots très courts ; choisir des mots d'au moins quatre lettres pour les jeux.
+
+## 40. Décors d'origine animés (22 nov. 2026)
+
+- **Décision** : retour aux décors `plage` et `livres` ; ajout d'animations d'ambiance (vagues qui bougent derrière, crabe qui sort de l'écran, dauphin qui saute ; souris, livres qui sautent, avion en papier pour les livres), programmées à des instants fixes. Les six maquettes plus sobres restent dans le code, non utilisées.
+- **Pourquoi** : « je préférais les décors d'avant » ; l'animation donne la vie sans changer le style.
+- **Écarté** : lier les animations à la voix (inutile, et cela compliquerait les ancres) ; des boucles infinies (interdites par le moteur).

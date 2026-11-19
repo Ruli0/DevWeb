@@ -722,3 +722,29 @@ test('jeu plage : cinq mots de plage et d\'îles, difficulté croissante, six cr
   const html = page.html(r.feuille).replace(/<script[\s\S]*?<\/script>/g, '');
   assert.ok(html.includes('class="soleil"') && html.includes('Touriste') && html.includes('Robinson'));
 });
+
+test('décors animés : crabe, dauphin, nuages, souris, livres sauteurs, avion ; mouvement vérifié dans la page', async (t) => {
+  const D = require('../studio/avis/jeu-decors.js');
+  const plage = D.decor('plage'), livres = D.decor('livres');
+  for (const cls of ['crabe', 'dauphin', 'eclaboussure', 'nuage', 'vague', 'soleil']) assert.ok((plage.fond + plage.bas).includes(`class="${cls}"`), `plage : ${cls}`);
+  for (const cls of ['souris', 'livre-saut', 'avion', 'plume', 'vague']) assert.ok((livres.fond + livres.bas).includes(`class="${cls}`), `livres : ${cls}`);
+  for (const d of [plage, livres]) { const o = (d.bas.match(/<g[ >]/g) || []).length, f = (d.bas.match(/<\/g>/g) || []).length; assert.strictEqual(o, f, 'groupes SVG équilibrés'); }
+  assert.strictEqual(typeof D.animer, 'function');
+  // Dans la page : au milieu de sa traversée le crabe est à l'écran, avant elle il est hors champ ; le dauphin est dans la voie de mer au sommet de son saut.
+  let chromium; try { ({ chromium } = require('playwright')); } catch (e) { t.skip('Playwright absent'); return; }
+  const dossier = path.join(__dirname, '..', 'videos/studio/jeu-plage');
+  if (!fs.existsSync(path.join(dossier, 'index.html'))) { t.skip('composition jeu-plage non construite'); return; }
+  const nav = await chromium.launch(), page = await nav.newPage({ viewport: { width: 1080, height: 1920 } });
+  try {
+    await page.goto(`file://${path.join(dossier, 'index.html')}`);
+    await page.waitForFunction(() => window.__timelines && Object.keys(window.__timelines).length, null, { timeout: 15000 });
+    const lire = (s, x) => page.evaluate(([sel, tt]) => { Object.values(window.__timelines)[0].seek(tt, false); const r = document.querySelector(sel).getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; }, [s, x]);
+    assert.ok((await lire('.crabe', 5)).x > 1080 || (await lire('.crabe', 5)).x < 0, 'crabe hors champ avant sa traversée');
+    const milieu = await lire('.crabe', 14.5); assert.ok(milieu.x > 100 && milieu.x < 1000, `crabe à l'écran : ${milieu.x}`);
+    const saut = await lire('.dauphin', 6); assert.ok(saut.y > 1200 && saut.y < 1350, `dauphin au sommet : ${saut.y}`);
+    assert.ok((await lire('.dauphin', 4)).y > 2000, 'dauphin hors champ avant son saut');
+    const v1 = await page.evaluate(() => { Object.values(window.__timelines)[0].seek(10, false); return document.querySelector('.vague').getBoundingClientRect().x; });
+    const v2 = await page.evaluate(() => { Object.values(window.__timelines)[0].seek(11.5, false); return document.querySelector('.vague').getBoundingClientRect().x; });
+    assert.ok(Math.abs(v1 - v2) > 5, `les vagues bougent : ${v1} → ${v2}`);
+  } finally { await nav.close(); }
+});

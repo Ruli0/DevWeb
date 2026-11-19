@@ -10,7 +10,7 @@
   else { racine.Avis = racine.Avis || {}; racine.Avis.jeuDecors = api; }
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
-  const onde = (y, a, f, couleur, extra = '') => `<path class="vague" d="M-40 ${y} C 150 ${y - a} 330 ${y + a} 540 ${y} S 900 ${y - a} 1120 ${y + a / 2} V1920 H-40Z" fill="${couleur}"${extra}/>`;
+  const onde = (y, a, f, couleur, extra = '') => `<path class="vague" d="M-160 ${y} C 90 ${y - a} 330 ${y + a} 540 ${y} S 900 ${y - a} 1240 ${y + a / 2} V1920 H-160Z" fill="${couleur}"${extra}/>`;
 
   const LIVRES = {
     titre: '#fff0dc',
@@ -19,8 +19,10 @@
       const dos = ['#2f7f8a', '#ffd45c', '#c46bff', '#4fd1c5', '#ff9a5c', '#7fb2ff', '#ff5d7a', '#8ad46a'];
       const hauteurs = [190, 150, 220, 170, 205, 140, 230, 160, 195, 150, 215, 175];
       let x = 40, livres = '';
-      hauteurs.forEach((h, i) => { const l = 52 + (i % 3) * 12; if (x + l > 600) return; livres += `<g><rect x="${x}" y="${1812 - h}" width="${l}" height="${h}" fill="${dos[i % dos.length]}"/><rect x="${x}" y="${1812 - h + 22}" width="${l}" height="10" fill="#ffffff55"/><rect x="${x}" y="${1812 - 38}" width="${l}" height="10" fill="#ffffff55"/><rect x="${x + 10}" y="${1812 - h / 2 - 12}" width="${l - 20}" height="22" fill="#fff6e8" opacity=".85"/></g>`; x += l + 6; });
+      hauteurs.forEach((h, i) => { const l = 52 + (i % 3) * 12; if (x + l > 600) return; livres += `<g${[1, 3, 4, 6].includes(i) ? ` class="livre-saut" data-k="${i}"` : ''}><rect x="${x}" y="${1812 - h}" width="${l}" height="${h}" fill="${dos[i % dos.length]}"/><rect x="${x}" y="${1812 - h + 22}" width="${l}" height="10" fill="#ffffff55"/><rect x="${x}" y="${1812 - 38}" width="${l}" height="10" fill="#ffffff55"/><rect x="${x + 10}" y="${1812 - h / 2 - 12}" width="${l - 20}" height="22" fill="#fff6e8" opacity=".85"/></g>`; x += l + 6; });
       return `<g style="filter:drop-shadow(5px 6px 0 #00000066)">${livres}<rect x="0" y="1812" width="1080" height="108" fill="#8a4a2f"/><rect x="0" y="1812" width="1080" height="14" fill="#a65e3a"/>
+        <g class="souris"><path d="M590 1796 C 630 1796 650 1770 690 1780" fill="none" stroke="#d9a5a0" stroke-width="6" stroke-linecap="round"/><ellipse cx="540" cy="1790" rx="46" ry="24" fill="#b9b3c2"/><ellipse cx="506" cy="1780" rx="22" ry="17" fill="#cfc9d8"/><circle cx="512" cy="1764" r="10" fill="#e8a9b0"/><circle cx="492" cy="1778" r="3" fill="#2a1a14"/><circle cx="486" cy="1786" r="4" fill="#e8a9b0"/><rect x="520" y="1806" width="8" height="8" fill="#8f889c"/><rect x="556" y="1806" width="8" height="8" fill="#8f889c"/></g>
+        <g class="avion"><path d="M0 0 L80 -16 L24 10Z" fill="#fff6e8"/><path d="M0 0 L80 -16 L36 -2Z" fill="#e7dcc4"/><path d="M24 10 L36 -2 L34 16Z" fill="#cfc3a8"/></g>
         <g><rect x="620" y="1720" width="300" height="42" fill="#c46bff"/><rect x="636" y="1678" width="270" height="42" fill="#4fd1c5"/><rect x="610" y="1636" width="290" height="42" fill="#ffd45c"/></g>
         <g><rect x="930" y="1700" width="92" height="112" rx="14" fill="#2a1a14"/><rect x="946" y="1684" width="60" height="24" rx="8" fill="#4a2f22"/>
         <g class="plume" style="transform-origin:976px 1690px"><path d="M976 1690 C 1010 1600 1050 1560 1068 1480 C 1020 1520 990 1580 976 1690Z" fill="#fff6e8"/><path d="M976 1690 C 1006 1610 1038 1570 1068 1480" fill="none" stroke="#e8b84a" stroke-width="4"/></g></g></g>`;
@@ -31,7 +33,7 @@
     titre: '#ffffff',
     fond: `<rect x="0" y="0" width="1080" height="1920" fill="#4cb8ea"/><rect x="0" y="0" width="1080" height="560" fill="#7fd0f2" opacity=".6"/>
       <g class="soleil" style="transform-origin:900px 160px"><circle cx="900" cy="160" r="150" fill="#ffe27a" opacity=".35"/><circle cx="900" cy="160" r="96" fill="#ffd45c"/><circle cx="900" cy="160" r="70" fill="#ffe9a0"/></g>
-      <g style="filter:drop-shadow(0 8px 0 #00000026)"><g fill="#fff"><ellipse cx="240" cy="250" rx="110" ry="34"/><circle cx="200" cy="228" r="36"/><circle cx="270" cy="220" r="44"/><ellipse cx="640" cy="236" rx="96" ry="26"/><circle cx="610" cy="220" r="30"/><circle cx="670" cy="214" r="36"/></g></g>
+      <g style="filter:drop-shadow(0 8px 0 #00000026)"><g fill="#fff" class="nuage" data-d="1"><ellipse cx="240" cy="250" rx="110" ry="34"/><circle cx="200" cy="228" r="36"/><circle cx="270" cy="220" r="44"/></g><g fill="#fff" class="nuage" data-d="-1"><ellipse cx="640" cy="236" rx="96" ry="26"/><circle cx="610" cy="220" r="30"/><circle cx="670" cy="214" r="36"/></g></g>
       ${onde(640, 46, 1, '#2fc4c8')}${onde(960, 52, 1, '#1aa3b5')}${onde(1290, 46, 1, '#0f8aa6')}
       <path d="M-40 1560 C 200 1500 420 1600 640 1545 S 940 1510 1120 1560 V1920 H-40Z" fill="#f5d89a"/><path d="M-40 1700 C 220 1650 440 1730 660 1690 S 960 1660 1120 1700 V1920 H-40Z" fill="#e9c37d"/>`,
     bas: `<g style="filter:drop-shadow(5px 6px 0 #00000055)"><g transform="translate(0 180)">
@@ -39,10 +41,12 @@
       <path d="M850 1630 C 840 1560 870 1500 900 1440" fill="none" stroke="#8a5a3c" stroke-width="22" stroke-linecap="round"/>
       <path d="M900 1440 C 840 1400 800 1420 770 1470 C 820 1440 860 1440 900 1440Z" fill="#2e9e5b"/><path d="M900 1440 C 950 1380 1010 1390 1040 1440 C 990 1410 940 1420 900 1440Z" fill="#3fbf6e"/><path d="M900 1440 C 880 1380 900 1340 940 1320 C 930 1370 920 1400 900 1440Z" fill="#2e9e5b"/><path d="M900 1440 C 800 1350 740 1360 700 1400 C 770 1390 840 1400 900 1440Z" fill="#3fbf6e"/><path d="M900 1440 C 990 1340 1050 1350 1075 1395 C 1010 1380 950 1400 900 1440Z" fill="#2e9e5b"/>
       <circle cx="880" cy="1452" r="14" fill="#6b3f26"/><circle cx="906" cy="1458" r="14" fill="#6b3f26"/>
-      <g><rect x="110" y="1700" width="250" height="26" rx="6" fill="#4fd1c5"/><rect x="110" y="1700" width="250" height="8" fill="#ffffff66"/><rect x="226" y="1470" width="9" height="236" fill="#8a5a3c"/><path d="M90 1520 C 100 1420 340 1420 370 1520Z" fill="#ff5d7a"/><path d="M170 1450 C 165 1480 160 1500 150 1520 L 205 1520 C 198 1490 196 1470 196 1440Z M290 1440 C 290 1470 296 1490 304 1520 L 355 1520 C 345 1490 335 1460 322 1450Z" fill="#fff6e8" opacity=".9"/><path d="M90 1520 q35 24 70 0 q35 24 70 0 q35 24 70 0 q35 24 70 0" fill="#ff5d7a"/></g></g></g>
+      <g><rect x="110" y="1700" width="250" height="26" rx="6" fill="#4fd1c5"/><rect x="110" y="1700" width="250" height="8" fill="#ffffff66"/><rect x="226" y="1470" width="9" height="236" fill="#8a5a3c"/><path d="M90 1520 C 100 1420 340 1420 370 1520Z" fill="#ff5d7a"/><path d="M170 1450 C 165 1480 160 1500 150 1520 L 205 1520 C 198 1490 196 1470 196 1440Z M290 1440 C 290 1470 296 1490 304 1520 L 355 1520 C 345 1490 335 1460 322 1450Z" fill="#fff6e8" opacity=".9"/><path d="M90 1520 q35 24 70 0 q35 24 70 0 q35 24 70 0 q35 24 70 0" fill="#ff5d7a"/></g></g>
       <g transform="translate(390 1850) scale(.8)"><path d="M0 -40 l14 36 38 4 -30 26 10 38 -32 -20 -32 20 10 -38 -30 -26 38 -4z" fill="#ff7a5c"/></g>
       <g transform="translate(470 1900)"><path d="M0 0 q60 -90 120 0z" fill="#ffd9c2"/><path d="M60 0 l-40 -70 M60 0 l0 -76 M60 0 l40 -70" stroke="#e8a58a" stroke-width="5" fill="none"/></g>
-      <g transform="translate(-150 20)"><ellipse cx="800" cy="1830" rx="48" ry="30" fill="#e84a3a"/><circle cx="780" cy="1802" r="9" fill="#fff"/><circle cx="820" cy="1802" r="9" fill="#fff"/><path d="M752 1818 l-30 -26 M848 1818 l30 -26" stroke="#e84a3a" stroke-width="9" stroke-linecap="round"/></g></g>`,
+      <g class="crabe"><g transform="translate(-150 20)"><ellipse cx="800" cy="1830" rx="48" ry="30" fill="#e84a3a"/><circle cx="780" cy="1802" r="9" fill="#fff"/><circle cx="820" cy="1802" r="9" fill="#fff"/><path d="M752 1818 l-30 -26 M848 1818 l30 -26" stroke="#e84a3a" stroke-width="9" stroke-linecap="round"/></g></g>
+      <g class="dauphin"><path d="M-110 0 C -70 -34 0 -40 60 -10 C 90 4 106 -6 126 -34 C 130 -4 126 14 104 24 C 80 30 60 28 40 20 C -10 28 -70 24 -110 0Z" fill="#6b8fb5"/><path d="M-20 -28 L -4 -62 L 8 -26Z" fill="#587aa0"/><path d="M-30 12 L -46 44 L -6 20Z" fill="#587aa0"/><path d="M-100 4 C -50 18 0 22 60 22 C 30 14 -30 14 -100 4Z" fill="#dbe8f2"/><path d="M-126 6 C -108 -4 -96 -10 -84 -12 L -84 12 C -98 14 -114 12 -126 6Z" fill="#6b8fb5"/><circle cx="-80" cy="-6" r="3.5" fill="#1d2a38"/></g>
+      <g class="eclaboussure"><circle cx="-22" cy="0" r="8" fill="#fff"/><circle cx="0" cy="-14" r="10" fill="#fff"/><circle cx="24" cy="-2" r="7" fill="#fff"/><circle cx="-8" cy="8" r="5" fill="#fff"/></g><g class="eclaboussure"><circle cx="-22" cy="0" r="8" fill="#fff"/><circle cx="0" cy="-14" r="10" fill="#fff"/><circle cx="24" cy="-2" r="7" fill="#fff"/><circle cx="-8" cy="8" r="5" fill="#fff"/></g></g>`,
   };
 
 
@@ -114,7 +118,64 @@
     })(),
   };
 
+  // --- L'ambiance animée (côté page) : tout est fini et déterministe. c = contexte du lecteur (c.ft = fromTo), el = le plan, d = durée du plan. -----------------------
+  function animer(c, el, nom, t0, d) {
+    const qa = (s) => [...el.querySelectorAll(s)], q = (s) => el.querySelector(s);
+    qa('.vague').forEach((v, i) => { const T = [6, 7.5, 9, 6.5][i % 4]; gsap.set(v, { x: 0 }); const n = Math.ceil(d / (T / 2)) + 1, ax = [34, 46, 58, 40][i % 4], ay = 9;
+      for (let k = 0; k < n; k += 1) c.ft(v, { x: k % 2 ? ax : -ax, y: k % 2 ? ay : -ay }, { x: k % 2 ? -ax : ax, y: k % 2 ? -ay : ay, duration: T / 2, ease: 'sine.inOut' }, t0 + k * T / 2);
+      gsap.set(v, { x: -ax, y: -ay }); });
+    const soleil = q('.soleil');
+    if (soleil) { gsap.set(soleil, { svgOrigin: soleil.dataset.o || '900 160' }); for (let u = 0; u + 3 <= d; u += 3) { c.ft(soleil, { scale: 1 }, { scale: 1.07, duration: 1.5, ease: 'sine.inOut' }, t0 + u); c.ft(soleil, { scale: 1.07 }, { scale: 1, duration: 1.5, ease: 'sine.inOut' }, t0 + u + 1.5); } }
+    qa('.nuage').forEach((n) => { const s = +n.dataset.d || 1; gsap.set(n, { x: -60 * s }); c.ft(n, { x: -60 * s }, { x: 60 * s, duration: d, ease: 'none' }, t0); });
+    if (q('.plume')) gsap.set(q('.plume'), { svgOrigin: '976 1690' });
+
+    // Un passage : un groupe qui traverse l'écran de part en part (hors champ avant et après), avec un petit rebond de marche.
+    const traverse = (g, passages, de, vers, duree, pas, bond) => {
+      gsap.set(g, { x: de });
+      passages.forEach(([t, sens]) => {
+        if (t + duree + 0.5 > d) return;
+        const a = sens > 0 ? de : vers, b = sens > 0 ? vers : de;
+        c.ft(g, { x: a }, { x: b, duration: duree, ease: 'none' }, t0 + t);
+        for (let k = 0; k < Math.floor(duree / pas); k += 1) { c.ft(g, { y: 0 }, { y: -bond, duration: pas / 2, ease: 'sine.out' }, t0 + t + k * pas); c.ft(g, { y: -bond }, { y: 0, duration: pas / 2, ease: 'sine.in' }, t0 + t + k * pas + pas / 2); }
+      });
+    };
+    const crabe = q('.crabe');
+    if (crabe) traverse(crabe, [[10, -1], [38, 1]], 620, -800, 9, 0.5, 6);
+    const souris = q('.souris');
+    if (souris) traverse(souris, [[12, -1], [36, 1]], 640, -760, 7, 0.28, 4);
+
+    // Le dauphin : un arc de 2 s dans la voie de mer, sorti de derrière la bande de papier, museau haut puis museau bas, avec deux éclaboussures.
+    const dauphin = q('.dauphin'), eclab = qa('.eclaboussure');
+    if (dauphin) {
+      gsap.set(dauphin, { x: 0, y: 2400, transformOrigin: '50% 50%' }); eclab.forEach((e) => gsap.set(e, { opacity: 0, x: 0, y: 2400 }));
+      [[5, 1], [18, -1], [29, 1], [47, -1]].forEach(([t, s]) => {
+        if (t + 2.5 > d) return;
+        const x0 = s > 0 ? 130 : 950, x1 = s > 0 ? 480 : 600, T = t0 + t;
+        c.ft(dauphin, { scaleX: s, x: x0, y: 1500, rotation: -38 * s }, { scaleX: s, x: x0, y: 1500, rotation: -38 * s, duration: 0.001 }, T - 0.002);
+        c.ft(dauphin, { x: x0 }, { x: x1, duration: 2, ease: 'none' }, T);
+        c.ft(dauphin, { y: 1500 }, { y: 1285, duration: 1, ease: 'power2.out' }, T);
+        c.ft(dauphin, { y: 1285 }, { y: 1500, duration: 1, ease: 'power2.in' }, T + 1);
+        c.ft(dauphin, { rotation: -38 * s }, { rotation: 38 * s, duration: 2, ease: 'sine.inOut' }, T);
+        c.ft(dauphin, { y: 1500 }, { y: 2400, duration: 0.001 }, T + 2.01);
+        [[0.16, x0 + (x1 - x0) * 0.08], [1.84, x0 + (x1 - x0) * 0.92]].forEach(([dt, ex], i) => {
+          c.ft(eclab[i], { opacity: 0, x: ex, y: 1428, scale: 0.3 }, { opacity: 1, scale: 1.2, duration: 0.25, ease: 'power2.out' }, T + dt);
+          c.ft(eclab[i], { opacity: 1 }, { opacity: 0, duration: 0.4 }, T + dt + 0.25);
+        });
+      });
+    }
+    // Les livres qui sautent de la rangée, la bascule autour du pied du livre.
+    qa('.livre-saut').forEach((l) => gsap.set(l, { transformOrigin: '50% 100%' }));
+    [[7, 1], [21, 3], [33, 4], [45, 6]].forEach(([t, k]) => {
+      const l = q(`.livre-saut[data-k="${k}"]`); if (!l || t + 1 > d) return;
+      c.ft(l, { y: 0, rotation: 0 }, { y: -70, rotation: -6, duration: 0.35, ease: 'power2.out' }, t0 + t);
+      c.ft(l, { y: -70, rotation: -6 }, { y: 0, rotation: 0, duration: 0.35, ease: 'power2.in' }, t0 + t + 0.35);
+    });
+    // L'avion en papier traverse le bas de l'écran, au-dessus des livres, sous la barre.
+    const avion = q('.avion');
+    if (avion) { gsap.set(avion, { x: -200, y: 1640 }); [16, 41].forEach((t) => { if (t + 6.5 > d) return; c.ft(avion, { x: -200 }, { x: 1280, duration: 6, ease: 'none' }, t0 + t); [1640, 1610, 1650, 1615, 1640].forEach((y, k, tab) => { if (k) c.ft(avion, { y: tab[k - 1], rotation: k % 2 ? -8 : 8 }, { y, rotation: k % 2 ? 8 : -8, duration: 1.5, ease: 'sine.inOut' }, t0 + t + (k - 1) * 1.5); }); }); }
+  }
+
   const DECORS = { livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
   const decor = (nom) => DECORS[nom] || DECORS.livres;
-  return { decor, DECORS };
+  return { decor, DECORS, animer };
 });
