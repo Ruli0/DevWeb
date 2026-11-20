@@ -184,16 +184,19 @@
           });
         });
         // Progressif : la caméra (échelle + translation de la grille) cadre les mots déjà posés, puis dézoome à chaque mot qui arrive.
-        const vues = [];
+        const vues = [], centres = [];
         if (prog) {
           const gx = parseFloat(grille.style.left), gy = parseFloat(grille.style.top), sz = parseFloat(grille.style.getPropertyValue('--case'));
           const R = cases.map((x) => ({ l: parseFloat(x.style.left), t: parseFloat(x.style.top), k: Math.min(...x.dataset.m.split(' ').map(Number)) }));
           for (let k = 0; k < N; k += 1) {
             const S = R.filter((r) => r.k <= k), l = Math.min(...S.map((r) => r.l)), t = Math.min(...S.map((r) => r.t)), r2 = Math.max(...S.map((r) => r.l + sz)), b = Math.max(...S.map((r) => r.t + sz));
             const s = Math.max(1, Math.min(960 / (r2 - l), 740 / (b - t), 175 / sz));
+            centres.push([(l + r2) / 2, (t + b) / 2]);
             vues.push({ scale: s, x: 540 - gx - s * (l + r2) / 2, y: 1010 - gy - s * (t + b) / 2 });
           }
-          gsap.set(grille, Object.assign({ transformOrigin: '0 0' }, vues[0]));
+          const s0 = vues[0].scale * 1.12, d0 = { scale: s0, x: 540 - gx - s0 * centres[0][0], y: 1010 - gy - s0 * centres[0][1] };
+          gsap.set(grille, Object.assign({ transformOrigin: '0 0' }, d0));
+          c.ft(grille, d0, Object.assign({ duration: 0.7, ease: 'power3.out' }, vues[0]), t0);
           DEC.anim(p.animation)[1](c, el, p, t0, d);
         }
         // La fin « teaser » : la grille s'efface, une nouvelle question arrive avec ses cases vides et son minuteur ; la vidéo coupe avant la réponse (et reboucle sur la première question).
@@ -213,20 +216,21 @@
           const ti = t0 + m.indice.t, tr = t0 + m.reponse.t, suivant = k + 1 < N ? t0 + p.mots[k + 1].indice.t : tr + 2;
           // L'indice en cours remplace le précédent dans le bandeau.
           // Muet : le nouvel indice arrive 0,8 s après le zéro du minuteur, l'ancien est parti à 0,4 s (jamais deux textes superposés).
-          c.ft(indices[k], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, muet && k ? ti + 0.8 : (fixe ? t0 + Math.min(m.indice.t, 0.3) : ti));
+          if (prog && k === 0) gsap.set(indices[0], { opacity: 1, y: 0 }); else c.ft(indices[k], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, muet && k ? ti + 0.8 : (fixe ? t0 + (prog ? 0 : Math.min(m.indice.t, 0.3)) : ti));
           c.ft(indices[k], { opacity: 1 }, { opacity: 0, duration: 0.25 }, muet ? tr + 0.4 : Math.max(tr + 1.1, suivant - 0.3));
           // Pendant la recherche, les cases du mot s'illuminent doucement, la case de départ en tête, puis respirent jusqu'à la réponse.
           const siennes = cases.filter((x) => x.dataset.m.split(' ').includes(String(k)));
-          const siennes0 = siennes.filter((x) => !deja.has(x)), tp = prog ? ti + (muet && k ? 0.6 : 0) : ti, tpop = prog ? tp + (k ? 0.3 : 0) : ti;
+          const siennes0 = siennes.filter((x) => !deja.has(x)), tp = prog ? ti + (muet && k ? 0.6 : 0) : ti, tpop = prog ? (k ? tp + 0.3 : t0) : ti, donne = prog && p.premiereLettre && k === 0 ? siennes0[0] : null, aRev = siennes0.filter((x) => x !== donne);
+          if (donne) { deja.add(donne); gsap.set(donne, { opacity: 1 }); gsap.set(q(donne, 'em'), { opacity: 1 }); gsap.set(q(donne, 'i'), { opacity: 0.5 }); }
           // Progressif : la suite de cases de ce mot arrive (pop) au début de sa fenêtre ; les croisements déjà posés restent.
           if (prog) {
-            c.ft(siennes0, { opacity: 0, y: 40, scale: 0.55 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.9)', stagger: 0.12 }, tpop);
+            c.ft(aRev, { opacity: 0, y: 40, scale: 0.55 }, { opacity: 1, y: 0, scale: 1, duration: k ? 0.4 : 0.3, ease: 'back.out(1.9)', stagger: k ? 0.12 : 0.07 }, tpop);
             if (k) c.ft(grille, vues[k - 1], Object.assign({ duration: 0.9, ease: 'power2.inOut' }, vues[k]), tp - 0.1);
           }
-          const H = GR.horaires(tr, siennes0.length, t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
+          const H = GR.horaires(tr, aRev.length, t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
           if (p.lueur !== false) {
             const te = H.depart - 0.05;
-            siennes0.forEach((cell, i) => {
+            aRev.forEach((cell, i) => {
               const lueurs = [q(cell, 's'), cell.previousElementSibling], base = i === 0 ? 0.85 : 0.5, bas = base * 0.45, ta = tpop + (prog ? 0.35 : 0.3) + i * 0.12;
               c.ft(lueurs, { opacity: 0 }, { opacity: base, duration: 0.6, ease: 'power2.out' }, ta);
               if (i === 0 && q(cell, 'b')) { c.ft(q(cell, 'b'), { scale: 1 }, { scale: 1.7, duration: 0.3, ease: 'power2.out' }, ta); c.ft(q(cell, 'b'), { scale: 1.7 }, { scale: 1, duration: 0.4, ease: 'power2.inOut' }, ta + 0.3); }
@@ -236,7 +240,7 @@
             });
           }
           // La révélation : une étincelle part de l'orbe vers chaque case neuve, la case s'illumine d'une onde, la lettre monte en devenant nette.
-          siennes0.forEach((cell, j) => {
+          aRev.forEach((cell, j) => {
             deja.add(cell);
             const ta = H.pose[j], tl = ta - GR.LETTRE.vol;
             const sp = sparks[cases.indexOf(cell)], dx = +cell.dataset.cx - ox, dy = +cell.dataset.cy - oy;

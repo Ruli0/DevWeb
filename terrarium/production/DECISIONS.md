@@ -311,3 +311,6 @@ Même principe que Rêverie (3 niveaux selon `paliers`), choisies par `"musique"
 
 ## 49. Finale spectaculaire avant la question mystère ; musique Rêverie dynamique retenue (20 nov. 2026)
 Jules garde Rêverie (108 bpm, pouls et charleston dès la 1re seconde). Chaque animation a un finale 2,4 s après la dernière réponse (quand les lettres ont fini de tomber) : fusée qui décolle et sort de l'écran, volcan en grande éruption (éclair, jets de lave), bonhomme qui saute les bras en l'air dans des flammes géantes, robot qui gonfle puis explose en éclat blanc et fait une vrille, bateau soulevé par une vague géante. La question mystère arrive 5,6 s après la dernière réponse (`teaser.delai`), la vidéo dure 34,3 s (`muet.fin` 9,6). Les éclairs couvrent tout l'écran (rect étendu).
+
+## 50. Ouverture accrocheuse après le relevé 2 h (visionnage moyen 2,6 s) (20 nov. 2026)
+Options de plan : `"premiereLettre": true` (la 1re lettre du 1er mot est déjà posée), question visible dès l'image 0, cases du 1er mot qui claquent une à une avec un « pop » (son) dès 0,02 s, zoom d'entrée de la caméra (1,12 → 1 en 0,7 s) ; `muet.intro` 0,3 s, `cadence` 5 s au lieu de 8 (durée 24,9 s). Appliqué aux 10 épisodes. À mesurer : visionnage moyen et % de vision complète (le seuil à battre : 2,6 s / 2,59 %). Écarté pour l'instant : aperçu du finale en ouverture (à tester seul).

@@ -61,8 +61,8 @@
         }
       ],
       "muet": {
-        "intro": 0.67,
-        "cadence": 8,
+        "intro": 0.3,
+        "cadence": 5,
         "fin": 9.6,
         "tempo": 108,
         "titreFixe": true
@@ -73,7 +73,8 @@
         "texte": "Le plus grand animal du monde",
         "n": 7,
         "delai": 5.6
-      }
+      },
+      "premiereLettre": true
     }
   ],
   "publication": {

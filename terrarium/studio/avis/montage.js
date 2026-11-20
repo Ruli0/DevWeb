@@ -330,10 +330,12 @@ function montage(ep, voixFournie) {
   if ((ep.musique || S.musique) === 'avis') { sons.push({ f: 'indicatif-court.wav', t: 0, v: 0.5 }); if (duree - dureeVoix > 1.5) sons.push({ f: 'indicatif.wav', t: arrondi(dureeVoix + 0.15), v: 0.6 }); }
   // Les bruitages du jeu de mots fléchés : un « tac » par lettre posée, un accord quand le mot est trouvé, un tic par seconde sur les trois dernières secondes.
   plans.filter((x) => x.id === 'grille' && x.p.muetCfg).forEach((x) => x.p.mots.forEach((m) => sons.push({ f: 'indice.wav', t: arrondi(x.t0 + m.indice.t + (m.indice.t > 6 ? 0.7 : -0.1)), v: arrondi(0.3 * reglages.bruitages) })));
+  // Ouverture : un « pop » par case du premier mot (mouvement et son dès la première seconde).
+  plans.filter((x) => x.id === 'grille' && x.p.affichage === 'progressif').forEach((x) => { const G = require('./grille.js'), g = G.construire(x.p.mots), n = G.nouvelles(g, x.p.mots.length)[0].length - (x.p.premiereLettre ? 1 : 0); for (let i = 0; i < n; i += 1) sons.push({ f: 'pop.wav', t: arrondi(x.t0 + 0.02 + i * 0.07), v: arrondi(0.25 * reglages.bruitages) }); });
   plans.filter((x) => x.id === 'grille').forEach((x) => {
     const G = require('./grille.js'), g = G.construire(x.p.mots), neuves = G.nouvelles(g, x.p.mots.length);
     x.p.mots.forEach((m, k) => {
-      const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length, x.t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
+      const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length - (x.p.premiereLettre && k === 0 ? 1 : 0), x.t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
       H.pose.forEach((t, j) => sons.push({ f: `lettre-${Math.min(8, j + 1)}.wav`, t: arrondi(t - 0.02), v: arrondi(0.3 * reglages.bruitages) }));
       sons.push({ f: 'trouve.wav', t: arrondi(H.fin + 0.12), v: arrondi(0.34 * reglages.bruitages) });
       [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
