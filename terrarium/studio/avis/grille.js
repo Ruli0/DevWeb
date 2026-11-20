@@ -84,7 +84,7 @@
 
   // La taille des cases s'adapte à la grille : toute la largeur utile (960 px) et la hauteur d'une zone de 770 px (y 490 à 1260), au plus 130 px de pas.
   const ZONE = { largeur: 960, haut: 490, hauteur: 770, vide: 8 };
-  const ZONE_PROG = { largeur: 960, haut: 640, hauteur: 650, vide: 8 };
+  const ZONE_PROG = { largeur: 960, haut: 640, hauteur: 740, vide: 8 };
   function dims(g, prog) {
     const Z = prog ? ZONE_PROG : ZONE;
     const pas = Math.max(40, Math.floor(Math.min(Z.largeur / Math.max(1, g.colonnes), Z.hauteur / Math.max(1, g.lignes), 130)));
@@ -155,6 +155,7 @@
 .jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
 .jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
 .jeu .barre.prog { display: none; }
+.jeu .danse { position: absolute; left: 0; top: 1450px; width: 1080px; height: 420px; overflow: visible; }
 .jeu .minuteur.prog { top: 300px; }
 .jeu .minuteur.prog .m-fond { stroke: #ffffff33; }
 .jeu .tampon.prog { left: 720px; top: 580px; background: #1a0b2e; }

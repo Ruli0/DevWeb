@@ -180,7 +180,73 @@
     fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d28d9"/><stop offset=".45" stop-color="#2a0f5c"/><stop offset="1" stop-color="#050308"/></linearGradient><radialGradient id="dg2" cx=".5" cy=".3" r=".6"><stop offset="0" stop-color="#a855f7" stop-opacity=".35"/><stop offset="1" stop-color="#a855f7" stop-opacity="0"/></radialGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/><rect width="1080" height="1920" fill="url(#dg2)"/>`,
     bas: '',
   };
+
+  // --- Le bonhomme qui danse (jeu progressif) : en bas de l'écran, de plus en plus de fête quand les mots deviennent difficiles. ---------------------------------
+  const note = (x, y, col) => `<g class="note" data-x="${x}" data-y="${y}" opacity="0"><ellipse cx="0" cy="0" rx="13" ry="10" fill="${col}" transform="rotate(-20)"/><path d="M11 -3 V-48 C 24 -42 32 -34 28 -22" fill="none" stroke="${col}" stroke-width="5" stroke-linecap="round"/></g>`;
+  const CONF = ['#ffd45c', '#ff7a5c', '#4fd1c5', '#c46bff', '#ffffff'];
+  function danse() {
+    const confettis = Array.from({ length: 14 }, (_, i) => `<rect class="confetti" data-i="${i}" x="${70 + i * 70}" y="0" width="14" height="22" rx="3" fill="${CONF[i % 5]}" opacity="0"/>`).join('');
+    const notes = [[300, 330, '#ffd45c'], [780, 300, '#4fd1c5'], [420, 280, '#ff7a5c'], [660, 340, '#c46bff']].map((n) => note(...n)).join('');
+    const faisceaux = ['#c46bff', '#4fd1c5', '#ffd45c', '#ff7a5c'].map((c2, i) => `<path class="faisceau" data-i="${i}" d="M540 70 L${140 + i * 270} 400 L${230 + i * 270} 400Z" fill="${c2}" opacity="0"/>`).join('');
+    return `<svg class="danse" viewBox="0 0 1080 420">
+      <ellipse class="sol" cx="540" cy="404" rx="250" ry="26" fill="#c46bff" opacity=".35"/>
+      <path class="spot" d="M470 0 L610 0 L760 410 L320 410Z" fill="#ffffff" opacity="0"/>${faisceaux}
+      <g class="boule" opacity="0"><path d="M540 -60 V30" stroke="#ffffff88" stroke-width="3"/><circle cx="540" cy="70" r="42" fill="#d9d9e8"/><path d="M500 60 H580 M500 80 H580 M524 30 V108 M556 30 V108" stroke="#8f8fb0" stroke-width="2.5"/></g>
+      ${notes}
+      <g transform="translate(540 400)"><g class="dn">
+        <g class="jg"><rect x="-34" y="-120" width="24" height="120" rx="12" fill="#4fd1c5"/><ellipse cx="-24" cy="0" rx="22" ry="9" fill="#2a1a14"/></g>
+        <g class="jd"><rect x="10" y="-120" width="24" height="120" rx="12" fill="#4fd1c5"/><ellipse cx="24" cy="0" rx="22" ry="9" fill="#2a1a14"/></g>
+        <rect x="-46" y="-236" width="92" height="132" rx="34" fill="#ffd45c"/>
+        <g class="bg"><rect x="-68" y="-222" width="24" height="108" rx="12" fill="#ffd45c"/><circle cx="-56" cy="-112" r="13" fill="#f2c9a0"/></g>
+        <g class="bd"><rect x="44" y="-222" width="24" height="108" rx="12" fill="#ffd45c"/><circle cx="56" cy="-112" r="13" fill="#f2c9a0"/></g>
+        <g class="tete"><circle cx="0" cy="-282" r="44" fill="#f2c9a0"/><path d="M-46 -286 C-46 -332 46 -332 46 -286 C 30 -306 -30 -306 -46 -286Z" fill="#2a1a14"/>
+          <circle cx="-15" cy="-278" r="5" fill="#2a1a14"/><circle cx="15" cy="-278" r="5" fill="#2a1a14"/><path d="M-16 -262 Q0 -246 16 -262" fill="none" stroke="#2a1a14" stroke-width="4" stroke-linecap="round"/></g>
+        <g class="lunettes" opacity="0"><rect x="-32" y="-292" width="28" height="16" rx="5" fill="#111"/><rect x="4" y="-292" width="28" height="16" rx="5" fill="#111"/><rect x="-6" y="-288" width="12" height="4" fill="#111"/></g>
+      </g></g>${confettis}</svg>`;
+  }
+  // Niveau de difficulté d'un mot : 0 (facile) ; 1 (milieu) ; 2 (le dernier). Rythme : le tempo de la musique ; plus c'est dur, plus ça bat vite et fort.
+  function danser(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], N = p.mots.length, mu = p.muetCfg || {};
+    const niv = (k) => (k === 0 ? 0 : k >= N - 1 ? 2 : 1), debut = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0);
+    const k1 = Math.min(1, N - 1), k2 = N - 1, T1 = debut(k1), T2 = debut(k2);
+    const niveauA = (t) => (t >= T2 ? 2 : t >= T1 ? 1 : 0), beat = 60 / (mu.tempo || 90);
+    const dn = q('.dn'), bg = q('.bg'), bd = q('.bd'), jg = q('.jg'), jd = q('.jd'), tete = q('.tete');
+    gsap.set(dn, { svgOrigin: '0 0' }); gsap.set(bg, { svgOrigin: '-56 -214' }); gsap.set(bd, { svgOrigin: '56 -214' }); gsap.set(jg, { svgOrigin: '-22 -118' }); gsap.set(jd, { svgOrigin: '22 -118' }); gsap.set(tete, { svgOrigin: '0 -240' });
+    let t = t0, i = 0, r = 0, ag = 0, ad = 0;
+    const fin = t0 + d;
+    while (t + 0.2 < fin) {
+      const L = niveauA(t), P = L === 0 ? beat : beat / 2, s = i % 2 ? 1 : -1, h = [14, 26, 44][L], rot = [4, 7, 10][L], bras = [28, 75, 150][L];
+      const ease = 'sine.inOut';
+      c.ft(dn, { y: 0 }, { y: -h, duration: P / 2, ease: 'sine.out' }, t); c.ft(dn, { y: -h }, { y: 0, duration: P / 2, ease: 'sine.in' }, t + P / 2);
+      c.ft(dn, { rotation: r }, { rotation: s * rot, duration: P, ease }, t);
+      c.ft(bg, { rotation: ag }, { rotation: s * bras, duration: P, ease }, t); c.ft(bd, { rotation: ad }, { rotation: s * bras, duration: P, ease }, t);
+      c.ft(jg, { rotation: 0 }, { rotation: 0, duration: P }, t);
+      c.ft(tete, { rotation: -r }, { rotation: -s * rot * 1.2, duration: P, ease }, t);
+      r = s * rot; ag = s * bras; ad = s * bras; t += P; i += 1;
+    }
+    // Niveau 1 : le projecteur, les notes de musique. Niveau 2 : lunettes, boule à facettes, faisceaux colorés, confettis.
+    c.ft(q('.spot'), { opacity: 0 }, { opacity: 0.16, duration: 0.8 }, T1);
+    c.ft(q('.sol'), { opacity: 0.35 }, { opacity: 0.7, duration: 0.8 }, T1);
+    qa('.note').forEach((n, j) => {
+      const x = +n.dataset.x, y = +n.dataset.y, dur = 2.4;
+      for (let u = T1 + j * 0.6, m = 0; u + dur < fin; u += dur, m += 1) {
+        c.ft(n, { opacity: 0, x, y, rotation: -10 }, { opacity: 0.95, duration: 0.3 }, u);
+        c.ft(n, { y }, { y: y - 230, rotation: 12, duration: dur, ease: 'sine.out' }, u);
+        c.ft(n, { opacity: 0.95 }, { opacity: 0, duration: 0.5 }, u + dur - 0.5);
+      }
+    });
+    c.ft(q('.lunettes'), { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.3, ease: 'back.out(2)' }, T2);
+    c.ft(q('.boule'), { opacity: 0, y: -200 }, { opacity: 1, y: 0, duration: 0.7, ease: 'bounce.out' }, T2);
+    c.ft(q('.sol'), { opacity: 0.7 }, { opacity: 1, duration: 0.5 }, T2);
+    gsap.set(q('.boule'), { opacity: 0 });
+    qa('.faisceau').forEach((f, j) => { for (let u = T2 + 0.4, m = 0; u + 0.6 < fin; u += 0.6, m += 1) c.ft(f, { opacity: (m + j) % 2 ? 0.5 : 0.05 }, { opacity: (m + j) % 2 ? 0.05 : 0.5, duration: 0.6, ease: 'sine.inOut' }, u); });
+    qa('.confetti').forEach((f, j) => { const dur = 2.2; for (let u = T2 + 0.5 + (j % 7) * 0.31, m = 0; u + dur < fin; u += dur, m += 1) {
+      c.ft(f, { opacity: 0, y: 0, rotation: 0 }, { opacity: 1, duration: 0.1 }, u);
+      c.ft(f, { y: 0 }, { y: 400, duration: dur, ease: 'none' }, u);
+      c.ft(f, { rotation: 0 }, { rotation: 360 * (j % 2 ? 1 : -1), duration: dur, ease: 'none' }, u);
+      c.ft(f, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); } });
+  }
   const DECORS = { degrade: DEGRADE, livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
   const decor = (nom) => DECORS[nom] || DECORS.livres;
-  return { decor, DECORS, animer };
+  return { decor, DECORS, animer, danse, danser };
 });
