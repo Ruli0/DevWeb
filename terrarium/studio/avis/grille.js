@@ -154,6 +154,7 @@
 .jeu .bandeau.prog .indices p { padding: 34px 135px 0 6px; color: #fff; text-shadow: 0 4px 18px #0008; }
 .jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
 .jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
+.jeu .barre.prog { display: none; }
 .jeu .minuteur.prog { top: 300px; }
 .jeu .minuteur.prog .m-fond { stroke: #ffffff33; }
 .jeu .tampon.prog { left: 720px; top: 580px; background: #1a0b2e; }
