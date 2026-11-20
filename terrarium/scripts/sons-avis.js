@@ -246,6 +246,95 @@ function reverie({ duree = 30, tempo = 92, paliers } = {}) {
 }
 VIVES.reverie = { nom: 'Rêverie (onirique, mi-lente, pour le jeu de mots fléchés)', tempo: 92, fabrique: (o) => reverie(o) };
 
+
+// --- Trois autres ambiances pour le jeu (20 nov. 2026), toutes à trois niveaux comme « Rêverie » : paliers[0] = le mot du milieu, paliers[1] = le dernier. ---
+const niveauDe = (paliers) => (t) => (!paliers ? 1 : t >= paliers[1] - 0.1 ? 2 : t >= paliers[0] - 0.1 ? 1 : 0);
+const montee = (b, paliers, bruit, graine, ampli = 0.06) => (paliers || []).forEach((p, j) => bruit(b, (x) => ampli * (x / 1.2) * (x / 1.2), { bas: 1500, haut: 11000, debut: Math.max(0, p - 1.2), hasard: graine(800 + j), duree: 1.2 }));
+const choc = (b, t, a, bruit, enveloppe, graine, g) => bruit(b, (x) => a * enveloppe(x, 0.002, 1.1), { bas: 3500, haut: 13000, debut: t, hasard: graine(g), duree: 1.6 });
+
+// Arcade : une ambiance de jeu vidéo, ondes carrées, arpèges et basse qui pulse ; le rythme s'installe puis s'emballe.
+function arcade({ duree = 30, tempo = 128, paliers } = {}) {
+  const { tampon, sinus, bruit, enveloppe, graine } = O();
+  const pas = 60 / tempo / 4, mes = 16 * pas, b = tampon(duree), niv = niveauDe(paliers);
+  const ACC = [[57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]], BAS = [33, 29, 36, 31];
+  const carre = (n, t, dur, a) => sinus(b, () => note(n), (x) => a * Math.min(1, x / 0.004) * Math.max(0, 1 - x / dur), t, 'carre', dur);
+  for (let m = 0; m * mes < duree; m += 1) {
+    const t0 = m * mes, acc = ACC[m % 4], L = niv(t0);
+    for (let k = 0; k < 16; k += 1) {
+      const t = t0 + k * pas, idx = [0, 1, 2, 1][(L ? k : k >> 1) % 4];
+      if (L >= 1 || k % 2 === 0) carre(acc[idx] + 24, t, pas * 1.6, L ? 0.04 : 0.03);
+      if (L === 0 ? (k === 0 || k === 8) : L === 1 ? [0, 3, 6, 8, 11, 14].includes(k) : k % 2 === 0) carre(BAS[m % 4] + (L === 2 && k % 4 === 2 ? 12 : 0), t, pas * (L === 0 ? 6 : 1.7), 0.09);
+      if (L >= 1) {
+        if (k % 4 === 0) BATTERIE.grosse(b, t, 0.5);
+        if (k === 4 || k === 12) BATTERIE.claire(b, t, 0.3, 300 + m + k);
+        if (L === 1 ? k % 2 === 0 : true) BATTERIE.charley(b, t + pas / 2, L === 2 ? 0.05 : 0.06, 500 + m * 16 + k, false);
+      }
+      if (L === 2) {
+        if (k % 4 === 0 || k % 4 === 3) carre(acc[[2, 1, 2, 0][(k >> 2) % 4]] + 36, t, pas * 3, 0.036);
+        if (m % 4 === 3 && k >= 12) BATTERIE.claire(b, t, 0.22, 900 + k);
+      }
+    }
+    if (L === 2 && m % 4 === 0) choc(b, t0, 0.05, bruit, enveloppe, graine, 400 + m);
+  }
+  montee(b, paliers, bruit, graine, 0.08);
+  return reverbe(b, 0.1);
+}
+VIVES.arcade = { nom: 'Arcade (jeu vidéo, ondes carrées, s\'emballe)', tempo: 128, fabrique: (o) => arcade(o) };
+
+// Lo-fi : accords chauds de piano électrique, batterie traînante, craquements de vinyle ; de plus en plus fourni.
+function lofi({ duree = 30, tempo = 84, paliers } = {}) {
+  const { tampon, sinus, bruit, enveloppe, graine } = O();
+  const pas = 60 / tempo / 4, mes = 16 * pas, b = tampon(duree), niv = niveauDe(paliers);
+  const ACC = [[50, 53, 57, 60], [43, 47, 50, 53], [48, 52, 55, 59], [45, 48, 52, 55]];
+  const rhodes = (n, t, a, tenue) => { const f = note(n); sinus(b, () => f, (x) => a * enveloppe(x, 0.008, tenue), t, 'sin', tenue * 3); sinus(b, () => f * 2, (x) => a * 0.3 * enveloppe(x, 0.004, tenue * 0.4), t, 'sin', tenue); sinus(b, () => f * 7, (x) => a * 0.05 * enveloppe(x, 0.001, 0.06), t, 'sin', 0.2); };
+  for (let m = 0; m * mes < duree; m += 1) {
+    const t0 = m * mes, acc = ACC[m % 4], L = niv(t0), sw = (k) => (k % 2 ? pas * 0.28 : 0);
+    (L === 0 ? [0] : L === 1 ? [0, 6, 10] : [0, 6, 10, 14]).forEach((k) => acc.forEach((n, i) => rhodes(n + 12, t0 + k * pas + i * 0.012, 0.03, 0.55 + (k === 0 ? 0.5 : 0))));
+    [0, ...(L >= 1 ? [6, 10] : [])].forEach((k) => sinus(b, () => note(acc[0] - 12), (x) => 0.2 * enveloppe(x, 0.006, 0.4), t0 + k * pas, 'sin', 1.2));
+    if (L === 2) [3, 8, 12, 15].forEach((k) => sinus(b, () => note(acc[(k >> 2) % 4] + 12), (x) => 0.1 * enveloppe(x, 0.004, 0.25), t0 + k * pas, 'sin', 0.8));
+    for (let k = 0; k < 16; k += 1) {
+      const t = t0 + k * pas;
+      if (L === 0 ? k === 0 || k === 10 : [0, 7, 10].includes(k)) BATTERIE.grosse(b, t, L === 0 ? 0.28 : 0.4);
+      if (L >= 1 && (k === 4 || k === 12)) BATTERIE.claire(b, t + 0.012, 0.24, 300 + m + k);
+      if (L >= 1 && k % 2 === 0) BATTERIE.charley(b, t + sw(k), 0.05, 500 + m * 16 + k, false);
+      if (L === 2 && k % 2 === 1) BATTERIE.charley(b, t + sw(k), 0.035, 700 + m * 16 + k, k === 15);
+      if (L === 2 && (k === 7 || k === 14)) BATTERIE.claire(b, t, 0.1, 100 + k);
+    }
+    bruit(b, (x) => 0.008 * (1 + L * 0.5) * Math.sin(Math.PI * Math.min(1, x / mes)), { bas: 3000, haut: 9000, debut: t0, hasard: graine(1200 + m), duree: mes });
+  }
+  montee(b, paliers, bruit, graine, 0.04);
+  return reverbe(b, 0.22);
+}
+VIVES.lofi = { nom: 'Lo-fi chaleureux (piano électrique, vinyle, de plus en plus fourni)', tempo: 84, fabrique: (o) => lofi(o) };
+
+// Épique : une montée cinématographique : nappes sombres, puis tambours et pizzicati, puis cordes qui galopent et chocs de cymbales.
+function epique({ duree = 30, tempo = 100, paliers } = {}) {
+  const { tampon, sinus, bruit, enveloppe, graine } = O();
+  const pas = 60 / tempo / 4, mes = 16 * pas, b = tampon(duree), niv = niveauDe(paliers);
+  const ACC = [[50, 53, 57], [46, 50, 53], [53, 57, 60], [48, 52, 55]], RAC = [38, 34, 41, 36];
+  for (let m = 0; m * mes < duree; m += 1) {
+    const t0 = m * mes, acc = ACC[m % 4], L = niv(t0);
+    acc.forEach((n) => [1, 1.004].forEach((d) => sinus(b, () => note(n) * d, (x) => (0.018 + L * 0.006) * Math.min(1, x / 0.8) * Math.min(1, (mes + 0.5 - x) / 0.9), t0 - 0.05, 'scie', mes + 0.5)));
+    sinus(b, () => note(RAC[m % 4]), (x) => 0.18 * Math.min(1, x / 0.3) * Math.min(1, (mes - x) / 0.5 + 0.2), t0, 'sin', mes);
+    if (L === 0) TIMBRES.cloche(b, note(acc[2] + 24), t0 + 8 * pas, 0.03, 1.2);
+    for (let k = 0; k < 16; k += 1) {
+      const t = t0 + k * pas;
+      if (L >= 1) { if (k % 4 === 0) BATTERIE.grosse(b, t, L === 2 ? 0.7 : 0.45); if (k % 2 === 0) TIMBRES.pince(b, note(acc[(k >> 1) % 3] + 24), t, 0.03, 0.8); }
+      if (L === 2) {
+        TIMBRES.pince(b, note(acc[k % 3] + 12), t, 0.02, 0.5);
+        sinus(b, () => note(acc[(k >> 1) % 3] + 12), (x) => 0.02 * Math.min(1, x / 0.02) * Math.max(0, 1 - x / (pas * 1.6)), t, 'scie', pas * 1.6);
+        if (k === 4 || k === 12) BATTERIE.claire(b, t, 0.4, 300 + m + k);
+        if (k % 2 === 0) BATTERIE.charley(b, t, 0.05, 500 + m * 16 + k, false);
+        if (m % 4 === 3 && k >= 12) BATTERIE.grosse(b, t + pas / 2, 0.55);
+      }
+    }
+    if (L === 2 && m % 2 === 0) choc(b, t0, 0.07, bruit, enveloppe, graine, 400 + m);
+  }
+  montee(b, paliers, bruit, graine, 0.1);
+  return reverbe(b, 0.3);
+}
+VIVES.epique = { nom: 'Épique (cinématographique, tambours et cordes)', tempo: 100, fabrique: (o) => epique(o) };
+
 function vive(style = 'funk', { duree = 30, plein, tempo, paliers } = {}) {
   const { tampon } = O();
   if (VIVES[style] && VIVES[style].fabrique) return VIVES[style].fabrique(Object.assign({ duree }, plein == null ? {} : { plein }, tempo == null ? {} : { tempo }, paliers ? { paliers } : {}));

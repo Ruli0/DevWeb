@@ -110,7 +110,7 @@ function montage(ep, voixFournie) {
   const THEMES = require('./themes.js');
   if (ep.theme && !THEMES[ep.theme]) erreurs.push(`"theme" : un parmi ${Object.keys(THEMES).join(', ')}`);
   if (ep.allure && !PERSO.ALLURES[ep.allure]) erreurs.push(`"allure" : une parmi ${Object.keys(PERSO.ALLURES).join(', ')}`);
-  if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique', 'house', 'house-nue', 'house-plate', 'reverie'].includes(ep.musique)) erreurs.push('"musique" : labo, house-plate, reverie, house, house-nue, funk, electro, acoustique, avis ou aucune');
+  if (ep.musique && !['avis', 'aucune', 'labo', 'funk', 'electro', 'acoustique', 'house', 'house-nue', 'house-plate', 'reverie', 'arcade', 'lofi', 'epique'].includes(ep.musique)) erreurs.push('"musique" : labo, house-plate, reverie, arcade, lofi, epique, house, house-nue, funk, electro, acoustique, avis ou aucune');
   if (ep.indicatif && !['A', 'B', 'C'].includes(ep.indicatif)) erreurs.push('"indicatif" : A, B ou C');
   if (ep.ouverture && !['vive', 'calme'].includes(ep.ouverture)) erreurs.push('"ouverture" : « vive » (défaut) ou « calme »');
   if (ep.aspect3d && !['doux', 'decoupe'].includes(ep.aspect3d)) erreurs.push('"aspect3d" : « doux » ou « decoupe »');

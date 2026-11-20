@@ -305,3 +305,6 @@ Catalogue d'animations à 3 niveaux (`danse`→flammes, `fusee`, `volcan`, `robo
 
 ## 47. Fin « teaser », musique qui s'excite, premier mot très facile (20 nov. 2026)
 Suite au relevé du 20 nov. (visionnage moyen ~55 %, 0 interaction) : (1) option de plan `"teaser": {texte, n}` : après le dernier mot, la grille s'efface et une nouvelle question facile arrive avec ses cases vides et son minuteur ; la vidéo coupe avant la réponse et reboucle sur la première question (`muet.fin` 5,8 s) ; (2) la musique Rêverie prend des `paliers` (mot 2 et mot 3, comme l'animation) : nappes et cloches rares, puis pouls et arpège, puis croches, charleston, basse et cloches doublées, avec une montée de souffle avant chaque palier ; (3) le premier indice est le plus facile possible (ex. « Au clair de la ... »). Appliqué aux 10 épisodes `jeu-mots-*`.
+
+## 48. Trois ambiances de plus pour le jeu : arcade, lofi, epique (20 nov. 2026)
+Même principe que Rêverie (3 niveaux selon `paliers`), choisies par `"musique"` dans l'épisode ; extraits d'écoute dans `videos/studio/musiques-demo/` (30,5 s, paliers à 9,27 s et 17,27 s). Mesure : le volume moyen monte de -29/-23/-22 dB (niveau 0) à -18/-17/-16 dB (niveau 2) pour arcade/lofi/epique ; Rêverie reste quasi plate (-17,8 → -17,4 dB). Le choix se fait à l'oreille (Jules).
