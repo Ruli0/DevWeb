@@ -63,7 +63,7 @@
       "muet": {
         "intro": 0.67,
         "cadence": 8,
-        "fin": 5.8,
+        "fin": 9.6,
         "tempo": 108,
         "titreFixe": true
       },
@@ -71,7 +71,8 @@
       "animation": "robot",
       "teaser": {
         "texte": "Il hulule la nuit",
-        "n": 5
+        "n": 5,
+        "delai": 5.6
       }
     }
   ],

@@ -308,3 +308,6 @@ Suite au relevé du 20 nov. (visionnage moyen ~55 %, 0 interaction) : (1) option
 
 ## 48. Trois ambiances de plus pour le jeu : arcade, lofi, epique (20 nov. 2026)
 Même principe que Rêverie (3 niveaux selon `paliers`), choisies par `"musique"` dans l'épisode ; extraits d'écoute dans `videos/studio/musiques-demo/` (30,5 s, paliers à 9,27 s et 17,27 s). Mesure : le volume moyen monte de -29/-23/-22 dB (niveau 0) à -18/-17/-16 dB (niveau 2) pour arcade/lofi/epique ; Rêverie reste quasi plate (-17,8 → -17,4 dB). Le choix se fait à l'oreille (Jules).
+
+## 49. Finale spectaculaire avant la question mystère ; musique Rêverie dynamique retenue (20 nov. 2026)
+Jules garde Rêverie (108 bpm, pouls et charleston dès la 1re seconde). Chaque animation a un finale 2,4 s après la dernière réponse (quand les lettres ont fini de tomber) : fusée qui décolle et sort de l'écran, volcan en grande éruption (éclair, jets de lave), bonhomme qui saute les bras en l'air dans des flammes géantes, robot qui gonfle puis explose en éclat blanc et fait une vrille, bateau soulevé par une vague géante. La question mystère arrive 5,6 s après la dernière réponse (`teaser.delai`), la vidéo dure 34,3 s (`muet.fin` 9,6). Les éclairs couvrent tout l'écran (rect étendu).

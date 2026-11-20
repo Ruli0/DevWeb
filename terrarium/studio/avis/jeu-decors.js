@@ -213,8 +213,8 @@
     const dn = q('.dn'), bg = q('.bg'), bd = q('.bd'), jg = q('.jg'), jd = q('.jd'), tete = q('.tete');
     gsap.set(dn, { svgOrigin: '0 0' }); gsap.set(bg, { svgOrigin: '-56 -214' }); gsap.set(bd, { svgOrigin: '56 -214' }); gsap.set(jg, { svgOrigin: '-22 -118' }); gsap.set(jd, { svgOrigin: '22 -118' }); gsap.set(tete, { svgOrigin: '0 -240' });
     let t = t0, i = 0, r = 0, ag = 0, ad = 0;
-    const fin = t0 + d;
-    while (t + 0.2 < fin) {
+    const fin = t0 + d, tc = tFinale(p, t0);
+    while (t + 0.2 < Math.min(fin, tc)) {
       const L = niveauA(t), P = L === 0 ? beat : beat / 2, s = i % 2 ? 1 : -1, h = [14, 26, 44][L], rot = [4, 7, 10][L], bras = [28, 75, 150][L], ease = 'sine.inOut';
       c.ft(dn, { y: 0 }, { y: -h, duration: P / 2, ease: 'sine.out' }, t); c.ft(dn, { y: -h }, { y: 0, duration: P / 2, ease: 'sine.in' }, t + P / 2);
       c.ft(dn, { rotation: r }, { rotation: s * rot, duration: P, ease }, t);
@@ -236,8 +236,15 @@
       gsap.set(f, { svgOrigin: `${[60, 190, 330, 750, 890, 1020, 470, 610][j]} 414`, scaleY: 0, scaleX: 1 });
       c.ft(f, { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: 0.7, ease: 'back.out(1.6)' }, T2 + 0.15 + j * 0.12);
       let u = T2 + 1.1 + j * 0.12, a = true;
-      while (u + 0.4 < fin) { c.ft(f, { scaleY: a ? 1 : 0.78, scaleX: a ? 1 : 1.08, skewX: a ? -4 * x : 4 * x }, { scaleY: a ? 0.78 : 1, scaleX: a ? 1.08 : 1, skewX: a ? 4 * x : -4 * x, duration: 0.4, ease: 'sine.inOut' }, u); u += 0.4; a = !a; }
+      while (u + 0.4 < Math.min(fin, tc)) { c.ft(f, { scaleY: a ? 1 : 0.78, scaleX: a ? 1 : 1.08, skewX: a ? -4 * x : 4 * x }, { scaleY: a ? 0.78 : 1, scaleX: a ? 1.08 : 1, skewX: a ? 4 * x : -4 * x, duration: 0.4, ease: 'sine.inOut' }, u); u += 0.4; a = !a; }
     });
+    // Finale : il saute très haut les bras en l'air, les flammes montent, la chaleur explose ; puis il continue de danser dans le feu.
+    c.ft(dn, { y: 0 }, { y: -200, duration: 0.55, ease: 'power2.out' }, tc); c.ft(dn, { y: -200 }, { y: 0, duration: 0.55, ease: 'bounce.out' }, tc + 0.55);
+    c.ft(bg, { rotation: ag }, { rotation: -165, duration: 0.4, ease: 'power2.out' }, tc); c.ft(bd, { rotation: ad }, { rotation: 165, duration: 0.4, ease: 'power2.out' }, tc);
+    c.ft(q('.chaleur'), { opacity: 0.55 }, { opacity: 0.95, duration: 0.6 }, tc);
+    qa('.flamme').forEach((f, j) => { c.ft(f, { scaleY: 1, scaleX: 1, skewX: 0 }, { scaleY: 1.9, scaleX: 1.15, duration: 0.5, ease: 'power2.out' }, tc);
+      for (let u = tc + 0.6, a = true; u + 0.35 < fin; u += 0.35, a = !a) c.ft(f, { scaleY: a ? 1.9 : 1.6 }, { scaleY: a ? 1.6 : 1.9, duration: 0.35, ease: 'sine.inOut' }, u); });
+    for (let u = tc + 1.1, a = true; u + 0.25 < fin; u += 0.25, a = !a) { c.ft(dn, { y: 0 }, { y: -30, duration: 0.125, ease: 'sine.out' }, u); c.ft(dn, { y: -30 }, { y: 0, duration: 0.125, ease: 'sine.in' }, u + 0.125); c.ft(bg, { rotation: a ? -165 : -135 }, { rotation: a ? -135 : -165, duration: 0.25 }, u); c.ft(bd, { rotation: a ? 165 : 135 }, { rotation: a ? 135 : 165, duration: 0.25 }, u); }
     qa('.braise').forEach((b, j) => { const dur = 1.8; for (let u = T2 + 0.6 + (j % 6) * 0.3, m = 0; u + dur < fin; u += dur, m += 1) {
       c.ft(b, { opacity: 0, y: 0, x: 0 }, { opacity: 1, duration: 0.15 }, u); c.ft(b, { y: 0 }, { y: -330 - (j % 4) * 40, duration: dur, ease: 'power1.out' }, u);
       c.ft(b, { x: 0 }, { x: (j % 2 ? 40 : -40), duration: dur, ease: 'sine.inOut' }, u); c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.4 }, u + dur - 0.4); } });
@@ -262,7 +269,7 @@
   }
   function fuser(c, el, p, t0, d) {
     const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], N = p.mots.length, mu = p.muetCfg || {};
-    const debut = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0), T1 = debut(Math.min(1, N - 1)), T2 = debut(N - 1), fin = t0 + d;
+    const debut = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0), T1 = debut(Math.min(1, N - 1)), T2 = debut(N - 1), fin = t0 + d, tc = tFinale(p, t0);
     const fu = q('.fu'), fl = q('.flam');
     gsap.set(fu, { svgOrigin: '0 0' }); gsap.set(fl, { svgOrigin: '0 -34', scaleY: 0 }); gsap.set(qa('.trait'), { opacity: 0 });
     // Au sol : un léger balancement ; allumage au niveau 1 (tremblements), décollage au niveau 2 (elle monte, vibre fort).
@@ -270,11 +277,15 @@
     c.ft(fl, { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 0.5, duration: 0.5, ease: 'power2.out' }, T1);
     c.ft(fu, { y: 0 }, { y: -70, duration: 1.1, ease: 'power2.out' }, T2);
     c.ft(fl, { scaleY: 0.5 }, { scaleY: 1.15, duration: 0.6, ease: 'power2.out' }, T2);
-    for (let u = T1 + 0.5, a = true; u + 0.07 < fin; u += 0.07, a = !a) {
+    for (let u = T1 + 0.5, a = true; u + 0.07 < Math.min(fin, tc); u += 0.07, a = !a) {
       const amp = u >= T2 ? 6 : 2.5, h = u >= T2 ? 1.15 : 0.5;
       c.ft(fu, { x: a ? -amp : amp, rotation: 0 }, { x: a ? amp : -amp, duration: 0.07, ease: 'none' }, u);
       c.ft(fl, { scaleY: a ? h : h * 0.8, scaleX: a ? 1 : 0.88 }, { scaleY: a ? h * 0.8 : h, scaleX: a ? 0.88 : 1, duration: 0.07, ease: 'none' }, u);
     }
+    // Finale : un dernier grondement puis elle décolle pour de bon et sort de l'écran par le haut, la flamme géante derrière elle.
+    c.ft(fl, { scaleY: 1.15 }, { scaleY: 1.9, duration: 0.5, ease: 'power2.out' }, tc);
+    c.ft(fu, { y: -70, x: 0 }, { y: -2300, duration: 2.3, ease: 'power2.in' }, tc + 0.1);
+    repete(tc + 0.5, fin, 0.07, (u, n) => c.ft(fl, { scaleY: n % 2 ? 1.9 : 1.55 }, { scaleY: n % 2 ? 1.55 : 1.9, duration: 0.07, ease: 'none' }, u));
     // Fumée : des ronds qui montent et s'élargissent ; plus nombreux à partir du niveau 1.
     qa('.fumee').forEach((f, j) => { const dur = 1.7, depart = j < 4 ? t0 + 0.3 * j : T1 + 0.2 * (j - 4); for (let u = depart; u + dur < fin; u += dur) {
       const s = j % 2 ? 1 : -1;
@@ -293,29 +304,38 @@
 
   // --- Trois animations de plus (volcan, robot, vague) : même gabarit à trois niveaux (T1 : le mot du milieu, T2 : le dernier mot). ---
   const niveaux = (p, t0) => { const N = p.mots.length, mu = p.muetCfg || {}, deb = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0); return { T1: deb(Math.min(1, N - 1)), T2: deb(N - 1) }; };
+  // Le finale : l'animation atteint son sommet (décollage, éruption…) 2,4 s après la dernière réponse (les lettres ont fini de tomber), quelques secondes avant la question mystère.
+  const tFinale = (p, t0) => t0 + p.mots[p.mots.length - 1].reponse.t + 2.4;
   // Répète une action finie : fn(u, n) pour u = depart, depart + pas, … tant que u + pas < fin.
   const repete = (depart, fin, pas, fn) => { for (let u = depart, n = 0; u + pas < fin; u += pas, n += 1) fn(u, n); };
   const bornes = (cl, n, f) => Array.from({ length: n }, (_, i) => f(i, `class="${cl}" data-i="${i}"`)).join('');
 
   function volcan() {
     const fumees = bornes('fumee', 8, (i, a) => `<circle ${a} cx="${540 + (i % 2 ? 14 : -14)}" cy="150" r="30" fill="#c9c3d6" opacity="0"/>`);
+    const gros = bornes('gros', 14, (i, a) => `<circle ${a} cx="540" cy="150" r="${15 + (i % 4) * 4}" fill="${i % 3 ? '#ffb43c' : '#ff3d1e'}" opacity="0"/>`);
     const jets = bornes('jet', 14, (i, a) => `<circle ${a} cx="540" cy="150" r="${7 + (i % 3) * 3}" fill="${i % 2 ? '#ffb43c' : '#ff5a2e'}" opacity="0"/>`);
     return `<svg class="danse" viewBox="0 0 1080 420"><g class="mont"><path d="M170 420 L450 120 L630 120 L910 420Z" fill="#4a2a24"/><path d="M450 120 L630 120 L675 170 L405 170Z" fill="#6a3a30"/><path d="M500 200 L540 420 L520 420 L470 230Z M600 210 L650 420 L630 420Z" fill="#2a1514" opacity=".6"/>
-      <ellipse class="cratere" cx="540" cy="122" rx="86" ry="18" fill="#ff5a2e" opacity=".25"/><path class="coulee" d="M520 130 C 510 220 470 300 450 420 L 520 420 C 520 330 550 230 560 130Z" fill="#ff7a2e" opacity="0"/></g>${fumees}${jets}
-      <rect class="flash" x="0" y="0" width="1080" height="420" fill="#ffb43c" opacity="0"/></svg>`;
+      <ellipse class="cratere" cx="540" cy="122" rx="86" ry="18" fill="#ff5a2e" opacity=".25"/><path class="coulee" d="M520 130 C 510 220 470 300 450 420 L 520 420 C 520 330 550 230 560 130Z" fill="#ff7a2e" opacity="0"/></g>${fumees}${jets}${gros}
+      <rect class="flash" x="-100" y="-1500" width="1300" height="1920" fill="#ffb43c" opacity="0"/></svg>`;
   }
   function volcanner(c, el, p, t0, d) {
-    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, mont = q('.mont');
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), mont = q('.mont');
     gsap.set(mont, { svgOrigin: '540 420' }); gsap.set(qa('.jet'), { opacity: 0 }); gsap.set(qa('.fumee'), { opacity: 0 });
     qa('.fumee').forEach((f, j) => { const dur = 2.2; repete(t0 + 0.4 * j, fin, dur, (u) => {
       const s = j % 2 ? 1 : -1; c.ft(f, { opacity: 0, x: 0, y: 0, scale: 0.4 }, { opacity: 0.75, duration: 0.3 }, u); c.ft(f, { x: 0, y: 0, scale: 0.4 }, { x: s * (20 + j * 8), y: -120, scale: 1.7, duration: dur, ease: 'power1.out' }, u); c.ft(f, { opacity: 0.75 }, { opacity: 0, duration: dur - 0.3 }, u + 0.3); }); });
     c.ft(q('.cratere'), { opacity: 0.25 }, { opacity: 0.8, duration: 0.8 }, T1); c.ft(q('.coulee'), { opacity: 0 }, { opacity: 0.85, duration: 1 }, T1);
-    repete(T1 + 0.5, fin, 0.08, (u, n) => c.ft(mont, { x: n % 2 ? -2 : 2 }, { x: n % 2 ? 2 : -2, duration: 0.08, ease: 'none' }, u));
+    repete(T1 + 0.5, Math.min(fin, tc), 0.08, (u, n) => c.ft(mont, { x: n % 2 ? -2 : 2 }, { x: n % 2 ? 2 : -2, duration: 0.08, ease: 'none' }, u));
     c.ft(q('.cratere'), { opacity: 0.8 }, { opacity: 1, duration: 0.4 }, T2);
     qa('.jet').forEach((b, j) => { const dur = 1.5, hauteur = 220 + (j % 5) * 40, dx = (j - 7) * 38; repete(T2 + 0.2 + (j % 7) * 0.18, fin, dur, (u) => {
       c.ft(b, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.1 }, u); c.ft(b, { x: 0 }, { x: dx, duration: dur, ease: 'none' }, u);
       c.ft(b, { y: 0 }, { y: -hauteur, duration: dur * 0.45, ease: 'power2.out' }, u); c.ft(b, { y: -hauteur }, { y: 40, duration: dur * 0.55, ease: 'power2.in' }, u + dur * 0.45); c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); }); });
-    repete(T2, fin, 0.6, (u, n) => { c.ft(q('.flash'), { opacity: 0 }, { opacity: n % 2 ? 0.1 : 0.2, duration: 0.15 }, u); c.ft(q('.flash'), { opacity: n % 2 ? 0.1 : 0.2 }, { opacity: 0, duration: 0.4 }, u + 0.15); });
+    // Finale : la grande éruption : un éclair orange, des jets de lave qui montent très haut, la montagne tremble.
+    c.ft(q('.flash'), { opacity: 0 }, { opacity: 0.85, duration: 0.12 }, tc); c.ft(q('.flash'), { opacity: 0.85 }, { opacity: 0.2, duration: 0.8 }, tc + 0.12);
+    repete(tc + 0.2, fin, 0.06, (u, n) => c.ft(mont, { x: n % 2 ? -6 : 6 }, { x: n % 2 ? 6 : -6, duration: 0.06, ease: 'none' }, u));
+    qa('.gros').forEach((b, j) => { const dur = 1.9, hauteur = 420 + (j % 5) * 70, dx = (j - 7) * 55; repete(tc + (j % 7) * 0.12, fin, dur, (u) => {
+      c.ft(b, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.08 }, u); c.ft(b, { x: 0 }, { x: dx, duration: dur, ease: 'none' }, u);
+      c.ft(b, { y: 0 }, { y: -hauteur, duration: dur * 0.45, ease: 'power2.out' }, u); c.ft(b, { y: -hauteur }, { y: 60, duration: dur * 0.55, ease: 'power2.in' }, u + dur * 0.45); c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); }); });
+    repete(T2, Math.min(fin, tc), 0.6, (u, n) => { c.ft(q('.flash'), { opacity: 0 }, { opacity: n % 2 ? 0.1 : 0.2, duration: 0.15 }, u); c.ft(q('.flash'), { opacity: n % 2 ? 0.1 : 0.2 }, { opacity: 0, duration: 0.4 }, u + 0.15); });
   }
 
   function robot() {
@@ -329,13 +349,13 @@
         <rect x="-8" y="-262" width="16" height="34" fill="#6c7a99"/><circle class="ant" cx="0" cy="-272" r="14" fill="#4fd1c5"/>
         <circle class="oeil" cx="-26" cy="-165" r="14" fill="#7dffd9"/><circle class="oeil" cx="26" cy="-165" r="14" fill="#7dffd9"/>
         <g class="engr" transform="translate(0 -30)"><circle r="26" fill="#2a3350"/><path d="M-26 0 H26 M0 -26 V26 M-18 -18 L18 18 M18 -18 L-18 18" stroke="#9fb0d6" stroke-width="5"/></g>
-      </g>${etincelles}</g></svg>`;
+      </g>${etincelles}</g><rect class="flashr" x="-100" y="-1500" width="1300" height="1920" fill="#ffffff" opacity="0"/></svg>`;
   }
   function roboter(c, el, p, t0, d) {
-    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, rb = q('.rb'), ant = q('.ant'), mu = p.muetCfg || {}, beat = 60 / (mu.tempo || 90);
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), rb = q('.rb'), ant = q('.ant'), mu = p.muetCfg || {}, beat = 60 / (mu.tempo || 90);
     gsap.set(rb, { svgOrigin: '0 0' }); gsap.set(q('.brg'), { svgOrigin: '-115 -210' }); gsap.set(q('.brd'), { svgOrigin: '115 -210' }); gsap.set(q('.engr'), { svgOrigin: '0 -30' }); gsap.set(qa('.etin'), { opacity: 0 });
     // Niveau 0 : il se balance en rythme et cligne des yeux ; niveau 1 : l'antenne clignote en rouge, les bras s'agitent ; niveau 2 : il vibre, les yeux rougissent, des étincelles jaillissent.
-    let r = 0; repete(t0, fin, beat, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, a = n % 2 ? 1 : -1, P = L ? beat / 2 : beat;
+    let r = 0; repete(t0, Math.min(fin, tc), beat, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, a = n % 2 ? 1 : -1, P = L ? beat / 2 : beat;
       c.ft(rb, { rotation: r }, { rotation: a * (2 + L * 2), duration: P, ease: 'sine.inOut' }, u); r = a * (2 + L * 2);
       c.ft(q('.brg'), { rotation: -a * (20 + L * 50) }, { rotation: a * (20 + L * 50), duration: P, ease: 'sine.inOut' }, u); c.ft(q('.brd'), { rotation: a * (20 + L * 50) }, { rotation: -a * (20 + L * 50), duration: P, ease: 'sine.inOut' }, u); });
     repete(t0 + 1.6, fin, 3.2, (u) => { c.ft(qa('.oeil'), { scaleY: 1 }, { scaleY: 0.1, duration: 0.08 }, u); c.ft(qa('.oeil'), { scaleY: 0.1 }, { scaleY: 1, duration: 0.1 }, u + 0.1); });
@@ -343,28 +363,40 @@
     repete(T1, fin, 0.4, (u, n) => c.ft(ant, { fill: n % 2 ? '#4fd1c5' : '#ff4d5e' }, { fill: n % 2 ? '#ff4d5e' : '#4fd1c5', duration: 0.4 }, u));
     repete(t0, fin, 1, (u) => c.ft(q('.engr'), { rotation: u >= T2 ? 0 : 0 }, { rotation: u >= T2 ? 360 : 90, duration: 1, ease: 'none' }, u));
     c.ft(qa('.oeil'), { fill: '#7dffd9' }, { fill: '#ff4d5e', duration: 0.4 }, T2); c.ft(q('.coeur'), { fill: '#4fd1c5' }, { fill: '#ff4d5e', duration: 0.4 }, T2);
-    repete(T2 + 0.3, fin, 0.06, (u, n) => c.ft(rb, { x: n % 2 ? -5 : 5 }, { x: n % 2 ? 5 : -5, duration: 0.06, ease: 'none' }, u));
+    repete(T2 + 0.3, Math.min(fin, tc + 1), 0.06, (u, n) => c.ft(rb, { x: n % 2 ? -5 : 5 }, { x: n % 2 ? 5 : -5, duration: 0.06, ease: 'none' }, u));
+    // Finale : il gonfle (surchauffe), puis explose en éclat blanc et saute en vrille.
+    c.ft(rb, { scale: 1 }, { scale: 1.3, duration: 1, ease: 'power2.in' }, tc);
+    c.ft(q('.flashr'), { opacity: 0 }, { opacity: 0.95, duration: 0.1 }, tc + 1); c.ft(q('.flashr'), { opacity: 0.95 }, { opacity: 0, duration: 0.7 }, tc + 1.1);
+    c.ft(rb, { scale: 1.3 }, { scale: 1, duration: 0.2, ease: 'power3.out' }, tc + 1);
+    c.ft(rb, { y: 0, rotation: 0 }, { y: -230, rotation: 360, duration: 0.7, ease: 'power2.out' }, tc + 1); c.ft(rb, { y: -230 }, { y: 0, duration: 0.55, ease: 'bounce.out' }, tc + 1.7);
+    repete(tc + 2.4, fin, 0.3, (u, n) => { c.ft(rb, { y: 0 }, { y: -26, duration: 0.15, ease: 'sine.out' }, u); c.ft(rb, { y: -26 }, { y: 0, duration: 0.15, ease: 'sine.in' }, u + 0.15); });
     qa('.etin').forEach((e, j) => { const dur = 0.8, ang = (j / 12) * Math.PI * 2, rx = Math.cos(ang) * (110 + (j % 3) * 30), ry = Math.sin(ang) * 90 - 30; repete(T2 + 0.2 + (j % 4) * 0.2, fin, dur, (u) => {
       c.ft(e, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.08 }, u); c.ft(e, { x: 0, y: 0 }, { x: rx, y: ry + 140, duration: dur, ease: 'power2.out' }, u); c.ft(e, { opacity: 1 }, { opacity: 0, duration: 0.3 }, u + dur - 0.3); }); });
   }
 
   function vague() {
     const gouttes = bornes('pluie', 16, (i, a) => `<rect ${a} x="${30 + i * 66}" y="0" width="4" height="${36 + (i % 3) * 12}" rx="2" fill="#bfe6ff" opacity="0"/>`);
-    const onde = (y, col, cl) => `<path class="${cl}" d="M-200 ${y} q 100 -40 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 V 440 H-200Z" fill="${col}"/>`;
-    return `<svg class="danse" viewBox="0 0 1080 420"><rect class="eclair" x="0" y="0" width="1080" height="420" fill="#ffffff" opacity="0"/>${gouttes}
+    const onde = (y, col, cl) => `<path class="${cl}" d="M-200 ${y} q 100 -40 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 V 1500 H-200Z" fill="${col}"/>`;
+    return `<svg class="danse" viewBox="0 0 1080 420"><rect class="eclair" x="-100" y="-1500" width="1300" height="1920" fill="#ffffff" opacity="0"/>${gouttes}
       <g class="bateau"><g transform="translate(540 330)"><path d="M-110 0 L110 0 L80 50 L-80 50Z" fill="#ff7a5c"/><rect x="-4" y="-190" width="8" height="190" fill="#2a1a14"/><path d="M8 -186 L120 -30 L8 -30Z" fill="#fff6e8"/><path d="M-8 -150 L-90 -30 L-8 -30Z" fill="#ffd45c"/></g></g>
       ${onde(340, '#1aa3b5', 'ond1')}${onde(375, '#0f6f9a', 'ond2')}${onde(405, '#0a4570', 'ond3')}</svg>`;
   }
   function vaguer(c, el, p, t0, d) {
-    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, bat = q('.bateau');
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), bat = q('.bateau');
     gsap.set(bat, { svgOrigin: '540 380' }); gsap.set(qa('.pluie'), { opacity: 0 });
     // La mer : les vagues glissent d'un côté à l'autre, plus vite et plus haut avec le niveau ; le bateau tangue de plus en plus fort.
-    [q('.ond1'), q('.ond2'), q('.ond3')].forEach((o, j) => { let x = 0; repete(t0, fin, 1.4, (u) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, dx = [30, 50, 80][L] * (j % 2 ? -1 : 1), v = [30, 55, 90][L] * (j % 2 ? -1 : 1);
+    [q('.ond1'), q('.ond2'), q('.ond3')].forEach((o, j) => { let x = 0; repete(t0, Math.min(fin, tc), 1.4, (u) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, dx = [30, 50, 80][L] * (j % 2 ? -1 : 1), v = [30, 55, 90][L] * (j % 2 ? -1 : 1);
       c.ft(o, { x, y: 0 }, { x: x === 0 ? dx : 0, y: L * 6 * (x === 0 ? -1 : 1), duration: 1.4, ease: 'sine.inOut' }, u); x = x === 0 ? dx : 0; }); });
-    let r = 0; repete(t0, fin, 1.3, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, a = (n % 2 ? 1 : -1) * [3, 7, 14][L], P = [1.3, 0.9, 0.55][L];
+    let r = 0; repete(t0, Math.min(fin, tc), 1.3, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, a = (n % 2 ? 1 : -1) * [3, 7, 14][L], P = [1.3, 0.9, 0.55][L];
       c.ft(bat, { rotation: r, y: 0 }, { rotation: a, y: -[4, 9, 18][L], duration: P, ease: 'sine.inOut' }, u); r = a; });
     qa('.pluie').forEach((g, j) => { const dur = 0.5; repete(T2 + (j % 5) * 0.1, fin, dur, (u) => { c.ft(g, { opacity: 0, y: -20 }, { opacity: 0.8, duration: 0.05 }, u); c.ft(g, { y: -20 }, { y: 330, duration: dur, ease: 'none' }, u); c.ft(g, { opacity: 0.8 }, { opacity: 0, duration: 0.1 }, u + dur - 0.1); }); });
-    repete(T2 + 0.5, fin, 2.2, (u) => { c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.5, duration: 0.05 }, u); c.ft(q('.eclair'), { opacity: 0.5 }, { opacity: 0, duration: 0.12 }, u + 0.05); c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.35, duration: 0.05 }, u + 0.3); c.ft(q('.eclair'), { opacity: 0.35 }, { opacity: 0, duration: 0.2 }, u + 0.35); });
+    // Finale : une vague géante soulève le bateau, un éclair, puis il retombe et flotte au-dessus de la houle.
+    [q('.ond1'), q('.ond2'), q('.ond3')].forEach((o, j) => { c.ft(o, { x: 0, y: 0 }, { y: -[230, 180, 120][j], duration: 1, ease: 'power2.out' }, tc); c.ft(o, { y: -[230, 180, 120][j] }, { y: -[150, 110, 70][j], duration: 0.8, ease: 'power2.inOut' }, tc + 1);
+      repete(tc + 1.8, fin, 1, (u, n) => c.ft(o, { y: -[150, 110, 70][j] + (n % 2 ? 14 : -14) }, { y: -[150, 110, 70][j] + (n % 2 ? -14 : 14), duration: 1, ease: 'sine.inOut' }, u)); });
+    c.ft(bat, { rotation: 0, y: 0 }, { rotation: 16, y: -310, duration: 1, ease: 'power2.out' }, tc); c.ft(bat, { rotation: 16, y: -310 }, { rotation: -6, y: -170, duration: 0.8, ease: 'power2.inOut' }, tc + 1);
+    repete(tc + 1.8, fin, 1, (u, n) => c.ft(bat, { rotation: n % 2 ? -6 : 6, y: -170 }, { rotation: n % 2 ? 6 : -6, y: -176, duration: 1, ease: 'sine.inOut' }, u));
+    c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.8, duration: 0.06 }, tc + 0.9); c.ft(q('.eclair'), { opacity: 0.8 }, { opacity: 0, duration: 0.5 }, tc + 0.96);
+    repete(T2 + 0.5, Math.min(fin, tc), 2.2, (u) => { c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.5, duration: 0.05 }, u); c.ft(q('.eclair'), { opacity: 0.5 }, { opacity: 0, duration: 0.12 }, u + 0.05); c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.35, duration: 0.05 }, u + 0.3); c.ft(q('.eclair'), { opacity: 0.35 }, { opacity: 0, duration: 0.2 }, u + 0.35); });
   }
   const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer] };
   const anim = (nom) => ANIMS[nom] || ANIMS.danse;

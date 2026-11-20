@@ -198,7 +198,7 @@
         }
         // La fin « teaser » : la grille s'efface, une nouvelle question arrive avec ses cases vides et son minuteur ; la vidéo coupe avant la réponse (et reboucle sur la première question).
         if (prog && p.teaser) {
-          const tt = t0 + fins[N - 1] + 1.8, tq = q(el, '.teaser p'), tc = qa(el, '.teaser i'), fond0 = Math.max(0.1, d - (tt - t0) - 0.3);
+          const tt = t0 + fins[N - 1] + (p.teaser.delai == null ? 5.6 : p.teaser.delai), tq = q(el, '.teaser p'), tc = qa(el, '.teaser i'), fond0 = Math.max(0.1, d - (tt - t0) - 0.3);
           gsap.set(tq, { opacity: 0 }); gsap.set(tc, { opacity: 0 });
           c.ft(grille, { opacity: 1 }, { opacity: 0, duration: 0.4 }, tt);
           c.ft(tq, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, tt + 0.3);
