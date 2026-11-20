@@ -296,3 +296,6 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 
 ## 44. Jeu « mot par mot » sur fond dégradé violet → noir (20 nov. 2026)
 Demande de Jules : plus dynamique, une seule suite de cases à la fois avec la question en gros, plus de sable ni de décor. Option de plan `"affichage": "progressif"` + décor `degrade` (grille.js `dims(g, prog)`, plans.js, jeu-decors.js). Les cases d'un mot arrivent (pop) au début de sa fenêtre ; l'ancien affichage reste le défaut. Écarté : zoom caméra (sparks plus complexes), à reprendre si besoin. Épisode : `jeu-mots-violet`.
+
+## 45. Variante « espace » du jeu progressif (20 nov. 2026)
+Option de plan `"animation": "fusee"` (défaut : bonhomme qui danse puis scène en flammes) et décor `espace` (bleu nuit étoilé). Fusée : au sol, allumage au mot 2, décollage + étoiles filantes au dernier mot. Épisode `jeu-mots-espace` (LUNE, ETOILE, PLANETE). Le bonhomme du jeu précédent finit désormais en flammes (sueur, chaleur, flammes, braises).

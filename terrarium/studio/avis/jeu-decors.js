@@ -242,7 +242,55 @@
       c.ft(b, { opacity: 0, y: 0, x: 0 }, { opacity: 1, duration: 0.15 }, u); c.ft(b, { y: 0 }, { y: -330 - (j % 4) * 40, duration: dur, ease: 'power1.out' }, u);
       c.ft(b, { x: 0 }, { x: (j % 2 ? 40 : -40), duration: dur, ease: 'sine.inOut' }, u); c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.4 }, u + dur - 0.4); } });
   }
-  const DECORS = { degrade: DEGRADE, livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
+
+  // --- La fusée (jeu progressif, variante) : au sol, elle s'allume quand les mots durcissent, puis décolle dans un défilé d'étoiles. ---
+  function fusee() {
+    const fumees = Array.from({ length: 12 }, (_, i) => `<circle class="fumee" data-i="${i}" cx="${i % 2 ? 40 : -40}" cy="-14" r="26" fill="#e8ecf5" opacity="0"/>`).join('');
+    const traits = Array.from({ length: 12 }, (_, i) => `<rect class="trait" data-i="${i}" x="${50 + i * 87}" y="-80" width="5" height="${70 + (i % 3) * 30}" rx="2.5" fill="#bfeaff" opacity="0"/>`).join('');
+    return `<svg class="danse" viewBox="0 0 1080 420">${traits}
+      <ellipse cx="540" cy="412" rx="230" ry="14" fill="#4fd1c5" opacity=".3"/>
+      <g transform="translate(540 410)">${fumees}
+        <g class="fu">
+          <g class="flam" opacity="0"><path d="M-30 -34 C -46 40 -14 110 0 190 C 14 110 46 40 30 -34Z" fill="#ff8a3c"/><path d="M-16 -34 C -22 20 -6 60 0 110 C 6 60 22 20 16 -34Z" fill="#ffe27a"/></g>
+          <path d="M-44 -130 L-98 -44 L-44 -66Z" fill="#ff4d5e"/><path d="M44 -130 L98 -44 L44 -66Z" fill="#ff4d5e"/>
+          <path d="M0 -340 C 64 -280 66 -130 46 -62 L-46 -62 C -66 -130 -64 -280 0 -340Z" fill="#f4f4fa"/>
+          <path d="M0 -340 C 30 -310 42 -282 48 -262 L-48 -262 C -42 -282 -30 -310 0 -340Z" fill="#ff4d5e"/>
+          <path d="M-46 -62 L46 -62 L40 -34 L-40 -34Z" fill="#8f8fb0"/>
+          <circle cx="0" cy="-196" r="30" fill="#4fd1c5"/><circle cx="0" cy="-196" r="22" fill="#14233a"/><path d="M-12 -206 Q-4 -214 6 -210" fill="none" stroke="#ffffff99" stroke-width="4" stroke-linecap="round"/>
+          <rect x="-46" y="-108" width="92" height="10" fill="#ff4d5e" opacity=".85"/>
+        </g></g></svg>`;
+  }
+  function fuser(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], N = p.mots.length, mu = p.muetCfg || {};
+    const debut = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0), T1 = debut(Math.min(1, N - 1)), T2 = debut(N - 1), fin = t0 + d;
+    const fu = q('.fu'), fl = q('.flam');
+    gsap.set(fu, { svgOrigin: '0 0' }); gsap.set(fl, { svgOrigin: '0 -34', scaleY: 0 }); gsap.set(qa('.trait'), { opacity: 0 });
+    // Au sol : un léger balancement ; allumage au niveau 1 (tremblements), décollage au niveau 2 (elle monte, vibre fort).
+    for (let u = t0, a = true; u + 1.2 < Math.min(T1, fin); u += 1.2, a = !a) c.ft(fu, { rotation: a ? -1.2 : 1.2 }, { rotation: a ? 1.2 : -1.2, duration: 1.2, ease: 'sine.inOut' }, u);
+    c.ft(fl, { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 0.5, duration: 0.5, ease: 'power2.out' }, T1);
+    c.ft(fu, { y: 0 }, { y: -70, duration: 1.1, ease: 'power2.out' }, T2);
+    c.ft(fl, { scaleY: 0.5 }, { scaleY: 1.15, duration: 0.6, ease: 'power2.out' }, T2);
+    for (let u = T1 + 0.5, a = true; u + 0.07 < fin; u += 0.07, a = !a) {
+      const amp = u >= T2 ? 6 : 2.5, h = u >= T2 ? 1.15 : 0.5;
+      c.ft(fu, { x: a ? -amp : amp, rotation: 0 }, { x: a ? amp : -amp, duration: 0.07, ease: 'none' }, u);
+      c.ft(fl, { scaleY: a ? h : h * 0.8, scaleX: a ? 1 : 0.88 }, { scaleY: a ? h * 0.8 : h, scaleX: a ? 0.88 : 1, duration: 0.07, ease: 'none' }, u);
+    }
+    // Fumée : des ronds qui montent et s'élargissent ; plus nombreux à partir du niveau 1.
+    qa('.fumee').forEach((f, j) => { const dur = 1.7, depart = j < 4 ? t0 + 0.3 * j : T1 + 0.2 * (j - 4); for (let u = depart; u + dur < fin; u += dur) {
+      const s = j % 2 ? 1 : -1;
+      c.ft(f, { opacity: 0, x: 0, y: 0, scale: 0.4 }, { opacity: 0.8, duration: 0.2 }, u);
+      c.ft(f, { x: 0, y: 0, scale: 0.4 }, { x: s * (50 + j * 12), y: -34, scale: 1.5, duration: dur, ease: 'power1.out' }, u);
+      c.ft(f, { opacity: 0.8 }, { opacity: 0, duration: dur - 0.2 }, u + 0.2); } });
+    // Décollage : des traits d'étoiles défilent vers le bas.
+    qa('.trait').forEach((t, j) => { const dur = 0.55; for (let u = T2 + 0.4 + (j % 5) * 0.11; u + dur < fin; u += dur) {
+      c.ft(t, { opacity: 0, y: 0 }, { opacity: 0.7, duration: 0.1 }, u); c.ft(t, { y: 0 }, { y: 520, duration: dur, ease: 'none' }, u); c.ft(t, { opacity: 0.7 }, { opacity: 0, duration: 0.15 }, u + dur - 0.15); } });
+  }
+  const ESPACE = {
+    titre: '#ffffff',
+    fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1f4d"/><stop offset=".55" stop-color="#0a4b66"/><stop offset="1" stop-color="#020b14"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/>${Array.from({ length: 46 }, (_, i) => `<circle cx="${(i * 197) % 1080}" cy="${(i * 331) % 1500}" r="${1.5 + (i % 3)}" fill="#ffffff" opacity="${0.35 + (i % 4) * 0.15}"/>`).join('')}`,
+    bas: '',
+  };
+  const DECORS = { degrade: DEGRADE, espace: ESPACE, livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
   const decor = (nom) => DECORS[nom] || DECORS.livres;
-  return { decor, DECORS, animer, danse, danser };
+  return { decor, DECORS, animer, danse, danser, fusee, fuser };
 });
