@@ -1,0 +1,84 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-plage-muet-court",
+  "titre": "Plus malin qu'un Robinson ? (muet, court)",
+  "rubrique": "voyage",
+  "numero": 13,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "plage",
+      "titre": "Plus malin qu'un *Robinson* ?",
+      "stades": [
+        "Touriste",
+        "Marin",
+        "Robinson"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "COCO",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Le fruit du cocotier"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "SOLEIL",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 7,
+          "indice": {
+            "texte": "Il brille sur la plage"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "CORAIL",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "L'animal qui construit les récifs"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.67,
+        "cadence": 8,
+        "fin": 3.5,
+        "tempo": 90,
+        "titreFixe": true,
+        "texteFin": "Touriste ou Robinson ? Ton score en commentaire"
+      }
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  }
+}

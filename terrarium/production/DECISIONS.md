@@ -287,3 +287,9 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Pourquoi** : tu as demandé si ça marche sans voix ; beaucoup regardent sans le son, et rien n'est encore publié : tous les choix de la chaîne sont des paris. Ma réserve : on s'était éloigné de ta valeur ajoutée (ta voix, tes opinions).
 - **Écarté** : continuer le polissage des décors et des animations sans chiffres.
 - **Règle** : plus de nouvelles fonctions de montage avant le premier relevé à 48 h, sauf correction de bug.
+
+## 43. Premier relevé : accroche immédiate et version courte (22 nov. 2026)
+
+- **Constat** : première capture TikTok Studio du jeu muet (moins de 100 vues) : la plupart des spectateurs partent à 0:01, plus personne après 0:25.
+- **Décision** : `jeu-plage-muet-court` : titre fixe en haut dès la première image, premier indice et minuteur à 0,67 s, trois mots de 8 s, 28 s au total (option de plan `muet.titreFixe`, `muet.tempo`). À comparer à la version longue.
+- **Réserve** : moins de 100 vues, probablement les nôtres : ne pas conclure sur ce seul relevé.

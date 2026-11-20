@@ -122,6 +122,7 @@
 .jeu .fond-papier path { filter: drop-shadow(0 -9px 0 #0000004d); }
 .jeu .jeu-titre { position: absolute; left: 250px; top: 305px; width: 780px; margin: 0; font: 800 58px/1.04 '${P.titre}'; letter-spacing: -.025em; color: var(--titre, ${c.texte}); text-shadow: 3px 4px 0 #00000055; }
 .jeu .jeu-titre em { font-style: italic; font-family: '${P.fort}'; font-weight: 400; color: #ffd45c; }
+.jeu .jeu-titre.fixe { left: 60px; top: 226px; width: 960px; font-size: 54px; white-space: nowrap; }
 .jeu .grille { position: absolute; }
 .jeu .case { position: absolute; width: var(--case); height: var(--case); filter: drop-shadow(5px 6px 0 #00000066); }
 .jeu .pap { position: absolute; inset: 0; background: #fff6e8; overflow: hidden; }
