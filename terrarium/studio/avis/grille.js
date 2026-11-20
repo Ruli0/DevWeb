@@ -150,11 +150,11 @@
 .jeu .m-vif { stroke: #ff5d7a; stroke-linecap: round; }
 .jeu .m-nb { position: absolute; inset: 0; display: grid; place-items: center; }
 .jeu .m-nb span { grid-area: 1 / 1; font: 800 36px '${P.titre}'; color: #2a1a14; font-variant-numeric: tabular-nums; }
-.jeu .bandeau.prog { height: 300px; filter: none; }
+.jeu .bandeau.prog { left: 60px; top: 270px; width: 960px; height: 330px; filter: none; }
 .jeu .bandeau.prog .indices p { padding: 34px 135px 0 6px; color: #fff; text-shadow: 0 4px 18px #0008; }
 .jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
 .jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
-.jeu .minuteur.prog { top: 330px; }
+.jeu .minuteur.prog { top: 300px; }
 .jeu .minuteur.prog .m-fond { stroke: #ffffff33; }
 .jeu .tampon.prog { left: 720px; top: 580px; background: #1a0b2e; }
 .jeu .tampon { position: absolute; left: 740px; top: 436px; padding: 6px 20px 8px; border: 5px solid #d62e4f; border-radius: 12px; color: #d62e4f; font: 800 34px '${P.titre}'; letter-spacing: .08em; background: #fff6e8; opacity: 0; transform-origin: 50% 50%; }
