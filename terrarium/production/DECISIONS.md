@@ -293,3 +293,6 @@ Chaque décision qui engage la suite, avec sa raison et ce qu'on a écarté. La 
 - **Constat** : première capture TikTok Studio du jeu muet (moins de 100 vues) : la plupart des spectateurs partent à 0:01, plus personne après 0:25.
 - **Décision** : `jeu-plage-muet-court` : titre fixe en haut dès la première image, premier indice et minuteur à 0,67 s, trois mots de 8 s, 28 s au total (option de plan `muet.titreFixe`, `muet.tempo`). À comparer à la version longue.
 - **Réserve** : moins de 100 vues, probablement les nôtres : ne pas conclure sur ce seul relevé.
+
+## 44. Jeu « mot par mot » sur fond dégradé violet → noir (20 nov. 2026)
+Demande de Jules : plus dynamique, une seule suite de cases à la fois avec la question en gros, plus de sable ni de décor. Option de plan `"affichage": "progressif"` + décor `degrade` (grille.js `dims(g, prog)`, plans.js, jeu-decors.js). Les cases d'un mot arrivent (pop) au début de sa fenêtre ; l'ancien affichage reste le défaut. Écarté : zoom caméra (sparks plus complexes), à reprendre si besoin. Épisode : `jeu-mots-violet`.

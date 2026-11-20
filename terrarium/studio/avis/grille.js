@@ -84,10 +84,12 @@
 
   // La taille des cases s'adapte à la grille : toute la largeur utile (960 px) et la hauteur d'une zone de 770 px (y 490 à 1260), au plus 130 px de pas.
   const ZONE = { largeur: 960, haut: 490, hauteur: 770, vide: 8 };
-  function dims(g) {
-    const pas = Math.max(40, Math.floor(Math.min(ZONE.largeur / Math.max(1, g.colonnes), ZONE.hauteur / Math.max(1, g.lignes), 130)));
-    const w = g.colonnes * pas - ZONE.vide, h = g.lignes * pas - ZONE.vide;
-    return { pas, caseTaille: pas - ZONE.vide, gx: Math.round((1080 - w) / 2), gy: Math.round(ZONE.haut + (ZONE.hauteur - h) / 2), w, h };
+  const ZONE_PROG = { largeur: 960, haut: 640, hauteur: 650, vide: 8 };
+  function dims(g, prog) {
+    const Z = prog ? ZONE_PROG : ZONE;
+    const pas = Math.max(40, Math.floor(Math.min(Z.largeur / Math.max(1, g.colonnes), Z.hauteur / Math.max(1, g.lignes), 130)));
+    const w = g.colonnes * pas - Z.vide, h = g.lignes * pas - Z.vide;
+    return { pas, caseTaille: pas - Z.vide, gx: Math.round((1080 - w) / 2), gy: Math.round(Z.haut + (Z.hauteur - h) / 2), w, h };
   }
   // Les couleurs de papier des mots, dans l'ordre de révélation (palette « coucher »).
   const COULEURS = ['#ff9a5c', '#ffd45c', '#4fd1c5', '#c46bff', '#ff5d7a', '#7fb2ff'];
@@ -148,6 +150,13 @@
 .jeu .m-vif { stroke: #ff5d7a; stroke-linecap: round; }
 .jeu .m-nb { position: absolute; inset: 0; display: grid; place-items: center; }
 .jeu .m-nb span { grid-area: 1 / 1; font: 800 36px '${P.titre}'; color: #2a1a14; font-variant-numeric: tabular-nums; }
+.jeu .bandeau.prog { height: 300px; filter: none; }
+.jeu .bandeau.prog .indices p { padding: 34px 135px 0 6px; color: #fff; text-shadow: 0 4px 18px #0008; }
+.jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
+.jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
+.jeu .minuteur.prog { top: 330px; }
+.jeu .minuteur.prog .m-fond { stroke: #ffffff33; }
+.jeu .tampon.prog { left: 720px; top: 580px; background: #1a0b2e; }
 .jeu .tampon { position: absolute; left: 740px; top: 436px; padding: 6px 20px 8px; border: 5px solid #d62e4f; border-radius: 12px; color: #d62e4f; font: 800 34px '${P.titre}'; letter-spacing: .08em; background: #fff6e8; opacity: 0; transform-origin: 50% 50%; }
 .jeu .barre { position: absolute; left: 60px; top: 1448px; width: 960px; height: 150px; }
 .jeu .strip { position: absolute; left: -22px; top: -16px; width: 1004px; height: 156px; filter: drop-shadow(6px 7px 0 #00000066); }

@@ -175,7 +175,12 @@
     if (avion) { gsap.set(avion, { x: -200, y: 1640 }); [16, 41].forEach((t) => { if (t + 6.5 > d) return; c.ft(avion, { x: -200 }, { x: 1280, duration: 6, ease: 'none' }, t0 + t); [1640, 1610, 1650, 1615, 1640].forEach((y, k, tab) => { if (k) c.ft(avion, { y: tab[k - 1], rotation: k % 2 ? -8 : 8 }, { y, rotation: k % 2 ? 8 : -8, duration: 1.5, ease: 'sine.inOut' }, t0 + t + (k - 1) * 1.5); }); }); }
   }
 
-  const DECORS = { livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
+  const DEGRADE = {
+    titre: '#ffffff',
+    fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d28d9"/><stop offset=".45" stop-color="#2a0f5c"/><stop offset="1" stop-color="#050308"/></linearGradient><radialGradient id="dg2" cx=".5" cy=".3" r=".6"><stop offset="0" stop-color="#a855f7" stop-opacity=".35"/><stop offset="1" stop-color="#a855f7" stop-opacity="0"/></radialGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/><rect width="1080" height="1920" fill="url(#dg2)"/>`,
+    bas: '',
+  };
+  const DECORS = { degrade: DEGRADE, livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
   const decor = (nom) => DECORS[nom] || DECORS.livres;
   return { decor, DECORS, animer };
 });
