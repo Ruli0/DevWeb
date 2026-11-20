@@ -35,7 +35,7 @@
           "ligne": 1,
           "colonne": 1,
           "indice": {
-            "texte": "Elle tourne autour de la Terre"
+            "texte": "Au clair de la ..."
           },
           "reponse": {}
         },
@@ -63,12 +63,16 @@
       "muet": {
         "intro": 0.67,
         "cadence": 8,
-        "fin": 3.5,
+        "fin": 5.8,
         "tempo": 90,
         "titreFixe": true
       },
       "affichage": "progressif",
-      "animation": "fusee"
+      "animation": "fusee",
+      "teaser": {
+        "texte": "La planète rouge",
+        "n": 4
+      }
     }
   ],
   "publication": {

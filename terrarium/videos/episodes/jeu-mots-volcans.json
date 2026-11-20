@@ -63,12 +63,16 @@
       "muet": {
         "intro": 0.67,
         "cadence": 8,
-        "fin": 3.5,
+        "fin": 5.8,
         "tempo": 90,
         "titreFixe": true
       },
       "affichage": "progressif",
-      "animation": "volcan"
+      "animation": "volcan",
+      "teaser": {
+        "texte": "Le célèbre volcan de Pompéi",
+        "n": 6
+      }
     }
   ],
   "publication": {

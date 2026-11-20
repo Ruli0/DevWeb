@@ -142,7 +142,7 @@
         const mu = p.muet || p.muetCfg, N = p.mots.length;
         const indices = (mu && mu.texteIntro ? `<p class="i-intro">${u.esc(mu.texteIntro)}</p>` : '') + p.mots.map((m, k) => `<p class="i-ind"${prog ? ` style="font-size:${m.indice.texte.length <= 30 ? 84 : m.indice.texte.length <= 48 ? 72 : 60}px"` : ''}>${mu && !prog ? `<small>Mot ${k + 1}/${N}</small>` : ''}${u.esc(m.indice.texte)}</p>`).join('') + (mu && mu.texteFin ? `<p class="i-fin">${u.esc(mu.texteFin)}</p>` : '');
         const dec = DEC.decor(p.decor), fond = `<svg class="fond-papier" viewBox="0 0 1080 1920" style="--titre:${dec.titre}">${dec.fond}${dec.bas}</svg>`;
-        return `${fond}${p.titre && !prog ? `<p class="jeu-titre${mu && mu.titreFixe ? ' fixe' : ''}" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau${prog ? ' prog' : ''}" style="clip-path:none">${prog ? '' : `<div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div>`}<div class="indices">${indices}</div></div>${prog ? '' : '<i class="scotch s1"></i><i class="scotch s2"></i>'}<div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div>${prog ? '' : '<div class="tampon">TROUVÉ</div>'}${minuteur}<div class="barre${prog ? ' prog' : ''}"><div class="strip"><div class="pap" style="clip-path:${GR.papier(88, 1004, 156)}"></div></div><div class="rail"><i></i></div>${paliers}</div>${etincelles}${prog ? DEC.anim(p.animation)[0]() : ''}`;
+        return `${fond}${p.titre && !prog ? `<p class="jeu-titre${mu && mu.titreFixe ? ' fixe' : ''}" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau${prog ? ' prog' : ''}" style="clip-path:none">${prog ? '' : `<div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div>`}<div class="indices">${indices}</div></div>${prog ? '' : '<i class="scotch s1"></i><i class="scotch s2"></i>'}<div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div>${prog ? '' : '<div class="tampon">TROUVÉ</div>'}${minuteur}<div class="barre${prog ? ' prog' : ''}"><div class="strip"><div class="pap" style="clip-path:${GR.papier(88, 1004, 156)}"></div></div><div class="rail"><i></i></div>${paliers}</div>${etincelles}${prog && p.teaser ? `<div class="teaser"><p>${u.esc(p.teaser.texte)}</p><div class="t-cases">${Array.from({ length: p.teaser.n || 4 }, () => '<i></i>').join('')}</div></div>` : ''}${prog ? DEC.anim(p.animation)[0]() : ''}`;
       },
       jouer(c, el, p, t0, d) {
         const cases = qa(el, '.case'), indices = qa(el, '.indices p.i-ind'), intro = q(el, '.indices p.i-intro'), pFin = q(el, '.indices p.i-fin'), paliers = qa(el, '.palier'), rail = q(el, '.rail i'), grille = q(el, '.grille');
@@ -195,6 +195,18 @@
           }
           gsap.set(grille, Object.assign({ transformOrigin: '0 0' }, vues[0]));
           DEC.anim(p.animation)[1](c, el, p, t0, d);
+        }
+        // La fin « teaser » : la grille s'efface, une nouvelle question arrive avec ses cases vides et son minuteur ; la vidéo coupe avant la réponse (et reboucle sur la première question).
+        if (prog && p.teaser) {
+          const tt = t0 + fins[N - 1] + 1.8, tq = q(el, '.teaser p'), tc = qa(el, '.teaser i'), fond0 = Math.max(0.1, d - (tt - t0) - 0.3);
+          gsap.set(tq, { opacity: 0 }); gsap.set(tc, { opacity: 0 });
+          c.ft(grille, { opacity: 1 }, { opacity: 0, duration: 0.4 }, tt);
+          c.ft(tq, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, tt + 0.3);
+          c.ft(tc, { opacity: 0, y: 40, scale: 0.55 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.9)', stagger: 0.12 }, tt + 0.5);
+          c.ft(mn, { opacity: 0 }, { opacity: 0.85, duration: 0.4 }, tt + 0.3);
+          c.ft([doux, vif], { attr: { 'stroke-dashoffset': 0 } }, { attr: { 'stroke-dashoffset': tour * 0.72 }, duration: fond0, ease: 'none' }, tt + 0.3);
+          c.ft(tc[0], { scale: 1 }, { scale: 1.08, duration: 0.5, ease: 'sine.inOut' }, tt + 1.4);
+          c.ft(tc[0], { scale: 1.08 }, { scale: 1, duration: 0.5, ease: 'sine.inOut' }, tt + 1.9);
         }
         const niveau = (j) => (j < mid ? 0.5 * j / mid : 0.5 + 0.5 * (j - mid) / (N - mid)), deja = new Set();
         p.mots.forEach((m, k) => {

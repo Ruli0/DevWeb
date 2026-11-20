@@ -155,6 +155,10 @@
 .jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
 .jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
 .jeu .barre.prog { display: none; }
+.jeu .teaser { position: absolute; left: 60px; top: 270px; width: 960px; height: 330px; }
+.jeu .teaser p { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; padding: 34px 135px 0 6px; font: 800 72px/1.06 '${P.titre}'; letter-spacing: -.02em; color: #fff; text-shadow: 0 4px 18px #0008; }
+.jeu .teaser .t-cases { position: absolute; left: 0; top: 400px; width: 960px; display: flex; justify-content: center; gap: 14px; }
+.jeu .teaser i { display: block; flex: 0 1 170px; aspect-ratio: 1; background: #fff6e8; border-radius: 12px; box-shadow: 6px 8px 0 #00000066, 0 0 36px #ffd45c88; }
 .jeu .danse { position: absolute; left: 0; top: 1450px; width: 1080px; height: 420px; overflow: visible; }
 .jeu .minuteur.prog { top: 300px; }
 .jeu .minuteur.prog .m-fond { stroke: #ffffff33; }

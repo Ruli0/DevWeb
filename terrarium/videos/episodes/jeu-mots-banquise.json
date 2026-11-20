@@ -63,12 +63,16 @@
       "muet": {
         "intro": 0.67,
         "cadence": 8,
-        "fin": 3.5,
+        "fin": 5.8,
         "tempo": 90,
         "titreFixe": true
       },
       "affichage": "progressif",
-      "animation": "fusee"
+      "animation": "fusee",
+      "teaser": {
+        "texte": "Le roi blanc de la banquise",
+        "n": 4
+      }
     }
   ],
   "publication": {

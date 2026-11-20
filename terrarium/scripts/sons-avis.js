@@ -224,27 +224,31 @@ VIVES['house-nue'] = { nom: 'Électro house, basse et grosse caisse seules', tem
 // --- « Rêverie » : l'ambiance du jeu de mots fléchés (18 nov. 2026, demandée « dans l'esprit de Call it what you like »). ------------
 // Une musique originale, onirique et mi-lente : des nappes chaudes sur quatre accords (fa maj7, la m7, ré m7, do maj7), un arpège de cloches
 // doux, une basse ronde et rare, un pouls feutré (grosse caisse sourde, petit claquement). Aucune mélodie ni suite d'accords du morceau cité.
-function reverie({ duree = 30, tempo = 92 } = {}) {
+function reverie({ duree = 30, tempo = 92, paliers } = {}) {
   const { tampon, sinus, bruit, enveloppe, graine } = O();
   const temps = 60 / tempo, mesure = 4 * temps, b = tampon(duree);
   const SUITE = [[53, 57, 60, 64], [57, 60, 64, 67], [50, 53, 57, 60], [48, 52, 55, 59]];
   const ARPEGE = [0, 1, 2, 3, 2, 1, 2, 3];
+  // La musique « s'excite » : niveau 0 (nappes et cloches rares), 1 (pouls et arpège complet) à paliers[0], 2 (croches, charleston, basse, cloches doublées) à paliers[1].
+  const niveau = (t) => (!paliers ? 1 : t >= paliers[1] - 0.1 ? 2 : t >= paliers[0] - 0.1 ? 1 : 0);
   for (let m = 0; m * mesure < duree; m += 1) {
-    const t0 = m * mesure, accord = SUITE[m % 4];
+    const t0 = m * mesure, accord = SUITE[m % 4], L = niveau(t0);
     accord.forEach((n, i) => [1, 1.0035].forEach((d) => sinus(b, () => note(n + 12) * d, (x) => 0.026 * Math.min(1, x / 0.9) * Math.min(1, (mesure + 0.6 - x) / 1.1), t0 - 0.05, 'sin', mesure + 0.6)));
-    basse(b, accord[0] - 24, t0, 3.2 * temps, 0.3); basse(b, accord[0] - 24, t0 + 2.5 * temps, 1.4 * temps, 0.2);
-    [0, 2].forEach((k) => BATTERIE.grosse(b, t0 + k * temps, 0.34));
-    [1, 3].forEach((k) => BATTERIE.mains(b, t0 + k * temps, 0.16, 600 + m * 7 + k));
-    ARPEGE.forEach((i, k) => TIMBRES.cloche(b, note(accord[i] + 24), t0 + k * temps / 2, 0.034 + (k % 2 ? 0 : 0.012), 0.9));
-    bruit(b, (x) => 0.012 * Math.sin(Math.PI * Math.min(1, x / mesure)), { bas: 5000, haut: 12000, debut: t0, hasard: graine(700 + m), duree: mesure });
+    basse(b, accord[0] - 24, t0, 3.2 * temps, 0.3); if (L >= 1) basse(b, accord[0] - 24, t0 + 2.5 * temps, 1.4 * temps, 0.2);
+    if (L >= 1) { [0, 2].forEach((k) => BATTERIE.grosse(b, t0 + k * temps, 0.34)); [1, 3].forEach((k) => BATTERIE.mains(b, t0 + k * temps, 0.16, 600 + m * 7 + k)); }
+    if (L >= 2) { [1, 3].forEach((k) => BATTERIE.grosse(b, t0 + k * temps, 0.22)); for (let k = 0; k < 8; k += 1) BATTERIE.charley(b, t0 + k * temps / 2 + temps / 4, 0.07 + (k % 2 ? 0 : 0.03), 900 + m * 9 + k, false); for (let k = 0; k < 8; k += 1) basse(b, accord[0] - 12, t0 + k * temps / 2, temps * 0.45, 0.16); }
+    ARPEGE.forEach((i, k) => { if (L === 0 && k % 2) return; TIMBRES.cloche(b, note(accord[i] + 24 + (L >= 2 && k % 2 ? 12 : 0)), t0 + k * temps / 2, (L === 0 ? 0.03 : 0.034) + (k % 2 ? 0 : 0.012), 0.9); });
+    bruit(b, (x) => 0.012 * Math.sin(Math.PI * Math.min(1, x / mesure)) * (1 + L), { bas: 5000, haut: 12000, debut: t0, hasard: graine(700 + m), duree: mesure });
   }
+  // Une montée (souffle qui grossit) juste avant chaque palier.
+  (paliers || []).forEach((p, j) => bruit(b, (x) => 0.05 * (x / 1.2) * (x / 1.2), { bas: 1500, haut: 11000, debut: Math.max(0, p - 1.2), hasard: graine(800 + j), duree: 1.2 }));
   return reverbe(b, 0.34);
 }
 VIVES.reverie = { nom: 'Rêverie (onirique, mi-lente, pour le jeu de mots fléchés)', tempo: 92, fabrique: (o) => reverie(o) };
 
-function vive(style = 'funk', { duree = 30, plein, tempo } = {}) {
+function vive(style = 'funk', { duree = 30, plein, tempo, paliers } = {}) {
   const { tampon } = O();
-  if (VIVES[style] && VIVES[style].fabrique) return VIVES[style].fabrique(Object.assign({ duree }, plein == null ? {} : { plein }, tempo == null ? {} : { tempo }));
+  if (VIVES[style] && VIVES[style].fabrique) return VIVES[style].fabrique(Object.assign({ duree }, plein == null ? {} : { plein }, tempo == null ? {} : { tempo }, paliers ? { paliers } : {}));
   const v = VIVES[style] || VIVES.funk, pas = 60 / v.tempo / 4, b = tampon(duree);
   for (let m = 0; m * 16 * pas < duree; m += 1) v.jouer(b, m, m * 16 * pas, pas, ACCORDS[m % 4], 200 + m * 50);
   return reverbe(b, 0.14);

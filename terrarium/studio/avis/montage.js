@@ -349,7 +349,7 @@ function montage(ep, voixFournie) {
     duree, dureeVoix, voix: { muet: !!reglageMuet, id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
       // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.
-      plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? (reglageMuet.tempo || 96) : undefined, muet: !!reglageMuet },
+      plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? (reglageMuet.tempo || 96) : undefined, muet: !!reglageMuet, paliers: reglageMuet && planMuet.affichage === 'progressif' && planMuet.mots.length >= 3 ? [arrondi(reglageMuet.intro + reglageMuet.cadence + 0.6), arrondi(reglageMuet.intro + (planMuet.mots.length - 1) * reglageMuet.cadence + 0.6)] : undefined },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,

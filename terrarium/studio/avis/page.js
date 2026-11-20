@@ -244,7 +244,7 @@ function ecrire(f, dossier) {
   // La musique : celle du compte (construite sur l'indicatif, une instrumentation par rubrique), l'ancienne « labo », ou aucune.
   let m;
   if (f.musique.nom === 'avis') m = outils.normaliser(AVIS.musique({ duree: f.duree + 0.3, rubrique: f.musique.rubrique, indicatif: f.musique.indicatif }), 0.8);
-  else if (AVIS.VIVES[f.musique.nom]) m = outils.normaliser(AVIS.vive(f.musique.nom, { duree: f.duree + 0.3, plein: f.musique.plein, tempo: f.musique.tempo }), 0.8);
+  else if (AVIS.VIVES[f.musique.nom]) m = outils.normaliser(AVIS.vive(f.musique.nom, { duree: f.duree + 0.3, plein: f.musique.plein, tempo: f.musique.tempo, paliers: f.musique.paliers }), 0.8);
   else if (f.musique.nom === 'aucune') m = outils.tampon(f.duree + 0.3);
   else m = outils.normaliser(MUSIQUES_ARRANGEES[f.musique.nom]({ duree: f.duree + 0.3, parties: Array.from({ length: Math.ceil(f.duree / (4 * 60 / 90)) + 1 }, () => 'plein'), coupures: [] }), 0.8);
   outils.ecrireWav(path.join(dossier, 'assets/sons/musique.wav'), m, true);

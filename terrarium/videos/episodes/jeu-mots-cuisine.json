@@ -63,12 +63,16 @@
       "muet": {
         "intro": 0.67,
         "cadence": 8,
-        "fin": 3.5,
+        "fin": 5.8,
         "tempo": 90,
         "titreFixe": true
       },
       "affichage": "progressif",
-      "animation": "danse"
+      "animation": "danse",
+      "teaser": {
+        "texte": "Il se casse pour faire une omelette",
+        "n": 5
+      }
     }
   ],
   "publication": {

@@ -302,3 +302,6 @@ Option de plan `"animation": "fusee"` (défaut : bonhomme qui danse puis scène 
 
 ## 46. Série « mot par mot » : 10 thèmes (20 nov. 2026)
 Catalogue d'animations à 3 niveaux (`danse`→flammes, `fusee`, `volcan`, `robot`, `vague`) et de fonds dégradés (`espace`, `ocean`, `jungle`, `desert`, `banquise`, `ville`, `foret`, `volcans`, `abysses`, `cuisine`), choisis par `"animation"` et `"decor"` dans le plan grille progressif. Épisodes `jeu-mots-<thème>` (3 mots croisés, de l'indice le plus facile au plus dur). Rythme conseillé : 1 par jour, relevé à 48 h pour garder les thèmes qui marchent.
+
+## 47. Fin « teaser », musique qui s'excite, premier mot très facile (20 nov. 2026)
+Suite au relevé du 20 nov. (visionnage moyen ~55 %, 0 interaction) : (1) option de plan `"teaser": {texte, n}` : après le dernier mot, la grille s'efface et une nouvelle question facile arrive avec ses cases vides et son minuteur ; la vidéo coupe avant la réponse et reboucle sur la première question (`muet.fin` 5,8 s) ; (2) la musique Rêverie prend des `paliers` (mot 2 et mot 3, comme l'animation) : nappes et cloches rares, puis pouls et arpège, puis croches, charleston, basse et cloches doublées, avec une montée de souffle avant chaque palier ; (3) le premier indice est le plus facile possible (ex. « Au clair de la ... »). Appliqué aux 10 épisodes `jeu-mots-*`.
