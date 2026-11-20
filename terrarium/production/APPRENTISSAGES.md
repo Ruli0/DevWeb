@@ -31,3 +31,7 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 - les 3 premières secondes et le taux de visionnage complet comptent beaucoup ;
 - revoir la vidéo en boucle aide ;
 - la zone recouverte par l'interface fait environ 300 à 480 px en bas et 140 px à droite (sur 1080 × 1920). Ce n'est pas une donnée officielle de TikTok pour les vidéos non sponsorisées.
+
+## Relevé du 20 nov. 2026 (37 min après publication) : `jeu-mots-violet`
+- 32 vues, visionnage moyen 15,6 s sur 28,2 s (~55 %), 0 % de vision complète, 0 interaction. Avec la version longue (59 s), la plupart partaient à 0:01 : l'accroche immédiate + format court + mot par mot semble mieux retenir. Hypothèse à confirmer à 48 h (échantillon minuscule).
+- Prochaine hypothèse : la fin (rien n'incite à commenter ou revoir). Test : fin « question teaser » avec boucle.
