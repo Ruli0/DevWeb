@@ -1,0 +1,86 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-jungle",
+  "titre": "Plus malin qu'un explorateur ?",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "jungle",
+      "titre": "Plus malin qu'un *explorateur* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Explorateur"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "LION",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Le roi de la jungle"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ELEPHANT",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Il a une trompe et de grandes oreilles"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "NENUPHAR",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Fleur qui flotte sur l'eau"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.67,
+        "cadence": 8,
+        "fin": 3.5,
+        "tempo": 90,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "danse"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

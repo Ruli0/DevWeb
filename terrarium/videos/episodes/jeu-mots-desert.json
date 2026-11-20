@@ -1,0 +1,86 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-desert",
+  "titre": "Plus malin qu'un nomade ?",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "desert",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "OASIS",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "De l'eau au milieu du désert"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "SOLEIL",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Il tape fort à midi"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "SCORPION",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Il pique avec sa queue"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.67,
+        "cadence": 8,
+        "fin": 3.5,
+        "tempo": 90,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "volcan"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

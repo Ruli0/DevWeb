@@ -290,7 +290,86 @@
     fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1f4d"/><stop offset=".55" stop-color="#0a4b66"/><stop offset="1" stop-color="#020b14"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/>${Array.from({ length: 46 }, (_, i) => `<circle cx="${(i * 197) % 1080}" cy="${(i * 331) % 1500}" r="${1.5 + (i % 3)}" fill="#ffffff" opacity="${0.35 + (i % 4) * 0.15}"/>`).join('')}`,
     bas: '',
   };
-  const DECORS = { degrade: DEGRADE, espace: ESPACE, livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
+
+  // --- Trois animations de plus (volcan, robot, vague) : même gabarit à trois niveaux (T1 : le mot du milieu, T2 : le dernier mot). ---
+  const niveaux = (p, t0) => { const N = p.mots.length, mu = p.muetCfg || {}, deb = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0); return { T1: deb(Math.min(1, N - 1)), T2: deb(N - 1) }; };
+  // Répète une action finie : fn(u, n) pour u = depart, depart + pas, … tant que u + pas < fin.
+  const repete = (depart, fin, pas, fn) => { for (let u = depart, n = 0; u + pas < fin; u += pas, n += 1) fn(u, n); };
+  const bornes = (cl, n, f) => Array.from({ length: n }, (_, i) => f(i, `class="${cl}" data-i="${i}"`)).join('');
+
+  function volcan() {
+    const fumees = bornes('fumee', 8, (i, a) => `<circle ${a} cx="${540 + (i % 2 ? 14 : -14)}" cy="150" r="30" fill="#c9c3d6" opacity="0"/>`);
+    const jets = bornes('jet', 14, (i, a) => `<circle ${a} cx="540" cy="150" r="${7 + (i % 3) * 3}" fill="${i % 2 ? '#ffb43c' : '#ff5a2e'}" opacity="0"/>`);
+    return `<svg class="danse" viewBox="0 0 1080 420"><g class="mont"><path d="M170 420 L450 120 L630 120 L910 420Z" fill="#4a2a24"/><path d="M450 120 L630 120 L675 170 L405 170Z" fill="#6a3a30"/><path d="M500 200 L540 420 L520 420 L470 230Z M600 210 L650 420 L630 420Z" fill="#2a1514" opacity=".6"/>
+      <ellipse class="cratere" cx="540" cy="122" rx="86" ry="18" fill="#ff5a2e" opacity=".25"/><path class="coulee" d="M520 130 C 510 220 470 300 450 420 L 520 420 C 520 330 550 230 560 130Z" fill="#ff7a2e" opacity="0"/></g>${fumees}${jets}
+      <rect class="flash" x="0" y="0" width="1080" height="420" fill="#ffb43c" opacity="0"/></svg>`;
+  }
+  function volcanner(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, mont = q('.mont');
+    gsap.set(mont, { svgOrigin: '540 420' }); gsap.set(qa('.jet'), { opacity: 0 }); gsap.set(qa('.fumee'), { opacity: 0 });
+    qa('.fumee').forEach((f, j) => { const dur = 2.2; repete(t0 + 0.4 * j, fin, dur, (u) => {
+      const s = j % 2 ? 1 : -1; c.ft(f, { opacity: 0, x: 0, y: 0, scale: 0.4 }, { opacity: 0.75, duration: 0.3 }, u); c.ft(f, { x: 0, y: 0, scale: 0.4 }, { x: s * (20 + j * 8), y: -120, scale: 1.7, duration: dur, ease: 'power1.out' }, u); c.ft(f, { opacity: 0.75 }, { opacity: 0, duration: dur - 0.3 }, u + 0.3); }); });
+    c.ft(q('.cratere'), { opacity: 0.25 }, { opacity: 0.8, duration: 0.8 }, T1); c.ft(q('.coulee'), { opacity: 0 }, { opacity: 0.85, duration: 1 }, T1);
+    repete(T1 + 0.5, fin, 0.08, (u, n) => c.ft(mont, { x: n % 2 ? -2 : 2 }, { x: n % 2 ? 2 : -2, duration: 0.08, ease: 'none' }, u));
+    c.ft(q('.cratere'), { opacity: 0.8 }, { opacity: 1, duration: 0.4 }, T2);
+    qa('.jet').forEach((b, j) => { const dur = 1.5, hauteur = 220 + (j % 5) * 40, dx = (j - 7) * 38; repete(T2 + 0.2 + (j % 7) * 0.18, fin, dur, (u) => {
+      c.ft(b, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.1 }, u); c.ft(b, { x: 0 }, { x: dx, duration: dur, ease: 'none' }, u);
+      c.ft(b, { y: 0 }, { y: -hauteur, duration: dur * 0.45, ease: 'power2.out' }, u); c.ft(b, { y: -hauteur }, { y: 40, duration: dur * 0.55, ease: 'power2.in' }, u + dur * 0.45); c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); }); });
+    repete(T2, fin, 0.6, (u, n) => { c.ft(q('.flash'), { opacity: 0 }, { opacity: n % 2 ? 0.1 : 0.2, duration: 0.15 }, u); c.ft(q('.flash'), { opacity: n % 2 ? 0.1 : 0.2 }, { opacity: 0, duration: 0.4 }, u + 0.15); });
+  }
+
+  function robot() {
+    const etincelles = bornes('etin', 12, (i, a) => `<circle ${a} cx="540" cy="-170" r="5" fill="#ffe27a" opacity="0"/>`);
+    return `<svg class="danse" viewBox="0 0 1080 420"><ellipse cx="540" cy="410" rx="190" ry="16" fill="#4fd1c5" opacity=".3"/>
+      <g transform="translate(540 410)"><g class="rb">
+        <rect x="-70" y="-70" width="40" height="70" rx="10" fill="#6c7a99"/><rect x="30" y="-70" width="40" height="70" rx="10" fill="#6c7a99"/><rect x="-90" y="-16" width="70" height="18" rx="9" fill="#2a3350"/><rect x="20" y="-16" width="70" height="18" rx="9" fill="#2a3350"/>
+        <rect x="-86" y="-230" width="172" height="170" rx="30" fill="#c9d3ea"/><rect x="-60" y="-200" width="120" height="70" rx="14" fill="#2a3350"/><circle class="coeur" cx="0" cy="-100" r="16" fill="#4fd1c5"/>
+        <g class="brg"><rect x="-134" y="-220" width="38" height="120" rx="19" fill="#9fb0d6"/><circle cx="-115" cy="-98" r="20" fill="#6c7a99"/></g>
+        <g class="brd"><rect x="96" y="-220" width="38" height="120" rx="19" fill="#9fb0d6"/><circle cx="115" cy="-98" r="20" fill="#6c7a99"/></g>
+        <rect x="-8" y="-262" width="16" height="34" fill="#6c7a99"/><circle class="ant" cx="0" cy="-272" r="14" fill="#4fd1c5"/>
+        <circle class="oeil" cx="-26" cy="-165" r="14" fill="#7dffd9"/><circle class="oeil" cx="26" cy="-165" r="14" fill="#7dffd9"/>
+        <g class="engr" transform="translate(0 -30)"><circle r="26" fill="#2a3350"/><path d="M-26 0 H26 M0 -26 V26 M-18 -18 L18 18 M18 -18 L-18 18" stroke="#9fb0d6" stroke-width="5"/></g>
+      </g>${etincelles}</g></svg>`;
+  }
+  function roboter(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, rb = q('.rb'), ant = q('.ant'), mu = p.muetCfg || {}, beat = 60 / (mu.tempo || 90);
+    gsap.set(rb, { svgOrigin: '0 0' }); gsap.set(q('.brg'), { svgOrigin: '-115 -210' }); gsap.set(q('.brd'), { svgOrigin: '115 -210' }); gsap.set(q('.engr'), { svgOrigin: '0 -30' }); gsap.set(qa('.etin'), { opacity: 0 });
+    // Niveau 0 : il se balance en rythme et cligne des yeux ; niveau 1 : l'antenne clignote en rouge, les bras s'agitent ; niveau 2 : il vibre, les yeux rougissent, des étincelles jaillissent.
+    let r = 0; repete(t0, fin, beat, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, a = n % 2 ? 1 : -1, P = L ? beat / 2 : beat;
+      c.ft(rb, { rotation: r }, { rotation: a * (2 + L * 2), duration: P, ease: 'sine.inOut' }, u); r = a * (2 + L * 2);
+      c.ft(q('.brg'), { rotation: -a * (20 + L * 50) }, { rotation: a * (20 + L * 50), duration: P, ease: 'sine.inOut' }, u); c.ft(q('.brd'), { rotation: a * (20 + L * 50) }, { rotation: -a * (20 + L * 50), duration: P, ease: 'sine.inOut' }, u); });
+    repete(t0 + 1.6, fin, 3.2, (u) => { c.ft(qa('.oeil'), { scaleY: 1 }, { scaleY: 0.1, duration: 0.08 }, u); c.ft(qa('.oeil'), { scaleY: 0.1 }, { scaleY: 1, duration: 0.1 }, u + 0.1); });
+    gsap.set(qa('.oeil'), { svgOrigin: '0 -165', transformOrigin: '50% 50%' });
+    repete(T1, fin, 0.4, (u, n) => c.ft(ant, { fill: n % 2 ? '#4fd1c5' : '#ff4d5e' }, { fill: n % 2 ? '#ff4d5e' : '#4fd1c5', duration: 0.4 }, u));
+    repete(t0, fin, 1, (u) => c.ft(q('.engr'), { rotation: u >= T2 ? 0 : 0 }, { rotation: u >= T2 ? 360 : 90, duration: 1, ease: 'none' }, u));
+    c.ft(qa('.oeil'), { fill: '#7dffd9' }, { fill: '#ff4d5e', duration: 0.4 }, T2); c.ft(q('.coeur'), { fill: '#4fd1c5' }, { fill: '#ff4d5e', duration: 0.4 }, T2);
+    repete(T2 + 0.3, fin, 0.06, (u, n) => c.ft(rb, { x: n % 2 ? -5 : 5 }, { x: n % 2 ? 5 : -5, duration: 0.06, ease: 'none' }, u));
+    qa('.etin').forEach((e, j) => { const dur = 0.8, ang = (j / 12) * Math.PI * 2, rx = Math.cos(ang) * (110 + (j % 3) * 30), ry = Math.sin(ang) * 90 - 30; repete(T2 + 0.2 + (j % 4) * 0.2, fin, dur, (u) => {
+      c.ft(e, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.08 }, u); c.ft(e, { x: 0, y: 0 }, { x: rx, y: ry + 140, duration: dur, ease: 'power2.out' }, u); c.ft(e, { opacity: 1 }, { opacity: 0, duration: 0.3 }, u + dur - 0.3); }); });
+  }
+
+  function vague() {
+    const gouttes = bornes('pluie', 16, (i, a) => `<rect ${a} x="${30 + i * 66}" y="0" width="4" height="${36 + (i % 3) * 12}" rx="2" fill="#bfe6ff" opacity="0"/>`);
+    const onde = (y, col, cl) => `<path class="${cl}" d="M-200 ${y} q 100 -40 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 V 440 H-200Z" fill="${col}"/>`;
+    return `<svg class="danse" viewBox="0 0 1080 420"><rect class="eclair" x="0" y="0" width="1080" height="420" fill="#ffffff" opacity="0"/>${gouttes}
+      <g class="bateau"><g transform="translate(540 330)"><path d="M-110 0 L110 0 L80 50 L-80 50Z" fill="#ff7a5c"/><rect x="-4" y="-190" width="8" height="190" fill="#2a1a14"/><path d="M8 -186 L120 -30 L8 -30Z" fill="#fff6e8"/><path d="M-8 -150 L-90 -30 L-8 -30Z" fill="#ffd45c"/></g></g>
+      ${onde(340, '#1aa3b5', 'ond1')}${onde(375, '#0f6f9a', 'ond2')}${onde(405, '#0a4570', 'ond3')}</svg>`;
+  }
+  function vaguer(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, bat = q('.bateau');
+    gsap.set(bat, { svgOrigin: '540 380' }); gsap.set(qa('.pluie'), { opacity: 0 });
+    // La mer : les vagues glissent d'un côté à l'autre, plus vite et plus haut avec le niveau ; le bateau tangue de plus en plus fort.
+    [q('.ond1'), q('.ond2'), q('.ond3')].forEach((o, j) => { let x = 0; repete(t0, fin, 1.4, (u) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, dx = [30, 50, 80][L] * (j % 2 ? -1 : 1), v = [30, 55, 90][L] * (j % 2 ? -1 : 1);
+      c.ft(o, { x, y: 0 }, { x: x === 0 ? dx : 0, y: L * 6 * (x === 0 ? -1 : 1), duration: 1.4, ease: 'sine.inOut' }, u); x = x === 0 ? dx : 0; }); });
+    let r = 0; repete(t0, fin, 1.3, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, a = (n % 2 ? 1 : -1) * [3, 7, 14][L], P = [1.3, 0.9, 0.55][L];
+      c.ft(bat, { rotation: r, y: 0 }, { rotation: a, y: -[4, 9, 18][L], duration: P, ease: 'sine.inOut' }, u); r = a; });
+    qa('.pluie').forEach((g, j) => { const dur = 0.5; repete(T2 + (j % 5) * 0.1, fin, dur, (u) => { c.ft(g, { opacity: 0, y: -20 }, { opacity: 0.8, duration: 0.05 }, u); c.ft(g, { y: -20 }, { y: 330, duration: dur, ease: 'none' }, u); c.ft(g, { opacity: 0.8 }, { opacity: 0, duration: 0.1 }, u + dur - 0.1); }); });
+    repete(T2 + 0.5, fin, 2.2, (u) => { c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.5, duration: 0.05 }, u); c.ft(q('.eclair'), { opacity: 0.5 }, { opacity: 0, duration: 0.12 }, u + 0.05); c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.35, duration: 0.05 }, u + 0.3); c.ft(q('.eclair'), { opacity: 0.35 }, { opacity: 0, duration: 0.2 }, u + 0.35); });
+  }
+  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer] };
+  const anim = (nom) => ANIMS[nom] || ANIMS.danse;
+  const degrade3 = (c1, c2, c3, titre) => ({ titre: titre || '#ffffff', bas: '', fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/>${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 233) % 1080}" cy="${(i * 397) % 1500}" r="${2 + (i % 3) * 2}" fill="#ffffff" opacity="${0.05 + (i % 4) * 0.03}"/>`).join('')}` });
+  const DECORS = { degrade: DEGRADE, espace: ESPACE, ocean: degrade3('#0a6fa8', '#06375e', '#020f1f'), jungle: degrade3('#1f7a3a', '#0d3d22', '#030f08'), desert: degrade3('#e0953a', '#8a3d1c', '#1b0a06'), banquise: degrade3('#6fb8e8', '#2a4f8f', '#0a1330'), ville: degrade3('#2b1a5e', '#14123a', '#05050f'), foret: degrade3('#3f8a4f', '#1b4a35', '#05140d'), volcans: degrade3('#a1231a', '#4a0f14', '#0b0305'), abysses: degrade3('#0b3b5c', '#06203a', '#01060f'), cuisine: degrade3('#e0603a', '#8a2a2a', '#1f0a0e'), livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
   const decor = (nom) => DECORS[nom] || DECORS.livres;
-  return { decor, DECORS, animer, danse, danser, fusee, fuser };
+  return { decor, DECORS, animer, danse, danser, fusee, fuser, anim };
 });

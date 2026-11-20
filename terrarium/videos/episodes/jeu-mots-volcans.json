@@ -1,0 +1,86 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-volcans",
+  "titre": "Plus malin qu'un volcanologue ?",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "volcans",
+      "titre": "Plus malin qu'un *volcanologue* ?",
+      "stades": [
+        "Touriste",
+        "Randonneur",
+        "Volcanologue"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "LAVE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Elle coule d'un volcan"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "FLAMME",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Elle brûle et elle éclaire"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ERUPTION",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Quand le volcan explose"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.67,
+        "cadence": 8,
+        "fin": 3.5,
+        "tempo": 90,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "volcan"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

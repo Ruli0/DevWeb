@@ -299,3 +299,6 @@ Demande de Jules : plus dynamique, une seule suite de cases à la fois avec la q
 
 ## 45. Variante « espace » du jeu progressif (20 nov. 2026)
 Option de plan `"animation": "fusee"` (défaut : bonhomme qui danse puis scène en flammes) et décor `espace` (bleu nuit étoilé). Fusée : au sol, allumage au mot 2, décollage + étoiles filantes au dernier mot. Épisode `jeu-mots-espace` (LUNE, ETOILE, PLANETE). Le bonhomme du jeu précédent finit désormais en flammes (sueur, chaleur, flammes, braises).
+
+## 46. Série « mot par mot » : 10 thèmes (20 nov. 2026)
+Catalogue d'animations à 3 niveaux (`danse`→flammes, `fusee`, `volcan`, `robot`, `vague`) et de fonds dégradés (`espace`, `ocean`, `jungle`, `desert`, `banquise`, `ville`, `foret`, `volcans`, `abysses`, `cuisine`), choisis par `"animation"` et `"decor"` dans le plan grille progressif. Épisodes `jeu-mots-<thème>` (3 mots croisés, de l'indice le plus facile au plus dur). Rythme conseillé : 1 par jour, relevé à 48 h pour garder les thèmes qui marchent.

@@ -1,0 +1,86 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-banquise",
+  "titre": "Plus malin qu'un esquimau ?",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "banquise",
+      "titre": "Plus malin qu'un *esquimau* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Explorateur"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "GLACE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "De l'eau gelée"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "IGLOO",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Maison faite de blocs de neige"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ESQUIMAU",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Il vit dans un igloo"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.67,
+        "cadence": 8,
+        "fin": 3.5,
+        "tempo": 90,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "fusee"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

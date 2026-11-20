@@ -1,0 +1,86 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-abysses",
+  "titre": "Plus malin qu'un plongeur ?",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "abysses",
+      "titre": "Plus malin qu'un *plongeur* ?",
+      "stades": [
+        "Baigneur",
+        "Plongeur",
+        "Explorateur"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "MEDUSE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Elle flotte et elle pique"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "EPAVE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 6,
+          "indice": {
+            "texte": "Reste d'un bateau coulé"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "AMPHORE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Vase des navires antiques"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.67,
+        "cadence": 8,
+        "fin": 3.5,
+        "tempo": 90,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "vague"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}
