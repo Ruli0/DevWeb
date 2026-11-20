@@ -35,3 +35,8 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 ## Relevé du 20 nov. 2026 (37 min après publication) : `jeu-mots-violet`
 - 32 vues, visionnage moyen 15,6 s sur 28,2 s (~55 %), 0 % de vision complète, 0 interaction. Avec la version longue (59 s), la plupart partaient à 0:01 : l'accroche immédiate + format court + mot par mot semble mieux retenir. Hypothèse à confirmer à 48 h (échantillon minuscule).
 - Prochaine hypothèse : la fin (rien n'incite à commenter ou revoir). Test : fin « question teaser » avec boucle.
+
+## Relevé du 20 nov. 2026 (2 h après publication) : correction du précédent
+- 122 vues, visionnage moyen 2,6 s (~9 %), 2,59 % de vision complète, 0 interaction. Le relevé de 37 min (15,6 s de moyenne sur 32 vues) n'était pas représentatif : **le démarrage ne retient pas** (la plupart partent en 2-3 s). Ceux qui restent vont au bout (≈3 personnes).
+- À corriger en priorité : les 2 premières secondes (image d'ouverture sans mouvement fort, musique douce au départ dans cette version, aucune accroche). Pistes testées ensuite : musique dynamique dès la 1re seconde, premier indice très facile, finale + question mystère (ces trois ne jouent pas sur les 2 premières secondes à eux seuls).
+- Ne pas conclure sur un relevé de moins de ~100 vues ; attendre 48 h.
