@@ -234,10 +234,10 @@ function reverie({ duree = 30, tempo = 92, paliers } = {}) {
   for (let m = 0; m * mesure < duree; m += 1) {
     const t0 = m * mesure, accord = SUITE[m % 4], L = niveau(t0);
     accord.forEach((n, i) => [1, 1.0035].forEach((d) => sinus(b, () => note(n + 12) * d, (x) => 0.026 * Math.min(1, x / 0.9) * Math.min(1, (mesure + 0.6 - x) / 1.1), t0 - 0.05, 'sin', mesure + 0.6)));
-    basse(b, accord[0] - 24, t0, 3.2 * temps, 0.3); if (L >= 1) basse(b, accord[0] - 24, t0 + 2.5 * temps, 1.4 * temps, 0.2);
-    if (L >= 1) { [0, 2].forEach((k) => BATTERIE.grosse(b, t0 + k * temps, 0.34)); [1, 3].forEach((k) => BATTERIE.mains(b, t0 + k * temps, 0.16, 600 + m * 7 + k)); }
+    basse(b, accord[0] - 24, t0, 3.2 * temps, 0.3); basse(b, accord[0] - 24, t0 + 2.5 * temps, 1.4 * temps, 0.2);
+    [0, 2].forEach((k) => BATTERIE.grosse(b, t0 + k * temps, 0.34)); [1, 3].forEach((k) => BATTERIE.mains(b, t0 + k * temps, 0.16, 600 + m * 7 + k));
     if (L >= 2) { [1, 3].forEach((k) => BATTERIE.grosse(b, t0 + k * temps, 0.22)); for (let k = 0; k < 8; k += 1) BATTERIE.charley(b, t0 + k * temps / 2 + temps / 4, 0.07 + (k % 2 ? 0 : 0.03), 900 + m * 9 + k, false); for (let k = 0; k < 8; k += 1) basse(b, accord[0] - 12, t0 + k * temps / 2, temps * 0.45, 0.16); }
-    ARPEGE.forEach((i, k) => { if (L === 0 && k % 2) return; TIMBRES.cloche(b, note(accord[i] + 24 + (L >= 2 && k % 2 ? 12 : 0)), t0 + k * temps / 2, (L === 0 ? 0.03 : 0.034) + (k % 2 ? 0 : 0.012), 0.9); });
+    ARPEGE.forEach((i, k) => { TIMBRES.cloche(b, note(accord[i] + 24 + (L >= 2 && k % 2 ? 12 : 0)), t0 + k * temps / 2, (L === 0 ? 0.03 : 0.034) + (k % 2 ? 0 : 0.012), 0.9); });
     bruit(b, (x) => 0.012 * Math.sin(Math.PI * Math.min(1, x / mesure)) * (1 + L), { bas: 5000, haut: 12000, debut: t0, hasard: graine(700 + m), duree: mesure });
   }
   // Une montée (souffle qui grossit) juste avant chaque palier.
@@ -261,16 +261,15 @@ function arcade({ duree = 30, tempo = 128, paliers } = {}) {
   for (let m = 0; m * mes < duree; m += 1) {
     const t0 = m * mes, acc = ACC[m % 4], L = niv(t0);
     for (let k = 0; k < 16; k += 1) {
-      const t = t0 + k * pas, idx = [0, 1, 2, 1][(L ? k : k >> 1) % 4];
-      if (L >= 1 || k % 2 === 0) carre(acc[idx] + 24, t, pas * 1.6, L ? 0.04 : 0.03);
-      if (L === 0 ? (k === 0 || k === 8) : L === 1 ? [0, 3, 6, 8, 11, 14].includes(k) : k % 2 === 0) carre(BAS[m % 4] + (L === 2 && k % 4 === 2 ? 12 : 0), t, pas * (L === 0 ? 6 : 1.7), 0.09);
-      if (L >= 1) {
-        if (k % 4 === 0) BATTERIE.grosse(b, t, 0.5);
-        if (k === 4 || k === 12) BATTERIE.claire(b, t, 0.3, 300 + m + k);
-        if (L === 1 ? k % 2 === 0 : true) BATTERIE.charley(b, t + pas / 2, L === 2 ? 0.05 : 0.06, 500 + m * 16 + k, false);
-      }
+      const t = t0 + k * pas, idx = [0, 1, 2, 1][k % 4];
+      carre(acc[idx] + 24, t, pas * 1.6, 0.04);
+      if (L <= 1 ? [0, 3, 6, 8, 11, 14].includes(k) : k % 2 === 0) carre(BAS[m % 4] + (L === 2 && k % 4 === 2 ? 12 : 0), t, pas * 1.7, 0.09);
+      if (k % 4 === 0) BATTERIE.grosse(b, t, 0.55);
+      if (k === 4 || k === 12) BATTERIE.claire(b, t, 0.3, 300 + m + k);
+      if (L === 2 ? true : k % 2 === 0) BATTERIE.charley(b, t + pas / 2, L === 2 ? 0.05 : 0.06, 500 + m * 16 + k, false);
+      if (L >= 1 && k % 4 === 0) carre(acc[[2, 1, 2, 0][(k >> 2) % 4]] + 36, t, pas * 3, 0.03);
       if (L === 2) {
-        if (k % 4 === 0 || k % 4 === 3) carre(acc[[2, 1, 2, 0][(k >> 2) % 4]] + 36, t, pas * 3, 0.036);
+        if (k % 4 === 3) carre(acc[[2, 1, 2, 0][(k >> 2) % 4]] + 36, t, pas * 3, 0.036);
         if (m % 4 === 3 && k >= 12) BATTERIE.claire(b, t, 0.22, 900 + k);
       }
     }
@@ -289,14 +288,14 @@ function lofi({ duree = 30, tempo = 84, paliers } = {}) {
   const rhodes = (n, t, a, tenue) => { const f = note(n); sinus(b, () => f, (x) => a * enveloppe(x, 0.008, tenue), t, 'sin', tenue * 3); sinus(b, () => f * 2, (x) => a * 0.3 * enveloppe(x, 0.004, tenue * 0.4), t, 'sin', tenue); sinus(b, () => f * 7, (x) => a * 0.05 * enveloppe(x, 0.001, 0.06), t, 'sin', 0.2); };
   for (let m = 0; m * mes < duree; m += 1) {
     const t0 = m * mes, acc = ACC[m % 4], L = niv(t0), sw = (k) => (k % 2 ? pas * 0.28 : 0);
-    (L === 0 ? [0] : L === 1 ? [0, 6, 10] : [0, 6, 10, 14]).forEach((k) => acc.forEach((n, i) => rhodes(n + 12, t0 + k * pas + i * 0.012, 0.03, 0.55 + (k === 0 ? 0.5 : 0))));
-    [0, ...(L >= 1 ? [6, 10] : [])].forEach((k) => sinus(b, () => note(acc[0] - 12), (x) => 0.2 * enveloppe(x, 0.006, 0.4), t0 + k * pas, 'sin', 1.2));
+    (L <= 1 ? [0, 6, 10] : [0, 3, 6, 10, 14]).forEach((k) => acc.forEach((n, i) => rhodes(n + 12, t0 + k * pas + i * 0.012, 0.03, 0.55 + (k === 0 ? 0.5 : 0))));
+    [0, 6, 10].forEach((k) => sinus(b, () => note(acc[0] - 12), (x) => 0.2 * enveloppe(x, 0.006, 0.4), t0 + k * pas, 'sin', 1.2));
     if (L === 2) [3, 8, 12, 15].forEach((k) => sinus(b, () => note(acc[(k >> 2) % 4] + 12), (x) => 0.1 * enveloppe(x, 0.004, 0.25), t0 + k * pas, 'sin', 0.8));
     for (let k = 0; k < 16; k += 1) {
       const t = t0 + k * pas;
-      if (L === 0 ? k === 0 || k === 10 : [0, 7, 10].includes(k)) BATTERIE.grosse(b, t, L === 0 ? 0.28 : 0.4);
-      if (L >= 1 && (k === 4 || k === 12)) BATTERIE.claire(b, t + 0.012, 0.24, 300 + m + k);
-      if (L >= 1 && k % 2 === 0) BATTERIE.charley(b, t + sw(k), 0.05, 500 + m * 16 + k, false);
+      if ([0, 7, 10].includes(k)) BATTERIE.grosse(b, t, 0.4);
+      if (k === 4 || k === 12) BATTERIE.claire(b, t + 0.012, 0.24, 300 + m + k);
+      if (k % 2 === 0) BATTERIE.charley(b, t + sw(k), 0.05, 500 + m * 16 + k, false);
       if (L === 2 && k % 2 === 1) BATTERIE.charley(b, t + sw(k), 0.035, 700 + m * 16 + k, k === 15);
       if (L === 2 && (k === 7 || k === 14)) BATTERIE.claire(b, t, 0.1, 100 + k);
     }
@@ -319,7 +318,7 @@ function epique({ duree = 30, tempo = 100, paliers } = {}) {
     if (L === 0) TIMBRES.cloche(b, note(acc[2] + 24), t0 + 8 * pas, 0.03, 1.2);
     for (let k = 0; k < 16; k += 1) {
       const t = t0 + k * pas;
-      if (L >= 1) { if (k % 4 === 0) BATTERIE.grosse(b, t, L === 2 ? 0.7 : 0.45); if (k % 2 === 0) TIMBRES.pince(b, note(acc[(k >> 1) % 3] + 24), t, 0.03, 0.8); }
+      { if (k % 4 === 0) BATTERIE.grosse(b, t, [0.4, 0.5, 0.7][L]); if (k % 2 === 0) TIMBRES.pince(b, note(acc[(k >> 1) % 3] + 24), t, 0.03, 0.8); if (L === 0 && k === 12) BATTERIE.claire(b, t, 0.25, 300 + m); }
       if (L === 2) {
         TIMBRES.pince(b, note(acc[k % 3] + 12), t, 0.02, 0.5);
         sinus(b, () => note(acc[(k >> 1) % 3] + 12), (x) => 0.02 * Math.min(1, x / 0.02) * Math.max(0, 1 - x / (pas * 1.6)), t, 'scie', pas * 1.6);
