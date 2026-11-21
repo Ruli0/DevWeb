@@ -323,3 +323,6 @@ Après 5 publications identiques (~500 vues, 1-2 likes, ~5 s, ~6 % de vision com
 
 ## 53. Série « culture pop » en format court (21 nov. 2026)
 Pour comparer avec la série nature/lieux : quatre vidéos de 15,7 s sur des sujets qui se commentent, avec des scènes dans le thème (`jeu-decors.js`) : `vinyle` (musique : disque, barres d'égaliseur, notes, projecteurs, finale disque emballé), `cinema` (bobine, faisceau, étoiles, finale statuette dorée), `stade` (ballon, projecteurs, tribunes, finale tir au but et confettis), `blocs` (blocs qui tombent et s'empilent, finale lignes complètes). Épisodes `jeu-mots-{musique,cinema,sport,jeux}-court` ; questions mystère : PIANO, ACTION, ARBITRE, VIES. Hypothèse : plus de commentaires que la série précédente (~1-2 likes, ~500 vues). Écarté : actualité (à tester après).
+
+## 54. Vidéo « fromage » (21 nov. 2026)
+Demande de Jules : fondue, raclette, tartiflette. TARTIFLETTE (11 lettres) est horizontale (11 colonnes × 8 lignes), RACLETTE croise son A, FONDUE son F (case donnée). Scène `fondue` (caquelon, bulles, fourchette qui trempe, finale : grand étirement du fromage puis gouttes dorées), fond `fromage`. Question mystère : EMMENTAL. `finaleDelai` 2,6 s et `teaser.delai` 4,6 s car TARTIFLETTE pose 9 lettres ; durée 16,3 s. Épisode `jeu-mots-fromage-court`.

@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-fromage-court",
+  "titre": "Plus malin qu'un Savoyard ? (court)",
+  "rubrique": "voyage",
+  "numero": 21,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "fromage",
+      "titre": "Plus malin qu'un *Savoyard* ?",
+      "stades": [
+        "Touriste",
+        "Skieur",
+        "Savoyard"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "FONDUE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Du pain trempé dans du fromage fondu"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "RACLETTE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Fromage fondu sur des pommes de terre"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "TARTIFLETTE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 0,
+          "indice": {
+            "texte": "Le plat de montagne au reblochon"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 7.0,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "fondue",
+      "teaser": {
+        "texte": "Le fromage qui a des trous",
+        "n": 8,
+        "delai": 4.6
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.6
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

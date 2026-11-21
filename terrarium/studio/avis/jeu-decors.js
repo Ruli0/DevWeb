@@ -614,10 +614,42 @@
     c.ft(rang1, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.2, duration: 0.3 }, tc + 2);
     c.ft(q('.flash'), { opacity: 0 }, { opacity: 0.3, duration: 0.1 }, tc + 2); c.ft(q('.flash'), { opacity: 0.3 }, { opacity: 0, duration: 0.5 }, tc + 2.1);
   }
-  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer], iceberg: [iceberg, icebergue], immeubles: [immeubles, immeubler], foret: [foret, forester], marmite: [marmite, marmiter], vinyle: [vinyle, vinyler], cinema: [cinema, cineaster], stade: [stade, stader], blocs: [blocs, blocser] };
+
+  // --- Fondue : un caquelon de fromage qui bout, une fourchette avec du pain qui trempe ; finale : le grand étirement du fromage. ---
+  function fondue() {
+    const bulles = bornes('bul', 7, (i, a) => `<circle ${a} cx="${450 + i * 30}" cy="252" r="${10 + (i % 3) * 3}" fill="#ffe27a" stroke="#e8b84a" stroke-width="3" opacity="0"/>`);
+    const vap = bornes('vap', 6, (i, a) => `<circle ${a} cx="${470 + i * 25}" cy="236" r="22" fill="#ffffff" opacity="0"/>`);
+    const gtt = bornes('gtt', 16, (i, a) => `<circle ${a} cx="540" cy="240" r="${9 + (i % 4) * 3}" fill="${i % 2 ? '#ffd45c' : '#f2b632'}" opacity="0"/>`);
+    return `<svg class="danse" viewBox="0 0 1080 420"><ellipse class="chaleur2" cx="540" cy="412" rx="210" ry="12" fill="#ff7a2e" opacity=".25"/>
+      <line class="fil" x1="540" y1="252" x2="540" y2="200" stroke="#ffd45c" stroke-width="7" stroke-linecap="round" opacity="0"/>
+      <g class="fk"><rect x="528" y="-70" width="24" height="90" rx="12" fill="#6b4a32"/><rect x="536" y="10" width="8" height="150" fill="#8f9bb3"/><rect x="504" y="130" width="72" height="70" rx="10" fill="#f2d9a6" stroke="#c9a060" stroke-width="3"/><path d="M514 148 H566 M514 168 H566" stroke="#e5c78a" stroke-width="3"/></g>
+      <path d="M360 250 C360 360 420 398 540 398 C660 398 720 360 720 250Z" fill="#d9534f"/><rect x="324" y="268" width="46" height="18" rx="9" fill="#b03a37"/><rect x="710" y="268" width="46" height="18" rx="9" fill="#b03a37"/>
+      <ellipse cx="540" cy="250" rx="180" ry="16" fill="#b03a37"/><ellipse class="fromage" cx="540" cy="252" rx="165" ry="12" fill="#ffd45c"/>${bulles}${vap}${gtt}</svg>`;
+  }
+  function fonduer(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc), fk = q('.fk'), fil = q('.fil');
+    gsap.set(qa('.bul'), { opacity: 0 }); gsap.set(qa('.vap'), { opacity: 0 }); gsap.set(qa('.gtt'), { opacity: 0 }); gsap.set(fil, { opacity: 0 });
+    // Niveau 0 : la fourchette se balance ; niveau 1 : le pain trempe et file du fromage ; niveau 2 : trempage rapide.
+    let t = t0, y0 = 0, i = 0;
+    while (t + 0.5 < stop) { const L = t >= T2 ? 2 : t >= T1 ? 1 : 0;
+      if (L === 0) { const y1 = i % 2 ? 8 : -8; c.ft(fk, { y: y0 }, { y: y1, duration: 1.4, ease: 'sine.inOut' }, t); y0 = y1; t += 1.4; }
+      else { const P = L === 1 ? 1.6 : 1.0; c.ft(fk, { y: y0 }, { y: 105, duration: 0.35 * P, ease: 'power2.in' }, t); c.ft(fk, { y: 105 }, { y: 0, duration: 0.4 * P, ease: 'power2.out' }, t + 0.35 * P); y0 = 0;
+        c.ft(fil, { opacity: 0, attr: { y2: 252, 'stroke-width': 8 } }, { opacity: 0.95, attr: { y2: 196, 'stroke-width': 4 }, duration: 0.2 * P, ease: 'none' }, t + 0.5 * P); c.ft(fil, { opacity: 0.95 }, { opacity: 0, duration: 0.1 * P }, t + 0.75 * P); t += P; }
+      i += 1; }
+    qa('.bul').forEach((b, j) => { const dur = 1.3, depart = j < 3 ? t0 + 0.4 * j : T1 + 0.2 * j; repete(depart, fin, dur, (u) => { c.ft(b, { opacity: 0, scale: 0.3, y: 0 }, { opacity: 0.95, scale: 1, y: -10, duration: dur * 0.7, ease: 'sine.out' }, u); c.ft(b, { scale: 1, opacity: 0.95 }, { scale: 1.5, opacity: 0, duration: dur * 0.3 }, u + dur * 0.7); }); });
+    qa('.vap').forEach((v, j) => { for (let u = T1 + 0.3 * j; u + 2.2 < fin; u += 2.2) { const fort = u >= T2; c.ft(v, { opacity: 0, x: 0, y: 0, scale: 0.5 }, { opacity: fort ? 0.6 : 0.3, duration: 0.3 }, u); c.ft(v, { x: 0, y: 0, scale: 0.5 }, { x: (j % 2 ? 30 : -30), y: -(fort ? 160 : 110), scale: 1.6, duration: 2.2, ease: 'power1.out' }, u); c.ft(v, { opacity: fort ? 0.6 : 0.3 }, { opacity: 0, duration: 1.5 }, u + 0.7); } });
+    c.ft(q('.chaleur2'), { opacity: 0.25 }, { opacity: 0.55, duration: 0.6 }, T1); c.ft(q('.chaleur2'), { opacity: 0.55 }, { opacity: 0.9, duration: 0.6 }, T2);
+    // Finale : le grand étirement : le pain monte très haut, le fil de fromage s'amincit, puis casse ; une pluie de gouttes dorées.
+    c.ft(fk, { y: y0 }, { y: -330, duration: 1.3, ease: 'power2.out' }, tc);
+    c.ft(fil, { opacity: 0, attr: { y2: 200, 'stroke-width': 8 } }, { opacity: 1, duration: 0.1 }, tc); c.ft(fil, { attr: { y2: 200 } }, { attr: { y2: -135 }, duration: 1.3, ease: 'power2.out' }, tc); c.ft(fil, { attr: { 'stroke-width': 8 } }, { attr: { 'stroke-width': 2 }, duration: 1.3, ease: 'none' }, tc);
+    c.ft(fil, { opacity: 1 }, { opacity: 0, duration: 0.15 }, tc + 1.3);
+    c.ft(fk, { y: -330 }, { y: 0, duration: 0.7, ease: 'back.out(1.5)' }, tc + 1.5);
+    jaillir(c, qa, '.gtt', tc + 1.3, fin, 190, 30);
+  }
+  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer], iceberg: [iceberg, icebergue], immeubles: [immeubles, immeubler], foret: [foret, forester], marmite: [marmite, marmiter], vinyle: [vinyle, vinyler], cinema: [cinema, cineaster], stade: [stade, stader], blocs: [blocs, blocser], fondue: [fondue, fonduer] };
   const anim = (nom) => ANIMS[nom] || ANIMS.danse;
   const degrade3 = (c1, c2, c3, titre) => ({ titre: titre || '#ffffff', bas: '', fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/>${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 233) % 1080}" cy="${(i * 397) % 1500}" r="${2 + (i % 3) * 2}" fill="#ffffff" opacity="${0.05 + (i % 4) * 0.03}"/>`).join('')}` });
-  const DECORS = { degrade: DEGRADE, espace: ESPACE, musique: degrade3('#5b1a8c', '#2a0f4c', '#07030f'), cinema: degrade3('#7a1522', '#33080f', '#060203'), stade: degrade3('#12503a', '#0b2a24', '#030b09'), jeux: degrade3('#1b2a6b', '#341a6b', '#06040f'), ocean: degrade3('#0a6fa8', '#06375e', '#020f1f'), jungle: degrade3('#1f7a3a', '#0d3d22', '#030f08'), desert: degrade3('#e0953a', '#8a3d1c', '#1b0a06'), banquise: degrade3('#6fb8e8', '#2a4f8f', '#0a1330'), ville: degrade3('#2b1a5e', '#14123a', '#05050f'), foret: degrade3('#3f8a4f', '#1b4a35', '#05140d'), volcans: degrade3('#a1231a', '#4a0f14', '#0b0305'), abysses: degrade3('#0b3b5c', '#06203a', '#01060f'), cuisine: degrade3('#e0603a', '#8a2a2a', '#1f0a0e'), livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
+  const DECORS = { degrade: DEGRADE, espace: ESPACE, musique: degrade3('#5b1a8c', '#2a0f4c', '#07030f'), cinema: degrade3('#7a1522', '#33080f', '#060203'), stade: degrade3('#12503a', '#0b2a24', '#030b09'), jeux: degrade3('#1b2a6b', '#341a6b', '#06040f'), fromage: degrade3('#d98a1f', '#8a4a0c', '#1f0d04'), ocean: degrade3('#0a6fa8', '#06375e', '#020f1f'), jungle: degrade3('#1f7a3a', '#0d3d22', '#030f08'), desert: degrade3('#e0953a', '#8a3d1c', '#1b0a06'), banquise: degrade3('#6fb8e8', '#2a4f8f', '#0a1330'), ville: degrade3('#2b1a5e', '#14123a', '#05050f'), foret: degrade3('#3f8a4f', '#1b4a35', '#05140d'), volcans: degrade3('#a1231a', '#4a0f14', '#0b0305'), abysses: degrade3('#0b3b5c', '#06203a', '#01060f'), cuisine: degrade3('#e0603a', '#8a2a2a', '#1f0a0e'), livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
   const decor = (nom) => DECORS[nom] || DECORS.livres;
   return { decor, DECORS, animer, danse, danser, fusee, fuser, anim };
 });
