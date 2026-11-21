@@ -32,3 +32,10 @@ Pour chaque vidéo, dans TikTok (Statistiques) : vues, **part de spectateurs enc
 4. **Aucun nouveau développement** de montage avant ces chiffres, sauf pour corriger un bug.
 
 Voir aussi : `ACCROCHES.md` (sept modèles d'accroche), `IDEES-VIDEOS.md`, `APPRENTISSAGES.md` (à remplir après le premier relevé).
+
+## Série « mots fléchés mot par mot » : description générique (21 nov. 2026)
+Description à coller (vidéos muettes, pas de mention « contenu généré par IA ») :
+> Tu trouves le mot avant la fin du minuteur ? 🧩 Écris le mot mystère de la fin en commentaire 👇 Et dis-moi combien de mots tu as trouvés (1, 2 ou 3) !
+> #motsfleches #quiz #jeu #defi #culturegenerale #fyp
+
+Épingler un commentaire du même genre. Couverture à ~0,6 s. Ordre conseillé (une par jour, même heure) : volcans, banquise, ville, forêt, abysses, océan, cuisine. Déjà publiées : espace, jungle, désert.
