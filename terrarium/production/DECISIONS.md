@@ -320,3 +320,6 @@ Jules ne veut plus de bonhomme ni de robot qui danse : l'animation du bas doit i
 
 ## 52. Format court de 15,7 s (21 nov. 2026)
 Après 5 publications identiques (~500 vues, 1-2 likes, ~5 s, ~6 % de vision complète ; l'oasis 8 likes), test du format court : `muet.cadence` 3 s, `finaleDelai` 2 s, `teaser.delai` 4 s, `muet.fin` 6,4 s (épisodes `jeu-mots-<thème>-court`). Une seule variable change par rapport aux longues (la durée). Seuil à battre : ~6 % de vision complète et ~5 s de visionnage moyen. Écarté pour l'instant : sujets d'actualité (à tester ensuite, culture pop plutôt qu'actu brute).
+
+## 53. Série « culture pop » en format court (21 nov. 2026)
+Pour comparer avec la série nature/lieux : quatre vidéos de 15,7 s sur des sujets qui se commentent, avec des scènes dans le thème (`jeu-decors.js`) : `vinyle` (musique : disque, barres d'égaliseur, notes, projecteurs, finale disque emballé), `cinema` (bobine, faisceau, étoiles, finale statuette dorée), `stade` (ballon, projecteurs, tribunes, finale tir au but et confettis), `blocs` (blocs qui tombent et s'empilent, finale lignes complètes). Épisodes `jeu-mots-{musique,cinema,sport,jeux}-court` ; questions mystère : PIANO, ACTION, ARBITRE, VIES. Hypothèse : plus de commentaires que la série précédente (~1-2 likes, ~500 vues). Écarté : actualité (à tester après).

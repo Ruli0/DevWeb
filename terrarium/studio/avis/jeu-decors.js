@@ -513,10 +513,111 @@
       c.ft(g, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.08 }, u); c.ft(g, { x: 0 }, { x: dx, duration: dur, ease: 'none' }, u); c.ft(g, { y: 0 }, { y: -h, duration: dur * 0.45, ease: 'power2.out' }, u); c.ft(g, { y: -h }, { y: 90, duration: dur * 0.55, ease: 'power2.in' }, u + dur * 0.45); c.ft(g, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); }); });
     qa('.vap').forEach((v, j) => repete(tc + 0.2, fin, 0.9, (u) => { c.ft(v, { opacity: 0, y: 0, scale: 0.8 }, { opacity: 0.8, duration: 0.15 }, u + (j % 4) * 0.08); c.ft(v, { y: 0, scale: 0.8 }, { y: -260, scale: 2.4, duration: 0.9, ease: 'power1.out' }, u + (j % 4) * 0.08); c.ft(v, { opacity: 0.8 }, { opacity: 0, duration: 0.4 }, u + 0.5); }));
   }
-  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer], iceberg: [iceberg, icebergue], immeubles: [immeubles, immeubler], foret: [foret, forester], marmite: [marmite, marmiter] };
+
+  // --- Quatre scènes « culture pop » : vinyle (musique), cinéma, stade (sport), blocs (jeux vidéo). ---
+  const flashRect = (cl, col) => `<rect class="${cl}" x="-100" y="-1500" width="1300" height="1920" fill="${col}" opacity="0"/>`;
+  const jetsHauts = (cl, n, cols, r0) => bornes(cl, n, (i, a) => `<circle ${a} cx="540" cy="200" r="${r0 + (i % 3) * 3}" fill="${cols[i % cols.length]}" opacity="0"/>`);
+  // Un jet de particules qui monte puis retombe (finale) ; répété jusqu'à la fin.
+  const jaillir = (c, qa, cl, t, fin, haut, ecart) => qa(cl).forEach((b, j) => { const dur = 1.6, h = haut + (j % 5) * 60, dx = (j - qa(cl).length / 2) * ecart; repete(t + (j % 7) * 0.12, fin, dur, (u) => {
+    c.ft(b, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.08 }, u); c.ft(b, { x: 0 }, { x: dx, duration: dur, ease: 'none' }, u); c.ft(b, { y: 0 }, { y: -h, duration: dur * 0.45, ease: 'power2.out' }, u); c.ft(b, { y: -h }, { y: 60, duration: dur * 0.55, ease: 'power2.in' }, u + dur * 0.45); c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); }); });
+
+  function vinyle() {
+    const barres = Array.from({ length: 12 }, (_, i) => `<rect class="eq" data-i="${i}" x="${120 + i * 72}" y="330" width="40" height="90" rx="6" fill="${['#ff4fa3', '#c46bff', '#7dd3ff'][i % 3]}" opacity=".9"/>`).join('');
+    const cols = ['#ffd45c', '#4fd1c5', '#ff7a5c', '#c46bff'];
+    const notes = Array.from({ length: 8 }, (_, i) => `<g class="nt" data-i="${i}" opacity="0"><ellipse cx="0" cy="0" rx="13" ry="10" fill="${cols[i % 4]}" transform="rotate(-20)"/><path d="M11 -3 V-48 C 24 -42 32 -34 28 -22" fill="none" stroke="${cols[i % 4]}" stroke-width="5" stroke-linecap="round"/></g>`).join('');
+    return `<svg class="danse" viewBox="0 0 1080 420"><path class="sp" d="M200 -300 L120 420 L420 420Z" fill="#ffffff" opacity="0"/><path class="sp" d="M880 -300 L660 420 L960 420Z" fill="#ffffff" opacity="0"/>
+      <g class="dq"><circle cx="540" cy="210" r="150" fill="#14101f"/><circle cx="540" cy="210" r="120" fill="none" stroke="#2a2340" stroke-width="3"/><circle cx="540" cy="210" r="90" fill="none" stroke="#2a2340" stroke-width="3"/><circle cx="540" cy="210" r="52" fill="#ff4fa3"/><circle cx="540" cy="210" r="8" fill="#14101f"/><circle cx="540" cy="82" r="8" fill="#ffffff" opacity=".8"/></g>${barres}${notes}${jetsHauts('gnt', 14, ['#ff4fa3', '#ffd45c', '#7dd3ff'], 8)}${flashRect('flash', '#ff4fa3')}</svg>`;
+  }
+  function vinyler(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc), dq = q('.dq');
+    gsap.set(dq, { svgOrigin: '540 210' }); gsap.set(qa('.nt'), { opacity: 0 }); gsap.set(qa('.gnt'), { opacity: 0 }); gsap.set(qa('.sp'), { opacity: 0, svgOrigin: '0 0' });
+    let ang = 0, t = t0; while (t + 0.2 < stop) { const L = t >= T2 ? 2 : t >= T1 ? 1 : 0, dps = [90, 240, 480][L], P = 0.5; c.ft(dq, { rotation: ang }, { rotation: ang + dps * P, duration: P, ease: 'none' }, t); ang += dps * P; t += P; }
+    qa('.eq').forEach((b, j) => { const x = 120 + j * 72 + 20; gsap.set(b, { svgOrigin: `${x} 420`, scaleY: 0.2 }); let h0 = 0.2;
+      repete(t0, stop, 0.25, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, h = 0.12 + [0.25, 0.55, 0.9][L] * alea(j * 13 + n * 7); c.ft(b, { scaleY: h0 }, { scaleY: h, duration: 0.25, ease: 'sine.inOut' }, u); h0 = h; }); });
+    qa('.nt').forEach((n, j) => { const bx = 160 + j * 110, dur = 2.4; gsap.set(n, { x: bx, y: 300 }); repete(T1 + (j % 4) * 0.5, fin, dur, (u) => { c.ft(n, { opacity: 0, x: bx, y: 300 }, { opacity: 0.95, duration: 0.3 }, u); c.ft(n, { y: 300 }, { y: 60, duration: dur, ease: 'sine.out' }, u); c.ft(n, { opacity: 0.95 }, { opacity: 0, duration: 0.5 }, u + dur - 0.5); }); });
+    qa('.sp').forEach((sp, j) => { c.ft(sp, { opacity: 0 }, { opacity: 0.1, duration: 0.6 }, T2); repete(T2, stop, 1.4, (u, n) => c.ft(sp, { rotation: (n % 2 ? -1 : 1) * 10 * (j ? -1 : 1) }, { rotation: (n % 2 ? 1 : -1) * 10 * (j ? -1 : 1), duration: 1.4, ease: 'sine.inOut' }, u)); });
+    // Finale : le disque s'emballe, les barres montent au maximum, jaillissement de notes et éclat rose.
+    c.ft(dq, { rotation: ang }, { rotation: ang + 1080, duration: 1.6, ease: 'power2.in' }, tc); c.ft(dq, { rotation: ang + 1080 }, { rotation: ang + 1080 + 3600, duration: Math.max(0.1, fin - tc - 1.6), ease: 'none' }, tc + 1.6);
+    qa('.eq').forEach((b, j) => repete(tc, fin, 0.12, (u, n) => c.ft(b, { scaleY: n % 2 ? 1 : 0.6 }, { scaleY: n % 2 ? 0.6 : 1, duration: 0.12, ease: 'none' }, u + (j % 3) * 0.02)));
+    c.ft(q('.flash'), { opacity: 0 }, { opacity: 0.55, duration: 0.12 }, tc + 1.2); c.ft(q('.flash'), { opacity: 0.55 }, { opacity: 0.1, duration: 0.8 }, tc + 1.32);
+    jaillir(c, qa, '.gnt', tc + 1.2, fin, 330, 40);
+  }
+
+  function cinema() {
+    const trous = [0, 1, 2, 3, 4, 5].map((i) => `<circle cx="${540 + Math.cos(i * Math.PI / 3) * 72}" cy="${220 + Math.sin(i * Math.PI / 3) * 72}" r="24" fill="#0c0c12"/>`).join('');
+    const etoiles = Array.from({ length: 12 }, (_, i) => `<path class="etoile" data-i="${i}" transform="translate(${60 + i * 88} ${60 + (i * 53) % 220}) scale(${0.7 + (i % 3) * 0.3})" d="M0 -14 L4 -4 L14 -4 L6 3 L9 13 L0 7 L-9 13 L-6 3 L-14 -4 L-4 -4Z" fill="#ffd45c" opacity="0"/>`).join('');
+    return `<svg class="danse" viewBox="0 0 1080 420"><path class="beam" d="M540 220 L260 -500 L820 -500Z" fill="#ffffff" opacity="0"/><path class="sp" d="M200 -300 L100 420 L420 420Z" fill="#ffd45c" opacity="0"/><path class="sp" d="M880 -300 L660 420 L980 420Z" fill="#ffd45c" opacity="0"/>${etoiles}
+      <rect x="0" y="398" width="1080" height="30" fill="#8f1d2c"/><g class="reel"><circle cx="540" cy="220" r="150" fill="#2a2a33"/><circle cx="540" cy="220" r="132" fill="#383844"/>${trous}<circle cx="540" cy="220" r="22" fill="#14141c"/></g>
+      <g class="trophee" transform="translate(540 420) scale(1.5)"><g class="trop"><path d="M-26 -40 L-20 -150 Q0 -168 20 -150 L26 -40Z" fill="#ffd45c"/><circle cx="0" cy="-176" r="19" fill="#ffd45c"/><rect x="-50" y="-40" width="100" height="26" rx="4" fill="#e8b84a"/><rect x="-64" y="-14" width="128" height="16" rx="4" fill="#c99a30"/><path d="M-10 -140 L-6 -60" stroke="#fff6c8" stroke-width="5" stroke-linecap="round" opacity=".7"/></g></g>${jetsHauts('gnt', 16, ['#ffd45c', '#fff6c8', '#ffb43c'], 7)}${flashRect('flash', '#ffe27a')}</svg>`;
+  }
+  function cineaster(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc), reel = q('.reel'), beam = q('.beam'), trop = q('.trop');
+    gsap.set(reel, { svgOrigin: '540 220' }); gsap.set(qa('.gnt'), { opacity: 0 }); gsap.set(qa('.sp'), { opacity: 0, svgOrigin: '0 0' }); gsap.set(trop, { y: 330 }); gsap.set(beam, { opacity: 0.05 });
+    let ang = 0, t = t0; while (t + 0.2 < fin) { const L = t >= T2 ? 2 : t >= T1 ? 1 : 0, dps = [70, 180, 360][L], P = 0.5; c.ft(reel, { rotation: ang }, { rotation: ang + dps * P, duration: P, ease: 'none' }, t); ang += dps * P; t += P; }
+    repete(t0, stop, 0.2, (u, n) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, b = [0.05, 0.12, 0.18][L], v = b + (alea(n * 5) - 0.5) * 0.05; c.ft(beam, { opacity: v }, { opacity: b + (alea(n * 5 + 3) - 0.5) * 0.05, duration: 0.2, ease: 'none' }, u); });
+    qa('.etoile').forEach((e, j) => { const base = j % 2 ? T2 : T1; repete(base + (j % 5) * 0.15, fin, 0.7, (u, n) => c.ft(e, { opacity: n % 2 ? 1 : 0.35 }, { opacity: n % 2 ? 0.35 : 1, duration: 0.35 }, u)); });
+    qa('.sp').forEach((sp, j) => { c.ft(sp, { opacity: 0 }, { opacity: 0.12, duration: 0.6 }, T2); repete(T2, stop, 1.4, (u, n) => c.ft(sp, { rotation: (n % 2 ? -1 : 1) * 12 * (j ? -1 : 1) }, { rotation: (n % 2 ? 1 : -1) * 12 * (j ? -1 : 1), duration: 1.4, ease: 'sine.inOut' }, u)); });
+    // Finale : la statuette dorée jaillit du sol dans un éclat de lumière et des étincelles dorées.
+    c.ft(trop, { y: 330 }, { y: -10, duration: 1.1, ease: 'back.out(1.5)' }, tc + 0.2);
+    c.ft(q('.flash'), { opacity: 0 }, { opacity: 0.6, duration: 0.1 }, tc + 0.9); c.ft(q('.flash'), { opacity: 0.6 }, { opacity: 0.08, duration: 0.8 }, tc + 1);
+    jaillir(c, qa, '.gnt', tc + 0.9, fin, 300, 40);
+    repete(tc + 1.4, fin, 0.8, (u, n) => c.ft(trop, { y: n % 2 ? -10 : -24 }, { y: n % 2 ? -24 : -10, duration: 0.8, ease: 'sine.inOut' }, u));
+  }
+
+  function stade() {
+    const bandes = Array.from({ length: 17 }, (_, i) => `<rect x="${i * 90 - 300}" y="340" width="90" height="90" fill="${i % 2 ? '#1f7a3a' : '#1a6a33'}"/>`).join('');
+    const fans = Array.from({ length: 36 }, (_, i) => `<circle class="fan" data-i="${i}" cx="${200 + (i % 18) * 40}" cy="${i < 18 ? 280 : 316}" r="9" fill="${['#ffd45c', '#ff4d5e', '#7dd3ff', '#ffffff'][i % 4]}" opacity=".15"/>`).join('');
+    const filet = Array.from({ length: 6 }, (_, i) => `<path d="M${710 + i * 32} 255 V340" stroke="#ffffff88" stroke-width="2"/>`).join('') + Array.from({ length: 4 }, (_, i) => `<path d="M700 ${270 + i * 20} H900" stroke="#ffffff88" stroke-width="2"/>`).join('');
+    const conf = Array.from({ length: 20 }, (_, i) => `<rect class="conf" data-i="${i}" x="${40 + i * 52}" y="0" width="12" height="18" rx="2" fill="${['#ffd45c', '#ff4d5e', '#4fd1c5', '#ffffff'][i % 4]}" opacity="0"/>`).join('');
+    return `<svg class="danse" viewBox="0 0 1080 420"><path class="sp" d="M60 -300 L-60 420 L460 420Z" fill="#ffffff" opacity="0"/><path class="sp" d="M1020 -300 L1140 420 L620 420Z" fill="#ffffff" opacity="0"/><g class="scene" transform="translate(540 420) scale(1.45) translate(-540 -420)"><rect x="-200" y="240" width="1480" height="100" fill="#121a2a"/>${fans}${bandes}
+      <g class="filet" opacity=".95">${filet}</g><path d="M700 340 V250 H900 V340" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+      <g class="ballon"><circle cx="300" cy="372" r="24" fill="#ffffff"/><path d="M300 358 L312 367 L308 381 L292 381 L288 367Z" fill="#2a2a33"/></g></g>${conf}${flashRect('flash', '#ffffff')}</svg>`;
+  }
+  function stader(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc), ball = q('.ballon');
+    gsap.set(ball, { svgOrigin: '300 372' }); gsap.set(qa('.conf'), { opacity: 0 }); gsap.set(qa('.sp'), { opacity: 0, svgOrigin: '0 0' }); gsap.set(q('.filet'), { svgOrigin: '900 300' });
+    // Le ballon rebondit sur place, puis dribble ; les projecteurs s'allument, les tribunes aussi.
+    let t = t0, i = 0, x0 = 0; while (t + 0.3 < stop) { const L = t >= T2 ? 2 : t >= T1 ? 1 : 0, P = [0.8, 0.6, 0.45][L], h = [60, 90, 120][L], x1 = L ? (i % 2 ? 1 : -1) * [0, 70, 110][L] : 0;
+      c.ft(ball, { y: 0, x: x0 }, { y: -h, x: (x0 + x1) / 2, duration: P / 2, ease: 'sine.out' }, t); c.ft(ball, { y: -h, x: (x0 + x1) / 2 }, { y: 0, x: x1, duration: P / 2, ease: 'sine.in' }, t + P / 2); c.ft(ball, { rotation: i * 180 }, { rotation: (i + 1) * 180, duration: P, ease: 'none' }, t); x0 = x1; t += P; i += 1; }
+    qa('.sp').forEach((sp) => c.ft(sp, { opacity: 0 }, { opacity: 0.1, duration: 0.8 }, T1));
+    qa('.fan').forEach((f, j) => { const a = alea(j * 11); if (a < 0.4) c.ft(f, { opacity: 0.15 }, { opacity: 0.9, duration: 0.3 }, T1 + a * 2); c.ft(f, { opacity: 0.15 }, { opacity: 0.9, duration: 0.3 }, T2 + a * 1.2); if (a > 0.6) repete(T2 + 0.5, stop, 0.5, (u, n) => c.ft(f, { opacity: n % 2 ? 0.9 : 0.4 }, { opacity: n % 2 ? 0.4 : 0.9, duration: 0.25 }, u)); });
+    // Finale : le tir part dans la lucarne, le filet gonfle, la foule explose, confettis.
+    c.ft(ball, { x: x0, y: 0, scale: 1 }, { x: 500, y: -50, scale: 0.65, duration: 0.9, ease: 'power1.out' }, tc);
+    c.ft(ball, { y: 0 }, { y: -30, duration: 0.4, ease: 'sine.out' }, tc + 0.9); c.ft(ball, { y: -30 }, { y: 30, duration: 0.5, ease: 'bounce.out' }, tc + 1.3);
+    [1.25, 1.12, 1.05, 1].forEach((v, k) => c.ft(q('.filet'), { scaleX: k ? [1.25, 1.12, 1.05][k - 1] : 1 }, { scaleX: v, duration: 0.2, ease: 'sine.inOut' }, tc + 0.9 + k * 0.2));
+    c.ft(q('.flash'), { opacity: 0 }, { opacity: 0.25, duration: 0.1 }, tc + 0.9); c.ft(q('.flash'), { opacity: 0.25 }, { opacity: 0, duration: 0.6 }, tc + 1);
+    qa('.fan').forEach((f, j) => repete(tc + 0.9, fin, 0.25, (u, n) => c.ft(f, { opacity: n % 2 ? 1 : 0.5 }, { opacity: n % 2 ? 0.5 : 1, duration: 0.25 }, u)));
+    qa('.conf').forEach((f, j) => { const dur = 1.8; repete(tc + 0.9 + (j % 8) * 0.1, fin, dur, (u) => { c.ft(f, { opacity: 0, y: -40, rotation: 0 }, { opacity: 1, duration: 0.1 }, u); c.ft(f, { y: -40 }, { y: 440, duration: dur, ease: 'none' }, u); c.ft(f, { rotation: 0 }, { rotation: 540 * (j % 2 ? 1 : -1), duration: dur, ease: 'none' }, u); c.ft(f, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); }); });
+  }
+
+  const BLOCS = (() => { const L0 = [0, 1, 2, 3].map((k) => [k, 0, 0]), L1 = [4, 5, 6, 7].map((k) => [k, 0, 1]).concat([[0, 1, 1], [1, 1, 1]]), L2 = [2, 3, 4, 5, 6, 7].map((k) => [k, 1, 2]); return L0.concat(L1, L2); })();
+  function blocs() {
+    const C = ['#4fd1c5', '#ffd45c', '#c46bff', '#6be36b', '#ff4d5e', '#6b8cff', '#ff9a3c'];
+    const grille = Array.from({ length: 9 }, (_, i) => `<path d="M${100 + i * 110} 100 V420" stroke="#ffffff14" stroke-width="2"/>`).join('');
+    const bl = BLOCS.map(([col, row, L], i) => `<g class="bloc" data-i="${i}" data-l="${L}" data-row="${row}"><rect x="${100 + col * 110 + 4}" y="${420 - 110 * (row + 1) + 4}" width="102" height="102" rx="10" fill="${C[(col + row * 3) % 7]}"/><rect x="${100 + col * 110 + 14}" y="${420 - 110 * (row + 1) + 14}" width="82" height="14" rx="6" fill="#ffffff55"/></g>`).join('');
+    return `<svg class="danse" viewBox="0 0 1080 420">${grille}${bl}${flashRect('flash', '#ffffff')}</svg>`;
+  }
+  function blocser(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), bl = qa('.bloc'), parNiveau = [0, 1, 2].map((L) => bl.filter((b) => +b.dataset.l === L));
+    gsap.set(bl, { opacity: 0 });
+    // Les blocs tombent et s'empilent : un par seconde, puis deux par seconde, puis quatre par seconde.
+    const depart = [t0 + 0.1, T1, T2], pas = [0.5, 0.35, 0.2];
+    parNiveau.forEach((liste, L) => liste.forEach((b, k) => { const u = depart[L] + k * pas[L]; if (u + 0.6 > fin) return; c.ft(b, { opacity: 0, y: -420 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.in' }, u); c.ft(b, { y: 0 }, { y: 0, duration: 0.01 }, u + 0.5); c.ft(b, { scaleY: 1 }, { scaleY: 1, duration: 0.01 }, u + 0.5); }));
+    // Finale : les lignes complètes clignotent et disparaissent, les blocs du dessus descendent d'un cran puis s'effacent à leur tour.
+    const rang0 = bl.filter((b) => +b.dataset.row === 0), rang1 = bl.filter((b) => +b.dataset.row === 1);
+    gsap.set(bl, { svgOrigin: '540 420' });
+    repete(tc, tc + 0.6, 0.1, (u, n) => c.ft(rang0, { opacity: n % 2 ? 1 : 0.3 }, { opacity: n % 2 ? 0.3 : 1, duration: 0.1 }, u));
+    c.ft(q('.flash'), { opacity: 0 }, { opacity: 0.3, duration: 0.1 }, tc + 0.6); c.ft(q('.flash'), { opacity: 0.3 }, { opacity: 0, duration: 0.5 }, tc + 0.7);
+    c.ft(rang0, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.2, duration: 0.3 }, tc + 0.6);
+    c.ft(rang1, { y: 0 }, { y: 110, duration: 0.35, ease: 'bounce.out' }, tc + 0.9);
+    repete(tc + 1.4, tc + 2, 0.1, (u, n) => c.ft(rang1, { opacity: n % 2 ? 1 : 0.3 }, { opacity: n % 2 ? 0.3 : 1, duration: 0.1 }, u));
+    c.ft(rang1, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.2, duration: 0.3 }, tc + 2);
+    c.ft(q('.flash'), { opacity: 0 }, { opacity: 0.3, duration: 0.1 }, tc + 2); c.ft(q('.flash'), { opacity: 0.3 }, { opacity: 0, duration: 0.5 }, tc + 2.1);
+  }
+  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer], iceberg: [iceberg, icebergue], immeubles: [immeubles, immeubler], foret: [foret, forester], marmite: [marmite, marmiter], vinyle: [vinyle, vinyler], cinema: [cinema, cineaster], stade: [stade, stader], blocs: [blocs, blocser] };
   const anim = (nom) => ANIMS[nom] || ANIMS.danse;
   const degrade3 = (c1, c2, c3, titre) => ({ titre: titre || '#ffffff', bas: '', fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/>${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 233) % 1080}" cy="${(i * 397) % 1500}" r="${2 + (i % 3) * 2}" fill="#ffffff" opacity="${0.05 + (i % 4) * 0.03}"/>`).join('')}` });
-  const DECORS = { degrade: DEGRADE, espace: ESPACE, ocean: degrade3('#0a6fa8', '#06375e', '#020f1f'), jungle: degrade3('#1f7a3a', '#0d3d22', '#030f08'), desert: degrade3('#e0953a', '#8a3d1c', '#1b0a06'), banquise: degrade3('#6fb8e8', '#2a4f8f', '#0a1330'), ville: degrade3('#2b1a5e', '#14123a', '#05050f'), foret: degrade3('#3f8a4f', '#1b4a35', '#05140d'), volcans: degrade3('#a1231a', '#4a0f14', '#0b0305'), abysses: degrade3('#0b3b5c', '#06203a', '#01060f'), cuisine: degrade3('#e0603a', '#8a2a2a', '#1f0a0e'), livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
+  const DECORS = { degrade: DEGRADE, espace: ESPACE, musique: degrade3('#5b1a8c', '#2a0f4c', '#07030f'), cinema: degrade3('#7a1522', '#33080f', '#060203'), stade: degrade3('#12503a', '#0b2a24', '#030b09'), jeux: degrade3('#1b2a6b', '#341a6b', '#06040f'), ocean: degrade3('#0a6fa8', '#06375e', '#020f1f'), jungle: degrade3('#1f7a3a', '#0d3d22', '#030f08'), desert: degrade3('#e0953a', '#8a3d1c', '#1b0a06'), banquise: degrade3('#6fb8e8', '#2a4f8f', '#0a1330'), ville: degrade3('#2b1a5e', '#14123a', '#05050f'), foret: degrade3('#3f8a4f', '#1b4a35', '#05140d'), volcans: degrade3('#a1231a', '#4a0f14', '#0b0305'), abysses: degrade3('#0b3b5c', '#06203a', '#01060f'), cuisine: degrade3('#e0603a', '#8a2a2a', '#1f0a0e'), livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
   const decor = (nom) => DECORS[nom] || DECORS.livres;
   return { decor, DECORS, animer, danse, danser, fusee, fuser, anim };
 });
