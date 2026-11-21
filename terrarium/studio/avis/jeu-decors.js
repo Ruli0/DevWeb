@@ -398,7 +398,122 @@
     c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.8, duration: 0.06 }, tc + 0.9); c.ft(q('.eclair'), { opacity: 0.8 }, { opacity: 0, duration: 0.5 }, tc + 0.96);
     repete(T2 + 0.5, Math.min(fin, tc), 2.2, (u) => { c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.5, duration: 0.05 }, u); c.ft(q('.eclair'), { opacity: 0.5 }, { opacity: 0, duration: 0.12 }, u + 0.05); c.ft(q('.eclair'), { opacity: 0 }, { opacity: 0.35, duration: 0.05 }, u + 0.3); c.ft(q('.eclair'), { opacity: 0.35 }, { opacity: 0, duration: 0.2 }, u + 0.35); });
   }
-  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer] };
+
+  // --- Quatre scènes « dans le thème » (sans personnage) : iceberg, immeubles, forêt, marmite. Même gabarit à trois niveaux + finale. ---
+  const alea = (i) => ((i * 9301 + 49297) % 233280) / 233280;
+  const surgir = (c, g, t, dur = 0.55) => c.ft(g, { scaleY: 0 }, { scaleY: 1, duration: dur, ease: 'back.out(1.6)' }, t);
+
+  function iceberg() {
+    const neige = bornes('neige', 22, (i, a) => `<circle ${a} cx="${30 + i * 48}" cy="-40" r="${3 + (i % 3)}" fill="#ffffff" opacity="0"/>`);
+    const splash = bornes('splash', 10, (i, a) => `<circle ${a} cx="760" cy="350" r="${8 + (i % 3) * 5}" fill="#dff6ff" opacity="0"/>`);
+    const onde = (y, col, cl) => `<path class="${cl}" d="M-200 ${y} q 100 -30 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 t 200 0 V 1500 H-200Z" fill="${col}"/>`;
+    return `<svg class="danse" viewBox="0 0 1080 420"><defs><linearGradient id="au" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4fffb0"/><stop offset=".5" stop-color="#7dd3ff"/><stop offset="1" stop-color="#c46bff"/></linearGradient></defs>
+      <rect class="aurore" x="-100" y="-1500" width="1300" height="1900" fill="url(#au)" opacity="0"/>${neige}
+      <g class="ice" transform="translate(540 350)"><g class="gl"><path d="M-190 0 L-130 -110 L-70 -80 L0 -240 L70 -130 L120 -165 L190 0Z" fill="#eaf8ff"/><path d="M0 -240 L70 -130 L40 0 L-20 -60Z" fill="#bfe3f5"/><path d="M-130 -110 L-70 -80 L-60 0 L-190 0Z" fill="#cfeefc"/>
+        <g class="chunk"><path d="M70 -130 L120 -165 L190 0 L120 0Z" fill="#ffffff"/><path d="M120 -165 L190 0 L150 0Z" fill="#cdeefb"/></g></g></g>
+      ${splash}${onde(350, '#2a8fc2', 'mer1')}${onde(385, '#1b6a9c', 'mer2')}${onde(412, '#0f4a75', 'mer3')}</svg>`;
+  }
+  function icebergue(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), gl = q('.gl'), chunk = q('.chunk'), ondes = [q('.mer1'), q('.mer2'), q('.mer3')], stop = Math.min(fin, tc);
+    gsap.set(gl, { svgOrigin: '0 0' }); gsap.set(chunk, { svgOrigin: '120 -80' }); gsap.set(qa('.neige'), { opacity: 0 }); gsap.set(qa('.splash'), { opacity: 0 }); gsap.set(q('.aurore'), { opacity: 0 });
+    // Il flotte : balancement lent, de plus en plus fort ; les vagues glissent ; la neige tombe au niveau 1 (tempête au niveau 2), l'aurore boréale s'allume.
+    let t = t0, i = 0, r = 0, y0 = 0;
+    while (t + 0.4 < stop) { const L = t >= T2 ? 2 : t >= T1 ? 1 : 0, P = [1.6, 1.2, 0.8][L], a = (i % 2 ? 1 : -1) * [1.2, 2.5, 4.5][L], y1 = (i % 2 ? -1 : 1) * [4, 7, 11][L];
+      c.ft(gl, { rotation: r, y: y0 }, { rotation: a, y: y1, duration: P, ease: 'sine.inOut' }, t); r = a; y0 = y1; t += P; i += 1; }
+    ondes.forEach((o, j) => { let x = 0; repete(t0, stop, 1.4, (u) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, dx = [30, 50, 80][L] * (j % 2 ? -1 : 1); c.ft(o, { x }, { x: x === 0 ? dx : 0, duration: 1.4, ease: 'sine.inOut' }, u); x = x === 0 ? dx : 0; }); });
+    qa('.neige').forEach((f, j) => { for (let u = T1 + (j % 7) * 0.3; u + 1.4 < fin; u += (u >= T2 ? 1.4 : 2.6)) { const dur = u >= T2 ? 1.4 : 2.6;
+      c.ft(f, { opacity: 0, y: 0, x: 0 }, { opacity: 0.9, duration: 0.15 }, u); c.ft(f, { y: 0 }, { y: 470, duration: dur, ease: 'none' }, u); c.ft(f, { x: 0 }, { x: (j % 2 ? 50 : -50) * (u >= T2 ? 2 : 1), duration: dur, ease: 'sine.inOut' }, u); c.ft(f, { opacity: 0.9 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); } });
+    c.ft(q('.aurore'), { opacity: 0 }, { opacity: 0.1, duration: 1.2 }, T1); c.ft(q('.aurore'), { opacity: 0.1 }, { opacity: 0.18, duration: 1 }, T2);
+    // Finale : la banquise tremble, un bloc se détache et plonge, éclaboussures, la mer se soulève.
+    repete(tc, tc + 0.8, 0.06, (u, n) => c.ft(gl, { x: n % 2 ? -4 : 4 }, { x: n % 2 ? 4 : -4, duration: 0.06, ease: 'none' }, u));
+    c.ft(q('.aurore'), { opacity: 0.18 }, { opacity: 0.5, duration: 0.3 }, tc); c.ft(q('.aurore'), { opacity: 0.5 }, { opacity: 0.22, duration: 1.2 }, tc + 0.3);
+    c.ft(chunk, { x: 0, y: 0, rotation: 0 }, { x: 170, y: 230, rotation: 45, duration: 1.1, ease: 'power2.in' }, tc + 0.8);
+    c.ft(gl, { x: 4, rotation: 0 }, { x: 0, rotation: -5, duration: 0.5, ease: 'power2.out' }, tc + 1.4);
+    qa('.splash').forEach((b, j) => { [tc + 1.7, tc + 4].forEach((u) => { if (u + 1.2 > fin) return;
+      c.ft(b, { opacity: 0, x: 0, y: 0, scale: 0.4 }, { opacity: 1, x: (j - 5) * 26, y: -150 - (j % 4) * 35, scale: 1, duration: 0.5, ease: 'power2.out' }, u); c.ft(b, { x: (j - 5) * 26, y: -150 - (j % 4) * 35 }, { x: (j - 5) * 34, y: 20, duration: 0.6, ease: 'power2.in' }, u + 0.5); c.ft(b, { opacity: 1 }, { opacity: 0, duration: 0.3 }, u + 0.9); }); });
+    ondes.forEach((o, j) => { c.ft(o, { y: 0 }, { y: -[70, 50, 30][j], duration: 0.5, ease: 'power2.out' }, tc + 1.7); c.ft(o, { y: -[70, 50, 30][j] }, { y: 0, duration: 1.2, ease: 'sine.inOut' }, tc + 2.2);
+      repete(tc + 3.4, fin, 1.4, (u, n) => c.ft(o, { x: n % 2 ? 0 : 50 * (j % 2 ? -1 : 1) }, { x: n % 2 ? 50 * (j % 2 ? -1 : 1) : 0, duration: 1.4, ease: 'sine.inOut' }, u)); });
+  }
+
+  const BATS = [[20, 110, 140, 0], [130, 100, 200, 0], [240, 130, 160, 0], [370, 100, 250, 1], [470, 120, 330, 2], [590, 110, 220, 1], [700, 100, 290, 2], [800, 120, 180, 1], [920, 130, 240, 2]];
+  function immeubles() {
+    const cols = ['#2a2f5c', '#1f2450', '#34396b'];
+    const bats = BATS.map(([x, w, h, L], i) => { const fen = []; for (let r = 0; r < Math.floor((h - 30) / 34); r += 1) for (let k = 0; k < Math.floor(w / 32); k += 1) { const fx = x + 10 + k * 32, fy = 420 - h + 16 + r * 34, j = fen.length / 2; fen.push(`<rect x="${fx}" y="${fy}" width="16" height="20" rx="2" fill="#161a3a"/><rect class="fen" data-b="${i}" data-j="${j}" x="${fx}" y="${fy}" width="16" height="20" rx="2" fill="#ffd45c" opacity="0"/>`); }
+      return `<g class="bat" data-i="${i}" data-l="${L}" data-cx="${x + w / 2}"><rect x="${x}" y="${420 - h}" width="${w}" height="${h}" fill="${cols[i % 3]}"/>${L === 2 ? `<rect x="${x + w / 2 - 3}" y="${420 - h - 50}" width="6" height="50" fill="#1f2450"/><circle class="balise" cx="${x + w / 2}" cy="${420 - h - 52}" r="6" fill="#ff4d5e"/>` : ''}${fen.join('')}</g>`; }).join('');
+    const feux = bornes('feu', 30, (i, a) => `<circle ${a} data-b="${i % 3}" cx="${[300, 540, 800][i % 3]}" cy="${[40, -60, 20][i % 3]}" r="7" fill="${['#ffd45c', '#ff4d5e', '#4fd1c5', '#c46bff', '#ffffff'][i % 5]}" opacity="0"/>`);
+    return `<svg class="danse" viewBox="0 0 1080 420"><path class="proj" d="M200 420 L150 -400 L260 -400Z" fill="#ffffff" opacity="0"/><path class="proj" d="M880 420 L830 -400 L940 -400Z" fill="#ffffff" opacity="0"/>${bats}
+      <rect x="0" y="408" width="1080" height="30" fill="#0d0f24"/><g class="taxi"><rect x="0" y="388" width="74" height="22" rx="8" fill="#ffd45c"/><rect x="14" y="374" width="42" height="18" rx="5" fill="#ffe27a"/><circle cx="16" cy="412" r="7" fill="#111"/><circle cx="58" cy="412" r="7" fill="#111"/></g>${feux}</svg>`;
+  }
+  function immeubler(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc);
+    const debutB = (L) => (L === 0 ? t0 : L === 1 ? T1 : T2), apparition = {};
+    gsap.set(qa('.fen'), { opacity: 0 }); gsap.set(qa('.feu'), { opacity: 0 }); gsap.set(qa('.proj'), { opacity: 0, svgOrigin: '0 0' });
+    // Les immeubles poussent : trois petits au début, plus hauts au mot du milieu, les gratte-ciel au dernier mot ; les fenêtres s'allument.
+    qa('.bat').forEach((b, i) => { const L = +b.dataset.l, cx = +b.dataset.cx; gsap.set(b, { svgOrigin: `${cx} 420` }); apparition[i] = debutB(L) + (L === 0 ? 0 : 0.12 * (i % 3)); if (L > 0) { gsap.set(b, { scaleY: 0 }); surgir(c, b, apparition[i], 0.6); } });
+    qa('.fen').forEach((f) => { const b = +f.dataset.b, j = +f.dataset.j, a = alea(j + b * 17), L = BATS[b][3], base = apparition[b] + 0.5;
+      const t = a < 0.35 ? base + a * 3 : a < 0.7 ? Math.max(base, T1) + 0.3 + (a - 0.35) * 5 : Math.max(base, T2) + 0.3 + (a - 0.7) * 4;
+      if (t < fin) c.ft(f, { opacity: 0 }, { opacity: 0.95, duration: 0.15 }, t);
+      if (a > 0.8 && t < stop) repete(Math.max(T2, t + 0.3) + a, stop, 0.7, (u, n) => c.ft(f, { opacity: n % 2 ? 0.95 : 0.25 }, { opacity: n % 2 ? 0.25 : 0.95, duration: 0.2 }, u)); });
+    repete(t0 + 0.5, fin, 4.2, (u) => c.ft(q('.taxi'), { x: -120 }, { x: 1180, duration: 3.6, ease: 'none' }, u));
+    qa('.balise').forEach((b) => repete(T2, fin, 0.8, (u, n) => c.ft(b, { opacity: n % 2 ? 1 : 0.2 }, { opacity: n % 2 ? 0.2 : 1, duration: 0.4 }, u)));
+    qa('.proj').forEach((pr, j) => { c.ft(pr, { opacity: 0 }, { opacity: 0.07, duration: 0.6 }, T2); gsap.set(pr, { svgOrigin: j ? '880 420' : '200 420' }); repete(T2, stop, 1.6, (u, n) => c.ft(pr, { rotation: (n % 2 ? -1 : 1) * 18 * (j ? -1 : 1) }, { rotation: (n % 2 ? 1 : -1) * 18 * (j ? -1 : 1), duration: 1.6, ease: 'sine.inOut' }, u)); });
+    // Finale : un feu d'artifice au-dessus de la ville.
+    qa('.feu').forEach((f, j) => { const b = j % 3, ang = (Math.floor(j / 3) / 10) * Math.PI * 2; [tc + b * 0.45, tc + 2 + b * 0.45].forEach((u) => { if (u + 1 > fin) return;
+      c.ft(f, { opacity: 0, x: 0, y: 0, scale: 1 }, { opacity: 1, duration: 0.05 }, u); c.ft(f, { x: 0, y: 0 }, { x: Math.cos(ang) * 150, y: Math.sin(ang) * 150 + 30, duration: 0.9, ease: 'power2.out' }, u); c.ft(f, { scale: 1 }, { scale: 0.3, duration: 0.9 }, u); c.ft(f, { opacity: 1 }, { opacity: 0, duration: 0.3 }, u + 0.65); }); });
+    c.ft(qa('.proj'), { opacity: 0.07 }, { opacity: 0.18, duration: 0.4 }, tc);
+  }
+
+  const ARBRES = [[70, 0.8, 0], [300, 0.9, 0], [540, 0.85, 0], [180, 1.2, 1], [420, 1.3, 1], [690, 1.1, 1], [830, 1.4, 2], [960, 1.2, 2], [610, 1.5, 2]];
+  function foret() {
+    const arbres = ARBRES.map(([x, s, L], i) => `<g class="arbre" data-i="${i}" data-x="${x}" data-l="${L}"><rect x="${x - 12 * s}" y="${420 - 95 * s}" width="${24 * s}" height="${95 * s}" fill="#6b4a32"/><circle class="cime" cx="${x}" cy="${420 - 140 * s}" r="${62 * s}" fill="#3fa34d"/><circle class="cime" cx="${x - 40 * s}" cy="${420 - 105 * s}" r="${44 * s}" fill="#3b9a49"/><circle class="cime" cx="${x + 40 * s}" cy="${420 - 105 * s}" r="${44 * s}" fill="#46ad55"/></g>`).join('');
+    const feuilles = bornes('feuille', 18, (i, a) => `<ellipse ${a} cx="${40 + i * 58}" cy="-60" rx="9" ry="5" fill="#e8872e" opacity="0"/>`);
+    const vent = bornes('vent', 26, (i, a) => `<ellipse ${a} cx="-60" cy="${30 + (i * 53) % 330}" rx="10" ry="6" fill="${i % 2 ? '#e8872e' : '#c9501f'}" opacity="0"/>`);
+    return `<svg class="danse" viewBox="0 0 1080 420">${arbres}<rect x="-100" y="408" width="1300" height="400" fill="#1f4d2a"/>${feuilles}${vent}</svg>`;
+  }
+  function forester(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc);
+    gsap.set(qa('.feuille'), { opacity: 0 }); gsap.set(qa('.vent'), { opacity: 0 });
+    const arbres = qa('.arbre');
+    arbres.forEach((a, i) => { const L = +a.dataset.l, x = +a.dataset.x; gsap.set(a, { svgOrigin: `${x} 420` }); if (L > 0) { gsap.set(a, { scaleY: 0 }); surgir(c, a, (L === 1 ? T1 : T2) + 0.12 * (i % 3), 0.7); } });
+    // Le vent : les arbres se balancent de plus en plus fort ; les cimes virent à l'automne au dernier mot, les feuilles tombent.
+    arbres.forEach((a, i) => { const x = +a.dataset.x; let t = t0 + (i % 3) * 0.2, k = 0, r = 0; while (t + 0.4 < stop) { const L = t >= T2 ? 2 : t >= T1 ? 1 : 0, P = [2, 1.4, 1][L], ang = (k % 2 ? 1 : -1) * [1.5, 3, 5][L]; c.ft(a, { rotation: r }, { rotation: ang, duration: P, ease: 'sine.inOut' }, t); r = ang; t += P; k += 1; } });
+    c.ft(qa('.cime'), { fill: '#3fa34d' }, { fill: '#e8872e', duration: 1.6 }, T2);
+    qa('.feuille').forEach((f, j) => { for (let u = T1 + (j % 6) * 0.4, k = 0; u + 3 < fin; u += (u >= T2 ? 2 : 3.4), k += 1) { const dur = u >= T2 ? 2 : 3.4;
+      c.ft(f, { opacity: 0, y: 0, x: 0, rotation: 0 }, { opacity: 1, duration: 0.2 }, u); c.ft(f, { y: 0 }, { y: 520, duration: dur, ease: 'none' }, u); c.ft(f, { x: 0 }, { x: (j % 2 ? 90 : -90), duration: dur, ease: 'sine.inOut' }, u); c.ft(f, { rotation: 0 }, { rotation: 360, duration: dur, ease: 'none' }, u); c.ft(f, { opacity: 1 }, { opacity: 0, duration: 0.3 }, u + dur - 0.3); } });
+    // Finale : une rafale de vent : les arbres plient, un tourbillon de feuilles traverse l'écran.
+    arbres.forEach((a, i) => repete(tc + (i % 3) * 0.05, fin, 0.3, (u, n) => c.ft(a, { rotation: n % 2 ? 12 : -4 }, { rotation: n % 2 ? -4 : 12, duration: 0.3, ease: 'sine.inOut' }, u)));
+    qa('.vent').forEach((v, j) => { [tc + (j % 9) * 0.1, tc + 2.2 + (j % 9) * 0.1].forEach((u) => { if (u + 1.5 > fin) return;
+      c.ft(v, { opacity: 0, x: 0, y: 0, rotation: 0 }, { opacity: 1, duration: 0.1 }, u); c.ft(v, { x: 0 }, { x: 1300, duration: 1.4, ease: 'power1.in' }, u); c.ft(v, { y: 0 }, { y: (j % 2 ? 60 : -60), duration: 0.7, ease: 'sine.inOut' }, u); c.ft(v, { y: (j % 2 ? 60 : -60) }, { y: 0, duration: 0.7, ease: 'sine.inOut' }, u + 0.7); c.ft(v, { rotation: 0 }, { rotation: 720, duration: 1.4, ease: 'none' }, u); c.ft(v, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + 1.3); }); });
+  }
+
+  function marmite() {
+    const vap = bornes('vap', 8, (i, a) => `<circle ${a} cx="${480 + (i % 4) * 40}" cy="226" r="24" fill="#ffffff" opacity="0"/>`);
+    const mousse = bornes('mousse', 10, (i, a) => `<circle ${a} cx="${376 + i * 36}" cy="256" r="19" fill="#fff6e8" opacity="0"/>`);
+    const gouttes = bornes('goutte', 16, (i, a) => `<circle ${a} cx="540" cy="240" r="${10 + (i % 4) * 3}" fill="${i % 2 ? '#ff7a4a' : '#ffb43c'}" opacity="0"/>`);
+    const flam = [430, 540, 650].map((x, i) => `<path class="flam" data-i="${i}" d="M${x - 26} 400 C ${x - 34} 360 ${x - 6} 350 ${x} 330 C ${x + 8} 350 ${x + 34} 360 ${x + 26} 400Z" fill="#ff8a3c"/><path class="flam" data-i="${i}" d="M${x - 12} 400 C ${x - 14} 376 ${x} 372 ${x} 356 C ${x + 6} 372 ${x + 16} 378 ${x + 12} 400Z" fill="#ffe27a"/>`).join('');
+    return `<svg class="danse" viewBox="0 0 1080 420"><rect x="240" y="398" width="600" height="30" rx="8" fill="#3a3a4f"/>${flam}
+      <g class="pot"><rect x="360" y="256" width="360" height="142" rx="24" fill="#aeb8cc"/><rect x="334" y="284" width="36" height="18" rx="9" fill="#8f9bb3"/><rect x="710" y="284" width="36" height="18" rx="9" fill="#8f9bb3"/><rect x="360" y="256" width="360" height="14" fill="#8f9bb3"/><ellipse cx="540" cy="256" rx="180" ry="12" fill="#ff7a4a"/>${mousse}
+        <g class="couv"><ellipse cx="540" cy="244" rx="192" ry="18" fill="#c3ccdc"/><path d="M500 244 q40 -42 80 0Z" fill="#8f9bb3"/><circle cx="540" cy="210" r="9" fill="#2a2f45"/></g></g>${vap}${gouttes}</svg>`;
+  }
+  function marmiter(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc), couv = q('.couv'), pot = q('.pot');
+    gsap.set(couv, { svgOrigin: '540 244' }); gsap.set(qa('.vap'), { opacity: 0 }); gsap.set(qa('.mousse'), { opacity: 0 }); gsap.set(qa('.goutte'), { opacity: 0 });
+    qa('.flam').forEach((f) => gsap.set(f, { svgOrigin: `${[430, 540, 650][+f.dataset.i]} 400`, scaleY: 0.5 }));
+    // Ça mijote : la vapeur monte ; au mot du milieu ça bout (le couvercle tremble, les flammes grandissent) ; au dernier la mousse déborde.
+    qa('.vap').forEach((v, j) => { for (let u = t0 + 0.35 * j; u + 2.4 < fin; u += 2.2) { const fort = u >= T1;
+      c.ft(v, { opacity: 0, x: 0, y: 0, scale: 0.5 }, { opacity: fort ? 0.6 : 0.35, duration: 0.3 }, u); c.ft(v, { x: 0, y: 0, scale: 0.5 }, { x: (j % 2 ? 40 : -40), y: -(fort ? 170 : 120), scale: 1.6, duration: 2.2, ease: 'power1.out' }, u); c.ft(v, { opacity: fort ? 0.6 : 0.35 }, { opacity: 0, duration: 1.6 }, u + 0.6); } });
+    qa('.flam').forEach((f) => { c.ft(f, { scaleY: 0.5 }, { scaleY: 0.9, duration: 0.5 }, T1); c.ft(f, { scaleY: 0.9 }, { scaleY: 1.3, duration: 0.5 }, T2);
+      repete(t0, stop, 0.2, (u, n) => { const h = u >= T2 ? 1.3 : u >= T1 ? 0.9 : 0.5; c.ft(f, { scaleY: n % 2 ? h : h * 0.85 }, { scaleY: n % 2 ? h * 0.85 : h, duration: 0.2, ease: 'none' }, u); }); });
+    repete(T1 + 0.3, stop, 0.12, (u, n) => { const a = u >= T2 ? 5 : 2; c.ft(couv, { y: n % 2 ? -a : 0, rotation: n % 2 ? -a * 0.6 : 0 }, { y: n % 2 ? 0 : -a, rotation: n % 2 ? 0 : a * 0.6, duration: 0.12, ease: 'none' }, u); });
+    repete(T2 + 0.3, stop, 0.08, (u, n) => c.ft(pot, { x: n % 2 ? -2 : 2 }, { x: n % 2 ? 2 : -2, duration: 0.08, ease: 'none' }, u));
+    qa('.mousse').forEach((m, j) => { for (let u = T2 + 0.2 + (j % 5) * 0.12; u + 1.2 < stop + 0.01; u += 1.2) { c.ft(m, { opacity: 0, y: 0, scale: 0.4 }, { opacity: 1, y: -34 - (j % 3) * 12, scale: 1.15, duration: 0.5, ease: 'power2.out' }, u); c.ft(m, { opacity: 1 }, { opacity: 0, duration: 0.5 }, u + 0.7); } });
+    // Finale : le couvercle saute, un geyser de soupe jaillit.
+    c.ft(couv, { y: 0, rotation: 0, x: 0 }, { y: -1500, rotation: 720, x: 120, duration: 1.4, ease: 'power2.in' }, tc);
+    qa('.goutte').forEach((g, j) => { const dur = 1.7, h = 300 + (j % 5) * 80, dx = (j - 8) * 26; repete(tc + (j % 8) * 0.1, fin, dur, (u) => {
+      c.ft(g, { opacity: 0, x: 0, y: 0 }, { opacity: 1, duration: 0.08 }, u); c.ft(g, { x: 0 }, { x: dx, duration: dur, ease: 'none' }, u); c.ft(g, { y: 0 }, { y: -h, duration: dur * 0.45, ease: 'power2.out' }, u); c.ft(g, { y: -h }, { y: 90, duration: dur * 0.55, ease: 'power2.in' }, u + dur * 0.45); c.ft(g, { opacity: 1 }, { opacity: 0, duration: 0.2 }, u + dur - 0.2); }); });
+    qa('.vap').forEach((v, j) => repete(tc + 0.2, fin, 0.9, (u) => { c.ft(v, { opacity: 0, y: 0, scale: 0.8 }, { opacity: 0.8, duration: 0.15 }, u + (j % 4) * 0.08); c.ft(v, { y: 0, scale: 0.8 }, { y: -260, scale: 2.4, duration: 0.9, ease: 'power1.out' }, u + (j % 4) * 0.08); c.ft(v, { opacity: 0.8 }, { opacity: 0, duration: 0.4 }, u + 0.5); }));
+  }
+  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer], iceberg: [iceberg, icebergue], immeubles: [immeubles, immeubler], foret: [foret, forester], marmite: [marmite, marmiter] };
   const anim = (nom) => ANIMS[nom] || ANIMS.danse;
   const degrade3 = (c1, c2, c3, titre) => ({ titre: titre || '#ffffff', bas: '', fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/>${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 233) % 1080}" cy="${(i * 397) % 1500}" r="${2 + (i % 3) * 2}" fill="#ffffff" opacity="${0.05 + (i % 4) * 0.03}"/>`).join('')}` });
   const DECORS = { degrade: DEGRADE, espace: ESPACE, ocean: degrade3('#0a6fa8', '#06375e', '#020f1f'), jungle: degrade3('#1f7a3a', '#0d3d22', '#030f08'), desert: degrade3('#e0953a', '#8a3d1c', '#1b0a06'), banquise: degrade3('#6fb8e8', '#2a4f8f', '#0a1330'), ville: degrade3('#2b1a5e', '#14123a', '#05050f'), foret: degrade3('#3f8a4f', '#1b4a35', '#05140d'), volcans: degrade3('#a1231a', '#4a0f14', '#0b0305'), abysses: degrade3('#0b3b5c', '#06203a', '#01060f'), cuisine: degrade3('#e0603a', '#8a2a2a', '#1f0a0e'), livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };

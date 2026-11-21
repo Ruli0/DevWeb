@@ -68,10 +68,10 @@
         "titreFixe": true
       },
       "affichage": "progressif",
-      "animation": "robot",
+      "animation": "immeubles",
       "teaser": {
-        "texte": "La ville de la tour Eiffel",
-        "n": 5,
+        "texte": "La ville qui ne dort jamais",
+        "n": 7,
         "delai": 5.6
       },
       "premiereLettre": true
