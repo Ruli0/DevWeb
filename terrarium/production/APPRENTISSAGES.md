@@ -40,3 +40,9 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 - 122 vues, visionnage moyen 2,6 s (~9 %), 2,59 % de vision complète, 0 interaction. Le relevé de 37 min (15,6 s de moyenne sur 32 vues) n'était pas représentatif : **le démarrage ne retient pas** (la plupart partent en 2-3 s). Ceux qui restent vont au bout (≈3 personnes).
 - À corriger en priorité : les 2 premières secondes (image d'ouverture sans mouvement fort, musique douce au départ dans cette version, aucune accroche). Pistes testées ensuite : musique dynamique dès la 1re seconde, premier indice très facile, finale + question mystère (ces trois ne jouent pas sur les 2 premières secondes à eux seuls).
 - Ne pas conclure sur un relevé de moins de ~100 vues ; attendre 48 h.
+
+## Relevé du 21 nov. 2026 (3 vidéos avec la nouvelle ouverture : première lettre, pops, 5 s par mot)
+- Espace 591 vues / 3 likes / 5,1 s / 6,33 % ; jungle 572 / 1 like + 1 com. / 4,8 s / 6,84 % ; désert 568 / 8 likes + 1 enreg. / 5,0 s / 6,01 %. Avant : 122 vues, 2,6 s, 2,59 %.
+- **L'ouverture a doublé** le visionnage moyen et plus que doublé la vision complète. Les 3 vidéos sont identiques sur ces deux mesures ; seules les interactions diffèrent (désert > espace > jungle).
+- Hypothèse (Jules) : un 1er mot imagé (OASIS) plaît plus qu'un mot de culture (LION). Non prouvée : 1 exemplaire par style, thème/fond/animation/heure différents, interactions très faibles. Décider après 5-6 vidéos de ≥ 500 vues.
+- Goulot restant : le début (~5 s en moyenne sur 24,9 s) ; commentaires ≈ 0 (la question mystère n'est vue que par ~6 % ; ajouter une consigne dans la description et un commentaire épinglé). À obtenir : la courbe « Taux de fidélisation » du désert et du jungle.
