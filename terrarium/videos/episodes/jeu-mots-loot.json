@@ -31,32 +31,62 @@
       ],
       "mots": [
         {
-          "texte": "SCORE",
-          "sens": "h",
-          "ligne": 1,
-          "colonne": 1,
-          "indice": {
-            "texte": "Le nombre de points d'un joueur"
-          },
-          "reponse": {}
-        },
-        {
-          "texte": "ENNEMI",
+          "texte": "BOSS",
           "sens": "v",
           "ligne": 1,
-          "colonne": 5,
+          "colonne": 4,
           "indice": {
-            "texte": "Il veut te faire perdre"
+            "texte": "Le grand méchant de fin de niveau"
           },
           "reponse": {}
         },
         {
-          "texte": "ESQUIVER",
+          "texte": "PIXEL",
+          "sens": "v",
+          "ligne": 2,
+          "colonne": 0,
+          "indice": {
+            "texte": "Le plus petit point d'un écran"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "NIVEAU",
+          "sens": "v",
+          "ligne": 2,
+          "colonne": 6,
+          "indice": {
+            "texte": "Il change quand tu passes au suivant"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ARCADE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 2,
+          "indice": {
+            "texte": "La salle des bornes de jeu"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "LEGENDE",
           "sens": "v",
           "ligne": 0,
-          "colonne": 1,
+          "colonne": 8,
           "indice": {
-            "texte": "Éviter un coup"
+            "texte": "Rareté suprême d'un objet"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "PERSONNAGE",
+          "sens": "h",
+          "ligne": 2,
+          "colonne": 0,
+          "indice": {
+            "texte": "Le héros que tu diriges à l'écran"
           },
           "reponse": {}
         }
@@ -64,29 +94,35 @@
       "muet": {
         "intro": 0.3,
         "cadence": 3,
-        "fin": 7.0,
+        "fin": 6.7,
         "tempo": 108,
         "titreFixe": true,
         "reponses": [
-          11,
-          22,
-          30
+          5.3,
+          10.3,
+          15.3,
+          20.3,
+          25.3,
+          30.3
         ]
       },
       "affichage": "progressif",
       "animation": "blocs",
       "teaser": {
-        "texte": "Il t'en reste trois avant le Game Over",
-        "n": 4,
+        "texte": "Tu la tiens à deux mains pour jouer",
+        "n": 7,
         "delai": 4.6
       },
       "premiereLettre": true,
       "finaleDelai": 2.4,
       "rarete": {
         "couleurs": [
+          "#aab0bd",
+          "#5ad17a",
           "#4da3ff",
           "#b45cff",
-          "#ffcf3a"
+          "#ffcf3a",
+          "#ff5a3c"
         ]
       }
     }

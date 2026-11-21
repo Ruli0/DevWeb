@@ -329,3 +329,6 @@ Demande de Jules : fondue, raclette, tartiflette. TARTIFLETTE (11 lettres) est h
 
 ## 55. Version « rareté » pour un son TikTok (21 nov. 2026)
 Jules veut caler les mots fléchés sur un son TikTok en vogue (« rare, super rare, legendary », 37 s, départ à 0 s). Je ne peux ni écouter ni intégrer le son (licence) : la vidéo est rendue **sans musique ni bruitages** (`musique: aucune`, `reglages.bruitages: 0`) et Jules ajoute le son dans l'appli. Nouvelles options : `muet.reponses` (instants exacts des réponses, ici 11 / 22 / 30 s, à ajuster sur le son) et `rarete.couleurs` (bleu, violet, or : halo plein écran à chaque mot, rayons dorés au dernier). Épisode `jeu-mots-loot` (thème jeux vidéo, 37 s). Instants de départ = hypothèse, à recaler avec les vrais temps du son.
+
+## 56. Version rareté : un mot toutes les 5 s (21 nov. 2026)
+Jules veut un mot toutes les 5 secondes : `jeu-mots-loot` passe à 6 mots (PERSONNAGE en épine, croisé par BOSS, PIXEL, NIVEAU, ARCADE, LEGENDE), réponses à 5,3 / 10,3 / 15,3 / 20,3 / 25,3 / 30,3 s, finale à +2,4 s, question mystère MANETTE à +4,6 s, 37,0 s au total. `rarete.couleurs` accepte N teintes (gris, vert, bleu, violet, or, orange-rouge), halo croissant, rayons dorés sur les deux derniers mots. Toujours sans musique ni bruitages (le son TikTok est ajouté dans l'appli) ; calage sur les vrais temps du son à faire avec Jules.
