@@ -103,7 +103,7 @@ function montage(ep, voixFournie) {
   // Un jeu muet (plan « grille » avec "muet") n'a pas de voix : la ligne de temps est fabriquée ici (accroche, intro, une tranche par mot).
   const planMuet = (ep.plans || []).find((x) => x.plan === 'grille' && x.muet);
   const reglageMuet = planMuet ? Object.assign({ intro: 5, cadence: 10 }, planMuet.muet) : null;
-  const voixBrute = reglageMuet ? { duree: reglageMuet.intro + (planMuet.mots || []).length * reglageMuet.cadence + (reglageMuet.fin == null ? 4 : reglageMuet.fin), mots: [], silences: [], maquette: true, muet: true } : voixFournie;
+  const voixBrute = reglageMuet ? { duree: (reglageMuet.reponses ? reglageMuet.reponses[reglageMuet.reponses.length - 1] : reglageMuet.intro + (planMuet.mots || []).length * reglageMuet.cadence) + (reglageMuet.fin == null ? 4 : reglageMuet.fin), mots: [], silences: [], maquette: true, muet: true } : voixFournie;
   if (!voixBrute) erreurs.push('la voix est introuvable (videos/voix/<id>/mots.json) : prépare-la avec scripts/voix.py, ou fais un jeu muet (plan « grille » avec "muet")');
   const voix = recaler(voixBrute || { duree: 1, mots: [], silences: [] });   // dates de mots recalées sur la parole réelle (voir recalage.js)
   if (ep.version !== 4) erreurs.push('ajoute "version": 4 (chaîne « avis »)');
@@ -242,7 +242,7 @@ function montage(ep, voixFournie) {
     (p.collage || []).forEach((co) => { if (co.a) { co.t = arrondi(Math.max(0, instant(co.a, curseur, ou).t - t0 - 0.1)); delete co.a; } else co.t = 0.4; });
     if (pl.plan === 'grille' && pl.muet) {
       // Jeu muet : la tranche du mot k va de intro + k × cadence à intro + (k + 1) × cadence ; la réponse tombe sur le zéro du minuteur.
-      (p.mots || []).forEach((m, k) => { if (m.indice && m.reponse) { m.indice.t = arrondi(reglageMuet.intro + k * reglageMuet.cadence); m.reponse.t = arrondi(reglageMuet.intro + (k + 1) * reglageMuet.cadence); m.reponse.f = m.reponse.t; } });
+      (p.mots || []).forEach((m, k) => { if (m.indice && m.reponse) { const rp = reglageMuet.reponses; m.indice.t = arrondi(rp ? (k ? rp[k - 1] : reglageMuet.intro) : reglageMuet.intro + k * reglageMuet.cadence); m.reponse.t = arrondi(rp ? rp[k] : reglageMuet.intro + (k + 1) * reglageMuet.cadence); m.reponse.f = m.reponse.t; } });
       if (p.pulse) p.pulse.t = arrondi(Math.max(0, reglageMuet.intro - 1.5));
       p.muetCfg = reglageMuet; delete p.muet;
     } else     def.ancres(p).forEach(([objet, champ]) => {
@@ -351,7 +351,7 @@ function montage(ep, voixFournie) {
     duree, dureeVoix, voix: { muet: !!reglageMuet, id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
       // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.
-      plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? (reglageMuet.tempo || 96) : undefined, muet: !!reglageMuet, paliers: reglageMuet && planMuet.affichage === 'progressif' && planMuet.mots.length >= 3 ? [arrondi(reglageMuet.intro + reglageMuet.cadence + 0.6), arrondi(reglageMuet.intro + (planMuet.mots.length - 1) * reglageMuet.cadence + 0.6)] : undefined },
+      plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? (reglageMuet.tempo || 96) : undefined, muet: !!reglageMuet, paliers: reglageMuet && planMuet.affichage === 'progressif' && planMuet.mots.length >= 3 ? (reglageMuet.reponses ? [arrondi(reglageMuet.reponses[0] + 0.6), arrondi(reglageMuet.reponses[planMuet.mots.length - 2] + 0.6)] : [arrondi(reglageMuet.intro + reglageMuet.cadence + 0.6), arrondi(reglageMuet.intro + (planMuet.mots.length - 1) * reglageMuet.cadence + 0.6)]) : undefined },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
     pauses, sons,
     mots: mots.length, groupes, plans, publication: ep.publication || null,

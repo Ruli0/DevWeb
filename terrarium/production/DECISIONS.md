@@ -326,3 +326,6 @@ Pour comparer avec la série nature/lieux : quatre vidéos de 15,7 s sur des suj
 
 ## 54. Vidéo « fromage » (21 nov. 2026)
 Demande de Jules : fondue, raclette, tartiflette. TARTIFLETTE (11 lettres) est horizontale (11 colonnes × 8 lignes), RACLETTE croise son A, FONDUE son F (case donnée). Scène `fondue` (caquelon, bulles, fourchette qui trempe, finale : grand étirement du fromage puis gouttes dorées), fond `fromage`. Question mystère : EMMENTAL. `finaleDelai` 2,6 s et `teaser.delai` 4,6 s car TARTIFLETTE pose 9 lettres ; durée 16,3 s. Épisode `jeu-mots-fromage-court`.
+
+## 55. Version « rareté » pour un son TikTok (21 nov. 2026)
+Jules veut caler les mots fléchés sur un son TikTok en vogue (« rare, super rare, legendary », 37 s, départ à 0 s). Je ne peux ni écouter ni intégrer le son (licence) : la vidéo est rendue **sans musique ni bruitages** (`musique: aucune`, `reglages.bruitages: 0`) et Jules ajoute le son dans l'appli. Nouvelles options : `muet.reponses` (instants exacts des réponses, ici 11 / 22 / 30 s, à ajuster sur le son) et `rarete.couleurs` (bleu, violet, or : halo plein écran à chaque mot, rayons dorés au dernier). Épisode `jeu-mots-loot` (thème jeux vidéo, 37 s). Instants de départ = hypothèse, à recaler avec les vrais temps du son.
