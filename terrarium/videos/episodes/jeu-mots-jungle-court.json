@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-jungle-court",
+  "titre": "Plus malin qu'un explorateur ? (court)",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "jungle",
+      "titre": "Plus malin qu'un *explorateur* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Explorateur"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "LION",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Le roi de la jungle"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ELEPHANT",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Il a une trompe et de grandes oreilles"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "NENUPHAR",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Fleur qui flotte sur l'eau"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 6.4,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "danse",
+      "teaser": {
+        "texte": "Il se balance de liane en liane",
+        "n": 5,
+        "delai": 4.0
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.0
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

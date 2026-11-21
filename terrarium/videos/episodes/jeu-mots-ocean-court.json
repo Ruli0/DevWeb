@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-ocean-court",
+  "titre": "Plus malin qu'un marin ? (court)",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "ocean",
+      "titre": "Plus malin qu'un *marin* ?",
+      "stades": [
+        "Mousse",
+        "Matelot",
+        "Capitaine"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "CRABE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Il marche de côté"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ECUME",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Elle blanchit au sommet des vagues"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ECAILLE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Elle recouvre la peau du poisson"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 6.4,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "vague",
+      "teaser": {
+        "texte": "Le plus grand animal du monde",
+        "n": 7,
+        "delai": 4.0
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.0
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

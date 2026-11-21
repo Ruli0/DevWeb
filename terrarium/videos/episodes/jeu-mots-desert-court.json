@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-desert-court",
+  "titre": "Plus malin qu'un nomade ? (court)",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "desert",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "OASIS",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Des palmiers et de l'eau au milieu du désert"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "SOLEIL",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Il tape fort à midi"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "SCORPION",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Il pique avec sa queue"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 6.4,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "volcan",
+      "teaser": {
+        "texte": "Le bossu du désert",
+        "n": 7,
+        "delai": 4.0
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.0
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

@@ -39,3 +39,6 @@ Description à coller (vidéos muettes, pas de mention « contenu généré par 
 > #motsfleches #quiz #jeu #defi #culturegenerale #fyp
 
 Épingler un commentaire du même genre. Couverture à ~0,6 s. Ordre conseillé (une par jour, même heure) : volcans, banquise, ville, forêt, abysses, océan, cuisine. Déjà publiées : espace, jungle, désert.
+
+## Test du format court (21 nov. 2026)
+10 vidéos de 15,7 s (`jeu-mots-<thème>-court`), même description générique. Publier à la même heure que les longues, comparer à 24-48 h (≥ 500 vues) : visionnage moyen, % de vision complète, likes, commentaires.

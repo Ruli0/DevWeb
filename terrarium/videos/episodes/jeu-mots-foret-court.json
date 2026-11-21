@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-foret-court",
+  "titre": "Plus malin qu'un garde forestier ? (court)",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "foret",
+      "titre": "Plus malin qu'un *garde forestier* ?",
+      "stades": [
+        "Promeneur",
+        "Randonneur",
+        "Garde forestier"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "CHENE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "L'arbre qui donne des glands"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ECORCE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "La peau de l'arbre"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ECUREUIL",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Il cache des noisettes"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 6.4,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "foret",
+      "teaser": {
+        "texte": "Il hulule la nuit",
+        "n": 5,
+        "delai": 4.0
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.0
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

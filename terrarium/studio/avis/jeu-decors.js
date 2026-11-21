@@ -305,7 +305,7 @@
   // --- Trois animations de plus (volcan, robot, vague) : même gabarit à trois niveaux (T1 : le mot du milieu, T2 : le dernier mot). ---
   const niveaux = (p, t0) => { const N = p.mots.length, mu = p.muetCfg || {}, deb = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0); return { T1: deb(Math.min(1, N - 1)), T2: deb(N - 1) }; };
   // Le finale : l'animation atteint son sommet (décollage, éruption…) 2,4 s après la dernière réponse (les lettres ont fini de tomber), quelques secondes avant la question mystère.
-  const tFinale = (p, t0) => t0 + p.mots[p.mots.length - 1].reponse.t + 2.4;
+  const tFinale = (p, t0) => t0 + p.mots[p.mots.length - 1].reponse.t + (p.finaleDelai == null ? 2.4 : p.finaleDelai);
   // Répète une action finie : fn(u, n) pour u = depart, depart + pas, … tant que u + pas < fin.
   const repete = (depart, fin, pas, fn) => { for (let u = depart, n = 0; u + pas < fin; u += pas, n += 1) fn(u, n); };
   const bornes = (cl, n, f) => Array.from({ length: n }, (_, i) => f(i, `class="${cl}" data-i="${i}"`)).join('');

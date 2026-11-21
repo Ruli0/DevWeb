@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-cuisine-court",
+  "titre": "Plus malin qu'un chef ? (court)",
+  "rubrique": "voyage",
+  "numero": 15,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "cuisine",
+      "titre": "Plus malin qu'un *chef* ?",
+      "stades": [
+        "Marmiton",
+        "Cuisinier",
+        "Chef"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "SOUPE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Elle se mange chaude à la cuillère"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "EPICE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Elle relève le goût d'un plat"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ASSIETTE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "On y pose son repas"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 6.4,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "marmite",
+      "teaser": {
+        "texte": "Il se casse pour faire une omelette",
+        "n": 5,
+        "delai": 4.0
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.0
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

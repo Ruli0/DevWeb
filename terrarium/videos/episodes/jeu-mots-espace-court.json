@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-espace-court",
+  "titre": "Plus malin qu'un astronaute ? (mot par mot) (court)",
+  "rubrique": "voyage",
+  "numero": 14,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "espace",
+      "titre": "Plus malin qu'un *astronaute* ?",
+      "stades": [
+        "Terrien",
+        "Pilote",
+        "Astronaute"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "LUNE",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Au clair de la ..."
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ETOILE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Le Soleil en est une"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "PLANETE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Mars, Vénus et la Terre en sont"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 6.4,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "fusee",
+      "teaser": {
+        "texte": "La planète rouge",
+        "n": 4,
+        "delai": 4.0
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.0
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}
