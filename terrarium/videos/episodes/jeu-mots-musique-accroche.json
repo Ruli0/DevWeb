@@ -8,9 +8,10 @@
   "voix": null,
   "musique": "reverie",
   "reglages": {
-    "musique": 0.6,
+    "musique": 0.3,
     "musiqueSeule": 1.0,
-    "bruitages": 0.5
+    "bruitages": 0.5,
+    "volume": 1.4
   },
   "plans": [
     {
