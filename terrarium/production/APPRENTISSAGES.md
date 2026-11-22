@@ -50,3 +50,9 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 ## Constat du 22 nov. 2026 (déclaré par Jules, sans capture)
 - Les dernières vidéos ne sont montrées qu'à ~150 personnes (contre ~570 pour les trois premières de la série) et ne récoltent qu'un like. Hypothèses (non vérifiées) : signaux faibles sur les vidéos précédentes (≈6 % de vision complète, quasi aucun partage ni commentaire), publications trop rapprochées et très semblables, contenu sans voix ni élément humain.
 - Décision : pause de publication de 2-3 jours, puis analyse sur captures TikTok Studio (fidélisation, spectateurs, sources de trafic, vue d'ensemble 7/28 jours) avant de choisir la prochaine expérience.
+
+## Relevé du 22 nov. 2026 (grille du profil + loot)
+- **Les vues par vidéo** (profil, 22 nov.) : six vidéos à 541-593 vues (cuisine, banquise, volcans, désert, jungle, espace), puis trois à 153-175 (ville/taxi, fromage, loot). Les six premières sont presque identiques : probablement un premier test de ~550 personnes par vidéo ; les trois dernières ont reçu environ 70 % de moins. Hypothèse (non vérifiée) : TikTok a réduit le test après des signaux faibles répétés et des publications rapprochées et semblables.
+- **Loot (37 s, 6 mots, un toutes les 5 s)** : 158 vues, 4 likes (2,5 %, le meilleur taux de la série), visionnage moyen 5,5 s, 2,12 % de vision complète (normal pour 37 s), 0 commentaire ni partage. Peu de vues, donc prudence.
+- Le visionnage moyen reste ≈ 5 s quelle que soit la durée (15,7 s, 24,9 s, 37 s) : le décrochage se fait dans les premières secondes, la durée n'est donc pas la cause principale. À confirmer avec la courbe de fidélisation.
+- Décision en cours : pause de publication ; analyser les courbes avant de relancer.
