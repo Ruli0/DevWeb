@@ -42,3 +42,7 @@ Description à coller (vidéos muettes, pas de mention « contenu généré par 
 
 ## Test du format court (21 nov. 2026)
 10 vidéos de 15,7 s (`jeu-mots-<thème>-court`), même description générique. Publier à la même heure que les longues, comparer à 24-48 h (≥ 500 vues) : visionnage moyen, % de vision complète, likes, commentaires.
+
+## Prochaine publication (22 nov. 2026) : `jeu-mots-desert-rarete`
+Une seule vidéo, pas de série. Ajouter le son TikTok « rare / super rare / legendary » dans l'appli (la vidéo est sans musique), couverture vers 3 s, publier à l'heure des meilleurs résultats passés, commentaire épinglé « Écris le mot mystère ».
+Description : « Tu trouves un mot toutes les 5 secondes ? 🏜️ Du commun au légendaire… Écris le mot mystère de la fin en commentaire 👇 Dis-moi à quel mot tu as bloqué ! #motsfleches #quiz #jeu #defi #legendary #fyp »

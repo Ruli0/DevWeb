@@ -1,0 +1,142 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-desert-rarete",
+  "titre": "Plus malin qu'un nomade ? (rareté, 37 s)",
+  "rubrique": "voyage",
+  "numero": 23,
+  "voix": null,
+  "musique": "aucune",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0,
+    "bruitages": 0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "desert",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "OASIS",
+          "sens": "v",
+          "ligne": 2,
+          "colonne": 2,
+          "indice": {
+            "texte": "Des palmiers et de l'eau au milieu du désert"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "DUNE",
+          "sens": "v",
+          "ligne": 2,
+          "colonne": 0,
+          "indice": {
+            "texte": "Colline façonnée par le vent"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "SABLE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Les grains qui couvrent le désert"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "CARAVANE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 6,
+          "indice": {
+            "texte": "File de chameaux qui traverse le désert"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "MIRAGE",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 8,
+          "indice": {
+            "texte": "Illusion d'eau qui n'existe pas"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "DROMADAIRE",
+          "sens": "h",
+          "ligne": 2,
+          "colonne": 0,
+          "indice": {
+            "texte": "Le chameau à une seule bosse"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 6.7,
+        "tempo": 108,
+        "titreFixe": true,
+        "reponses": [
+          5.3,
+          10.3,
+          15.3,
+          20.3,
+          25.3,
+          30.3
+        ]
+      },
+      "affichage": "progressif",
+      "animation": "dunes",
+      "teaser": {
+        "texte": "Il pique avec sa queue",
+        "n": 8,
+        "delai": 4.6
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.4,
+      "rarete": {
+        "couleurs": [
+          "#aab0bd",
+          "#5ad17a",
+          "#4da3ff",
+          "#b45cff",
+          "#ffcf3a",
+          "#ff5a3c"
+        ]
+      }
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

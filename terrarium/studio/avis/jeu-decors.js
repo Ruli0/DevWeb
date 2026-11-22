@@ -646,7 +646,35 @@
     c.ft(fk, { y: -330 }, { y: 0, duration: 0.7, ease: 'back.out(1.5)' }, tc + 1.5);
     jaillir(c, qa, '.gtt', tc + 1.3, fin, 190, 30);
   }
-  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer], iceberg: [iceberg, icebergue], immeubles: [immeubles, immeubler], foret: [foret, forester], marmite: [marmite, marmiter], vinyle: [vinyle, vinyler], cinema: [cinema, cineaster], stade: [stade, stader], blocs: [blocs, blocser], fondue: [fondue, fonduer] };
+
+  // --- Dunes (désert) : soleil, dunes qui ondulent, vent puis tempête de sable ; finale : la tempête se dissipe et révèle une oasis. ---
+  function dunes() {
+    const grains = bornes('grain', 24, (i, a) => `<ellipse ${a} cx="-60" cy="${60 + (i * 37) % 330}" rx="${12 + (i % 3) * 4}" ry="3" fill="#f1d199" opacity="0"/>`);
+    const palme = (x, sc) => `<g transform="translate(${x} 392) scale(${sc})"><path d="M0 0 C10 -50 -6 -100 8 -150" stroke="#6b4a32" stroke-width="12" fill="none" stroke-linecap="round"/><g class="palmes"><ellipse cx="-34" cy="-160" rx="40" ry="12" fill="#3fa34d" transform="rotate(-25 -34 -160)"/><ellipse cx="46" cy="-160" rx="40" ry="12" fill="#46ad55" transform="rotate(25 46 -160)"/><ellipse cx="6" cy="-180" rx="34" ry="11" fill="#3b9a49" transform="rotate(-80 6 -180)"/><ellipse cx="-12" cy="-150" rx="34" ry="10" fill="#46ad55" transform="rotate(-8 -12 -150)"/></g></g>`;
+    const eclats = bornes('eclat2', 8, (i, a) => `<circle ${a} cx="${420 + i * 34}" cy="${398 + (i % 2) * 8}" r="4" fill="#ffffff" opacity="0"/>`);
+    return `<svg class="danse" viewBox="0 0 1080 420"><circle class="sol2" cx="880" cy="120" r="80" fill="#ffd45c" opacity=".95"/><circle cx="880" cy="120" r="120" fill="#ffd45c" opacity=".18"/>
+      <path class="dn1" d="M-300 330 C -100 270 100 340 320 300 S 700 270 900 320 S 1200 300 1400 320 V 440 H-300Z" fill="#c67a2c"/><path class="dn2" d="M-300 362 C -100 322 150 380 380 346 S 760 330 960 372 S 1250 350 1400 366 V 440 H-300Z" fill="#a8571a"/>
+      <g class="oasis" opacity="0"><ellipse cx="540" cy="400" rx="190" ry="24" fill="#3ec7e8"/><ellipse cx="540" cy="396" rx="150" ry="14" fill="#8fe3f5" opacity=".6"/>${palme(400, 0.9)}${palme(690, 1.05)}${palme(560, 0.7)}${eclats}</g>
+      <path class="dn3" d="M-300 396 C -50 376 200 412 460 392 S 840 380 1080 400 S 1300 392 1400 398 V 440 H-300Z" fill="#7a3a10"/>${grains}<rect class="tempete" x="-100" y="-1500" width="1300" height="1960" fill="#c98a3b" opacity="0"/></svg>`;
+  }
+  function dunader(c, el, p, t0, d) {
+    const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0), stop = Math.min(fin, tc), sol = q('.sol2'), oasis = q('.oasis');
+    gsap.set(sol, { svgOrigin: '880 120' }); gsap.set(oasis, { svgOrigin: '540 410', opacity: 0 }); gsap.set(qa('.grain'), { opacity: 0 }); gsap.set(qa('.eclat2'), { opacity: 0 }); gsap.set(q('.tempete'), { opacity: 0 });
+    qa('.palmes').forEach((pm) => gsap.set(pm, { svgOrigin: '8 -150' }));
+    // Les dunes ondulent en glissant, le soleil grossit et rougit au fil des mots.
+    [q('.dn1'), q('.dn2'), q('.dn3')].forEach((o, j) => { let x = 0; repete(t0, stop, 2.4, (u) => { const L = u >= T2 ? 2 : u >= T1 ? 1 : 0, dx = [26, 40, 60][L] * (j % 2 ? -1 : 1); c.ft(o, { x }, { x: x === 0 ? dx : 0, duration: 2.4, ease: 'sine.inOut' }, u); x = x === 0 ? dx : 0; }); });
+    c.ft(sol, { scale: 1 }, { scale: 1.18, duration: 0.8 }, T1); c.ft(sol, { scale: 1.18, fill: '#ffd45c' }, { scale: 1.35, fill: '#ff9a3c', duration: 0.8 }, T2);
+    // Vent (niveau 1), tempête de sable (niveau 2) : des traits de sable traversent l'écran, le ciel brunit.
+    qa('.grain').forEach((g, j) => { for (let u = T1 + (j % 8) * 0.18; u + 1 < stop; u += (u >= T2 ? 0.9 : 1.8)) { const dur = u >= T2 ? 0.9 : 1.8; c.ft(g, { opacity: 0, x: 0 }, { opacity: 0.75, duration: 0.1 }, u); c.ft(g, { x: 0 }, { x: 1240, duration: dur, ease: 'none' }, u); c.ft(g, { opacity: 0.75 }, { opacity: 0, duration: 0.15 }, u + dur - 0.15); } });
+    c.ft(q('.tempete'), { opacity: 0 }, { opacity: 0.14, duration: 0.8 }, T1); c.ft(q('.tempete'), { opacity: 0.14 }, { opacity: 0.28, duration: 0.8 }, T2);
+    // Finale : la tempête culmine, puis se dissipe et révèle une oasis (palmiers, eau qui scintille).
+    c.ft(q('.tempete'), { opacity: 0.28 }, { opacity: 0.6, duration: 0.6 }, tc); c.ft(q('.tempete'), { opacity: 0.6 }, { opacity: 0, duration: 1.3 }, tc + 0.6);
+    qa('.grain').forEach((g, j) => { for (let u = tc + (j % 6) * 0.1, k = 0; u + 0.7 < Math.min(fin, tc + 1.9); u += 0.6, k += 1) { c.ft(g, { opacity: 0, x: 0 }, { opacity: 0.9, duration: 0.08 }, u); c.ft(g, { x: 0 }, { x: 1240, duration: 0.6, ease: 'none' }, u); c.ft(g, { opacity: 0.9 }, { opacity: 0, duration: 0.1 }, u + 0.5); } });
+    c.ft(oasis, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.9, ease: 'back.out(1.5)' }, tc + 1.1);
+    qa('.palmes').forEach((pm, j) => repete(tc + 2, fin, 0.9, (u, n) => c.ft(pm, { rotation: n % 2 ? 5 : -5 }, { rotation: n % 2 ? -5 : 5, duration: 0.9, ease: 'sine.inOut' }, u)));
+    qa('.eclat2').forEach((e, j) => repete(tc + 2 + (j % 4) * 0.12, fin, 0.7, (u, n) => c.ft(e, { opacity: n % 2 ? 1 : 0.1 }, { opacity: n % 2 ? 0.1 : 1, duration: 0.35 }, u)));
+  }
+  const ANIMS = { danse: [danse, danser], fusee: [fusee, fuser], volcan: [volcan, volcanner], robot: [robot, roboter], vague: [vague, vaguer], iceberg: [iceberg, icebergue], immeubles: [immeubles, immeubler], foret: [foret, forester], marmite: [marmite, marmiter], vinyle: [vinyle, vinyler], cinema: [cinema, cineaster], stade: [stade, stader], blocs: [blocs, blocser], fondue: [fondue, fonduer], dunes: [dunes, dunader] };
   const anim = (nom) => ANIMS[nom] || ANIMS.danse;
   const degrade3 = (c1, c2, c3, titre) => ({ titre: titre || '#ffffff', bas: '', fond: `<defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".55" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#dg)"/>${Array.from({ length: 30 }, (_, i) => `<circle cx="${(i * 233) % 1080}" cy="${(i * 397) % 1500}" r="${2 + (i % 3) * 2}" fill="#ffffff" opacity="${0.05 + (i % 4) * 0.03}"/>`).join('')}` });
   const DECORS = { degrade: DEGRADE, espace: ESPACE, musique: degrade3('#5b1a8c', '#2a0f4c', '#07030f'), cinema: degrade3('#7a1522', '#33080f', '#060203'), stade: degrade3('#12503a', '#0b2a24', '#030b09'), jeux: degrade3('#1b2a6b', '#341a6b', '#06040f'), fromage: degrade3('#d98a1f', '#8a4a0c', '#1f0d04'), ocean: degrade3('#0a6fa8', '#06375e', '#020f1f'), jungle: degrade3('#1f7a3a', '#0d3d22', '#030f08'), desert: degrade3('#e0953a', '#8a3d1c', '#1b0a06'), banquise: degrade3('#6fb8e8', '#2a4f8f', '#0a1330'), ville: degrade3('#2b1a5e', '#14123a', '#05050f'), foret: degrade3('#3f8a4f', '#1b4a35', '#05140d'), volcans: degrade3('#a1231a', '#4a0f14', '#0b0305'), abysses: degrade3('#0b3b5c', '#06203a', '#01060f'), cuisine: degrade3('#e0603a', '#8a2a2a', '#1f0a0e'), livres: LIVRES, plage: PLAGE, 'plage-affiche': AFFICHE, 'plage-geo': GEO, 'plage-carte': CARTE, 'plage-crepuscule': CREPUSCULE, 'livres-bureau': BUREAU, 'livres-biblio': BIBLIO };
