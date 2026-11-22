@@ -831,3 +831,13 @@ test('jeu muet : sans voix ni sous-titres, une tranche de 10 s par mot, intro et
   assert.strictEqual(a.length, b.length); for (let i = 0; i < a.length; i += 1) assert.ok(Number.isFinite(a[i]) && a[i] === b[i]);
   const ind = sons.BRUITAGES['indice.wav'](); assert.ok(ind.length > 0 && Array.from(ind).every(Number.isFinite));
 });
+
+test('voix hors champ : le montage la déclare et baisse la musique sous les clips', () => {
+  const ep = JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname, '../videos/episodes/jeu-mots-musique-accroche.json'), 'utf8'));
+  const M = require('../studio/avis/montage.js');
+  const r = M.monter ? M.monter(ep) : M.montage(ep);
+  const f = r.feuille || r;
+  assert.ok(f.voix.off && f.voix.off.length === 5, 'cinq clips de voix hors champ');
+  assert.ok(f.musique.creux.length >= 3, 'la musique baisse sous la voix');
+  assert.ok(f.duree >= 18.9, 'la vidéo laisse finir la dernière phrase');
+});

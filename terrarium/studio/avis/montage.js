@@ -344,11 +344,14 @@ function montage(ep, voixFournie) {
   // La musique suit la voix : basse quand l'auteur parle (« creux »), plus forte dans les silences.
   const creux = [];
   groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
+  // Voix hors champ posée sur un jeu muet : chaque clip (fichier, instant t, durée) baisse la musique.
+  const voixOff = Array.isArray(ep.voixOff) ? ep.voixOff.filter((v) => v && v.fichier && v.t >= 0 && v.duree > 0) : [];
+  voixOff.forEach((v) => { const d = creux[creux.length - 1]; if (d && v.t - d[1] < 0.9) d[1] = Math.max(d[1], v.t + v.duree); else creux.push([v.t, v.t + v.duree]); });
 
   const feuille = {
     version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', palette: PALETTES[ep.palette] ? ep.palette : S.palette, accent: rub ? (pal.accents[ep.rubrique] || rub.accent) : '#fff', fond: pal.couleurs.fond, texte: pal.couleurs.texte,
-    duree, dureeVoix, voix: { muet: !!reglageMuet, id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume },
+    duree, dureeVoix, voix: { muet: !!reglageMuet, id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume, off: reglageMuet ? voixOff : [] },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
       // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.
       plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? (reglageMuet.tempo || 96) : undefined, muet: !!reglageMuet, paliers: reglageMuet && planMuet.affichage === 'progressif' && planMuet.mots.length >= 3 ? (reglageMuet.reponses ? [arrondi(reglageMuet.reponses[0] + 0.6), arrondi(reglageMuet.reponses[planMuet.mots.length - 2] + 0.6)] : [arrondi(reglageMuet.intro + reglageMuet.cadence + 0.6), arrondi(reglageMuet.intro + (planMuet.mots.length - 1) * reglageMuet.cadence + 0.6)]) : undefined },

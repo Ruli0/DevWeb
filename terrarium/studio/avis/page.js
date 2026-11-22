@@ -221,7 +221,15 @@ function ecrire(f, dossier) {
   });
   f.plans.forEach((pl) => (pl.p.collage || []).forEach((co) => { fs.mkdirSync(path.join(dossier, 'assets/medias'), { recursive: true }); copierMedia(co.image, dossier); }));
   // Un jeu muet n'a pas de voix : une piste silencieuse de la durée de la vidéo.
-  if (f.voix.muet) execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=mono', '-t', String(f.duree), '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
+  if (f.voix.muet) {
+    // Voix hors champ : les clips enregistrés (videos/voix/<id>/<fichier>) sont posés à leur instant sur une piste de silence.
+    const clips = (f.voix.off || []).map((v) => Object.assign({}, v, { chemin: path.join(RACINE, 'videos/voix', f.voix.id, v.fichier) }));
+    clips.forEach((v) => { if (!fs.existsSync(v.chemin)) throw new Error(`voix hors champ : fichier introuvable (${v.chemin})`); });
+    const entrees = ['-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=mono', ...clips.flatMap((v) => ['-i', v.chemin])];
+    const pistes = clips.map((v, i) => `[${i + 1}:a]aresample=48000,aformat=channel_layouts=mono,adelay=${Math.round(v.t * 1000)}:all=1[c${i}]`);
+    const filtre = clips.length ? `${pistes.join(';')};[0:a]${clips.map((_, i) => `[c${i}]`).join('')}amix=inputs=${1 + clips.length}:normalize=0:duration=first,atrim=0:${f.duree}[out]` : '[0:a]atrim=0:' + f.duree + '[out]';
+    execFileSync('ffmpeg', ['-v', 'error', '-y', ...entrees, '-t', String(f.duree), '-filter_complex', filtre, '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
+  }
   else execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', path.join(RACINE, 'videos/voix', f.voix.id, 'propre.flac'), '-filter_complex', filtreVoix(f.voix), '-map', '[out]', '-c:a', 'pcm_s16le', path.join(dossier, 'assets/sons/voix.wav')]);
   // L'orbe suit le vrai rythme de la voix montée : on mesure son énergie, 60 fois par seconde (repli : les mots, déjà dans la feuille).
   if (f.orbe && !f.voix.muet) {
