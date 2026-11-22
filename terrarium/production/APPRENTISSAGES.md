@@ -46,3 +46,7 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 - **L'ouverture a doublé** le visionnage moyen et plus que doublé la vision complète. Les 3 vidéos sont identiques sur ces deux mesures ; seules les interactions diffèrent (désert > espace > jungle).
 - Hypothèse (Jules) : un 1er mot imagé (OASIS) plaît plus qu'un mot de culture (LION). Non prouvée : 1 exemplaire par style, thème/fond/animation/heure différents, interactions très faibles. Décider après 5-6 vidéos de ≥ 500 vues.
 - Goulot restant : le début (~5 s en moyenne sur 24,9 s) ; commentaires ≈ 0 (la question mystère n'est vue que par ~6 % ; ajouter une consigne dans la description et un commentaire épinglé). À obtenir : la courbe « Taux de fidélisation » du désert et du jungle.
+
+## Constat du 22 nov. 2026 (déclaré par Jules, sans capture)
+- Les dernières vidéos ne sont montrées qu'à ~150 personnes (contre ~570 pour les trois premières de la série) et ne récoltent qu'un like. Hypothèses (non vérifiées) : signaux faibles sur les vidéos précédentes (≈6 % de vision complète, quasi aucun partage ni commentaire), publications trop rapprochées et très semblables, contenu sans voix ni élément humain.
+- Décision : pause de publication de 2-3 jours, puis analyse sur captures TikTok Studio (fidélisation, spectateurs, sources de trafic, vue d'ensemble 7/28 jours) avant de choisir la prochaine expérience.
