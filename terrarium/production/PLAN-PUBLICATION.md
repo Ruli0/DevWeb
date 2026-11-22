@@ -46,3 +46,6 @@ Description à coller (vidéos muettes, pas de mention « contenu généré par 
 ## Prochaine publication (22 nov. 2026) : `jeu-mots-desert-rarete`
 Une seule vidéo, pas de série. Ajouter le son TikTok « rare / super rare / legendary » dans l'appli (la vidéo est sans musique), couverture vers 3 s, publier à l'heure des meilleurs résultats passés, commentaire épinglé « Écris le mot mystère ».
 Description : « Tu trouves un mot toutes les 5 secondes ? 🏜️ Du commun au légendaire… Écris le mot mystère de la fin en commentaire 👇 Dis-moi à quel mot tu as bloqué ! #motsfleches #quiz #jeu #defi #legendary #fyp »
+
+## Test d'ouverture : `jeu-mots-musique-accroche` (22 nov. 2026)
+Une seule vidéo, rien d'autre en parallèle. Couverture : la 1re image (l'accroche). Description : « Tu trouves les 3 mots ? 🎶 Écris le mot mystère de la fin en commentaire 👇 #motsfleches #quiz #musique #defi #fyp ». Relevé à 24-48 h : courbe de fidélisation (% à 2 s et à 7 s), visionnage moyen.

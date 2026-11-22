@@ -155,6 +155,8 @@
 .jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
 .jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
 .jeu .barre.prog { display: none; }
+.jeu .accroche { position: absolute; left: 60px; top: 260px; width: 960px; height: 380px; pointer-events: none; }
+.jeu .accroche p { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center; text-align: center; font: 800 128px/1.0 '${P.titre}'; letter-spacing: -.03em; color: #fff; text-shadow: 0 6px 28px #000b; }
 .jeu .rar { position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%, var(--rc) 0%, #0000 72%); opacity: 0; pointer-events: none; }
 .jeu .rayons { position: absolute; left: -300px; top: 100px; width: 1680px; height: 1680px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #ffd45c00 0deg 10deg, #ffd45caa 10deg 20deg); -webkit-mask-image: radial-gradient(circle, #000 0%, #0000 62%); mask-image: radial-gradient(circle, #000 0%, #0000 62%); opacity: 0; pointer-events: none; }
 .jeu .teaser { position: absolute; left: 60px; top: 270px; width: 960px; height: 330px; }
