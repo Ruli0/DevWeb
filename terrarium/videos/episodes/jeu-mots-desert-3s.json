@@ -36,7 +36,7 @@
           "ligne": 0,
           "colonne": 0,
           "indice": {
-            "texte": "Des palmiers et de l'eau au milieu du désert"
+            "texte": "Palmiers et eau en plein désert"
           },
           "reponse": {}
         }
@@ -59,7 +59,8 @@
       "affichage": "progressif",
       "animation": "dunes",
       "premiereLettre": true,
-      "finaleDelai": 0.5
+      "finaleDelai": 0.5,
+      "regle": "3 SECONDES"
     }
   ],
   "publication": {

@@ -368,3 +368,6 @@ Revue des MP4 `jeu-mots-desert-3s` / `jeu-mots-volcan-3s` (planche à 2 i/s, ima
 
 ## 68. Retrait du cadre crème (23 nov. 2026)
 Jules retire le cadre crème de 26 px du thème « papier découpé » (`studio/avis/themes.js`) : l'image va maintenant jusqu'aux bords ; seul le léger vignettage intérieur reste. S'applique à toutes les vidéos rendues à partir de maintenant ; les vidéos déjà publiées gardent leur cadre. Les deux mini-vidéos 3 s sont re-rendues sans cadre.
+
+## 69. Règle affichée et question raccourcie sur les mini-vidéos (23 nov. 2026)
+Pour la première seconde : option de plan `regle` (bandeau doré « 3 SECONDES » avec une icône de chronomètre, 68 px, en haut dès l'image 0) ; question du désert raccourcie à « Palmiers et eau en plein désert » (6 mots, 2 lignes). Appliqué à `jeu-mots-desert-3s` et `jeu-mots-volcan-3s` (5,9 s). « Opti » reste à vérifier sur les chiffres.

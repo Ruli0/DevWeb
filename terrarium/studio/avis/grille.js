@@ -173,6 +173,8 @@
 .jeu .teaser i { display: flex; align-items: center; justify-content: center; flex: 0 1 170px; aspect-ratio: 1; background: #fff6e8; border-radius: 12px; box-shadow: 6px 8px 0 #00000066, 0 0 36px #ffd45c88; }
 .jeu .danse { position: absolute; left: 0; top: 1500px; width: 1080px; height: 420px; overflow: visible; z-index: 1; }
 .jeu .grille, .jeu .bandeau, .jeu .minuteur, .jeu .teaser, .jeu .compte, .jeu .accroche { z-index: 2; }
+.jeu .regle { position: absolute; left: 0; top: 178px; width: 1080px; display: flex; align-items: center; justify-content: center; gap: 16px; z-index: 2; color: #ffd45c; font: 900 68px/1 '${P.titre}'; letter-spacing: .06em; text-shadow: 0 4px 16px #0009; }
+.jeu .regle svg { filter: drop-shadow(0 4px 10px #0009); }
 .jeu .compte { position: absolute; left: 0; top: 620px; width: 1080px; height: 220px; pointer-events: none; }
 .jeu .compte span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 900 190px/1 '${P.titre}'; color: #fff; text-shadow: 0 0 46px #ffd45c, 0 10px 0 #0007; opacity: 0; }
 .jeu .compte span.fin { color: #ff5a3c; text-shadow: 0 0 50px #ff5a3c, 0 10px 0 #0007; }

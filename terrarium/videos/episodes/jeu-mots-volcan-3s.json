@@ -59,7 +59,8 @@
       "affichage": "progressif",
       "animation": "volcan",
       "premiereLettre": true,
-      "finaleDelai": 0.5
+      "finaleDelai": 0.5,
+      "regle": "3 SECONDES"
     }
   ],
   "publication": {
