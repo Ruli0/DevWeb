@@ -357,7 +357,7 @@ function montage(ep, voixFournie) {
       // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.
       plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? (reglageMuet.tempo || 96) : undefined, muet: !!reglageMuet, paliers: reglageMuet && planMuet.affichage === 'progressif' && planMuet.mots.length >= 3 ? (reglageMuet.reponses ? [arrondi(reglageMuet.reponses[0] + 0.6), arrondi(reglageMuet.reponses[planMuet.mots.length - 2] + 0.6)] : [arrondi(reglageMuet.intro + reglageMuet.cadence + 0.6), arrondi(reglageMuet.intro + (planMuet.mots.length - 1) * reglageMuet.cadence + 0.6)]) : undefined },
     // Bruitages : un tic par seconde de compte à rebours, un impact à la fin.
-    pauses, sons,
+    pauses, sons: sons.filter((s) => s.t >= 0),   // un bruitage avant l'instant 0 (ex. tic de minuteur d'un mot très court) est ignoré
     mots: mots.length, groupes, plans, publication: ep.publication || null,
   };
   // L'orbe de voix : "orbe": false dans l'épisode la retire partout ; dans un plan, elle disparaît pendant ce plan. Par plan : un nom d'emplacement
