@@ -49,3 +49,6 @@ Description : « Tu trouves un mot toutes les 5 secondes ? 🏜️ Du commun au 
 
 ## Test d'ouverture : `jeu-mots-musique-accroche` (22 nov. 2026)
 Une seule vidéo, rien d'autre en parallèle. Couverture : la 1re image (l'accroche). Description : « Tu trouves les 3 mots ? 🎶 Écris le mot mystère de la fin en commentaire 👇 #motsfleches #quiz #musique #defi #fyp ». Relevé à 24-48 h : courbe de fidélisation (% à 2 s et à 7 s), visionnage moyen.
+
+## « À quelle lettre tu trouves ? » (23 nov. 2026)
+Publier `jeu-mots-mirage-lettres` seule (le lendemain de la mini-vidéo désert). Commentaire épinglé : « Tu l'as trouvé à quelle lettre ? ». Description : « Une lettre de plus toutes les 2 secondes… tu trouves à laquelle ? 🏜️ #motsfleches #quiz #defi #fyp ». Réserve : `jeu-mots-comete-lettres`. Mesures : vision complète, visionnage moyen en %, et surtout commentaires.

@@ -1,0 +1,84 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-comete-lettres",
+  "titre": "À quelle lettre tu trouves ? (comète)",
+  "rubrique": "voyage",
+  "numero": 33,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "espace",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "COMETE",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Boule de glace à longue queue dans l'espace"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.3
+        ],
+        "reponses": [
+          7.8
+        ],
+        "fin": 3.4,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2,
+          "ordre": [
+            4,
+            2,
+            1
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "fusee",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "À QUELLE LETTRE TU TROUVES ?"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

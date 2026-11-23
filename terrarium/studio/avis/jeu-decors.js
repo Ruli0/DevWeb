@@ -269,7 +269,7 @@
   }
   function fuser(c, el, p, t0, d) {
     const q = (s) => el.querySelector(s), qa = (s) => [...el.querySelectorAll(s)], N = p.mots.length, mu = p.muetCfg || {};
-    const debut = (k) => t0 + p.mots[k].indice.t + (mu && k ? 0.6 : 0), T1 = debut(Math.min(1, N - 1)), T2 = debut(N - 1), fin = t0 + d, tc = tFinale(p, t0);
+    const { T1, T2 } = niveaux(p, t0), fin = t0 + d, tc = tFinale(p, t0);
     const fu = q('.fu'), fl = q('.flam');
     gsap.set(fu, { svgOrigin: '0 0' }); gsap.set(fl, { svgOrigin: '0 -34', scaleY: 0 }); gsap.set(qa('.trait'), { opacity: 0 });
     // Au sol : un léger balancement ; allumage au niveau 1 (tremblements), décollage au niveau 2 (elle monte, vibre fort).

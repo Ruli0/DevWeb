@@ -336,10 +336,13 @@ function montage(ep, voixFournie) {
   plans.filter((x) => x.id === 'grille').forEach((x) => {
     const G = require('./grille.js'), g = G.construire(x.p.mots), neuves = G.nouvelles(g, x.p.mots.length);
     x.p.mots.forEach((m, k) => {
-      const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length - (x.p.premiereLettre && k === 0 ? 1 : 0), x.t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
+      const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length - (x.p.premiereLettre && k === 0 ? 1 : 0) - (x.p.muetCfg && x.p.muetCfg.etapes && k === 0 ? x.p.muetCfg.etapes.ordre.length : 0), x.t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
       H.pose.forEach((t, j) => sons.push({ f: `lettre-${Math.min(8, j + 1)}.wav`, t: arrondi(t - 0.02), v: arrondi(0.3 * reglages.bruitages) }));
       sons.push({ f: 'trouve.wav', t: arrondi(H.fin + 0.12), v: arrondi(0.34 * reglages.bruitages) });
-      if (!(x.p.muetCfg && x.p.muetCfg.chrono)) [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
+      const et = x.p.muetCfg && x.p.muetCfg.etapes && k === 0 ? x.p.muetCfg.etapes : null;
+      // Mode « une lettre de plus » : un chrono par étape (son « ding » tombe sur la nouvelle lettre), un son à chaque lettre-indice.
+      if (et) { const d0 = x.t0 + m.indice.t; for (let j = 0; j <= et.ordre.length; j += 1) sons.push({ f: `chrono-${et.pas}.wav`, t: arrondi(d0 + j * et.pas), v: arrondi(0.45 * reglages.bruitages) }); et.ordre.forEach((_, j) => sons.push({ f: 'lettre-2.wav', t: arrondi(d0 + et.pas * (j + 1) - 0.02), v: arrondi(0.3 * reglages.bruitages) })); }
+      else if (!(x.p.muetCfg && x.p.muetCfg.chrono)) [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
       // Chronomètre : son « ding » tombe sur la première lettre posée (la réponse claque sur le ding).
       else sons.push({ f: `chrono-${x.p.muetCfg.chronoDuree || 5}.wav`, t: arrondi(Math.max(0, (H.pose.length ? H.pose[0] : x.t0 + m.reponse.t) - (x.p.muetCfg.chronoDuree || 5))), v: arrondi(0.5 * reglages.bruitages) });
     });
