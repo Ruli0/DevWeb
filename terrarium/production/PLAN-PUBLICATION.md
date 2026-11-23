@@ -52,3 +52,4 @@ Une seule vidéo, rien d'autre en parallèle. Couverture : la 1re image (l'accro
 
 ## « À quelle lettre tu trouves ? » (23 nov. 2026)
 Publier `jeu-mots-mirage-lettres` seule (le lendemain de la mini-vidéo désert). Commentaire épinglé : « Tu l'as trouvé à quelle lettre ? ». Description : « Une lettre de plus toutes les 2 secondes… tu trouves à laquelle ? 🏜️ #motsfleches #quiz #defi #fyp ». Réserve : `jeu-mots-comete-lettres`. Mesures : vision complète, visionnage moyen en %, et surtout commentaires.
+Ordre ensuite (une par jour) : VOLCANOLOGUE, HIPPOCAMPE, DROMADAIRE (`jeu-mots-*-lettres`). Même commentaire épinglé : « Tu l'as trouvé à quelle lettre ? ».

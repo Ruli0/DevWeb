@@ -86,7 +86,8 @@
   const ZONE = { largeur: 960, haut: 490, hauteur: 770, vide: 8 };
   const ZONE_PROG = { largeur: 960, haut: 640, hauteur: 740, vide: 8 };
   function dims(g, prog) {
-    const Z = prog ? ZONE_PROG : ZONE;
+    // Une seule ligne (jeu d'un seul mot horizontal) : presque toute la largeur, cases plus serrées, pour les mots longs.
+    const Z = prog ? (g.lignes === 1 ? Object.assign({}, ZONE_PROG, { largeur: 1040, vide: 6 }) : ZONE_PROG) : ZONE;
     const pas = Math.max(40, Math.floor(Math.min(Z.largeur / Math.max(1, g.colonnes), Z.hauteur / Math.max(1, g.lignes), 130)));
     const w = g.colonnes * pas - Z.vide, h = g.lignes * pas - Z.vide;
     return { pas, caseTaille: pas - Z.vide, gx: Math.round((1080 - w) / 2), gy: Math.round(Z.haut + (Z.hauteur - h) / 2), w, h };

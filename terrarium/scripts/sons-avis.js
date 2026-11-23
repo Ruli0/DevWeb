@@ -395,6 +395,7 @@ const BRUITAGES = {
   },
   // Le chronomètre de 5 secondes : un tic-tac toutes les 0,5 s (deux timbres qui alternent), puis toutes les 0,25 s sur la dernière seconde et demie, et un petit « ding » à 5,0 s.
   'chrono-5.wav': () => chronometre(5),
+  'chrono-1.6.wav': () => chronometre(1.6),
   'chrono-2.wav': () => chronometre(2),
   'chrono-3.wav': () => chronometre(3),
   'chrono-5-ancien.wav': () => {

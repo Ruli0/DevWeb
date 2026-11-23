@@ -1,0 +1,85 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-hippocampe-lettres",
+  "titre": "À quelle lettre tu trouves ? (hippocampe)",
+  "rubrique": "voyage",
+  "numero": 35,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "ocean",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "HIPPOCAMPE",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Petit poisson à tête de cheval"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.3
+        ],
+        "reponses": [
+          7.8
+        ],
+        "fin": 3.4,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 1.6,
+          "ordre": [
+            9,
+            5,
+            7,
+            4
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "vague",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "À QUELLE LETTRE TU TROUVES ?"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

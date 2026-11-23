@@ -1,0 +1,85 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-volcanologue-lettres",
+  "titre": "À quelle lettre tu trouves ? (volcanologue)",
+  "rubrique": "voyage",
+  "numero": 34,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "volcans",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "VOLCANOLOGUE",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Il étudie les volcans de près"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.3
+        ],
+        "reponses": [
+          7.8
+        ],
+        "fin": 3.4,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 1.6,
+          "ordre": [
+            11,
+            9,
+            3,
+            5
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "volcan",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "À QUELLE LETTRE TU TROUVES ?"
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}
