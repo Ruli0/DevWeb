@@ -155,6 +155,13 @@
 .jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
 .jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
 .jeu .barre.prog { display: none; }
+.jeu .hype { position: absolute; inset: -80px; pointer-events: none; z-index: 60; }
+.jeu .hype .h-fond { position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, #1a0b2ecc 0%, #05030aee 100%); }
+.jeu .hype .hw { position: absolute; left: 80px; width: 1080px; text-align: center; font-family: '${P.titre}'; font-weight: 900; line-height: 1; letter-spacing: -.02em; color: #fff; text-shadow: 0 6px 24px #000a; display: flex; align-items: center; justify-content: center; gap: 24px; }
+.jeu .hype .hw.like { text-shadow: 0 0 46px #ff4fa3, 0 9px 0 #c21866; }
+.jeu .hype .hw.sub { font-weight: 800; color: #ffe9f4; }
+.jeu .hype .hw.feu { background: linear-gradient(#ffe27a 0%, #ff7a2e 55%, #e8281c 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 28px #ff7a2e); }
+.jeu .hype .hw.stamp { color: #ffd45c; text-shadow: 0 8px 0 #8a5a00, 0 0 40px #ffb43c; }
 .jeu .accroche { position: absolute; left: 60px; top: 260px; width: 960px; height: 380px; pointer-events: none; }
 .jeu .accroche p { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center; text-align: center; font: 800 128px/1.0 '${P.titre}'; letter-spacing: -.03em; color: #fff; text-shadow: 0 6px 28px #000b; }
 .jeu .rar { position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%, var(--rc) 0%, #0000 72%); opacity: 0; pointer-events: none; }
