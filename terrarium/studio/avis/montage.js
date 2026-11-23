@@ -340,8 +340,8 @@ function montage(ep, voixFournie) {
       H.pose.forEach((t, j) => sons.push({ f: `lettre-${Math.min(8, j + 1)}.wav`, t: arrondi(t - 0.02), v: arrondi(0.3 * reglages.bruitages) }));
       sons.push({ f: 'trouve.wav', t: arrondi(H.fin + 0.12), v: arrondi(0.34 * reglages.bruitages) });
       if (!(x.p.muetCfg && x.p.muetCfg.chrono)) [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
-      // Chronomètre de 5 s : démarre quand la question apparaît et se termine à la révélation.
-      else sons.push({ f: `chrono-${x.p.muetCfg.chronoDuree || 5}.wav`, t: arrondi(Math.max(0, x.t0 + m.reponse.t - (x.p.muetCfg.chronoDuree || 5))), v: arrondi(0.5 * reglages.bruitages) });
+      // Chronomètre : son « ding » tombe sur la première lettre posée (la réponse claque sur le ding).
+      else sons.push({ f: `chrono-${x.p.muetCfg.chronoDuree || 5}.wav`, t: arrondi(Math.max(0, (H.pose.length ? H.pose[0] : x.t0 + m.reponse.t) - (x.p.muetCfg.chronoDuree || 5))), v: arrondi(0.5 * reglages.bruitages) });
     });
   });
   plans.filter((x) => x.id === 'grille' && x.p.muetCfg && x.p.muetCfg.chrono && x.p.teaser).forEach((x) => { const dernier = x.p.mots[x.p.mots.length - 1], tt = x.t0 + dernier.reponse.t + (x.p.teaser.delai == null ? 5.6 : x.p.teaser.delai); sons.push({ f: 'chrono-5.wav', t: arrondi(tt + 0.4), v: arrondi(0.5 * reglages.bruitages) }); });

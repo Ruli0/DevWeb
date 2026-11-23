@@ -151,7 +151,7 @@
 .jeu .m-nb { position: absolute; inset: 0; display: grid; place-items: center; }
 .jeu .m-nb span { grid-area: 1 / 1; font: 800 36px '${P.titre}'; color: #2a1a14; font-variant-numeric: tabular-nums; }
 .jeu .bandeau.prog { left: 60px; top: 270px; width: 960px; height: 330px; filter: none; }
-.jeu .bandeau.prog .indices p { padding: 34px 135px 0 6px; color: #fff; text-shadow: 0 4px 18px #0008; }
+.jeu .bandeau.prog .indices p { padding: 34px 135px 0 34px; color: #fff; text-shadow: 0 4px 18px #0008; }
 .jeu .bandeau.prog .indices p.i-intro, .jeu .bandeau.prog .indices p.i-fin { font-size: 46px; padding-top: 0; }
 .jeu .bandeau.prog .indices p small { left: 6px; top: 0; color: #d9b8ff; }
 .jeu .barre.prog { display: none; }
@@ -171,7 +171,11 @@
 .jeu .teaser .t-cases { position: absolute; left: 0; top: 400px; width: 960px; display: flex; justify-content: center; gap: 14px; }
 .jeu .teaser i b { font: 800 90px '${P.titre}'; color: #2a1a14; opacity: 0; }
 .jeu .teaser i { display: flex; align-items: center; justify-content: center; flex: 0 1 170px; aspect-ratio: 1; background: #fff6e8; border-radius: 12px; box-shadow: 6px 8px 0 #00000066, 0 0 36px #ffd45c88; }
-.jeu .danse { position: absolute; left: 0; top: 1450px; width: 1080px; height: 420px; overflow: visible; }
+.jeu .danse { position: absolute; left: 0; top: 1500px; width: 1080px; height: 420px; overflow: visible; z-index: 1; }
+.jeu .grille, .jeu .bandeau, .jeu .minuteur, .jeu .teaser, .jeu .compte, .jeu .accroche { z-index: 2; }
+.jeu .compte { position: absolute; left: 0; top: 620px; width: 1080px; height: 220px; pointer-events: none; }
+.jeu .compte span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 900 190px/1 '${P.titre}'; color: #fff; text-shadow: 0 0 46px #ffd45c, 0 10px 0 #0007; opacity: 0; }
+.jeu .compte span.fin { color: #ff5a3c; text-shadow: 0 0 50px #ff5a3c, 0 10px 0 #0007; }
 .jeu .minuteur.prog { top: 300px; }
 .jeu .minuteur.prog .m-fond { stroke: #ffffff33; }
 .jeu .tampon.prog { left: 720px; top: 580px; background: #1a0b2e; }
