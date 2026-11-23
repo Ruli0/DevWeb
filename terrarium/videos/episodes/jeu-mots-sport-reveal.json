@@ -1,0 +1,94 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-sport-reveal",
+  "titre": "Plus malin qu'un coach ? (réponse révélée)",
+  "rubrique": "voyage",
+  "numero": 28,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "stade",
+      "titre": "Plus malin qu'un *coach* ?",
+      "stades": [
+        "Supporter",
+        "Joueur",
+        "Coach"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "FOOT",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "Le sport le plus populaire du monde"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "TRIBUNE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 4,
+          "indice": {
+            "texte": "Les supporters s'y installent"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "EFFORT",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Ce que fait un sportif qui se dépasse"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "fin": 9.2,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "stade",
+      "teaser": {
+        "texte": "Il siffle les fautes",
+        "n": 7,
+        "delai": 4.0,
+        "reponse": "ARBITRE"
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.0
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false
+}

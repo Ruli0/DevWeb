@@ -309,7 +309,8 @@ function montage(ep, voixFournie) {
     } if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
   plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond && x.fond !== 'photo') erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
   if (!plans.length) erreurs.push('aucun plan');
-  if (!ep.essai && (duree < 15 || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre 15 et 75 s`);
+  const dureeMin = reglageMuet ? 10 : 15;   // un jeu muet peut être très court (test de rétention)
+  if (!ep.essai && (duree < dureeMin || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre ${dureeMin} et 75 s`);
 
   // Bruitages : un tic par seconde de compte à rebours et un impact à la fin ; sur un décor 3D, un souffle à chaque
   // changement de mouvement de caméra et, si le décor en a une, son ambiance pendant tout le plan.
