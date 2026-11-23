@@ -55,7 +55,7 @@
         // Petit coup de zoom à l'arrivée, puis une dérive lente du contenu et du décor.
         // Le tout premier plan s'ouvre sur un zoom avant plus marqué (l'accroche) ; "ouverture": "calme" le retire.
         if (i === 0 && f.ouverture !== 'calme') c.ft(el.querySelector('.contenu'), { scale: 1.07 }, { scale: 1, duration: 0.9, ease: 'expo.out' }, 0);
-        else c.ft(el.querySelector('.contenu'), { scale: 1.06 }, { scale: 1, duration: 0.6, ease: 'power3.out' }, pl.t0 + retard);
+        else if (!(i === 0 && f.ouverture === 'calme')) c.ft(el.querySelector('.contenu'), { scale: 1.06 }, { scale: 1, duration: 0.6, ease: 'power3.out' }, pl.t0 + retard);   // « calme » : la première image est déjà l'image finale (couverture nette)
         const decor = el.querySelector('.decor-svg'), photo = el.querySelector('.photo-img');
         if (decor) A.decors[pl.fond].jouer(c, decor, pl.t0, pl.dClip);
         // Le zoom lent part du sujet (« cadrage », en bas de la photo) : un cadrage de 1,22 à 1,32 remonte l'auteur

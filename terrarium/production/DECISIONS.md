@@ -377,3 +377,6 @@ Idée de Jules après la mini-vidéo 3 s (rétention 84-92 %, vision complète 1
 
 ## 71. Mots longs pour « À quelle lettre tu trouves ? » (23 nov. 2026)
 Demande de Jules : des mots plus longs (plus durs à trouver tôt, révélation finale plus forte). Trois vidéos de 11,2 s, une lettre toutes les 1,6 s (`etapes.pas` 1,6, `chrono-1.6.wav`), 4 indices puis 5 à 7 lettres d'un coup : VOLCANOLOGUE (12, volcan : V → …E → …G… → …C… → …N…), HIPPOCAMPE (10, océan), DROMADAIRE (10, désert). Grille d'une seule ligne : largeur utile 1 040 px et cases plus serrées (80 px pour 12 lettres, ~98 px pour 10). Au-delà de 12 lettres, les cases deviendraient trop petites pour un téléphone.
+
+## 72. Grand chrono visible dans « À quelle lettre tu trouves ? » ; première image nette (23 nov. 2026)
+Demande de Jules : un chrono visible. Dans le mode `etapes`, un grand anneau doré (220 px) entre la question et les cases se vide jusqu'à la révélation, avec un chiffre par seconde (8 → 1, les 3 derniers en rouge) et une pulsation à chaque nouvelle lettre ; le petit anneau du coin est masqué dans ce mode. Image 0 : pour un jeu d'un seul mot, plus de « pop » des cases, et `ouverture: "calme"` supprime désormais tout zoom d'entrée sur le premier plan (`lecteur.js`) : la première image (couverture) est identique à l'état stable. Appliqué aux 5 vidéos `*-lettres` et aux 2 vidéos `*-3s`.

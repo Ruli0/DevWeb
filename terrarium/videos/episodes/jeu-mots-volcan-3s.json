@@ -74,5 +74,6 @@
     ],
     "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
   },
-  "orbe": false
+  "orbe": false,
+  "ouverture": "calme"
 }
