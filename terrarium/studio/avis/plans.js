@@ -208,13 +208,13 @@
           gsap.set(fondH, { opacity: 0 }); gsap.set(ws, { opacity: 0 });
           c.ft(fondH, { opacity: 0 }, { opacity: 1, duration: 0.2 }, th - 0.05); c.ft(fondH, { opacity: 1 }, { opacity: 0, duration: 0.3 }, fin);
           p.hype.mots.forEach((w, i) => {
-            const e = ws[i], a = th + w.t, sortie = th + (w.sortie == null ? p.hype.duree : w.sortie);
+            const e = ws[i], a = th + w.t, sortie = th + (w.sortie == null ? p.hype.duree - 0.12 : w.sortie);
             if (w.style === 'stamp') c.ft(e, { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'power3.in' }, a);
             else if (w.style === 'sub') c.ft(e, { opacity: 0, y: 60, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: 'back.out(2)' }, a);
             else c.ft(e, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.4)' }, a);
             if (w.style === 'like') { const cs = q(e, '.coeur'); if (cs) for (let u2 = a + 0.3, k = 0; u2 + 0.3 < sortie; u2 += 0.3, k += 1) c.ft(cs, { scale: k % 2 ? 1.2 : 1 }, { scale: k % 2 ? 1 : 1.2, duration: 0.3, ease: 'sine.inOut' }, u2); }
             if (w.style === 'feu') for (let u2 = a + 0.3, k = 0; u2 + 0.06 < sortie; u2 += 0.06, k += 1) c.ft(e, { x: k % 2 ? -7 : 7, y: k % 3 ? 3 : -3 }, { x: k % 2 ? 7 : -7, y: k % 3 ? -3 : 3, duration: 0.06, ease: 'none' }, u2);
-            if (w.sortie != null) c.ft(e, { opacity: 1 }, { opacity: 0, duration: 0.18 }, sortie);
+            c.ft(e, { opacity: 1 }, { opacity: 0, duration: 0.2 }, sortie);   // chaque mot s'efface avant la fin du calque : rien ne reste sur la grille
           });
         }
         // La fin « teaser » : la grille s'efface, une nouvelle question arrive avec ses cases vides et son minuteur ; la vidéo coupe avant la réponse (et reboucle sur la première question).

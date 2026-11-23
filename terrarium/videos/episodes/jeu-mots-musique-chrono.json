@@ -10,7 +10,7 @@
   "reglages": {
     "musique": 0.3,
     "musiqueSeule": 1.0,
-    "volume": 1.4,
+    "volume": 1.7,
     "bruitages": 1.0
   },
   "plans": [
@@ -42,12 +42,12 @@
           "reponse": {}
         },
         {
-          "texte": "ECOUTER",
+          "texte": "ACCORD",
           "sens": "v",
           "ligne": 0,
           "colonne": 1,
           "indice": {
-            "texte": "Ce qu'on fait avec des écouteurs"
+            "texte": "Plusieurs notes jouées en même temps"
           },
           "reponse": {}
         },
@@ -67,13 +67,13 @@
         "cadence": 5,
         "debuts": [
           0.3,
-          5.3,
-          14.4
+          10.2,
+          17.2
         ],
         "reponses": [
           5.3,
-          11.1,
-          20.2
+          16.0,
+          23.0
         ],
         "fin": 11.1,
         "tempo": 108,
@@ -91,7 +91,7 @@
       "premiereLettre": true,
       "finaleDelai": 2.2,
       "hype": {
-        "t": 11.5,
+        "t": 7.2,
         "duree": 2.75,
         "mots": [
           {
@@ -156,23 +156,23 @@
       "duree": 1.49
     },
     {
-      "fichier": "ligne-2.wav",
-      "t": 6.3,
-      "duree": 1.93
-    },
-    {
       "fichier": "ligne-3.wav",
-      "t": 11.5,
+      "t": 7.2,
       "duree": 2.73
     },
     {
+      "fichier": "ligne-2.wav",
+      "t": 11.2,
+      "duree": 1.93
+    },
+    {
       "fichier": "ligne-4.wav",
-      "t": 15.4,
+      "t": 18.2,
       "duree": 3.62
     },
     {
       "fichier": "ligne-5.wav",
-      "t": 24.6,
+      "t": 27.4,
       "duree": 3.83
     }
   ]
