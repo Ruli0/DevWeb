@@ -104,5 +104,32 @@
     "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
   },
   "orbe": false,
-  "voixGeneree": true
+  "voixGeneree": true,
+  "voixOff": [
+    {
+      "fichier": "ligne-1.wav",
+      "t": 0.5,
+      "duree": 1.49
+    },
+    {
+      "fichier": "ligne-2.wav",
+      "t": 6.3,
+      "duree": 1.93
+    },
+    {
+      "fichier": "ligne-3.wav",
+      "t": 11.5,
+      "duree": 2.73
+    },
+    {
+      "fichier": "ligne-4.wav",
+      "t": 15.4,
+      "duree": 3.62
+    },
+    {
+      "fichier": "ligne-5.wav",
+      "t": 24.6,
+      "duree": 3.83
+    }
+  ]
 }
