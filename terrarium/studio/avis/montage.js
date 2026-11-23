@@ -309,7 +309,7 @@ function montage(ep, voixFournie) {
     } if (x.d < 1.2) erreurs.push(`plan ${i + 1} (${x.id}) : ${x.d} s à l’écran, c’est trop court (au moins 1,2 s)`); });
   plans.forEach((x, i) => { if (i && x.fond === plans[i - 1].fond && x.fond !== 'photo') erreurs.push(`plan ${i + 1} (${x.id}) : même fond « ${x.fond} » que le plan précédent : change "fond"`); });
   if (!plans.length) erreurs.push('aucun plan');
-  const dureeMin = reglageMuet ? 10 : 15;   // un jeu muet peut être très court (test de rétention)
+  const dureeMin = reglageMuet ? 5 : 15;   // un jeu muet peut être très court (test de rétention)
   if (!ep.essai && (duree < dureeMin || duree > 75)) erreurs.push(`durée ${duree} s : il faut entre ${dureeMin} et 75 s`);
 
   // Bruitages : un tic par seconde de compte à rebours et un impact à la fin ; sur un décor 3D, un souffle à chaque
@@ -341,7 +341,7 @@ function montage(ep, voixFournie) {
       sons.push({ f: 'trouve.wav', t: arrondi(H.fin + 0.12), v: arrondi(0.34 * reglages.bruitages) });
       if (!(x.p.muetCfg && x.p.muetCfg.chrono)) [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
       // Chronomètre de 5 s : démarre quand la question apparaît et se termine à la révélation.
-      else sons.push({ f: 'chrono-5.wav', t: arrondi(Math.max(0, x.t0 + m.reponse.t - 5)), v: arrondi(0.5 * reglages.bruitages) });
+      else sons.push({ f: `chrono-${x.p.muetCfg.chronoDuree || 5}.wav`, t: arrondi(Math.max(0, x.t0 + m.reponse.t - (x.p.muetCfg.chronoDuree || 5))), v: arrondi(0.5 * reglages.bruitages) });
     });
   });
   plans.filter((x) => x.id === 'grille' && x.p.muetCfg && x.p.muetCfg.chrono && x.p.teaser).forEach((x) => { const dernier = x.p.mots[x.p.mots.length - 1], tt = x.t0 + dernier.reponse.t + (x.p.teaser.delai == null ? 5.6 : x.p.teaser.delai); sons.push({ f: 'chrono-5.wav', t: arrondi(tt + 0.4), v: arrondi(0.5 * reglages.bruitages) }); });

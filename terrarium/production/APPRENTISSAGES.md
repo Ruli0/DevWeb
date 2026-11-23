@@ -56,3 +56,8 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 - **Loot (37 s, 6 mots, un toutes les 5 s)** : 158 vues, 4 likes (2,5 %, le meilleur taux de la série), visionnage moyen 5,5 s, 2,12 % de vision complète (normal pour 37 s), 0 commentaire ni partage. Peu de vues, donc prudence.
 - Le visionnage moyen reste ≈ 5 s quelle que soit la durée (15,7 s, 24,9 s, 37 s) : le décrochage se fait dans les premières secondes, la durée n'est donc pas la cause principale. À confirmer avec la courbe de fidélisation.
 - Décision en cours : pause de publication ; analyser les courbes avant de relancer.
+
+## Relevé du 23 nov. 2026 : `jeu-mots-musique-chrono` (chrono + voix clonée, 34 s)
+- 4 h après publication : 151 vues, visionnage moyen 5,6 s (16 %), vision complète 4,49 %, 4 likes (2,6 %), 0 commentaire / partage / enregistrement, 0 follower. À 50 min (53 vues) : 3,3 s et 0 % : les premiers relevés d'une vidéo ne sont pas représentatifs.
+- Aucune des variantes testées (accroche, durée 13-37 s, voix, annonce, chrono, réponse révélée, grille complète) n'a dépassé ~5,6 s de visionnage moyen ; la portée de départ reste à ~150 vues. Le visionnage moyen est stable (~5 s) quelle que soit la durée : une vidéo longue plafonne donc à 15 % de visionnage.
+- Hypothèse du test suivant : une vidéo très courte (≈ 7 s, un seul mot, chrono de 3 s, réponse, boucle) peut monter la vision complète (seul signal qui reste faible), à vérifier sur ≥ 150 vues.

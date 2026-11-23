@@ -112,7 +112,7 @@
       textes: (p) => [p.titre, ...(p.mots || []).map((m) => m.indice && m.indice.texte)],
       valider(p) {
         const e = GR.construire(p.mots).erreurs.slice();
-        if ((p.mots || []).length < 3 || (p.mots || []).length > 6) e.push('le jeu prévoit de trois à six mots qui se croisent');
+        if ((p.mots || []).length < (p.affichage === 'progressif' ? 1 : 3) || (p.mots || []).length > 6) e.push('le jeu prévoit de trois à six mots qui se croisent (un seul mot est permis en affichage progressif)');
         (p.mots || []).forEach((m, k) => {
           if (!m.indice || !m.indice.texte || (!m.indice.a && !p.muet)) e.push(`mot ${k + 1} : "indice": { "texte", "a" }`);
           if (!m.reponse || (!m.reponse.a && !p.muet)) e.push(`mot ${k + 1} : "reponse": { "a" } (le mot dit par l’orbe)`);

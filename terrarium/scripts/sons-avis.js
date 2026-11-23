@@ -346,6 +346,21 @@ function vive(style = 'funk', { duree = 30, plein, tempo, paliers } = {}) {
 }
 
 // --- Les bruitages calés sur l'image --------------------------------------------------
+// Un chronomètre de `duree` secondes : un tic-tac toutes les 0,5 s, puis toutes les 0,25 s sur la dernière seconde et demie, et un « ding » à la fin.
+function chronometre(duree) {
+  const { tampon, sinus, bruit, enveloppe, graine } = O();
+  const b = tampon(duree + 0.6), accel = Math.max(0, duree - 1.5);
+  const instants = []; for (let t = 0; t < accel; t += 0.5) instants.push(t); for (let t = accel; t < duree; t += 0.25) instants.push(t);
+  instants.forEach((t, i) => {
+    const f = i % 2 ? 1500 : 2000;
+    sinus(b, () => f, (x) => 0.55 * enveloppe(x, 0.001, 0.025), t, 'sin', 0.14);
+    bruit(b, (x) => 0.4 * enveloppe(x, 0.0004, 0.009), { bas: 2200, haut: 9500, debut: t, hasard: graine(300 + i), duree: 0.05 });
+  });
+  sinus(b, () => 1320, (x) => 0.45 * enveloppe(x, 0.002, 0.45), duree, 'sin', 0.6);
+  sinus(b, () => 1980, (x) => 0.22 * enveloppe(x, 0.002, 0.3), duree, 'sin', 0.5);
+  return b;
+}
+
 const BRUITAGES = {
   'indicatif.wav': (cle) => indicatif(cle),
   'indicatif-court.wav': (cle) => indicatif(cle, { court: true }),
@@ -379,7 +394,9 @@ const BRUITAGES = {
     return reverbe(b, 0.28);
   },
   // Le chronomètre de 5 secondes : un tic-tac toutes les 0,5 s (deux timbres qui alternent), puis toutes les 0,25 s sur la dernière seconde et demie, et un petit « ding » à 5,0 s.
-  'chrono-5.wav': () => {
+  'chrono-5.wav': () => chronometre(5),
+  'chrono-3.wav': () => chronometre(3),
+  'chrono-5-ancien.wav': () => {
     const { tampon, sinus, bruit, enveloppe, graine } = O();
     const b = tampon(5.6);
     const instants = []; for (let t = 0; t < 3.5; t += 0.5) instants.push(t); for (let t = 3.5; t < 5; t += 0.25) instants.push(t);
