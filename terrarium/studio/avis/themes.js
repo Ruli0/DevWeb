@@ -17,12 +17,12 @@ module.exports = {
     mot: (f, c) => ({ pale: 0.4, actif: { backgroundColor: f.accent, color: c.fond }, dit: { backgroundColor: 'rgba(0,0,0,0)', color: c.texte }, fort: f.accent }),
   },
   // LE STYLE DU COMPTE, choisi par l'auteur le 16 nov. 2026 (« le papier découpé mais avec des couleurs plus vives comme le néon »).
-  // Papier découpé : cadre crème, calques avec une ombre nette, étiquettes de papier posées de travers.
+  // Papier découpé : calques avec une ombre nette, étiquettes de papier posées de travers (le cadre crème a été retiré).
   decoupe: {
-    description: 'Papier découpé : cadre crème autour de l’image, calques du décor avec une ombre nette, sous-titres sur une étiquette de papier un peu de travers.',
+    description: 'Papier découpé : calques du décor avec une ombre nette, sous-titres sur une étiquette de papier un peu de travers.',
     polices: ['bricolage-grotesque-latin-800-normal.woff2'],
     css: (f, c) => `${police('Bricolage Grotesque', 'bricolage-grotesque-latin-800-normal.woff2', 800)}
-#root::after { content: ''; position: absolute; inset: 0; border: 26px solid ${c.texte}; z-index: 97; pointer-events: none; box-shadow: inset 0 0 0 3px ${c.fond}22, inset 0 0 90px #00000055; }
+#root::after { content: ''; position: absolute; inset: 0; z-index: 97; pointer-events: none; box-shadow: inset 0 0 90px #00000055; }   /* plus de cadre crème (retiré à la demande de Jules, 23 nov. 2026) : seul le léger vignettage reste */
 .decor-svg, .photo-img { filter: saturate(1.4) contrast(1.12); }
 .decor-3d { filter: saturate(1.15) contrast(1.06); }
 .decor-svg .milieu, .decor-svg .pres { filter: drop-shadow(0 16px 0 #00000040); }
