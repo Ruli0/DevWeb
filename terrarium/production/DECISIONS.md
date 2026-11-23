@@ -380,3 +380,6 @@ Demande de Jules : des mots plus longs (plus durs à trouver tôt, révélation 
 
 ## 72. Grand chrono visible dans « À quelle lettre tu trouves ? » ; première image nette (23 nov. 2026)
 Demande de Jules : un chrono visible. Dans le mode `etapes`, un grand anneau doré (220 px) entre la question et les cases se vide jusqu'à la révélation, avec un chiffre par seconde (8 → 1, les 3 derniers en rouge) et une pulsation à chaque nouvelle lettre ; le petit anneau du coin est masqué dans ce mode. Image 0 : pour un jeu d'un seul mot, plus de « pop » des cases, et `ouverture: "calme"` supprime désormais tout zoom d'entrée sur le premier plan (`lecteur.js`) : la première image (couverture) est identique à l'état stable. Appliqué aux 5 vidéos `*-lettres` et aux 2 vidéos `*-3s`.
+
+## 73. Carte d'introduction « TROUVE LE MOT » (23 nov. 2026)
+Demande de Jules : une phrase d'introduction en gros sur le décor seul, puis la vidéo telle quelle. Option de plan `intro {texte, duree}` : un calque avec le fond du décor (la scène du bas reste visible) et le texte en très gros (170 px, deux lignes « TROUVE / LE MOT »), visible dès l'image 0 (couverture), léger zoom, puis fondu de 0,18 s ; toute la ligne de temps du jeu est décalée de 1,2 s (`muet.debuts` 1,5 s, `muet.reponses` 9,0 s). Appliqué aux 5 vidéos `*-lettres` (12,4 s).

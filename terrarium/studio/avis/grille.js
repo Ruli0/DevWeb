@@ -177,6 +177,9 @@
 .jeu .regle { position: absolute; left: 0; top: 178px; width: 1080px; display: flex; align-items: center; justify-content: center; gap: 16px; z-index: 2; color: #ffd45c; font: 900 68px/1 '${P.titre}'; letter-spacing: .06em; text-shadow: 0 4px 16px #0009; }
 .jeu .regle svg { filter: drop-shadow(0 4px 10px #0009); }
 .jeu .minuteur.cache { display: none; }
+.jeu .intro-jeu { position: absolute; left: 0; top: 0; width: 1080px; height: 1440px; overflow: hidden; z-index: 5; pointer-events: none; }
+.jeu .intro-jeu svg { position: absolute; left: 0; top: 0; }
+.jeu .intro-jeu p { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 60px; font: 900 170px/0.98 '${P.titre}'; letter-spacing: -.02em; color: #fff; text-shadow: 0 0 50px #ffd45c, 0 10px 0 #0007; }
 .jeu .chronog { position: absolute; left: 430px; top: 660px; width: 220px; height: 220px; z-index: 2; pointer-events: none; transform-origin: 50% 50%; }
 .jeu .chronog svg { position: absolute; inset: 0; transform: rotate(-90deg); }
 .jeu .chronog circle { fill: none; stroke-width: 16; }

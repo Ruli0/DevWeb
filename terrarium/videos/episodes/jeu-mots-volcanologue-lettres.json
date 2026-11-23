@@ -45,10 +45,10 @@
         "intro": 0.3,
         "cadence": 3,
         "debuts": [
-          0.3
+          1.5
         ],
         "reponses": [
-          7.8
+          9.0
         ],
         "fin": 3.4,
         "tempo": 108,
@@ -67,7 +67,11 @@
       "animation": "volcan",
       "premiereLettre": true,
       "finaleDelai": 0.5,
-      "regle": "À QUELLE LETTRE TU TROUVES ?"
+      "regle": "À QUELLE LETTRE TU TROUVES ?",
+      "intro": {
+        "texte": "TROUVE\nLE MOT",
+        "duree": 1.2
+      }
     }
   ],
   "publication": {
