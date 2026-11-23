@@ -378,6 +378,20 @@ const BRUITAGES = {
     [72, 76, 79, 84].forEach((n, i) => TIMBRES.cloche(b, note(n), i * 0.06, 0.32, 0.8));
     return reverbe(b, 0.28);
   },
+  // Le chronomètre de 5 secondes : un tic-tac toutes les 0,5 s (deux timbres qui alternent), puis toutes les 0,25 s sur la dernière seconde et demie, et un petit « ding » à 5,0 s.
+  'chrono-5.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(5.6);
+    const instants = []; for (let t = 0; t < 3.5; t += 0.5) instants.push(t); for (let t = 3.5; t < 5; t += 0.25) instants.push(t);
+    instants.forEach((t, i) => {
+      const f = i % 2 ? 1500 : 2000;
+      sinus(b, () => f, (x) => 0.55 * enveloppe(x, 0.001, 0.025), t, 'sin', 0.14);
+      bruit(b, (x) => 0.4 * enveloppe(x, 0.0004, 0.009), { bas: 2200, haut: 9500, debut: t, hasard: graine(300 + i), duree: 0.05 });
+    });
+    sinus(b, () => 1320, (x) => 0.45 * enveloppe(x, 0.002, 0.45), 5.0, 'sin', 0.6);
+    sinus(b, () => 1980, (x) => 0.22 * enveloppe(x, 0.002, 0.3), 5.0, 'sin', 0.5);
+    return b;
+  },
   'tic-jeu.wav': () => {
     const { tampon, sinus, bruit, enveloppe, graine } = O();
     const b = tampon(0.25);

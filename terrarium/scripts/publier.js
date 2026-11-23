@@ -18,7 +18,7 @@ function preparer(ep, voix, { rendu } = {}) {
   aEcrire(ep.publication, 'le texte de publication');
   if (ep.publication && !nu(ep.publication.texte) && !ep.publication._a_ecrire) bloquants.push('le texte de publication est vide');
   if (voix && voix.maquette) bloquants.push('la voix est une maquette muette : enregistre ta voix (ou génère-la) avant le rendu final');
-  if (voix && voix.muet) rappels.push('Version muette : aucune voix, donc pas de mention « contenu généré par IA » à cocher. Ajoute un son de la bibliothèque de TikTok si tu veux de la musique plus connue.');
+  if (voix && voix.muet && !(voix.off && voix.off.length)) rappels.push('Version muette : aucune voix, donc pas de mention « contenu généré par IA » à cocher. Ajoute un son de la bibliothèque de TikTok si tu veux de la musique plus connue.');
   if (voix && voix.generee) rappels.push('Voix générée par IA : coche « contenu généré par IA » à la publication. Ta vraie voix reste préférable.');
   if ((ep.plans || []).some((p) => p.fond === 'photo' || (p.collage || []).length)) rappels.push('Ta photo apparaît dans la vidéo : vérifie que tu es d’accord pour la montrer, et qu’elle ne révèle rien de privé (lieu, plaque, visage d’un tiers).');
   if (['travail', 'relations'].includes(ep.rubrique)) rappels.push('Sujet d’opinion : présente-le comme ton avis, sans chiffre ni source que tu n’as pas vérifiés.');

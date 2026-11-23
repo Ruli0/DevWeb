@@ -1,0 +1,108 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "jeu-mots-musique-chrono",
+  "titre": "Plus malin qu'un DJ ? (chrono)",
+  "rubrique": "voyage",
+  "numero": 29,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 0.3,
+    "musiqueSeule": 1.0,
+    "volume": 1.4,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "musique",
+      "titre": "Plus malin qu'un *DJ* ?",
+      "stades": [
+        "Fan",
+        "Choriste",
+        "DJ"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "CHANT",
+          "sens": "h",
+          "ligne": 1,
+          "colonne": 1,
+          "indice": {
+            "texte": "On le fait sous la douche"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "ECOUTER",
+          "sens": "v",
+          "ligne": 0,
+          "colonne": 1,
+          "indice": {
+            "texte": "Ce qu'on fait avec des écouteurs"
+          },
+          "reponse": {}
+        },
+        {
+          "texte": "TIMBRE",
+          "sens": "v",
+          "ligne": 1,
+          "colonne": 5,
+          "indice": {
+            "texte": "Ce qui distingue le son d'une guitare de celui d'un piano"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 5,
+        "debuts": [
+          0.3,
+          5.3,
+          14.4
+        ],
+        "reponses": [
+          5.3,
+          11.1,
+          20.2
+        ],
+        "fin": 11.1,
+        "tempo": 108,
+        "chrono": true,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "vinyle",
+      "teaser": {
+        "texte": "L'instrument aux 88 touches",
+        "n": 5,
+        "delai": 4.0,
+        "reponse": "PIANO"
+      },
+      "premiereLettre": true,
+      "finaleDelai": 2.2
+    }
+  ],
+  "publication": {
+    "texte": "Plus malin qu'un Robinson ? 🏝️ 3 mots, 8 secondes chacun. Ton score en commentaire 👇",
+    "hashtags": [
+      "#motsfleches",
+      "#quiz",
+      "#plage",
+      "#vacances",
+      "#defi"
+    ],
+    "commentaire": "Touriste, marin ou Robinson ? Ton score en commentaire 👇"
+  },
+  "orbe": false,
+  "voixGeneree": true
+}

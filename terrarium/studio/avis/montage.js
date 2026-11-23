@@ -242,7 +242,7 @@ function montage(ep, voixFournie) {
     (p.collage || []).forEach((co) => { if (co.a) { co.t = arrondi(Math.max(0, instant(co.a, curseur, ou).t - t0 - 0.1)); delete co.a; } else co.t = 0.4; });
     if (pl.plan === 'grille' && pl.muet) {
       // Jeu muet : la tranche du mot k va de intro + k × cadence à intro + (k + 1) × cadence ; la réponse tombe sur le zéro du minuteur.
-      (p.mots || []).forEach((m, k) => { if (m.indice && m.reponse) { const rp = reglageMuet.reponses; m.indice.t = arrondi(rp ? (k ? rp[k - 1] : reglageMuet.intro) : reglageMuet.intro + k * reglageMuet.cadence); m.reponse.t = arrondi(rp ? rp[k] : reglageMuet.intro + (k + 1) * reglageMuet.cadence); m.reponse.f = m.reponse.t; } });
+      (p.mots || []).forEach((m, k) => { if (m.indice && m.reponse) { const rp = reglageMuet.reponses, db = reglageMuet.debuts; m.indice.t = arrondi(db ? db[k] : rp ? (k ? rp[k - 1] : reglageMuet.intro) : reglageMuet.intro + k * reglageMuet.cadence); m.reponse.t = arrondi(rp ? rp[k] : reglageMuet.intro + (k + 1) * reglageMuet.cadence); m.reponse.f = m.reponse.t; } });
       if (p.pulse) p.pulse.t = arrondi(Math.max(0, reglageMuet.intro - 1.5));
       p.muetCfg = reglageMuet; delete p.muet;
     } else     def.ancres(p).forEach(([objet, champ]) => {
@@ -339,9 +339,12 @@ function montage(ep, voixFournie) {
       const H = G.horaires(x.t0 + m.reponse.t, neuves[k].length - (x.p.premiereLettre && k === 0 ? 1 : 0), x.t0 + (m.reponse.f == null ? m.reponse.t : m.reponse.f));
       H.pose.forEach((t, j) => sons.push({ f: `lettre-${Math.min(8, j + 1)}.wav`, t: arrondi(t - 0.02), v: arrondi(0.3 * reglages.bruitages) }));
       sons.push({ f: 'trouve.wav', t: arrondi(H.fin + 0.12), v: arrondi(0.34 * reglages.bruitages) });
-      [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
+      if (!(x.p.muetCfg && x.p.muetCfg.chrono)) [3, 2, 1].forEach((r) => sons.push({ f: 'tic-jeu.wav', t: arrondi(x.t0 + m.reponse.t - r), v: arrondi(0.22 * reglages.bruitages) }));
+      // Chronomètre de 5 s : démarre quand la question apparaît et se termine à la révélation.
+      else sons.push({ f: 'chrono-5.wav', t: arrondi(Math.max(0, x.t0 + m.reponse.t - 5)), v: arrondi(0.5 * reglages.bruitages) });
     });
   });
+  plans.filter((x) => x.id === 'grille' && x.p.muetCfg && x.p.muetCfg.chrono && x.p.teaser).forEach((x) => { const dernier = x.p.mots[x.p.mots.length - 1], tt = x.t0 + dernier.reponse.t + (x.p.teaser.delai == null ? 5.6 : x.p.teaser.delai); sons.push({ f: 'chrono-5.wav', t: arrondi(tt + 0.4), v: arrondi(0.5 * reglages.bruitages) }); });
   // La musique suit la voix : basse quand l'auteur parle (« creux »), plus forte dans les silences.
   const creux = [];
   groupes.forEach((g) => { const d = creux[creux.length - 1]; if (d && g.t0 - d[1] < 0.9) d[1] = g.t1; else creux.push([g.t0, g.t1]); });
@@ -352,7 +355,7 @@ function montage(ep, voixFournie) {
   const feuille = {
     version: 4, format: 'avis', theme: ep.theme && THEMES[ep.theme] ? ep.theme : 'decoupe', aspect3d: ep.aspect3d === 'decoupe' ? 'decoupe' : 'doux', ouverture: ep.ouverture === 'calme' ? 'calme' : 'vive', allure: PERSO.ALLURES[ep.allure] ? ep.allure : S.personnage, id: ep.id, titre: ep.titre || ep.id, numero: ep.numero || 1,
     rubrique: rub ? rub.nom : '', palette: PALETTES[ep.palette] ? ep.palette : S.palette, accent: rub ? (pal.accents[ep.rubrique] || rub.accent) : '#fff', fond: pal.couleurs.fond, texte: pal.couleurs.texte,
-    duree, dureeVoix, voix: { muet: !!reglageMuet, id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume, off: reglageMuet ? voixOff : [] },
+    duree, dureeVoix, voix: { muet: !!reglageMuet, id: ep.voix || ep.id, garde, pauses: pausesVoix, vitesse: reglages.vitesse, volume: reglages.volume, off: reglageMuet ? voixOff : [], generee: !!ep.voixGeneree },
     musique: { nom: sansMusique ? 'aucune' : (ep.musique || S.musique), rubrique: ep.rubrique, indicatif: ep.indicatif || S.indicatif, volume: reglages.musique, seule: Math.max(reglages.musique, reglages.musiqueSeule), creux,
       // L'instant où la musique « entre » (house) : le premier mot fort, sinon 4 s ; jamais avant 2 s.
       plein: arrondi(Math.max(2, (mots.find((m) => m.fort) || { t: 4 }).t)), tempo: reglageMuet ? (reglageMuet.tempo || 96) : undefined, muet: !!reglageMuet, paliers: reglageMuet && planMuet.affichage === 'progressif' && planMuet.mots.length >= 3 ? (reglageMuet.reponses ? [arrondi(reglageMuet.reponses[0] + 0.6), arrondi(reglageMuet.reponses[planMuet.mots.length - 2] + 0.6)] : [arrondi(reglageMuet.intro + reglageMuet.cadence + 0.6), arrondi(reglageMuet.intro + (planMuet.mots.length - 1) * reglageMuet.cadence + 0.6)]) : undefined },
