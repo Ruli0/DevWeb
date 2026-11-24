@@ -61,3 +61,9 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 - 4 h après publication : 151 vues, visionnage moyen 5,6 s (16 %), vision complète 4,49 %, 4 likes (2,6 %), 0 commentaire / partage / enregistrement, 0 follower. À 50 min (53 vues) : 3,3 s et 0 % : les premiers relevés d'une vidéo ne sont pas représentatifs.
 - Aucune des variantes testées (accroche, durée 13-37 s, voix, annonce, chrono, réponse révélée, grille complète) n'a dépassé ~5,6 s de visionnage moyen ; la portée de départ reste à ~150 vues. Le visionnage moyen est stable (~5 s) quelle que soit la durée : une vidéo longue plafonne donc à 15 % de visionnage.
 - Hypothèse du test suivant : une vidéo très courte (≈ 7 s, un seul mot, chrono de 3 s, réponse, boucle) peut monter la vision complète (seul signal qui reste faible), à vérifier sur ≥ 150 vues.
+
+## Relevé du 24 nov. 2026 : `jeu-mots-mirage-lettres` (« À quelle lettre tu trouves ? », 12,4 s)
+~2 h après publication : 27 vues, visionnage moyen 3,6 s (29 %), 13,51 % jusqu'au bout, 0 follower. Moins bien que la mini désert 3 s (5,0 s, 84-92 %, 17 %).
+- Les spectateurs partent dans les 3-4 premières secondes : la carte « TROUVE LE MOT » (0-1,2 s) retarde le jeu sans accrocher, et la règle était cachée par la barre de recherche de TikTok (corrigé : zone sûre, décision 74).
+- Hypothèse testée ensuite : sans carte d'intro (question + première lettre + chrono dès l'image 0), le temps moyen dépasse 5 s et 40 %. Un seul changement : VOLCANOLOGUE.
+- Portée toujours très faible (< 30 vues en 2 h) : l'hypothèse d'un compte freiné tient toujours.
