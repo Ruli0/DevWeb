@@ -85,12 +85,14 @@
   // La taille des cases s'adapte à la grille : toute la largeur utile (960 px) et la hauteur d'une zone de 770 px (y 490 à 1260), au plus 130 px de pas.
   const ZONE = { largeur: 960, haut: 490, hauteur: 770, vide: 8 };
   const ZONE_PROG = { largeur: 960, haut: 640, hauteur: 740, vide: 8 };
-  function dims(g, prog) {
+  // Zone sûre TikTok (barre de recherche en haut, icônes à droite) : largeur 860, centrée sur x = 470 (de 40 à 900).
+  const SUR = { largeur: 860, cx: 470 };
+  function dims(g, prog, sur) {
     // Une seule ligne (jeu d'un seul mot horizontal) : presque toute la largeur, cases plus serrées, pour les mots longs.
-    const Z = prog ? (g.lignes === 1 ? Object.assign({}, ZONE_PROG, { largeur: 1040, vide: 6 }) : ZONE_PROG) : ZONE;
+    const Z = prog ? (g.lignes === 1 ? Object.assign({}, ZONE_PROG, { largeur: sur ? SUR.largeur : 1040, vide: 6 }) : (sur ? Object.assign({}, ZONE_PROG, { largeur: SUR.largeur }) : ZONE_PROG)) : ZONE;
     const pas = Math.max(40, Math.floor(Math.min(Z.largeur / Math.max(1, g.colonnes), Z.hauteur / Math.max(1, g.lignes), 130)));
     const w = g.colonnes * pas - Z.vide, h = g.lignes * pas - Z.vide;
-    return { pas, caseTaille: pas - Z.vide, gx: Math.round((1080 - w) / 2), gy: Math.round(Z.haut + (Z.hauteur - h) / 2), w, h };
+    return { pas, caseTaille: pas - Z.vide, gx: Math.round(((sur ? 2 * SUR.cx : 1080) - w) / 2), gy: Math.round(Z.haut + (Z.hauteur - h) / 2), w, h };
   }
   // Les couleurs de papier des mots, dans l'ordre de révélation (palette « coucher »).
   const COULEURS = ['#ff9a5c', '#ffd45c', '#4fd1c5', '#c46bff', '#ff5d7a', '#7fb2ff'];
@@ -187,6 +189,11 @@
 .jeu .chronog .cg-arc { stroke: #ffd45c; stroke-linecap: round; filter: drop-shadow(0 0 10px #ffd45c); }
 .jeu .chronog span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 900 110px/1 '${P.titre}'; color: #fff; text-shadow: 0 6px 0 #0007; opacity: 0; font-variant-numeric: tabular-nums; }
 .jeu .chronog span.fin { color: #ff5a3c; }
+.jeu.sur .regle { top: 300px; left: 40px; width: 860px; font-size: 44px !important; letter-spacing: .02em; gap: 10px; white-space: nowrap; }
+.jeu.sur .bandeau.prog { top: 370px; width: 840px; }
+.jeu.sur .bandeau.prog .indices p { padding-right: 20px; }
+.jeu.sur .chronog { left: 360px; top: 700px; }
+.jeu.sur .intro-jeu p { padding: 0 180px 0 60px; font-size: 150px; }
 .jeu .compte { position: absolute; left: 0; top: 620px; width: 1080px; height: 220px; pointer-events: none; }
 .jeu .compte span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 900 190px/1 '${P.titre}'; color: #fff; text-shadow: 0 0 46px #ffd45c, 0 10px 0 #0007; opacity: 0; }
 .jeu .compte span.fin { color: #ff5a3c; text-shadow: 0 0 50px #ff5a3c, 0 10px 0 #0007; }

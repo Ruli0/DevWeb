@@ -1,5 +1,6 @@
 // Planche d'aperçu d'une vidéo, sans rendu : quelques secondes au lieu de plusieurs minutes.
-//   NODE_PATH=$(npm root -g) node scripts/apercu.js <id | chemin/index.html> <sortie.png> [t1 t2 …]
+//   NODE_PATH=$(npm root -g) node scripts/apercu.js <id | chemin/index.html> <sortie.png> [--zone-tiktok] [t1 t2 …]
+// --zone-tiktok : dessine en rouge les zones cachées par l'interface TikTok (haut, icônes à droite, légende en bas).
 // Sans instants donnés : le milieu de chaque plan du scénario.
 // Utilise Playwright (installé globalement) et ffmpeg.
 const fs = require('node:fs');
@@ -8,7 +9,8 @@ const { execSync } = require('node:child_process');
 const { chromium } = require('playwright');
 
 (async () => {
-  const [id, sortie, ...donnes] = process.argv.slice(2);
+  const args = process.argv.slice(2), zoneTikTok = args.includes('--zone-tiktok');
+  const [id, sortie, ...donnes] = args.filter((a) => a !== '--zone-tiktok');
   if (!id || !sortie) { console.error('Usage : node scripts/apercu.js <id> <sortie.png> [t1 t2 …]'); process.exit(1); }
   const racine = path.join(__dirname, '..');
   // <id> d'une vidéo de l'ancienne chaîne, ou chemin direct vers un index.html (studio).
@@ -37,6 +39,13 @@ const { chromium } = require('playwright');
         c.style.display = instant >= debut && instant < debut + duree ? '' : 'none';
       });
     }, t);
+    if (zoneTikTok) await page.evaluate(() => {
+      if (document.getElementById('zone-tiktok')) return;
+      const z = document.createElement('div'); z.id = 'zone-tiktok';
+      z.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:99999';
+      z.innerHTML = [[0, 0, 1080, 290], [900, 290, 180, 1630], [0, 1480, 900, 440]].map(([x, y, w, h]) => `<div style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:#ff000040;outline:3px solid #ff0000aa"></div>`).join('');
+      document.body.appendChild(z);
+    });
     const f = sortie.replace(/\.png$/, `-${i}.png`);
     images.push(f);
     await page.screenshot({ path: f });

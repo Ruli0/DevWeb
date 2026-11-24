@@ -80,6 +80,8 @@ Par défaut, la 3D est « douce » : facettes éclairées en dégradé, ombres d
 
 Rien d'important à droite de x 940 dans la moitié basse (boutons de TikTok).
 
+**Zone sûre TikTok (vérifiée sur une capture, 24 nov. 2026)** : rien d'important au-dessus de y 290 (barre de recherche), à droite de x 900 à partir de y 290 (avatar, cœur, commentaires, favoris, son), sous y 1480 (légende, bannière). Option de plan grille `zoneSure: true` ; contrôle : `node scripts/apercu.js <index.html> <sortie.png> --zone-tiktok t1 t2 …` (zones cachées en rouge).
+
 ## Limites connues
 
 - Les décors sont des dessins vectoriels faits à la main dans le code : plus chaleureux que des aplats, mais ce ne sont pas des photos. De vraies images de l'auteur feront mieux.

@@ -68,6 +68,7 @@
       "premiereLettre": true,
       "finaleDelai": 0.5,
       "regle": "À QUELLE LETTRE TU TROUVES ?",
+      "zoneSure": true,
       "intro": {
         "texte": "TROUVE\nLE MOT",
         "duree": 1.2
