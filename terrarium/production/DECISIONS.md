@@ -392,3 +392,6 @@ MIRAGE avec carte d'intro : 3,6 s de visionnage moyen (29 %) sur 12,4 s, moins q
 
 ## 76. Au plus 8 lettres pour « À quelle lettre tu trouves ? » (24 nov. 2026)
 Avec la zone sûre (860 px utiles), VOLCANOLOGUE donnait des cases de ~66 px, trop petites selon Jules ; il refuse le mot coupé sur deux lignes. Nouveaux mots de 7-8 lettres, cases de ~105-117 px : CRATÈRE (« La bouche du volcan », volcan), PIEUVRE (« Huit bras et trois cœurs », océan), SCORPION (« Il pique avec sa queue dans le désert », désert) ; réglage de MIRAGE (3 indices, une lettre toutes les 2 s, 11,2 s, sans carte d'intro). VOLCANOLOGUE, HIPPOCAMPE, DROMADAIRE restent en réserve.
+
+## 77. Essai « Devine la blague » (24 nov. 2026)
+Jules : « il nous faut des likes » ; idée d'une devinette drôle (« Le roi de la pop qui fait du bruit quand on appuie dessus ? Michael Klaxon »). Même moteur que « À quelle lettre » : question drôle se terminant par « Michael… », KLAXON lettre par lettre (K → K….N → K.A..N → KLAXON, une lettre toutes les 2 s), puis la chute en gros (« MICHAEL KLAXON ! ») et « LIKE ❤️ si t'as ri 😂 » ; règle « DEVINE LA BLAGUE », décor musique / vinyle, 10,2 s, jeu dès l'image 0. Épisode `blague-klaxon`. Hypothèse : l'humour fait liker plus qu'une devinette sérieuse.

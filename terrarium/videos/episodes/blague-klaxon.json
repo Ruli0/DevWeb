@@ -1,0 +1,122 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "blague-klaxon",
+  "titre": "Blague : Michael Klaxon",
+  "rubrique": "voyage",
+  "numero": 40,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 1.0,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "musique",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "KLAXON",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Le roi de la pop qui fait « pouet » : Michael…"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.3
+        ],
+        "reponses": [
+          5.8
+        ],
+        "fin": 4.4,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2,
+          "ordre": [
+            5,
+            2
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "vinyle",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "DEVINE LA BLAGUE",
+      "zoneSure": true,
+      "hype": {
+        "t": 6.9,
+        "duree": 3.3,
+        "mots": [
+          {
+            "texte": "MICHAEL",
+            "t": 0.0,
+            "sortie": 1.6,
+            "taille": 140,
+            "top": 640,
+            "style": "stamp"
+          },
+          {
+            "texte": "KLAXON !",
+            "t": 0.25,
+            "sortie": 1.6,
+            "taille": 140,
+            "top": 820,
+            "style": "like"
+          },
+          {
+            "texte": "LIKE",
+            "t": 1.7,
+            "taille": 180,
+            "top": 660,
+            "style": "like",
+            "coeur": true
+          },
+          {
+            "texte": "si t'as ri 😂",
+            "t": 1.95,
+            "taille": 92,
+            "top": 930,
+            "style": "sub"
+          }
+        ]
+      }
+    }
+  ],
+  "publication": {
+    "texte": "Le roi de la pop qui fait « pouet » 😂 Tu l'avais ? Like si t'as ri 👇",
+    "hashtags": [
+      "#blague",
+      "#devinette",
+      "#humour",
+      "#jeudemots",
+      "#michaeljackson"
+    ],
+    "commentaire": "Envoie ta meilleure blague du même genre 👇"
+  },
+  "orbe": false,
+  "ouverture": "calme"
+}
