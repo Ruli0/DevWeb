@@ -248,10 +248,10 @@
             if (l.t <= 0) gsap.set(bulles[i], { opacity: 1 }); else c.ft(bulles[i], { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2.4)' }, tl);
             if (i + 1 < L.length) c.ft(bulles[i], { opacity: 1 }, { opacity: 0, duration: 0.08 }, fin);
             let prec = 0.1;
-            (l.env || []).forEach((v, k) => { const ry = Math.max(0.1, v * 17); c.ft(bec, { attr: { ry: prec } }, { attr: { ry }, duration: 1 / 15, ease: 'none' }, tl + k / 15); prec = ry; });
+            (l.env || []).forEach((v, k) => { const ry = Math.max(0.1, v * 30); c.ft(bec, { attr: { ry: prec } }, { attr: { ry }, duration: 1 / 15, ease: 'none' }, tl + k / 15); prec = ry; });
             if (l.env && l.env.length) c.ft(bec, { attr: { ry: prec } }, { attr: { ry: 0.1 }, duration: 0.08 }, tl + l.env.length / 15);
           });
-          const yT = -338, cl = (t) => { c.ft(yeux, { attr: { transform: 'translate(0 0) scale(1 1)' } }, { attr: { transform: `translate(0 ${yT * 0.9}) scale(1 0.1)` }, duration: 0.06 }, t); c.ft(yeux, { attr: { transform: `translate(0 ${yT * 0.9}) scale(1 0.1)` } }, { attr: { transform: 'translate(0 0) scale(1 1)' }, duration: 0.08 }, t + 0.08); };
+          const yT = -338, cl = (t) => c.ft(yeux, { attr: { transform: 'translate(0 0) scale(1 1)' } }, { attr: { transform: `translate(0 ${yT * 0.9}) scale(1 0.1)` }, duration: 0.07, yoyo: true, repeat: 1 }, t);
           for (let t = 1.7; t < d - 0.3; t += 2.9) cl(t0 + t);
           if (p.presentateur.saut != null) { const ts = t0 + p.presentateur.saut; c.ft(saut, { attr: { transform: 'translate(0 0)' } }, { attr: { transform: 'translate(0 -110)' }, duration: 0.22, ease: 'power2.out', yoyo: true, repeat: 3 }, ts); }
         }
