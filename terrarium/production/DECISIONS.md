@@ -389,3 +389,6 @@ Capture de MIRAGE publiée : la barre de recherche de TikTok cachait la règle �
 
 ## 75. Retrait de la carte « TROUVE LE MOT » (24 nov. 2026)
 MIRAGE avec carte d'intro : 3,6 s de visionnage moyen (29 %) sur 12,4 s, moins que la mini 3 s. La carte retarde le jeu ; elle est retirée des 4 vidéos non publiées (VOLCANOLOGUE, HIPPOCAMPE, DROMADAIRE, COMETE), qui reviennent à 11,2 s avec le jeu dès l'image 0 (`muet.debuts` 0,3 s, `reponses` 7,8 s), en gardant la zone sûre TikTok. L'option `intro` reste disponible dans le moteur. Test suivant : VOLCANOLOGUE, à comparer au temps moyen de MIRAGE.
+
+## 76. Au plus 8 lettres pour « À quelle lettre tu trouves ? » (24 nov. 2026)
+Avec la zone sûre (860 px utiles), VOLCANOLOGUE donnait des cases de ~66 px, trop petites selon Jules ; il refuse le mot coupé sur deux lignes. Nouveaux mots de 7-8 lettres, cases de ~105-117 px : CRATÈRE (« La bouche du volcan », volcan), PIEUVRE (« Huit bras et trois cœurs », océan), SCORPION (« Il pique avec sa queue dans le désert », désert) ; réglage de MIRAGE (3 indices, une lettre toutes les 2 s, 11,2 s, sans carte d'intro). VOLCANOLOGUE, HIPPOCAMPE, DROMADAIRE restent en réserve.
