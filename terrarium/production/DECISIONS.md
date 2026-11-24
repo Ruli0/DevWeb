@@ -399,3 +399,6 @@ Mise à jour (Jules) : question « Le roi de la pop qui fait « tut tut » ? »,
 
 ## 78. Relance sur un nouveau compte TikTok (24 nov. 2026)
 La blague Klaxon fait un flop comme les précédentes : depuis la 7e vidéo, tout plafonne entre 30 et 150 vues, quel que soit le format, contre ~550-590 pour les 6 premières. Hypothèse : compte freiné. Jules choisit un compte neuf (plan dans `PLAN-NOUVEAU-COMPTE.md` : 2 jours de navigation, 1 vidéo par jour, 7 vidéos courtes, décision à 7 jours). Alternatives écartées pour l'instant : Jules à l'écran (gardé si le compte neuf plafonne aussi), sons tendance seuls (ne règle pas un compte freiné), pause et bilan.
+
+## 79. Virage vers « une personne à l'écran » (24 nov. 2026)
+Jules : « ce format fonctionnait peut-être en 2015, pas fin 2026 ». Recherche (`TENDANCES-2026.md`) : en 2026, l'engagement vient surtout d'une vraie personne (brut, humour, défi, réaction, séries). Prochain format proposé : « Ils essaient de trouver le mot » (un proche filmé qui joue à une devinette de l'outil, grille incrustée en haut, sous-titres). Le plan du nouveau compte reste valable avec ce format. Aucun code avant la première vidéo filmée. Alternatives : continuer les devinettes sans personne (plafond constaté), IA réaliste (étiquette obligatoire, engagement incertain).
