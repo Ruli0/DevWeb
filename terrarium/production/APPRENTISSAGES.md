@@ -69,3 +69,6 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 - Portée toujours très faible (< 30 vues en 2 h) : l'hypothèse d'un compte freiné tient toujours.
 - À 4 h : 65 vues, 1 like, 0 commentaire, 3,4 s en moyenne (~27 %), 11,24 % jusqu'au bout, 0 follower. Les gens partent avant le 1er indice (~3,5 s) ; aucun commentaire « à quelle lettre » : le jeu ne déclenche pas encore la réaction attendue. Test suivant : CRATÈRE (jeu dès l'image 0, cases ~110 px), réussite si plus de 5 s en moyenne.
 - Courbe de fidélisation (13:44) : 100 % → ~55 % à 1 s, ~40 % à 2 s, ~30 % à 4 s, puis presque plate (~25 %) jusqu'à 12 s. La perte se fait pendant la carte « TROUVE LE MOT » ; ceux qui voient le jeu commencer restent jusqu'au bout. Règle : l'image 0 doit déjà montrer le jeu (question + cases + chrono), jamais une carte de titre.
+
+## 24 nov. 2026 : la blague Klaxon fait aussi un flop
+D'après Jules (chiffres à relever). Même plafond que tous les formats depuis la 7e vidéo : l'hypothèse « compte freiné » devient la plus probable. Test : nouveau compte (décision 78), décision après 7 jours (au-dessus de 200-300 vues : c'était le compte ; sous 100 : c'est le genre).
