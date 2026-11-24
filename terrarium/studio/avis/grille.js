@@ -187,6 +187,11 @@
 .jeu .regle { position: absolute; left: 0; top: 178px; width: 1080px; display: flex; align-items: center; justify-content: center; gap: 16px; z-index: 2; color: #ffd45c; font: 900 68px/1 '${P.titre}'; letter-spacing: .06em; text-shadow: 0 4px 16px #0009; }
 .jeu .regle svg { filter: drop-shadow(0 4px 10px #0009); }
 .jeu .minuteur.cache { display: none; }
+.jeu .presente { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 3; pointer-events: none; }
+.jeu .presente svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.jeu .presente .bulle { position: absolute; left: 400px; top: 1150px; width: 490px; min-height: 170px; display: flex; align-items: center; padding: 22px 28px; box-sizing: border-box; background: #fff6e8; border-radius: 34px; box-shadow: 6px 8px 0 #00000066; transform-origin: 0% 70%; }
+.jeu .presente .bulle::before { content: ''; position: absolute; left: -30px; top: 92px; border: 22px solid transparent; border-right: 34px solid #fff6e8; border-left: 0; }
+.jeu .presente .bulle p { margin: 0; font: 800 54px/1.05 '${P.titre}'; color: #2a1a14; letter-spacing: -.02em; }
 .jeu .intro-jeu { position: absolute; left: 0; top: 0; width: 1080px; height: 1440px; overflow: hidden; z-index: 5; pointer-events: none; }
 .jeu .intro-jeu svg { position: absolute; left: 0; top: 0; }
 .jeu .intro-jeu p { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 60px; font: 900 170px/0.98 '${P.titre}'; letter-spacing: -.02em; color: #fff; text-shadow: 0 0 50px #ffd45c, 0 10px 0 #0007; }

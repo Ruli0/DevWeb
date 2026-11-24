@@ -58,7 +58,7 @@
     // La tête : deux aigrettes, deux grands yeux ronds, un petit bec. Les pupilles regardent vers le geste.
     const regard = pose === 'montre' ? 9 : pose === 'reflechit' ? -6 : 0, yT = -338;
     const oeil = (x) => `<circle cx="${x}" cy="${yT}" r="52" fill="#ffffff" fill-opacity=".72" ${BORDV}/><circle cx="${x + regard}" cy="${yT + (pose === 'reflechit' ? -8 : 2)}" r="24" fill="#17283a" fill-opacity=".9"/><circle cx="${x + regard + 8}" cy="${yT - 8 + (pose === 'reflechit' ? -8 : 0)}" r="8" fill="#ffffff"/>`;
-    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" ${FONCE} ${BORDV}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" ${VERRE} ${BORDV}/>${reflet(`M-104 ${yT - 44} Q-72 ${yT - 92} -22 ${yT - 100}`, 8)}${oeil(-52)}${oeil(52)}<path d="M-17 ${yT + 34} L17 ${yT + 34} L0 ${yT + 70} Z" fill="#ffffff" fill-opacity=".8" ${BORDV}/>`;
+    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" ${FONCE} ${BORDV}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" ${VERRE} ${BORDV}/>${reflet(`M-104 ${yT - 44} Q-72 ${yT - 92} -22 ${yT - 100}`, 8)}<g class="yeux">${oeil(-52)}${oeil(52)}</g><ellipse class="bouche" cx="0" cy="${yT + 50}" rx="20" ry="0.1" fill="#5a1630" fill-opacity=".92"/><path class="bec" d="M-17 ${yT + 34} L17 ${yT + 34} L0 ${yT + 70} Z" fill="#ffffff" fill-opacity=".8" ${BORDV}/>`;
     return `<g class="perso hibou" data-pose="${pose}"><g class="elan"><g transform="rotate(${P.penche || 0})">${patte('jg', -44)}${patte('jd', 44)}${corps}${aile('bg', -104, P.bg[0], -1)}${aile('bd', 104, P.bd[0], 1)}<g class="tete-p">${tete}</g></g></g></g>`;
   }
 
@@ -96,12 +96,15 @@
   // Le mouvement : il respire toujours ; certaines poses ont un geste (la main qui salue, le pas, la traction).
   // Tout passe par l'attribut « transform » des groupes (jamais par les propriétés x, y ou rotation de GSAP, qui se repèrent
   // dans l'image entière et décalent un dessin déjà placé par un groupe parent).
-  function jouer(c, el, pose, t0, d) {
+  // deja : le personnage est déjà en place à t0 (pas d'entrée), pour qu'il soit visible dès l'image 0.
+  function jouer(c, el, pose, t0, d, deja) {
     const P = POSES[pose] || POSES.debout, q = (s) => el.querySelector(s);
     const fois = (periode) => Math.max(1, Math.floor(d / periode));
     const tr = (g, de, vers, plus, t) => c.ft(g, { attr: { transform: de } }, Object.assign({ attr: { transform: vers } }, plus), t);
-    c.ft(q('.perso'), { opacity: 0 }, { opacity: 1, duration: 0.2 }, t0 + 0.15);
-    tr(q('.perso'), 'translate(0 70) scale(0.6)', 'translate(0 0) scale(1)', { duration: 0.5, ease: 'back.out(1.8)' }, t0 + 0.15);
+    if (!deja) {
+      c.ft(q('.perso'), { opacity: 0 }, { opacity: 1, duration: 0.2 }, t0 + 0.15);
+      tr(q('.perso'), 'translate(0 70) scale(0.6)', 'translate(0 0) scale(1)', { duration: 0.5, ease: 'back.out(1.8)' }, t0 + 0.15);
+    }
     tr(q('.tete-p'), 'translate(0 0)', 'translate(0 -7)', { duration: 0.9, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(1.8) - 1 }, t0 + 0.7);
     const balance = (cls, de, vers, periode) => tr(q(cls), `rotate(${de})`, `rotate(${vers})`, { duration: periode / 2, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(periode) - 1 }, t0 + 0.7);
     if (q('.hibou') && P.geste !== 'grimpe') { tr(q('.elan'), 'translate(0 0)', 'translate(0 -12)', { duration: 1.0, ease: 'sine.inOut', yoyo: true, repeat: 2 * fois(2.0) - 1 }, t0 + 0.7); if (!P.geste) { balance('.bg', -4, 6, 1.0); balance('.bd', 4, -6, 1.0); } }
