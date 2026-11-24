@@ -398,6 +398,16 @@ const BRUITAGES = {
   'chrono-1.6.wav': () => chronometre(1.6),
   'chrono-2.wav': () => chronometre(2),
   'chrono-3.wav': () => chronometre(3),
+  // Un klaxon de voiture « tut tut » : deux coups de deux notes carrées un peu désaccordées (tierce), avec un léger vibrato.
+  'klaxon.wav': () => {
+    const { tampon, sinus } = O();
+    const b = tampon(0.9), env = (d) => (x) => 0.16 * Math.min(1, x / 0.012) * Math.min(1, Math.max(0, (d - x) / 0.03));
+    [[0, 0.2], [0.3, 0.32]].forEach(([t, d]) => [[392, 1], [494, 0.85], [588, 0.35]].forEach(([f, a]) => {
+      sinus(b, (x) => f * (1 + 0.004 * Math.sin(x * 38)), (x) => a * env(d)(x), t, 'carre', d);
+      sinus(b, (x) => f * 1.006, (x) => a * 0.6 * env(d)(x), t, 'scie', d);
+    }));
+    return b;
+  },
   'chrono-5-ancien.wav': () => {
     const { tampon, sinus, bruit, enveloppe, graine } = O();
     const b = tampon(5.6);

@@ -122,7 +122,7 @@
         return e;
       },
       dessin: (p, u) => {
-        const prog = p.affichage === 'progressif', g = GR.construire(p.mots), D = GR.dims(g, prog, !!p.zoneSure), st = p.stades || ['Singe', 'Homme classique', 'Molière'], fig = p.figures || ['singe', 'classique', 'moliere'], xs = [60, 480, 900];
+        const prog = p.affichage === 'progressif', g = GR.couper(GR.construire(p.mots), p.coupure), D = GR.dims(g, prog, !!p.zoneSure), st = p.stades || ['Singe', 'Homme classique', 'Molière'], fig = p.figures || ['singe', 'classique', 'moliere'], xs = [60, 480, 900];
         const neuves = GR.nouvelles(g, p.mots.length);
         // Les cases : du papier découpé aux bords irréguliers (forme stable), une ombre nette, une couleur par mot ; le halo est dessous.
         const cases = g.cases.map((x, n) => {
@@ -192,7 +192,7 @@
           });
         });
         // Progressif : la caméra (échelle + translation de la grille) cadre les mots déjà posés, puis dézoome à chaque mot qui arrive.
-        const vues = [], centres = [], CX = p.zoneSure ? 470 : 540, LW = p.zoneSure ? 860 : 960;
+        const vues = [], centres = [], CX = p.zoneSure ? 470 : 540, LW = p.zoneSure ? 860 : 960, CY = p.coupure ? 1075 : 1010;
         if (prog) {
           const gx = parseFloat(grille.style.left), gy = parseFloat(grille.style.top), sz = parseFloat(grille.style.getPropertyValue('--case'));
           const R = cases.map((x) => ({ l: parseFloat(x.style.left), t: parseFloat(x.style.top), k: Math.min(...x.dataset.m.split(' ').map(Number)) }));
@@ -200,10 +200,10 @@
             const S = R.filter((r) => r.k <= k), l = Math.min(...S.map((r) => r.l)), t = Math.min(...S.map((r) => r.t)), r2 = Math.max(...S.map((r) => r.l + sz)), b = Math.max(...S.map((r) => r.t + sz));
             const s = Math.max(1, Math.min(LW / (r2 - l), 740 / (b - t), 175 / sz));
             centres.push([(l + r2) / 2, (t + b) / 2]);
-            vues.push({ scale: s, x: CX - gx - s * (l + r2) / 2, y: 1010 - gy - s * (t + b) / 2 });
+            vues.push({ scale: s, x: CX - gx - s * (l + r2) / 2, y: CY - gy - s * (t + b) / 2 });
           }
           if (p.grilleComplete) for (let k = 0; k < N; k += 1) { vues[k] = vues[N - 1]; centres[k] = centres[N - 1]; }
-          const s0 = vues[0].scale * (N === 1 ? 1 : 1.12), d0 = { scale: s0, x: CX - gx - s0 * centres[0][0], y: 1010 - gy - s0 * centres[0][1] };
+          const s0 = vues[0].scale * (N === 1 ? 1 : 1.12), d0 = { scale: s0, x: CX - gx - s0 * centres[0][0], y: CY - gy - s0 * centres[0][1] };
           gsap.set(grille, Object.assign({ transformOrigin: '0 0' }, d0));
           c.ft(grille, d0, Object.assign({ duration: 0.7, ease: 'power3.out' }, vues[0]), t0);
           DEC.anim(p.animation)[1](c, el, p, t0, d);

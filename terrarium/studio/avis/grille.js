@@ -94,6 +94,14 @@
     const w = g.colonnes * pas - Z.vide, h = g.lignes * pas - Z.vide;
     return { pas, caseTaille: pas - Z.vide, gx: Math.round(((sur ? 2 * SUR.cx : 1080) - w) / 2), gy: Math.round(Z.haut + (Z.hauteur - h) / 2), w, h };
   }
+  // Un nom en deux mots (ex. MICHAEL KLAXON, écrit d'un seul tenant dans l'épisode) : les cases à partir de la n-ième passent
+  // sur une deuxième ligne, centrée sous la première. L'ordre des cases (et donc des indices) ne change pas.
+  function couper(g, n) {
+    if (!n || g.lignes !== 1 || n >= g.cases.length) return g;
+    const L1 = n, L2 = g.cases.length - n, col = Math.max(L1, L2);
+    g.cases.forEach((x, i) => { if (i < n) x.c = i + (col - L1) / 2; else { x.l = 1; x.c = i - n + (col - L2) / 2; } });
+    return Object.assign(g, { lignes: 2, colonnes: col });
+  }
   // Les couleurs de papier des mots, dans l'ordre de révélation (palette « coucher »).
   const COULEURS = ['#ff9a5c', '#ffd45c', '#4fd1c5', '#c46bff', '#ff5d7a', '#7fb2ff'];
   // L'horaire d'un mot révélé : une lettre nouvelle toutes les 0,22 s, posée 0,5 s après le départ de son étincelle, la première après la voix.
@@ -212,5 +220,5 @@
 .jeu .etincelle { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, #fff 0 25%, #ffd45c 55%, #ff9a5c00 100%); box-shadow: 0 0 20px 7px #ffb03b99; pointer-events: none; z-index: 5; }`;
   }
 
-  return { construire, figure, css, dims, horaires, nouvelles, papier, COULEURS, LETTRE, FIGURES };
+  return { construire, couper, figure, css, dims, horaires, nouvelles, papier, COULEURS, LETTRE, FIGURES };
 });

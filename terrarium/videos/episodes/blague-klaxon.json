@@ -31,12 +31,12 @@
       ],
       "mots": [
         {
-          "texte": "KLAXON",
+          "texte": "MICHAELKLAXON",
           "sens": "h",
           "ligne": 0,
           "colonne": 0,
           "indice": {
-            "texte": "Le roi de la pop qui fait « pouet » : Michael…"
+            "texte": "Le roi de la pop qui fait « tut tut » ?"
           },
           "reponse": {}
         }
@@ -48,16 +48,18 @@
           0.3
         ],
         "reponses": [
-          5.8
+          7.8
         ],
         "fin": 4.4,
         "tempo": 108,
         "titreFixe": true,
         "etapes": {
-          "pas": 2,
+          "pas": 1.6,
           "ordre": [
-            5,
-            2
+            7,
+            10,
+            3,
+            12
           ]
         }
       },
@@ -68,7 +70,7 @@
       "regle": "DEVINE LA BLAGUE",
       "zoneSure": true,
       "hype": {
-        "t": 6.9,
+        "t": 8.9,
         "duree": 3.3,
         "mots": [
           {
@@ -103,11 +105,24 @@
             "style": "sub"
           }
         ]
-      }
+      },
+      "coupure": 7,
+      "sons": [
+        {
+          "f": "klaxon.wav",
+          "t": 0.1,
+          "v": 0.5
+        },
+        {
+          "f": "klaxon.wav",
+          "t": 8.35,
+          "v": 0.55
+        }
+      ]
     }
   ],
   "publication": {
-    "texte": "Le roi de la pop qui fait « pouet » 😂 Like si tu as trouvé 👇",
+    "texte": "Le roi de la pop qui fait « tut tut » 🚗 Like si tu as trouvé 👇",
     "hashtags": [
       "#blague",
       "#devinette",

@@ -324,6 +324,8 @@ function montage(ep, voixFournie) {
   if (reglages.bruitages > 0) plans.forEach((x) => {
     const decor = DECORS[x.fond] || DECORS3D[x.fond];
     ((decor && decor.sons) || []).forEach((b) => { if (b.t < x.d - 0.3) sons.push(Object.assign({ f: b.f, t: arrondi(x.t0 + b.t), v: arrondi(b.v * reglages.bruitages) }, b.boucle ? { duree: arrondi(Math.min(19, x.dClip - b.t)) } : {})); });
+    // Les bruitages déclarés par le plan lui-même (ex. un klaxon) : { f, t (depuis le début du plan), v }.
+    (x.p.sons || []).forEach((b) => { if (b.t < x.d) sons.push({ f: b.f, t: arrondi(x.t0 + b.t), v: arrondi((b.v || 0.4) * reglages.bruitages) }); });
     if (x.p.illu) sons.push({ f: 'pop.wav', t: arrondi(x.t0 + 0.4), v: arrondi(0.3 * reglages.bruitages) });
   });
   // L'indicatif du compte : deux notes sur la première image, le motif entier quand la voix se tait.
