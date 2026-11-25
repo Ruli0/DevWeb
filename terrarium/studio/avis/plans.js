@@ -87,11 +87,52 @@
       if (u < 1.8) { const k = Math.sin(Math.PI * (u - 1.55) / 0.25); return { x: 0, y: 0, r: 0, sx: 1 + 0.3 * k, sy: 1 - 0.32 * k }; }
       const k = (u - 1.8) / 0.5; return { x: 0, y: -70 * Math.sin(Math.PI * k) * (1 - k * 0.3), r: 0, sx: 1 - 0.06 * Math.sin(Math.PI * k), sy: 1 + 0.08 * Math.sin(Math.PI * k) };
     };
+    // Le vol d'arrivée (presentateur.vol) : décollage pendant le dézoom de l'accroche, sortie par le haut, retour par la gauche
+    // en planant, vol stationnaire près de la question (le temps de la lire), descente et atterrissage à sa place au sol.
+    // Trajectoire : courbes d'Hermite cubiques (position et vitesse continues), en unités du dessin du hibou (× 0,62 à l'écran).
+    const VO = p.presentateur.vol;
+    const hermite = (K, t) => {   // K : [{t, x, y, vx?, vy?}] ; vitesses intérieures par différences centrées (spline cardinale)
+      if (t <= K[0].t) return [K[0].x, K[0].y]; const n = K.length - 1; if (t >= K[n].t) return [K[n].x, K[n].y];
+      const m = (i) => (K[i].vx != null ? [K[i].vx, K[i].vy] : [(K[i + 1].x - K[i - 1].x) / (K[i + 1].t - K[i - 1].t), (K[i + 1].y - K[i - 1].y) / (K[i + 1].t - K[i - 1].t)]);
+      let i = 0; while (t > K[i + 1].t) i += 1;
+      const a = K[i], b = K[i + 1], h = b.t - a.t, u = (t - a.t) / h, ma = m(i), mb = m(i + 1);
+      const h00 = 2 * u ** 3 - 3 * u * u + 1, h10 = u ** 3 - 2 * u * u + u, h01 = -2 * u ** 3 + 3 * u * u, h11 = u ** 3 - u * u;
+      return [h00 * a.x + h10 * h * ma[0] + h01 * b.x + h11 * h * mb[0], h00 * a.y + h10 * h * ma[1] + h01 * b.y + h11 * h * mb[1]];
+    };
+    let SEG = [];
+    if (VO) {
+      const td = VO.depart, ta = VO.arrivee, tp = VO.pose, X = VO.x, Y = VO.y;
+      SEG = [
+        [{ t: td, x: 0, y: 0, vx: 0, vy: -1400 }, { t: td + 0.22, x: -110, y: -620 }, { t: td + 0.5, x: -420, y: -2700, vx: -1300, vy: -9000 }],
+        [{ t: ta - 0.9, x: -1000, y: -1150, vx: 2600, vy: -300 }, { t: ta - 0.6, x: -260, y: -1420 }, { t: ta - 0.3, x: X - 380, y: Y - 330 }, { t: ta, x: X, y: Y, vx: 0, vy: 0 }],
+        [{ t: tp - 0.8, x: X, y: Y, vx: 0, vy: 0 }, { t: tp - 0.42, x: X * 0.55, y: Y * 0.62 }, { t: tp, x: 0, y: 0, vx: -500, vy: 2600 }],
+      ];
+    }
+    const voler = (t) => {   // { x, y, r, kF (0 au sol, 1 en vol), hov (vol stationnaire), sx, sy }
+      const R = { x: 0, y: 0, r: 0, kF: 0, hov: 0, sx: 1, sy: 1 };
+      if (!VO) return R;
+      const td = VO.depart, ta = VO.arrivee, tp = VO.pose;
+      if (t >= td - 0.16 && t < td) { const k = Math.sin(Math.PI * (t - td + 0.16) / 0.16); R.sx = 1 + 0.18 * k; R.sy = 1 - 0.22 * k; return R; }   // il se tasse
+      if (t >= tp && t < tp + 0.42) { const u = (t - tp) / 0.42, k = Math.sin(Math.PI * Math.min(1, u / 0.45)) * (u < 0.45 ? 1 : 0), r2 = u >= 0.45 ? Math.sin(Math.PI * (u - 0.45) / 0.55) : 0; R.sx = 1 + 0.26 * k - 0.05 * r2; R.sy = 1 - 0.3 * k + 0.07 * r2; R.y = -34 * r2; return R; }   // atterrissage : écrasement, petit rebond
+      if (t < td || t >= tp) return R;
+      let K = null; if (t <= SEG[0][2].t) K = SEG[0]; else if (t >= SEG[1][0].t && t <= ta) K = SEG[1]; else if (t >= SEG[2][0].t) K = SEG[2];
+      if (!K && t > SEG[0][2].t && t < SEG[1][0].t) { R.x = -2000; R.y = -3000; R.kF = 1; return R; }   // hors champ
+      const e = 1 / 120; let x, y, vx = 0;
+      if (K) { [x, y] = hermite(K, t); const a2 = hermite(K, t - e), b2 = hermite(K, t + e); vx = (b2[0] - a2[0]) / (2 * e); }
+      else { x = VO.x; y = VO.y; }   // vol stationnaire
+      R.x = x; R.y = y; R.kF = 1;
+      R.hov = K ? (K === SEG[1] ? lisse((t - ta + 0.25) / 0.25) : K === SEG[2] ? 1 - lisse((t - SEG[2][0].t) / 0.25) : 0) : 1;
+      R.r = Math.max(-24, Math.min(24, vx * 0.011));
+      R.sx = 0.95; R.sy = 1.06;
+      return R;
+    };
+    const dansLesAirs = (t) => VO && t >= VO.depart - 0.16 && t < VO.pose + 0.42;
+    const ll = L.find((l) => l.lecture), mots = ll ? qa(el, '.qm') : [];
     // La danse : dans chaque silence entre deux phrases (et après la dernière), calée sur le tempo de la musique.
     // Jamais pendant l'amorce (le raccord de la boucle reste en « défi ») ni pendant l'éjection.
     const danseOK = !!p.presentateur.danse, temps = 60 / ((p.muetCfg && p.muetCfg.tempo) || 108);
     const silences = danseOK ? L.map((l, k) => [l.t + (l.duree || 1.5) + 0.06, k + 1 < L.length ? L[k + 1].t - 0.04 : d + 1]).filter(([a, b]) => b - a > 0.3) : [];
-    const danse = (t) => { if (!danseOK || (tE != null && t >= tE && t < tE + 2.3)) return 0; let k = 0; silences.forEach(([a, b]) => { k = Math.max(k, cloche(t, a, 0.3, Math.max(0, b - a - 0.6), 0.3)); }); return k; };
+    const danse = (t) => { if (!danseOK || (tE != null && t >= tE && t < tE + 2.3) || (VO && t >= VO.depart - 0.5 && t < VO.pose + 0.6)) return 0; let k = 0; silences.forEach(([a, b]) => { k = Math.max(k, cloche(t, a, 0.3, Math.max(0, b - a - 0.6), 0.3)); }); return k; };
     const A = (n, v) => n && n.setAttribute('transform', v);
     function rendre(t) {
       const i = ligneA(t), avant = i === 0 && t < L[0].t, e1 = emoDe(i), e0 = avant || (i === 0 && p.amorceBoucle) ? e1 : emoDe(i - 1), kE = i < 0 || avant ? 1 : lisse((t - L[i].t) / 0.18), kA = i < 0 || avant ? 1 : dos(lisse((t - L[i].t) / 0.55));
@@ -106,23 +147,32 @@
       A(tete, `translate(0 ${(-7 * o + 2 * Math.sin(2 * Math.PI * t / 1.7)).toFixed(2)}) rotate(${tilt.toFixed(2)} 0 -250)`);
       // corps : respiration (étirement doux depuis les pieds) ; folie « ejecte » : vol complet
       const sR = 0.018 * Math.sin(2 * Math.PI * t / 1.7), V = tE != null ? vol(t - tE) : vol(-1);
-      A(corps, `scale(${((1 - sR) * V.sx * (1 + 0.07 * kD * at)).toFixed(4)} ${((1 + sR) * V.sy * (1 - 0.09 * kD * at)).toFixed(4)})`);
+      const F = voler(t), fP = 2 * Math.PI * 5.5 * t, bob = F.hov * 16 * Math.sin(fP + Math.PI / 2);   // battements à 5,5 par seconde ; il monte à chaque coup d'ailes
+      A(corps, `scale(${((1 - sR) * V.sx * F.sx * (1 + 0.07 * kD * at)).toFixed(4)} ${((1 + sR) * V.sy * F.sy * (1 - 0.09 * kD * at)).toFixed(4)})`);
       const jx = pan * 6 * Math.sin(t * 61) + pan * 3 * Math.sin(t * 97);
-      A(pos, `translate(${(V.x + jx + 22 * kD * sa).toFixed(1)} ${(V.y - 34 * kD * ab).toFixed(1)}) rotate(${V.r.toFixed(1)} 0 -200) rotate(${(8 * kD * sa).toFixed(2)} 0 0)`);
+      A(pos, `translate(${(V.x + F.x + jx + 22 * kD * sa).toFixed(1)} ${(V.y + F.y + bob - 34 * kD * ab).toFixed(1)}) rotate(${(V.r + F.r).toFixed(1)} 0 -200) rotate(${(8 * kD * sa).toFixed(2)} 0 0)`);
       fantomes.forEach((g, k) => { const u = tE == null ? -1 : t - tE, Vf = vol(u - 0.035 * (k + 1)), vis = u > 0.18 && u < 1.5; g.setAttribute('opacity', vis ? (0.28 - k * 0.08).toFixed(2) : '0'); g.setAttribute('transform', `translate(${Vf.x.toFixed(1)} ${Vf.y.toFixed(1)}) rotate(${Vf.r.toFixed(1)} 0 -200)`); });
       // ailes : geste de l'émotion (arrivée avec dépassement), flottement au repos, battements de joie
       const W0 = EMO[e0].ailes, W1 = EMO[e1].ailes, bat = e1 === 'joie' ? 16 * Math.sin(t * 38) : 0, fl = 4 * Math.sin(2 * Math.PI * t / 1.3);
       const lev = tr ? cloche(t, tr.t, 0.14, tr.duree || 0.55, 0.16) : 0;
       if (trTxt) trTxt.setAttribute('opacity', lisse((lev - 0.4) / 0.4).toFixed(2));
       const dG = 50 + 65 * sa * sa, dD = -(50 + 65 * Math.cos(Math.PI * ph) ** 2);   // sinus au carré : pas d'à-coup au changement de sens
-      A(ag, `rotate(${(mix(mix(W0[0], W1[0], kA) + fl + bat + pan * 10 * Math.sin(t * 47) + 78 * lev, dG, kD)).toFixed(2)})`);
-      A(ad, `rotate(${(mix(mix(W0[1], W1[1], kA) - fl - bat - pan * 10 * Math.sin(t * 43) + (e1 === 'defi' ? 6 * Math.sin(t * 9) * (1 - kE * 0.3) : 0), dD, kD)).toFixed(2)})`);
+      const kF = VO ? (t < VO.depart ? lisse((t - VO.depart + 0.1) / 0.1) : 1 - lisse((t - VO.pose + 0.05) / 0.2)) : 0, battement = 80 + 62 * Math.sin(fP);
+      A(ag, `rotate(${mix(mix(mix(W0[0], W1[0], kA) + fl + bat + pan * 10 * Math.sin(t * 47) + 78 * lev, dG, kD), battement, kF).toFixed(2)})`);
+      A(ad, `rotate(${mix(mix(mix(W0[1], W1[1], kA) - fl - bat - pan * 10 * Math.sin(t * 43) + (e1 === 'defi' ? 6 * Math.sin(t * 9) * (1 - kE * 0.3) : 0), dD, kD), -battement, kF).toFixed(2)})`);
       // regard : vers chaque nouvelle lettre, puis vers le spectateur
       let gx = 2 * Math.sin(2 * Math.PI * t / 4.1), gy = 0;
       indices.concat([revel]).forEach((ti) => { const k = cloche(t, ti - 0.05, 0.12, 0.45, 0.2); gx = mix(gx, 13, k); gy = mix(gy, -15, k); });
       if (pan) { gx += pan * 8 * Math.sin(t * 13); }
       if (tr) { const kt = cloche(t, tr.t + 0.08, 0.1, (tr.duree || 0.55) - 0.1, 0.12); gx = mix(gx, -16, kt); gy = mix(gy, 12, kt); }
+      if (ll) { const kl = cloche(t, ll.t - 0.15, 0.2, (ll.duree || 2) - 0.1, 0.3); gx = mix(gx, -15, kl); gy = mix(gy, -14, kl); }   // il regarde la question
       [pg, pd].forEach((n) => A(n, `translate(${gx.toFixed(2)} ${gy.toFixed(2)})`));
+      if (ll && mots.length && ll.mots) {   // karaoké : le mot qu'il dit s'allume, les mots pas encore lus sont atténués
+        const kW = cloche(t, ll.t - 0.2, 0.2, (ll.duree || 2) - 0.2, 0.4);
+        mots.forEach((sp, k) => { const w = ll.mots[k]; if (!w) return; const a2 = ll.t + w[0], b2 = ll.t + w[1], lu = lisse((t - a2 + 0.04) / 0.08), cur = cloche(t, a2 - 0.04, 0.08, Math.max(0, b2 - a2 - 0.04), 0.22);
+          sp.style.opacity = (1 - kW * 0.5 * (1 - lu)).toFixed(3); sp.style.transform = cur ? `scale(${(1 + 0.12 * cur).toFixed(4)})` : '';
+          sp.style.color = cur > 0.01 ? `rgb(255, ${Math.round(255 - 43 * cur)}, ${Math.round(255 - 163 * cur)})` : ''; });
+      }
       // paupières : clignements, regard à demi fermé quand il est agacé
       let lid = 0; clignes.forEach((b) => { lid = Math.max(lid, cloche(t, b, 0.06, 0.02, 0.09)); });
       lid = Math.max(lid, (e1 === 'agace' ? 0.38 * kE : 0) + (e0 === 'agace' && e1 !== 'agace' ? 0.38 * (1 - kE) : 0));
@@ -293,7 +343,7 @@
         try { const e = require('./orbe.js').emplacement({ orbe: p.orbe, grille: true, fond: 'nuit' }); ox = e.x; oy = e.y; } catch (err) { /* page : pas de require */ }
         const etincelles = g.cases.map(() => '<i class="etincelle"></i>').join('');
         const mu = p.muet || p.muetCfg, N = p.mots.length;
-        const indices = (mu && mu.texteIntro ? `<p class="i-intro">${u.esc(mu.texteIntro)}</p>` : '') + p.mots.map((m, k) => `<p class="i-ind"${prog ? ` style="font-size:${N === 1 ? (m.indice.texte.length <= 30 ? 100 : m.indice.texte.length <= 48 ? 88 : 74) : m.indice.texte.length <= 30 ? 84 : m.indice.texte.length <= 48 ? 72 : 60}px"` : ''}>${mu && !prog ? `<small>Mot ${k + 1}/${N}</small>` : ''}${u.esc(m.indice.texte)}</p>`).join('') + (mu && mu.texteFin ? `<p class="i-fin">${u.esc(mu.texteFin)}</p>` : '');
+        const indices = (mu && mu.texteIntro ? `<p class="i-intro">${u.esc(mu.texteIntro)}</p>` : '') + p.mots.map((m, k) => `<p class="i-ind"${prog ? ` style="font-size:${N === 1 ? (m.indice.texte.length <= 30 ? 100 : m.indice.texte.length <= 48 ? 88 : 74) : m.indice.texte.length <= 30 ? 84 : m.indice.texte.length <= 48 ? 72 : 60}px"` : ''}>${mu && !prog ? `<small>Mot ${k + 1}/${N}</small>` : ''}${(p.presentateur && (p.presentateur.lignes || []).some((l) => l.lecture) && k === 0 ? m.indice.texte.split(' ').map((w) => `<span class="qm">${u.esc(w)}</span>`).join(' ') : u.esc(m.indice.texte))}</p>`).join('') + (mu && mu.texteFin ? `<p class="i-fin">${u.esc(mu.texteFin)}</p>` : '');
         const dec = DEC.decor(p.decor), fond = `<svg class="fond-papier" viewBox="0 0 1080 1920" style="--titre:${dec.titre}">${dec.fond}${dec.bas}</svg>` + (p.fond3d ? '<canvas class="fond-3d" width="540" height="960"></canvas>' : '') + (p.fondAnime ? fondAnimeSvg(p.fondAnime, !!p.fond3d) : '');
         return `${fond}${p.titre && !prog ? `<p class="jeu-titre${mu && mu.titreFixe ? ' fixe' : ''}" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau${prog ? ' prog' : ''}" style="clip-path:none">${prog ? '' : `<div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div>`}<div class="indices">${indices}</div></div>${prog ? '' : '<i class="scotch s1"></i><i class="scotch s2"></i>'}<div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div>${prog ? '' : '<div class="tampon">TROUVÉ</div>'}${minuteur}<div class="barre${prog ? ' prog' : ''}"><div class="strip"><div class="pap" style="clip-path:${GR.papier(88, 1004, 156)}"></div></div><div class="rail"><i></i></div>${paliers}</div>${etincelles}${p.rarete ? (p.mots.map((_, k) => { const tiers = p.rarete.couleurs || ['#4da3ff', '#b45cff', '#ffcf3a']; return `<div class="rar" style="--rc:${tiers[Math.min(k, tiers.length - 1)]}"></div>`; }).join('') + '<div class="rayons"></div>') : ''}${prog && N === 1 && mu && mu.etapes ? (() => { const m0 = p.mots[0], D = Math.max(1, Math.round(m0.reponse.t + 0.5 - m0.indice.t)); return `<div class="chronog"><svg viewBox="0 0 220 220" width="220" height="220"><circle class="cg-fond" cx="110" cy="110" r="94"/><circle class="cg-arc" cx="110" cy="110" r="94"/></svg>${Array.from({ length: D }, (_, j) => `<span data-j="${j}"${D - j <= 3 ? ' class="fin"' : ''}>${D - j}</span>`).join('')}</div>`; })() : ''}${p.presentateur ? `<div class="presente">${p.presentateur.accroche ? `<div class="voile"></div>` : ''}<svg viewBox="0 0 1080 1920" width="1080" height="1920"><g transform="translate(230 1470) scale(0.62)">${p.presentateur.allure === 'hibou2' ? '<use href="#h2-hibou" class="h2-fantome" opacity="0"/><use href="#h2-hibou" class="h2-fantome" opacity="0"/><use href="#h2-hibou" class="h2-fantome" opacity="0"/>' : ''}<g class="saut">${PERSO().svg('debout', p.presentateur.allure || 'hibou')}</g></g></svg>${(() => { const h = (k) => { const x = Math.sin(k * 91.7 + 13.1) * 43758.5; return x - Math.floor(x); }, cols = ['#ffd45c', '#ff5d7a', '#4fd1c5', '#c46bff', '#7fb2ff', '#ff9a5c']; return `<svg class="eclats" viewBox="0 0 1080 1920" width="1080" height="1920">${Array.from({ length: 10 }, (_, k) => `<path class="plume" d="M0 -26 C14 -10 12 14 0 26 C-12 14 -14 -10 0 -26 Z M0 -26 V30" fill="#e9f6ff" fill-opacity=".85" stroke="#ffffff" stroke-width="2" transform="translate(${Math.round(120 + h(k) * 230)} ${Math.round(1120 + h(k + 50) * 120)})" opacity="0"/>`).join('')}${Array.from({ length: 5 }, (_, k) => `<circle class="poussiere" cx="${150 + k * 40}" cy="1462" r="0" fill="#ffffff" fill-opacity=".55"/>`).join('')}${Array.from({ length: 28 }, (_, k) => `<rect class="confetti" x="-9" y="-5" width="18" height="10" rx="2" fill="${cols[k % cols.length]}" transform="translate(230 1240)" opacity="0"/>`).join('')}</svg><div class="flash"></div>`; })()}${p.presentateur.accroche ? `<div class="accroche-h"><p>${u.esc(p.presentateur.accroche.texte)}</p><small>${u.esc(p.presentateur.accroche.sous || '')}</small></div>` : ''}${p.presentateur.cta ? `<div class="cta${p.presentateur.cta.haut ? ' haut' : ''}">${u.esc(p.presentateur.cta.texte)}</div>` : ''}${(p.presentateur.lignes || []).map((l) => `<div class="bulle"><p>${u.esc(l.texte)}</p></div>`).join('')}</div>` : ''}${p.intro ? `<div class="intro-jeu"><svg viewBox="0 0 1080 1920" width="1080" height="1920">${dec.fond}</svg><p>${u.esc(p.intro.texte).replace(/\n/g, '<br>')}</p></div>` : ''}${p.regle ? `<div class="regle"${p.regle.length > 14 ? ' style="font-size:50px"' : ''}><svg viewBox="0 0 40 44" width="50" height="55"><rect x="16" y="0" width="8" height="6" rx="2" fill="currentColor"/><circle cx="20" cy="25" r="16" fill="none" stroke="currentColor" stroke-width="5"/><path d="M20 25 L20 15" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span>${u.esc(p.regle)}</span></div>` : ''}${prog && N === 1 && mu && mu.chrono ? `<div class="compte">${Array.from({ length: mu.chronoDuree || 5 }, (_, j) => `<span data-j="${j}"${j === (mu.chronoDuree || 5) - 1 ? ' class="fin"' : ''}>${(mu.chronoDuree || 5) - j}</span>`).join('')}</div>` : ''}${p.hype ? `<div class="hype"><div class="h-fond"></div>${p.hype.mots.map((w) => `<div class="hw ${w.style || 'sub'}" style="top:${w.top}px;font-size:${w.taille}px">${u.esc(w.texte)}${w.coeur ? '<svg class="coeur" viewBox="0 0 100 90" width="200" height="180"><path d="M50 86 C20 62 4 46 4 28 C4 14 15 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C85 4 96 14 96 28 C96 46 80 62 50 86Z" fill="#ff4fa3" stroke="#ffffff" stroke-width="5"/></svg>' : ''}</div>`).join('')}</div>` : ''}${p.accroche ? `<div class="accroche"><p>${u.esc(p.accroche.texte)}</p></div>` : ''}${prog && p.teaser ? `<div class="teaser"><p>${u.esc(p.teaser.texte)}</p><div class="t-cases">${Array.from({ length: p.teaser.n || 4 }, (_, i) => `<i>${p.teaser.reponse ? `<b style="font-size:${Math.min(110, Math.floor(760 / (p.teaser.n || 4)))}px">${u.esc(p.teaser.reponse[i] || '')}</b>` : ''}</i>`).join('')}</div></div>` : ''}${prog ? DEC.anim(p.animation)[0]() : ''}`;
       },
@@ -402,6 +452,7 @@
           gsap.set(bulles, { opacity: 0 });
           L.forEach((l, i) => {
             const tl = t0 + l.t, fin = i + 1 < L.length ? t0 + L[i + 1].t - 0.08 : t0 + d;
+            if (l.lecture) return;   // la question se lit sur l'écran (karaoké), pas dans une bulle
             if (l.t <= 0 || (i === 0 && p.amorceBoucle)) gsap.set(bulles[i], { opacity: 1 }); else c.ft(bulles[i], { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2.4)' }, tl);
             if (i + 1 < L.length) c.ft(bulles[i], { opacity: 1 }, { opacity: 0, duration: 0.08 }, fin);
             if (h2) return;

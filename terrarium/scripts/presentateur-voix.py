@@ -37,6 +37,14 @@ def main():
         l['env'] = [round(float(v), 2) for v in env]; l['envHz'] = 30
         duree = round(len(a) / 15000, 2)
         l['duree'] = duree
+        if l.get('lecture'):   # karaoké : horaire de chaque mot dit (faster-whisper), relatif au début de la phrase
+            from faster_whisper import WhisperModel
+            global _W
+            if '_W' not in globals(): _W = WhisperModel('medium', device='cpu', compute_type='int8')
+            a16 = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', dst, '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True).stdout, np.float32)
+            seg, _ = _W.transcribe(a16, language='fr', word_timestamps=True, initial_prompt=l['texte'])
+            l['mots'] = [[round(w.start, 2), round(w.end, 2)] for sg in seg for w in sg.words if any(ch.isalnum() for ch in w.word)]
+            print(f"   mots : {[(w.word.strip(), round(w.start, 2)) for sg in []]}{l['mots']}")
         off.append({'fichier': f'l{n}.wav', 't': l['t'], 'duree': duree})
         print(f'l{n} : {duree} s, à {l["t"]} s')
     ep['voixOff'] = off; ep['voixGeneree'] = True

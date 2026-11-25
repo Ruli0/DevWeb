@@ -427,6 +427,13 @@ const BRUITAGES = {
     bruit(b, (x) => 0.7 * Math.sin(Math.PI * Math.min(1, x / 0.55)) ** 2, { bas: 600, haut: 6000, debut: 0, hasard: graine(610), duree: 0.6 });
     return b;
   },
+  // Ailes : une seconde de battements (5,5 par seconde), souffles feutrés qui montent puis retombent.
+  'ailes.wav': () => {
+    const { tampon, bruit, graine } = O();
+    const b = tampon(1.1);
+    for (let k = 0; k < 6; k += 1) bruit(b, (x) => 0.55 * Math.sin(Math.PI * Math.min(1, x / 0.15)) ** 2, { bas: 250, haut: 2200, debut: k / 5.5, hasard: graine(640 + k), duree: 0.15 });
+    return b;
+  },
   // Gloups : une déglutition de dessin animé (deux bulles graves qui montent).
   'gloups.wav': () => {
     const { tampon, sinus, enveloppe } = O();
