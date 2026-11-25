@@ -57,7 +57,7 @@ Si les objectifs sont atteints, on enchaîne avec PIEUVRE puis SCORPION, même h
 
 Cocher « contenu généré par IA » ; couverture = première image (STOP) ; garder le son de la vidéo ; publier vers 18-20 h.
 
-## Vidéo 3 : MIRAGE (version courte, 18,35 s)
+## Vidéo 3 : MIRAGE (version serrée, 13,9 s ; l'ancienne de 18,35 s est gardée en réserve)
 **Vidéo** : `videos/studio/jeu-mots-mirage-hibou/jeu-mots-mirage-hibou-final.mp4` · boucle parfaite.
 **Description** :
 > STOP ✋ Ce hibou parie ses plumes que tu ne trouves pas ce mot 🦉🏜️ Tu l'as eu à quelle lettre ?
@@ -66,4 +66,4 @@ Cocher « contenu généré par IA » ; couverture = première image (STOP) ; ga
 **Commentaire épinglé** :
 > Écris la lettre où tu l'as trouvé. Le hibou répond aux meilleurs 👀
 
-Cocher « contenu généré par IA ». Différence avec SCORPION (seul changement testé) : vol et lecture raccourcis (~2 s au lieu de 5 s), vidéo de 18,35 s au lieu de 20,6 s.
+Cocher « contenu généré par IA ». Différences avec SCORPION : vol et lecture raccourcis, une lettre toutes les 2 s, oasis de fin, 13,9 s au lieu de 20,6 s.
