@@ -32,6 +32,7 @@ def main():
         env = np.clip(rms / (np.percentile(rms, 90) + 1e-6), 0, 1)
         l['env'] = [round(float(v), 2) for v in env]; l['envHz'] = 30
         duree = round(len(a) / 15000, 2)
+        l['duree'] = duree
         off.append({'fichier': f'l{n}.wav', 't': l['t'], 'duree': duree})
         print(f'l{n} : {duree} s, à {l["t"]} s')
     ep['voixOff'] = off; ep['voixGeneree'] = True

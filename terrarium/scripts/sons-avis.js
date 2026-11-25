@@ -397,6 +397,7 @@ const BRUITAGES = {
   'chrono-5.wav': () => chronometre(5),
   'chrono-1.6.wav': () => chronometre(1.6),
   'chrono-2.wav': () => chronometre(2),
+  'chrono-2.8.wav': () => chronometre(2.8),
   'chrono-3.wav': () => chronometre(3),
   // Les bruitages « zinzin » du hibou présentateur.
   // Boing : un ressort (fréquence qui ondule et retombe).

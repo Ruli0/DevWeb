@@ -53,28 +53,36 @@
       if (u < 1.8) { const k = Math.sin(Math.PI * (u - 1.55) / 0.25); return { x: 0, y: 0, r: 0, sx: 1 + 0.3 * k, sy: 1 - 0.32 * k }; }
       const k = (u - 1.8) / 0.5; return { x: 0, y: -70 * Math.sin(Math.PI * k) * (1 - k * 0.3), r: 0, sx: 1 - 0.06 * Math.sin(Math.PI * k), sy: 1 + 0.08 * Math.sin(Math.PI * k) };
     };
+    // La danse : dans chaque silence entre deux phrases (et après la dernière), calée sur le tempo de la musique.
+    // Jamais pendant l'amorce (le raccord de la boucle reste en « défi ») ni pendant l'éjection.
+    const danseOK = !!p.presentateur.danse, temps = 60 / ((p.muetCfg && p.muetCfg.tempo) || 108);
+    const silences = danseOK ? L.map((l, k) => [l.t + (l.duree || 1.5) + 0.06, k + 1 < L.length ? L[k + 1].t - 0.04 : d + 1]).filter(([a, b]) => b - a > 0.3) : [];
+    const danse = (t) => { if (!danseOK || (tE != null && t > tE - 0.05 && t < tE + 2.3)) return 0; let k = 0; silences.forEach(([a, b]) => { k = Math.max(k, cloche(t, a, 0.3, Math.max(0, b - a - 0.6), 0.3)); }); return k; };
     const A = (n, v) => n && n.setAttribute('transform', v);
     function rendre(t) {
       const i = ligneA(t), avant = i === 0 && t < L[0].t, e1 = emoDe(i), e0 = avant || (i === 0 && p.amorceBoucle) ? e1 : emoDe(i - 1), kE = i < 0 || avant ? 1 : lisse((t - L[i].t) / 0.18), kA = i < 0 || avant ? 1 : dos(lisse((t - L[i].t) / 0.55));
       const o = bouchee(t), pan = tP != null && t >= tP && t < finP ? cloche(t, tP, 0.15, 1.4, 0.25) : 0;
+      const kD = danse(t), ph = t / temps, sa = Math.sin(Math.PI * ph), ab = Math.abs(sa), at = Math.pow(Math.max(0, Math.cos(2 * Math.PI * ph)), 3);
       // sourcils
       const S0 = P.SOURCILS[e0] || P.SOURCILS.neutre, S1 = P.SOURCILS[e1] || P.SOURCILS.neutre;
-      [sg, sd].forEach((n, c2) => { const v = S0[c2].map((x, j) => mix(x, S1[c2][j], kE) - (j % 2 ? o * 6 : 0)); n.setAttribute('d', `M${v[0].toFixed(1)} ${v[1].toFixed(1)} Q${v[2].toFixed(1)} ${v[3].toFixed(1)} ${v[4].toFixed(1)} ${v[5].toFixed(1)}`); });
+      const SJ = P.SOURCILS.joie;
+      [sg, sd].forEach((n, c2) => { const v = S0[c2].map((x, j) => mix(mix(x, S1[c2][j], kE), SJ[c2][j], kD) - (j % 2 ? o * 6 : 0)); n.setAttribute('d', `M${v[0].toFixed(1)} ${v[1].toFixed(1)} Q${v[2].toFixed(1)} ${v[3].toFixed(1)} ${v[4].toFixed(1)} ${v[5].toFixed(1)}`); });
       // tête : balancement, émotion, syllabes, tremblement de panique
-      const tilt = 3 * Math.sin(2 * Math.PI * t / 3.3) + mix(EMO[e0].tilt, EMO[e1].tilt, kE) + 3 * o + pan * 4 * Math.sin(t * 52);
+      const tilt = 3 * Math.sin(2 * Math.PI * t / 3.3) + mix(EMO[e0].tilt, EMO[e1].tilt, kE) + 3 * o + pan * 4 * Math.sin(t * 52) - 11 * kD * sa;
       A(tete, `translate(0 ${(-7 * o + 2 * Math.sin(2 * Math.PI * t / 1.7)).toFixed(2)}) rotate(${tilt.toFixed(2)} 0 -250)`);
       // corps : respiration (étirement doux depuis les pieds) ; folie « ejecte » : vol complet
       const sR = 0.018 * Math.sin(2 * Math.PI * t / 1.7), V = tE != null ? vol(t - tE) : vol(-1);
-      A(corps, `scale(${((1 - sR) * V.sx).toFixed(4)} ${((1 + sR) * V.sy).toFixed(4)})`);
+      A(corps, `scale(${((1 - sR) * V.sx * (1 + 0.07 * kD * at)).toFixed(4)} ${((1 + sR) * V.sy * (1 - 0.09 * kD * at)).toFixed(4)})`);
       const jx = pan * 6 * Math.sin(t * 61) + pan * 3 * Math.sin(t * 97);
-      A(pos, `translate(${(V.x + jx).toFixed(1)} ${V.y.toFixed(1)}) rotate(${V.r.toFixed(1)} 0 -200)`);
+      A(pos, `translate(${(V.x + jx + 22 * kD * sa).toFixed(1)} ${(V.y - 34 * kD * ab).toFixed(1)}) rotate(${V.r.toFixed(1)} 0 -200) rotate(${(8 * kD * sa).toFixed(2)} 0 0)`);
       fantomes.forEach((g, k) => { const u = tE == null ? -1 : t - tE, Vf = vol(u - 0.035 * (k + 1)), vis = u > 0.18 && u < 1.5; g.setAttribute('opacity', vis ? (0.28 - k * 0.08).toFixed(2) : '0'); g.setAttribute('transform', `translate(${Vf.x.toFixed(1)} ${Vf.y.toFixed(1)}) rotate(${Vf.r.toFixed(1)} 0 -200)`); });
       // ailes : geste de l'émotion (arrivée avec dépassement), flottement au repos, battements de joie
       const W0 = EMO[e0].ailes, W1 = EMO[e1].ailes, bat = e1 === 'joie' ? 16 * Math.sin(t * 38) : 0, fl = 4 * Math.sin(2 * Math.PI * t / 1.3);
       const lev = tr ? cloche(t, tr.t, 0.14, tr.duree || 0.55, 0.16) : 0;
       if (trTxt) trTxt.setAttribute('opacity', lisse((lev - 0.4) / 0.4).toFixed(2));
-      A(ag, `rotate(${(mix(W0[0], W1[0], kA) + fl + bat + pan * 10 * Math.sin(t * 47) + 78 * lev).toFixed(2)})`);
-      A(ad, `rotate(${(mix(W0[1], W1[1], kA) - fl - bat - pan * 10 * Math.sin(t * 43) + (e1 === 'defi' ? 6 * Math.sin(t * 9) * (1 - kE * 0.3) : 0)).toFixed(2)})`);
+      const dG = 50 + 65 * sa * sa, dD = -(50 + 65 * Math.cos(Math.PI * ph) ** 2);   // sinus au carré : pas d'à-coup au changement de sens
+      A(ag, `rotate(${(mix(mix(W0[0], W1[0], kA) + fl + bat + pan * 10 * Math.sin(t * 47) + 78 * lev, dG, kD)).toFixed(2)})`);
+      A(ad, `rotate(${(mix(mix(W0[1], W1[1], kA) - fl - bat - pan * 10 * Math.sin(t * 43) + (e1 === 'defi' ? 6 * Math.sin(t * 9) * (1 - kE * 0.3) : 0), dD, kD)).toFixed(2)})`);
       // regard : vers chaque nouvelle lettre, puis vers le spectateur
       let gx = 2 * Math.sin(2 * Math.PI * t / 4.1), gy = 0;
       indices.concat([revel]).forEach((ti) => { const k = cloche(t, ti - 0.05, 0.12, 0.45, 0.2); gx = mix(gx, 13, k); gy = mix(gy, -15, k); });
@@ -84,6 +92,7 @@
       // paupières : clignements, regard à demi fermé quand il est agacé
       let lid = 0; clignes.forEach((b) => { lid = Math.max(lid, cloche(t, b, 0.06, 0.02, 0.09)); });
       lid = Math.max(lid, (e1 === 'agace' ? 0.38 * kE : 0) + (e0 === 'agace' && e1 !== 'agace' ? 0.38 * (1 - kE) : 0));
+      lid = Math.max(lid, 0.3 * kD);
       [lg, ld].forEach((n) => n.setAttribute('height', (112 * lid).toFixed(1)));
       // bec
       bouche.setAttribute('ry', (0.1 + 34 * o).toFixed(2)); langue.setAttribute('ry', (0.1 + 12 * o).toFixed(2)); langue.setAttribute('cy', (-338 + 52 + 12 * o).toFixed(1));
