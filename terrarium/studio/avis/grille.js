@@ -190,6 +190,7 @@
 .jeu .presente { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 3; pointer-events: none; }
 .jeu .presente svg { position: absolute; left: 0; top: 0; overflow: visible; }
 .jeu .presente .cta { position: absolute; left: 420px; top: 1352px; font: 900 50px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 4px 14px #000b; white-space: nowrap; transform-origin: 0% 50%; }
+.jeu .presente .cta.haut { left: auto; right: 190px; top: 1078px; font-size: 46px; transform-origin: 100% 50%; }
 .jeu .presente .eclats { position: absolute; left: 0; top: 0; overflow: visible; }
 .jeu .presente .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
 .jeu .presente .bulle { position: absolute; left: 400px; top: 1150px; width: 490px; min-height: 170px; display: flex; align-items: center; padding: 22px 28px; box-sizing: border-box; background: #fff6e8; border-radius: 34px; box-shadow: 6px 8px 0 #00000066; transform-origin: 0% 70%; }

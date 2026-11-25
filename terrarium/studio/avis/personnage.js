@@ -96,7 +96,9 @@
       + `<ellipse class="h2-bouche" cx="0" cy="${yT + 52}" rx="22" ry="0.1" fill="#5a1630"/><ellipse cx="0" cy="${yT + 52}" rx="10" ry="0.1" class="h2-langue" fill="#ff6f91"/>`
       + `<g transform="translate(0 ${yT + 44})"><g class="h2-mach"><path d="M-14 0 L14 0 L0 22 Z" fill="#ffc94d" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/></g></g>`
       + `<path d="M-19 ${yT + 26} L19 ${yT + 26} L0 ${yT + 52} Z" fill="#ffd45c" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/>`;
-    return `<g class="h2-pos"><g id="h2-hibou"><g class="h2-corps">${patte(-44)}${patte(44)}${corps}${aile('h2-ag', -104, -1)}${aile('h2-ad', 104, 1)}<g class="h2-tete">${tete}</g></g></g></g>`;
+    // La triche : la réponse écrite sur le flanc, sous l'aile gauche (visible seulement quand il la soulève). Texte posé par plans.js.
+    const triche = '<text class="h2-triche" x="0" y="0" transform="translate(-132 -72) rotate(-82)" font-size="44" font-weight="900" font-family="Inter, Arial, sans-serif" fill="#ffd45c" stroke="#13233d" stroke-width="8" paint-order="stroke" opacity="0"></text>';
+    return `<g class="h2-pos"><g id="h2-hibou"><g class="h2-corps">${patte(-44)}${patte(44)}${corps}${triche}${aile('h2-ag', -104, -1)}${aile('h2-ad', 104, 1)}<g class="h2-tete">${tete}</g></g></g></g>`;
   }
 
   function svg(pose = 'debout', allure = 'bonnet') {
