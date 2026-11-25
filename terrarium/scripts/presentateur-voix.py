@@ -42,9 +42,16 @@ def main():
             global _W
             if '_W' not in globals(): _W = WhisperModel('medium', device='cpu', compute_type='int8')
             a16 = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', dst, '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True).stdout, np.float32)
-            seg, _ = _W.transcribe(a16, language='fr', word_timestamps=True, initial_prompt=l['texte'])
-            l['mots'] = [[round(w.start, 2), round(w.end, 2)] for sg in seg for w in sg.words if any(ch.isalnum() for ch in w.word)]
-            print(f"   mots : {[(w.word.strip(), round(w.start, 2)) for sg in []]}{l['mots']}")
+            # sans amorce de texte (elle fausse les horaires) ; « qu » + « 'il » = un seul mot
+            seg, _ = _W.transcribe(a16, language='fr', word_timestamps=True, condition_on_previous_text=False)
+            ws = []
+            for sg in seg:
+                for w in sg.words:
+                    if not any(ch.isalnum() for ch in w.word): continue
+                    if ws and w.word.strip()[:1] in ("'", '’'): ws[-1][1] = round(w.end, 2); ws[-1][2] += w.word.strip()
+                    else: ws.append([round(w.start, 2), round(w.end, 2), w.word.strip()])
+            l['mots'] = [[a, b] for a, b, _ in ws]
+            print('   mots :', [(m, a) for a, b, m in ws])
         off.append({'fichier': f'l{n}.wav', 't': l['t'], 'duree': duree})
         print(f'l{n} : {duree} s, à {l["t"]} s')
     ep['voixOff'] = off; ep['voixGeneree'] = True

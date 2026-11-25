@@ -192,7 +192,7 @@
 .jeu.f3d .presente > svg:not(.eclats) { filter: drop-shadow(0 10px 18px #2a0a1fcc) drop-shadow(0 0 3px #2a0a1f99); }
 .jeu .presente .cta { position: absolute; left: 420px; top: 1352px; font: 900 50px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 4px 14px #000b; white-space: nowrap; transform-origin: 0% 50%; }
 .jeu .presente .cta.haut { left: auto; right: 190px; top: 1078px; font-size: 46px; transform-origin: 100% 50%; }
-.jeu .qm { display: inline-block; transform-origin: 50% 70%; }
+.jeu .qm { display: inline-block; transform-origin: 50% 70%; margin-right: .12em; }
 .jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }
 .jeu.f3d .fond-papier, .jeu.f3d .danse { display: none; }
 .jeu .fond-anime { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
