@@ -193,6 +193,17 @@
 .jeu .presente .cta { position: absolute; left: 420px; top: 1352px; font: 900 50px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 4px 14px #000b; white-space: nowrap; transform-origin: 0% 50%; }
 .jeu .presente .cta.haut { left: auto; right: 190px; top: 1078px; font-size: 46px; transform-origin: 100% 50%; }
 .jeu .qm { display: inline-block; transform-origin: 50% 70%; margin-right: .12em; }
+.jeu.qcmode .grille, .jeu.qcmode .bandeau, .jeu.qcmode .chronog, .jeu.qcmode .minuteur, .jeu.qcmode .regle { display: none !important; }
+.jeu .qcm { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.jeu .qcm .qq { position: absolute; inset: 0; }
+.jeu .qcm .q-tete { position: absolute; left: 40px; top: 300px; width: 860px; text-align: center; color: #ffd45c; font: 900 44px/1 '${P.titre}'; letter-spacing: .03em; text-shadow: 0 4px 14px #000b; }
+.jeu .qcm .q-carte { position: absolute; left: 40px; top: 372px; width: 860px; height: 236px; display: flex; align-items: center; justify-content: center; background: #fff6e8; border-radius: 30px; box-shadow: 0 10px 0 #00000055, 0 0 40px #ffffff44; }
+.jeu .qcm .q-carte p { margin: 0; padding: 0 36px; text-align: center; font: 800 58px/1.1 '${P.titre}'; color: #1d2333; letter-spacing: -.01em; }
+.jeu .qcm .q-rep { position: absolute; left: 40px; width: 860px; height: 104px; display: flex; align-items: center; gap: 26px; background: #fff6e8; border-radius: 24px; box-shadow: 0 7px 0 #00000055; transform-origin: 50% 50%; }
+.jeu .qcm .q-rep b { margin-left: 18px; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: #2f7bff; color: #fff; font: 900 44px/1 '${P.titre}'; box-shadow: inset 0 -5px 0 #0003; }
+.jeu .qcm .q-rep span { font: 800 52px/1 '${P.titre}'; color: #1d2333; }
+.jeu .qcm .q-barre { position: absolute; left: 40px; top: 1012px; width: 860px; height: 22px; border-radius: 11px; background: #ffffff40; overflow: hidden; }
+.jeu .qcm .q-barre i { display: block; width: 100%; height: 100%; background: #ffd45c; border-radius: 11px; }
 .jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }
 .jeu.f3d .fond-papier, .jeu.f3d .danse { display: none; }
 .jeu .fond-anime { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
