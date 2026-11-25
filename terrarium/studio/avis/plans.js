@@ -20,9 +20,9 @@
     const rayons = Array.from({ length: 12 }, (_, k) => { const a = (k / 12) * 2 * Math.PI, b = a + Math.PI / 24, R = 2200; return `<path d="M0 0 L${(R * Math.cos(a)).toFixed(0)} ${(R * Math.sin(a)).toFixed(0)} L${(R * Math.cos(b)).toFixed(0)} ${(R * Math.sin(b)).toFixed(0)} Z"/>`; }).join('');
     const grains = Array.from({ length: 40 }, (_, k) => `<circle class="fa-grain" r="${(2 + hf(k + 3) * 3.5).toFixed(1)}" fill="#ffe7b8" fill-opacity="${(0.3 + hf(k + 7) * 0.35).toFixed(2)}" cx="0" cy="0"/>`).join('');
     const boule = `<g class="fa-boule" opacity="0"><g class="fa-boule-r"><circle r="52" fill="none" stroke="#8a5a2b" stroke-width="7" stroke-opacity=".8"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${(Math.cos(k) * 48).toFixed(0)} ${(Math.sin(k) * 48).toFixed(0)} Q${(Math.cos(k * 2.3) * 20).toFixed(0)} ${(Math.sin(k * 1.7) * 20).toFixed(0)} ${(Math.cos(k + 2.6) * 48).toFixed(0)} ${(Math.sin(k + 2.6) * 48).toFixed(0)}" fill="none" stroke="#a8743b" stroke-width="5" stroke-opacity=".85"/>`).join('')}</g></g>`;
-    // Avec le fond 3D, seuls les grains de sable et le buisson roulant restent (le ciel, le soleil et les dunes sont en 3D).
+    // Avec le fond 3D, seuls les grains de sable restent (le ciel, le soleil et les dunes sont en 3D).
     const d2d = sans2d ? '' : `<g transform="translate(930 1660)"><g class="fa-rayons" fill="#fff1c2" fill-opacity=".09">${rayons}</g></g><g class="fa-dune1"><path d="${dune(1540, 26, 14, 0.4)}" fill="#c9632e" fill-opacity=".42"/></g><g class="fa-dune2"><path d="${dune(1640, 30, 12, 1.9)}" fill="#9a3f1e" fill-opacity=".5"/></g>`;
-    return `<svg class="fond-anime" viewBox="0 0 1080 1920" width="1080" height="1920">${d2d}${boule}<g class="fa-grains">${grains}</g></svg>`;
+    return `<svg class="fond-anime" viewBox="0 0 1080 1920" width="1080" height="1920">${d2d}${sans2d ? '' : boule}<g class="fa-grains">${grains}</g></svg>`;   // pas de buisson roulant avec le fond 3D (demande de Jules)
   }
   function animerFond(c, el, p, t0, d) {
     const sv = q(el, '.fond-anime'); if (!sv) return;
@@ -35,6 +35,7 @@
       if (d2) d2.setAttribute('transform', `translate(${(-mod(2160 * t / Lp, 1080)).toFixed(2)} 0)`);
       gr.forEach((g, k) => { const P = G[k]; g.setAttribute('cx', (mod(P.x0 - 1180 * P.m * t / Lp, 1180) - 50).toFixed(1)); g.setAttribute('cy', (P.y0 + P.a * Math.sin(2 * Math.PI * 2 * t / Lp + P.ph)).toFixed(1)); });
       const a = 2.4, b = 7.4, u = (t - a) / (b - a);
+      if (!bo) return;
       if (u <= 0 || u >= 1) { bo.setAttribute('opacity', '0'); return; }
       const x = -160 + 1400 * u, y = 1740 - Math.abs(Math.sin(Math.PI * u * 5)) * 80;
       bo.setAttribute('opacity', '1'); bo.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`); bor.setAttribute('transform', `rotate(${(x / 52 * 57.3).toFixed(1)})`);
