@@ -45,12 +45,12 @@
         "intro": 0.3,
         "cadence": 3,
         "debuts": [
-          0.3
+          0.7
         ],
         "reponses": [
-          7.8
+          8.2
         ],
-        "fin": 4.4,
+        "fin": 4.4222,
         "tempo": 108,
         "titreFixe": true,
         "etapes": {
@@ -72,7 +72,7 @@
         "allure": "hibou2",
         "lignes": [
           {
-            "t": 0.0,
+            "t": 0.4,
             "texte": "Je parie MES PLUMES que tu trouves pas !",
             "env": [
               0.86,
@@ -135,7 +135,7 @@
             "envHz": 30
           },
           {
-            "t": 2.4,
+            "t": 2.8,
             "texte": "Regarde la fin… REGARDE LA FIN !",
             "env": [
               0.21,
@@ -211,7 +211,7 @@
             "envHz": 30
           },
           {
-            "t": 4.85,
+            "t": 5.25,
             "texte": "T'as toujours pas ?! Sérieux ?!",
             "env": [
               1.0,
@@ -267,7 +267,7 @@
             "envHz": 30
           },
           {
-            "t": 6.6,
+            "t": 7.0,
             "texte": "Je transpire des plumes là…",
             "env": [
               0.52,
@@ -326,7 +326,7 @@
             "envHz": 30
           },
           {
-            "t": 8.35,
+            "t": 8.75,
             "texte": "CRATÈRE ! Like si tu l'avais !",
             "env": [
               0.47,
@@ -395,7 +395,7 @@
             "envHz": 30
           },
           {
-            "t": 10.45,
+            "t": 10.85,
             "texte": "Encore un ?",
             "emotion": "defi",
             "env": [
@@ -433,7 +433,7 @@
           "demiTons": 2
         },
         "cta": {
-          "t": 9.6,
+          "t": 10.0,
           "texte": "À quelle lettre ? 💬 👉",
           "haut": true
         }
@@ -441,45 +441,46 @@
       "sons": [
         {
           "f": "boing.wav",
-          "t": 0.2,
+          "t": 0.6,
           "v": 0.45
         },
         {
           "f": "whoosh.wav",
-          "t": 2.4,
+          "t": 2.8,
           "v": 0.35
         },
         {
           "f": "hou-hou.wav",
-          "t": 4.9,
+          "t": 5.3,
           "v": 0.4
         },
         {
           "f": "gloups.wav",
-          "t": 6.62,
+          "t": 7.02,
           "v": 0.45
         },
         {
           "f": "explosion.wav",
-          "t": 8.35,
+          "t": 8.75,
           "v": 0.6
         },
         {
           "f": "whoosh.wav",
-          "t": 8.5,
+          "t": 8.9,
           "v": 0.45
         },
         {
           "f": "pouf.wav",
-          "t": 9.9,
+          "t": 10.3,
           "v": 0.55
         },
         {
           "f": "boing.wav",
-          "t": 10.15,
+          "t": 10.55,
           "v": 0.35
         }
-      ]
+      ],
+      "amorceBoucle": 0.4
     }
   ],
   "publication": {
@@ -498,32 +499,32 @@
   "voixOff": [
     {
       "fichier": "l1.wav",
-      "t": 0.0,
+      "t": 0.4,
       "duree": 1.8
     },
     {
       "fichier": "l2.wav",
-      "t": 2.4,
+      "t": 2.8,
       "duree": 2.25
     },
     {
       "fichier": "l3.wav",
-      "t": 4.85,
+      "t": 5.25,
       "duree": 1.58
     },
     {
       "fichier": "l4.wav",
-      "t": 6.6,
+      "t": 7.0,
       "duree": 1.66
     },
     {
       "fichier": "l5.wav",
-      "t": 8.35,
+      "t": 8.75,
       "duree": 2.0
     },
     {
       "fichier": "l6.wav",
-      "t": 10.45,
+      "t": 10.85,
       "duree": 0.86
     }
   ],

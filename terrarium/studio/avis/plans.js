@@ -35,9 +35,10 @@
     const hs = (k) => { const x = Math.sin(k * 57.3 + 7.7) * 43758.5; return x - Math.floor(x); };
     const EMO = { neutre: { tilt: 0, ailes: [6, -6] }, defi: { tilt: 6, ailes: [8, -78] }, choc: { tilt: 0, ailes: [42, -42] }, agace: { tilt: -8, ailes: [-28, 28] }, panique: { tilt: 0, ailes: [150, -150] }, joie: { tilt: 4, ailes: [165, -165] } };
     const emoDe = (i) => (i < 0 ? 'neutre' : L[i].emotion || 'neutre');
-    const ligneA = (t) => { let i = -1; L.forEach((l, k) => { if (l.t <= t + 1e-6) i = k; }); return i; };
+    // Avant la première phrase (amorce de boucle), le hibou est déjà dans l'émotion de la première phrase.
+    const ligneA = (t) => { let i = L.length ? 0 : -1; L.forEach((l, k) => { if (l.t <= t + 1e-6) i = k; }); return i; };
     const bouchee = (t) => {   // ouverture du bec (0 à 1) : enveloppe de la phrase en cours, interpolée et adoucie
-      const i = ligneA(t); if (i < 0) return 0; const l = L[i], e = l.env || [], hz = l.envHz || 15, x = (t - l.t) * hz;
+      const i = ligneA(t); if (i < 0 || t < L[i].t) return 0; const l = L[i], e = l.env || [], hz = l.envHz || 15, x = (t - l.t) * hz;
       if (!e.length || x >= e.length) return 0;
       const v = (k) => (k < 0 || k >= e.length ? 0 : e[k]), k0 = Math.floor(x), f = x - k0;
       return lisse((t - l.t) / 0.06) * lisse((e.length - x) / 2) * cl(0.5 * mix(v(k0), v(k0 + 1), f) + 0.25 * mix(v(k0 - 1), v(k0), f) + 0.25 * mix(v(k0 + 1), v(k0 + 2), f));
@@ -54,7 +55,7 @@
     };
     const A = (n, v) => n && n.setAttribute('transform', v);
     function rendre(t) {
-      const i = ligneA(t), e1 = emoDe(i), e0 = emoDe(i - 1), kE = i < 0 ? 1 : lisse((t - L[i].t) / 0.18), kA = i < 0 ? 1 : dos(lisse((t - L[i].t) / 0.55));
+      const i = ligneA(t), avant = i === 0 && t < L[0].t, e1 = emoDe(i), e0 = avant || (i === 0 && p.amorceBoucle) ? e1 : emoDe(i - 1), kE = i < 0 || avant ? 1 : lisse((t - L[i].t) / 0.18), kA = i < 0 || avant ? 1 : dos(lisse((t - L[i].t) / 0.55));
       const o = bouchee(t), pan = tP != null && t >= tP && t < finP ? cloche(t, tP, 0.15, 1.4, 0.25) : 0;
       // sourcils
       const S0 = P.SOURCILS[e0] || P.SOURCILS.neutre, S1 = P.SOURCILS[e1] || P.SOURCILS.neutre;
@@ -344,7 +345,7 @@
           gsap.set(bulles, { opacity: 0 });
           L.forEach((l, i) => {
             const tl = t0 + l.t, fin = i + 1 < L.length ? t0 + L[i + 1].t - 0.08 : t0 + d;
-            if (l.t <= 0) gsap.set(bulles[i], { opacity: 1 }); else c.ft(bulles[i], { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2.4)' }, tl);
+            if (l.t <= 0 || (i === 0 && p.amorceBoucle)) gsap.set(bulles[i], { opacity: 1 }); else c.ft(bulles[i], { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2.4)' }, tl);
             if (i + 1 < L.length) c.ft(bulles[i], { opacity: 1 }, { opacity: 0, duration: 0.08 }, fin);
             if (h2) return;
             let prec = 0.1;
