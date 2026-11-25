@@ -18,7 +18,7 @@ ETAGES = [
        lignes=[(0.25, 'Gros phoque à défenses…', 'neutre', None, True), (2.27, 'Ça se corse…', 'choc', None, False), (6.27, 'Morse !', 'joie', None, False)],
        sons=[('whoosh.wav', 2.27, .3), ('bulles.wav', 7.3, .5)]),
   dict(mot='NARVAL', q='La licorne des mers', regle='ÉTAGE 3 · LES PROFONDEURS', ordre=[5, 3], deb=0.25, pas=2.0, d=8.6,
-       lignes=[(0.25, 'La licorne des mers…', 'neutre', None, True), (4.27, "J'ai froid… très froid !", 'panique', 'tremble', False), (6.27, 'Narval !', 'joie', None, False)],
+       lignes=[(0.25, 'La licorne des mers…', 'neutre', None, True), (4.27, "J'ai froid… très froid !", 'panique', 'tremble', False), (6.32, 'Narval !', 'joie', None, False)],
        sons=[('gloups.wav', 4.29, .45), ('bulles.wav', 7.3, .5)]),
   dict(mot='KRILL', q='Minuscule crevette, repas des baleines', regle='ÉTAGE 4 · LES ABYSSES', ordre=[4, 2], deb=0.25, pas=2.4, d=None,
        lignes=[(0.25, 'Minuscule crevette, repas des baleines…', 'neutre', None, True), (5.07, 'Personne trouve celui-là !', 'agace', None, False), (7.47, "KRILL ! Like si t'es allé jusqu'au fond !", 'joie', 'emerveille', False), (10.2, 'Encore un ?', 'defi', None, False)],
