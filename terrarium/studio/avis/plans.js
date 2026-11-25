@@ -102,7 +102,11 @@
     let SEG = [];
     if (VO) {
       const td = VO.depart, ta = VO.arrivee, tp = VO.pose, X = VO.x, Y = VO.y;
-      SEG = [
+      if (VO.direct) SEG = [   // version courte : il décolle du gros plan et monte directement se placer près de la question
+        [{ t: td, x: 0, y: 0, vx: 0, vy: -1400 }, { t: td + (ta - td) * 0.5, x: 1032, y: -470 }, { t: ta, x: X, y: Y, vx: 0, vy: 0 }],
+        null,
+        [{ t: tp - 0.8, x: X, y: Y, vx: 0, vy: 0 }, { t: tp - 0.42, x: 758, y: -355 }, { t: tp, x: 0, y: 0, vx: -1500, vy: 1300 }],
+      ]; else SEG = [
         // décollage : vers le haut puis sort par la gauche ; arrivée : entre en haut à droite et descend en douceur à droite
         // de la question (sans la survoler) ; descente : passe à droite puis sous la grille jusqu'à sa place.
         [{ t: td, x: 0, y: 0, vx: 0, vy: -1400 }, { t: td + 0.22, x: -113, y: -516 }, { t: td + 0.5, x: -790, y: -1323, vx: -2600, vy: -1700 }],
@@ -117,13 +121,14 @@
       if (t >= td - 0.16 && t < td) { const k = Math.sin(Math.PI * (t - td + 0.16) / 0.16); R.sx = 1 + 0.18 * k; R.sy = 1 - 0.22 * k; return R; }   // il se tasse
       if (t >= tp && t < tp + 0.42) { const u = (t - tp) / 0.42, k = Math.sin(Math.PI * Math.min(1, u / 0.45)) * (u < 0.45 ? 1 : 0), r2 = u >= 0.45 ? Math.sin(Math.PI * (u - 0.45) / 0.55) : 0; R.sx = 1 + 0.26 * k - 0.05 * r2; R.sy = 1 - 0.3 * k + 0.07 * r2; R.y = -34 * r2; return R; }   // atterrissage : écrasement, petit rebond
       if (t < td || t >= tp) return R;
-      let K = null; if (t <= SEG[0][2].t) K = SEG[0]; else if (t >= SEG[1][0].t && t <= ta) K = SEG[1]; else if (t >= SEG[2][0].t) K = SEG[2];
-      if (!K && t > SEG[0][2].t && t < SEG[1][0].t) { R.x = -2000; R.y = -3000; R.kF = 1; return R; }   // hors champ
+      let K = null; const fin0 = SEG[0][SEG[0].length - 1].t;
+      if (t <= fin0) K = SEG[0]; else if (SEG[1] && t >= SEG[1][0].t && t <= ta) K = SEG[1]; else if (t >= SEG[2][0].t) K = SEG[2];
+      if (!K && SEG[1] && t > fin0 && t < SEG[1][0].t) { R.x = -2000; R.y = -3000; R.kF = 1; return R; }   // hors champ
       const e = 1 / 120; let x, y, vx = 0;
       if (K) { [x, y] = hermite(K, t); const a2 = hermite(K, t - e), b2 = hermite(K, t + e); vx = (b2[0] - a2[0]) / (2 * e); }
       else { x = VO.x; y = VO.y; }   // vol stationnaire
       R.x = x; R.y = y; R.kF = 1;
-      R.hov = K ? (K === SEG[1] ? lisse((t - ta + 0.25) / 0.25) : K === SEG[2] ? 1 - lisse((t - SEG[2][0].t) / 0.25) : 0) : 1;
+      R.hov = K ? (K === SEG[1] || (VO.direct && K === SEG[0]) ? lisse((t - ta + 0.25) / 0.25) : K === SEG[2] ? 1 - lisse((t - SEG[2][0].t) / 0.25) : 0) : 1;
       R.r = Math.max(-24, Math.min(24, vx * 0.011));
       R.sx = 0.95; R.sy = 1.06;
       return R;
