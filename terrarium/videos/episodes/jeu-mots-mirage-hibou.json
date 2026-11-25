@@ -408,7 +408,7 @@
             "t": 14.728,
             "texte": "MIRAGE ! Like si tu l'avais !",
             "emotion": "joie",
-            "folie": "ejecte",
+            "folie": "emerveille",
             "envHz": 30,
             "env": [
               1.0,
@@ -537,26 +537,6 @@
           "v": 0.45
         },
         {
-          "f": "explosion.wav",
-          "t": 14.728,
-          "v": 0.6
-        },
-        {
-          "f": "whoosh.wav",
-          "t": 14.878,
-          "v": 0.45
-        },
-        {
-          "f": "pouf.wav",
-          "t": 16.278,
-          "v": 0.55
-        },
-        {
-          "f": "boing.wav",
-          "t": 16.528,
-          "v": 0.35
-        },
-        {
           "f": "whoosh.wav",
           "t": 1.2,
           "v": 0.45
@@ -580,11 +560,25 @@
           "f": "pouf.wav",
           "t": 3.62,
           "v": 0.5
+        },
+        {
+          "f": "merveille.wav",
+          "t": 14.62,
+          "v": 0.5
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 17.5,
+          "v": 0.22
         }
       ],
       "amorceBoucle": 0.4,
       "fondAnime": "desert",
-      "fond3d": "mirage"
+      "fond3d": "mirage",
+      "fond3dOpts": {
+        "revel": 14.68,
+        "fin": 18.2
+      }
     }
   ],
   "publication": {

@@ -434,6 +434,14 @@ const BRUITAGES = {
     for (let k = 0; k < 6; k += 1) bruit(b, (x) => 0.55 * Math.sin(Math.PI * Math.min(1, x / 0.15)) ** 2, { bas: 250, haut: 2200, debut: k / 5.5, hasard: graine(640 + k), duree: 0.15 });
     return b;
   },
+  // Merveille : un arpège de cloches qui monte (accord majeur) et un scintillement aigu, pour l'apparition de l'oasis.
+  'merveille.wav': () => {
+    const { tampon, sinus, enveloppe } = O();
+    const b = tampon(2.6);
+    [72, 76, 79, 84, 88, 91].forEach((n, i) => TIMBRES.cloche(b, note(n), i * 0.09, 0.32, 1.3));
+    for (let k = 0; k < 14; k += 1) { const f = note(96 + (k * 5) % 12); sinus(b, () => f, (x) => 0.06 * enveloppe(x, 0.002, 0.12), 0.25 + k * 0.07, 'sin', 0.4); }
+    return reverbe(b, 0.45);
+  },
   // Gloups : une déglutition de dessin animé (deux bulles graves qui montent).
   'gloups.wav': () => {
     const { tampon, sinus, enveloppe } = O();

@@ -19,10 +19,10 @@
   const r = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true });
   r.setPixelRatio(1); r.setSize(W, H, false);
   const sc = new THREE.Scene(), cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const U = { uT: { value: 0 }, uL: { value: L }, uR: { value: new THREE.Vector2(W, H) } };
+  const U = { uT: { value: 0 }, uL: { value: L }, uR: { value: new THREE.Vector2(W, H) }, uRev: { value: 0 }, uOnd: { value: 0 } };
   const frag = `${MIR ? '#define MIRAGE' : ''}
 precision highp float;
-uniform float uT, uL; uniform vec2 uR;
+uniform float uT, uL, uRev, uOnd; uniform vec2 uR;
 #define PI 3.14159265
 const float PZ = 48.0;               // période du terrain en profondeur
 float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -62,23 +62,27 @@ vec3 ciel(vec3 rd, vec3 sd){
 #ifdef MIRAGE
 // Un palmier en silhouette dans le plan (azimut, élévation) : tronc courbé et six palmes en arc. Renvoie la couverture (0 à 1).
 float seg(vec2 p, vec2 a, vec2 b, float w){ vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return smoothstep(w, w * 0.4, length(pa - ba * h)); }
-float palmier(vec2 q, float hgt, float pench){
-  float c = 0.0; vec2 top = vec2(pench * hgt, hgt);
+vec2 palmier(vec2 q, float hgt, float pench){   // (tronc, palmes)
+  float tr = 0.0, fr = 0.0; vec2 top = vec2(pench * hgt, hgt);
   for (int i = 0; i < 5; i++) { float a = float(i) / 5.0, b = float(i + 1) / 5.0;      // tronc courbé, plus épais en bas
-    c = max(c, seg(q, vec2(pench * hgt * a * a, hgt * a), vec2(pench * hgt * b * b, hgt * b), 0.0034 - 0.0012 * a)); }
+    tr = max(tr, seg(q, vec2(pench * hgt * a * a, hgt * a), vec2(pench * hgt * b * b, hgt * b), (0.0034 - 0.0012 * a) * hgt / 0.08)); }
   for (int k = 0; k < 8; k++) {                                                            // palmes pleines qui retombent
-    float dir = (float(k) - 3.5) / 3.5, sx = sign(dir + 0.0001), lg = hgt * (0.55 + 0.15 * abs(sin(float(k) * 1.7)));
+    float dir = (float(k) - 3.5) / 3.5, lg = hgt * (0.55 + 0.15 * abs(sin(float(k) * 1.7)));
     vec2 p0 = top;
     for (int j = 0; j < 5; j++) { float u = float(j + 1) / 5.0;
       vec2 p1 = top + vec2(dir * lg * u * 0.95, lg * (0.55 * u - 1.05 * u * u * (0.45 + 0.55 * abs(dir))));   // arc : monte puis retombe
-      c = max(c, seg(q, p0, p1, 0.0058 * (1.0 - 0.8 * u) + 0.0009)); p0 = p1; }
+      fr = max(fr, seg(q, p0, p1, (0.0058 * (1.0 - 0.8 * u) + 0.0009) * hgt / 0.08)); p0 = p1; }
   }
-  c = max(c, smoothstep(0.006, 0.003, length(q - top)));                                   // cœur
-  return c;
+  fr = max(fr, smoothstep(0.006, 0.003, length(q - top) * 0.08 / hgt));                    // cœur
+  return vec2(tr, fr);
 }
-float oasis(vec2 ae, float t){   // ae : (azimut, élévation) ; la chaleur fait onduler les palmiers
-  vec2 q = ae + vec2(0.0009 * sin(ae.y * 170.0 + 2.0 * PI * 5.0 * t / uL) + 0.0006 * sin(ae.y * 60.0 - 2.0 * PI * 3.0 * t / uL), 0.0);
-  float c = palmier(q - vec2(0.075, 0.0), 0.075, 0.16);
+// L'oasis : trois palmiers. Mirage (uRev = 0) : petits, au loin, en silhouette. Réelle (uRev = 1) : 2,2 fois plus grands.
+// La chaleur les fait onduler (plus fort quand le mirage devient réel ou s'évanouit : uOnd).
+vec2 oasis(vec2 ae, float t){
+  float S = mix(1.0, 1.55, uRev), c0 = 0.115, c1 = mix(0.115, 0.128, uRev);
+  vec2 q = vec2((ae.x - c1) / S + c0, ae.y / S);
+  q.x += 0.0009 * sin(ae.y * 170.0 + 2.0 * PI * 5.0 * t / uL) + 0.0006 * sin(ae.y * 60.0 - 2.0 * PI * 3.0 * t / uL) + uOnd * sin(ae.y * 45.0 + 2.0 * PI * 9.0 * t / uL);   // uOnd : ondulation lente et ample (apparition, dissolution)
+  vec2 c = palmier(q - vec2(0.075, 0.0), 0.075, 0.16);
   c = max(c, palmier(q - vec2(0.118, 0.0), 0.098, -0.12));
   c = max(c, palmier(q - vec2(0.152, 0.0), 0.062, 0.2));
   return c;
@@ -131,20 +135,55 @@ void main(){
       vec3 rr = normalize(vec3(rd.x, -el * 1.6 + 0.004 + vag, rd.z));
       vec3 eau = ciel(rr, sd) * vec3(0.78, 0.95, 1.18) + vec3(0.25, 0.45, 0.6) * 0.12;
       eau += vec3(1.0, 0.9, 0.7) * pow(max(dot(normalize(vec3(rr.x, rr.y, rr.z)), sd), 0.0), 400.0) * 1.2;   // reflet du soleil
-      eau = mix(eau, eau * (1.0 - 0.75 * oasis(vec2(az, -el * 1.6 + 0.004 + vag), uT)) , 0.8);              // reflet des palmiers
+      vec2 ro2 = oasis(vec2(az, -el * 1.6 + 0.004 + vag), uT); eau = mix(eau, eau * (1.0 - 0.75 * max(ro2.x, ro2.y)), 0.8 * (1.0 - uRev));              // reflet des palmiers
       eau *= 1.0 + 0.12 * sin(el * 900.0 + 2.0 * PI * 6.0 * uT / uL);   // lignes de scintillement
       col = mix(col, eau, bande * 0.9);
     }
-    float pal = oasis(vec2(az, el), uT) * smoothstep(-0.003, 0.002, el) * loin;
-    col = mix(col, mix(vec3(0.12, 0.04, 0.16), horizon(vec3(rd.x, 0.02, rd.z)), 0.22), pal * 0.95);   // silhouettes brumeuses
+    // L'oasis réelle (uRev) : un lac turquoise sous les palmiers, avec reflets et éclats de soleil, et des buissons sur la rive.
+    float lc = mix(0.115, 0.128, uRev), dl = (az - lc) / 0.17, prof = 0.012 + 0.1 * uRev;
+    float lac = uRev * smoothstep(1.0, 0.82, length(vec2(dl, el / prof * 0.9))) * step(el, 0.0);
+    if (lac > 0.0) {
+      float vg = 0.002 * sin(az * 220.0 + 2.0 * PI * 3.0 * uT / uL) + 0.0012 * sin(az * 530.0 - 2.0 * PI * 5.0 * uT / uL);
+      vec3 rr = normalize(vec3(rd.x, -el + vg, rd.z));
+      float fres = 0.25 + 0.75 * pow(1.0 - clamp(-el * 12.0, 0.0, 1.0), 3.0);
+      vec3 eauR = mix(vec3(0.04, 0.42, 0.48), ciel(rr, sd) * vec3(0.95, 1.0, 1.05), fres);
+      vec2 rp = oasis(vec2(az, -el + vg), uT);
+      eauR = mix(eauR, vec3(0.06, 0.16, 0.08), 0.75 * max(rp.x, rp.y));                           // reflet des palmiers
+      float gl = hash(floor(vec2(az * 700.0, el * 1600.0 + floor(uT / uL * 40.0) * 3.0)));
+      eauR += vec3(1.0, 0.9, 0.6) * step(0.985, gl) * pow(max(dot(rr, sd), 0.0), 6.0) * 2.5;      // éclats de soleil
+      col = mix(col, eauR, lac);
+    }
+    float rive = uRev * smoothstep(1.05, 0.9, abs(dl)) * smoothstep(0.003 + 0.012 * vnoise(vec2(az * 90.0, 0.0), 1000.0) * uRev, 0.0, el) * step(-0.004, el);
+    col = mix(col, mix(vec3(0.07, 0.25, 0.08), vec3(0.35, 0.55, 0.15), vnoise(vec2(az * 300.0, el * 300.0), 1000.0)), rive * 0.95);   // buissons
+    vec2 pv = oasis(vec2(az, el), uT) * smoothstep(-0.003, 0.002, el) * max(loin, uRev);
+    vec3 silh = mix(vec3(0.12, 0.04, 0.16), horizon(vec3(rd.x, 0.02, rd.z)), 0.22);
+    float lum = pow(max(dot(normalize(vec3(rd.x, 0.0, rd.z)), normalize(vec3(sd.x, 0.0, sd.z))), 0.0), 40.0);
+    vec3 tronc = mix(vec3(0.2, 0.1, 0.05), vec3(0.62, 0.36, 0.16), lum) * (0.82 + 0.18 * sin(el * 900.0));   // anneaux du tronc
+    float foli = 0.5 + 0.5 * sin(az * 640.0 + el * 420.0 + 2.0 * sin(az * 90.0));                                                  // folioles
+    vec3 palme = mix(vec3(0.02, 0.17, 0.05), vec3(0.16, 0.46, 0.1), 0.55 + 0.45 * foli) * (0.85 + 0.3 * smoothstep(0.02, 0.2, el))
+               + vec3(1.0, 0.7, 0.25) * lum * 0.9 * foli;                                                       // contre-jour doré
+    col = mix(col, mix(silh, tronc, uRev), pv.x);
+    col = mix(col, mix(silh, palme, uRev), pv.y);
+    // lucioles dorées autour de l'oasis
+    if (uRev > 0.0) for (int k = 0; k < 18; k++) {
+      float fk = float(k), ph = 2.0 * PI * (uT / uL * (1.0 + mod(fk, 3.0)) + hash(vec2(fk, 1.0)));
+      vec2 lp = vec2(lc + (hash(vec2(fk, 2.0)) - 0.5) * 0.26 + 0.01 * sin(ph), 0.01 + hash(vec2(fk, 3.0)) * 0.17 + 0.008 * cos(ph * 1.3));
+      float dd = length(vec2(az, el) - lp);
+      col += vec3(1.0, 0.82, 0.4) * uRev * (exp(-dd * dd / 0.0000035) * 1.4 + exp(-dd * dd / 0.00004) * 0.25) * (0.6 + 0.4 * sin(ph * 2.0));
+    }
+    col *= mix(vec3(1.0), vec3(1.07, 1.0, 0.9), uRev);   // lumière plus chaude
   }
 #endif
   col = 1.0 - exp(-col * 1.35); col = pow(col, vec3(0.95)); col *= 1.0 - 0.3 * dot(uv, uv);   // étalonnage doux + vignette                       // vignette
   gl_FragColor = vec4(col, 1.0);
 }`;
   sc.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: U, vertexShader: 'void main(){ gl_Position = vec4(position, 1.0); }', fragmentShader: frag })));
-  return { maj(t) { U.uT.value = t; r.render(sc, cam); } };
+  // Révélation de l'oasis (mirage seulement) : montée en 0,5 s à opts.revel, maintien, dissolution de 0,8 s finie à opts.fin.
+  const O = opts || {}, lis = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+  const rev = (t) => (O.revel == null ? 0 : lis((t - O.revel) / 0.5) * (1 - lis((t - O.fin + 0.8) / 0.8)));
+  const ond = (t) => (O.revel == null ? 0 : 0.004 * Math.exp(-(((t - O.revel - 0.2) / 0.25) ** 2)) + 0.006 * lis((t - O.fin + 0.9) / 0.6) * (1 - lis((t - O.fin) / 0.15)));
+  return { maj(t) { U.uT.value = t; U.uRev.value = rev(t); U.uOnd.value = ond(t); r.render(sc, cam); } };
 }
-  const mirage = (canvas, L) => desert(canvas, L, { mirage: true });
+  const mirage = (canvas, L, o) => desert(canvas, L, Object.assign({ mirage: true }, o || {}));
   return { desert, mirage };
 });

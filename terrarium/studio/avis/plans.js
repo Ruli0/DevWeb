@@ -62,6 +62,7 @@
     const revel = m0.reponse.t + GR.LETTRE.vol;
     const lz = L.find((l) => l.folie === 'zoom'), lp = L.find((l) => l.folie === 'tremble'), le = L.find((l) => l.folie === 'ejecte');
     const tE = le ? le.t : null, tP = lp ? lp.t : null, finP = lp ? lp.t + 1.8 : null;
+    const lm = L.find((l) => l.folie === 'emerveille');   // émerveillé : il regarde l'oasis apparaître (éclat doré)
     const cl = (x) => Math.max(0, Math.min(1, x)), lisse = (x) => { x = cl(x); return x * x * (3 - 2 * x); };
     const dos = (x) => { x = cl(x); const s2 = 1.4; return 1 + (s2 + 1) * Math.pow(x - 1, 3) + s2 * Math.pow(x - 1, 2); };   // back.out
     const cloche = (t, a, mont, tenue, desc) => (t < a ? 0 : t < a + mont ? lisse((t - a) / mont) : t < a + mont + tenue ? 1 : lisse(1 - (t - a - mont - tenue) / desc));
@@ -171,6 +172,7 @@
       let gx = 2 * Math.sin(2 * Math.PI * t / 4.1), gy = 0;
       indices.concat([revel]).forEach((ti) => { const k = cloche(t, ti - 0.05, 0.12, 0.45, 0.2); gx = mix(gx, 13, k); gy = mix(gy, -15, k); });
       if (pan) { gx += pan * 8 * Math.sin(t * 13); }
+      if (lm) { const kM = cloche(t, lm.t + 0.05, 0.25, 2.4, 0.4); gx = mix(gx, 17, kM); gy = mix(gy, -13, kM); }
       if (tr) { const kt = cloche(t, tr.t + 0.08, 0.1, (tr.duree || 0.55) - 0.1, 0.12); gx = mix(gx, -16, kt); gy = mix(gy, 12, kt); }
       if (ll) { const kl = cloche(t, ll.t - 0.15, 0.2, (ll.duree || 2) - 0.1, 0.3); gx = mix(gx, -15, kl); gy = mix(gy, -14, kl); }   // il regarde la question
       [pg, pd].forEach((n) => A(n, `translate(${gx.toFixed(2)} ${gy.toFixed(2)})`));
@@ -210,7 +212,8 @@
       confettis.forEach((cf, k) => { const tc = u - 0.05; if (tc < 0 || tc > 1.7) { cf.setAttribute('opacity', '0'); return; } const C = confs[k];
         cf.setAttribute('opacity', (tc < 1.1 ? 1 : 1 - (tc - 1.1) / 0.6).toFixed(2));
         cf.setAttribute('transform', `translate(${(230 + C.vx * tc * 0.6).toFixed(1)} ${(1240 + C.vy * tc * 0.6 + 700 * tc * tc).toFixed(1)}) rotate(${(C.r * tc).toFixed(1)})`); });
-      flash.style.opacity = u >= 0 && u < 0.2 ? (0.5 * cloche(u, 0, 0.04, 0.02, 0.12)).toFixed(3) : '0';
+      if (lm && t >= lm.t - 0.1 && t < lm.t + 0.7) { flash.style.background = '#ffe2a0'; flash.style.opacity = (0.42 * cloche(t, lm.t - 0.08, 0.08, 0.05, 0.5)).toFixed(3); }
+      else { flash.style.background = ''; flash.style.opacity = u >= 0 && u < 0.2 ? (0.5 * cloche(u, 0, 0.04, 0.02, 0.12)).toFixed(3) : '0'; }
       poussiere.forEach((pp, k) => { const tp = u - 1.55 - k * 0.02; if (tp < 0 || tp > 0.6) { pp.setAttribute('r', '0'); return; } pp.setAttribute('r', (14 + 50 * (tp / 0.6)).toFixed(1)); pp.setAttribute('fill-opacity', (0.55 * (1 - tp / 0.6)).toFixed(2)); pp.setAttribute('cx', (150 + k * 40 + (k - 2) * 60 * tp).toFixed(1)); });
       const sec = (u >= 0 && u < 0.35 ? 14 * (1 - u / 0.35) * Math.sin(u * 95) : 0) + (u >= 1.55 && u < 1.8 ? 8 * (1 - (u - 1.55) / 0.25) * Math.sin(u * 90) : 0);
       if (cadre) cadre.style.translate = sec ? `${sec.toFixed(2)}px 0px` : '';
@@ -449,7 +452,7 @@
         // calculée à la préparation de la voix), une bulle par phrase, et saute de joie à la révélation.
         if (p.fond3d) {   // fond 3D : la scène est rendue à chaque image par le même pilote fini
           const cv = q(el, '.fond-3d'), F3 = (typeof self !== 'undefined' ? self : this).Avis.fond3d, Lp = d - (p.amorceBoucle || 0);
-          if (cv && F3 && F3[p.fond3d]) { const sc3 = F3[p.fond3d](cv, Lp), pil = { t: 0 }; sc3.maj(0); c.ft(pil, { t: 0 }, { t: d, duration: d, ease: 'none', onUpdate: () => sc3.maj(pil.t) }, t0); }
+          if (cv && F3 && F3[p.fond3d]) { const sc3 = F3[p.fond3d](cv, Lp, p.fond3dOpts), pil = { t: 0 }; sc3.maj(0); c.ft(pil, { t: 0 }, { t: d, duration: d, ease: 'none', onUpdate: () => sc3.maj(pil.t) }, t0); }
         }
         if (p.fondAnime) animerFond(c, el, p, t0, d);
         if (p.presentateur) {
