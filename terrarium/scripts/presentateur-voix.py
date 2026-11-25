@@ -26,6 +26,10 @@ def main():
     for n, l in enumerate(lignes, 1):
         src, dst = os.path.join(dossier, f'l{n}.wav'), os.path.join(sortie, f'l{n}.wav')
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-af', 'aresample=24000,silenceremove=start_periods=1:start_threshold=-45dB,' + perso + 'loudnorm=I=-16:TP=-1.5:LRA=7,aresample=48000', '-ac', '1', dst], check=True)
+        # Accent (lignes[].accent {debut, db}) : une fin de phrase qui doit claquer, montée après le traitement (le compresseur l'aplatirait).
+        if l.get('accent'):
+            ac = l['accent']; tmp = dst + '.tmp.wav'
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', dst, '-af', f"volume=enable='gte(t,{ac['debut']})':volume={ac['db']}dB,alimiter=limit=0.89:level=false", tmp], check=True); os.replace(tmp, dst)
         brut = subprocess.run(['ffmpeg', '-v', 'error', '-i', dst, '-ac', '1', '-ar', '15000', '-f', 'f32le', '-'], capture_output=True).stdout  # 30 valeurs/s : paquets de 500
         a = np.frombuffer(brut, np.float32)
         rms = np.array([np.sqrt(np.mean(a[i:i + 500] ** 2)) for i in range(0, len(a), 500)]) if len(a) else np.zeros(1)
