@@ -4,7 +4,7 @@ Pose la voix du présentateur IA dans un épisode.
   python3 scripts/presentateur-voix.py <id-episode> <dossier-des-prises-choisies>
 Le dossier contient l1.wav, l2.wav… (une prise choisie par phrase, cf. voix-choisir.py), dans l'ordre de presentateur.lignes.
 Pour chaque phrase : silence de début retiré, niveau ramené à -16 LUFS, copie dans videos/voix/<id>/, enveloppe de la voix
-à 15 valeurs par seconde (0 à 1, pour le bec du présentateur). L'épisode reçoit voixOff (une entrée par phrase, à l'instant de
+à 30 valeurs par seconde (0 à 1, pour le bec du présentateur). L'épisode reçoit voixOff (une entrée par phrase, à l'instant de
 la ligne), voixGeneree: true (rappel « contenu généré par IA ») et les enveloppes.
 """
 import json, os, subprocess, sys
@@ -26,11 +26,11 @@ def main():
     for n, l in enumerate(lignes, 1):
         src, dst = os.path.join(dossier, f'l{n}.wav'), os.path.join(sortie, f'l{n}.wav')
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-af', 'aresample=24000,silenceremove=start_periods=1:start_threshold=-45dB,' + perso + 'loudnorm=I=-16:TP=-1.5:LRA=7,aresample=48000', '-ac', '1', dst], check=True)
-        brut = subprocess.run(['ffmpeg', '-v', 'error', '-i', dst, '-ac', '1', '-ar', '15000', '-f', 'f32le', '-'], capture_output=True).stdout
+        brut = subprocess.run(['ffmpeg', '-v', 'error', '-i', dst, '-ac', '1', '-ar', '15000', '-f', 'f32le', '-'], capture_output=True).stdout  # 30 valeurs/s : paquets de 500
         a = np.frombuffer(brut, np.float32)
-        rms = np.array([np.sqrt(np.mean(a[i:i + 1000] ** 2)) for i in range(0, len(a), 1000)]) if len(a) else np.zeros(1)
+        rms = np.array([np.sqrt(np.mean(a[i:i + 500] ** 2)) for i in range(0, len(a), 500)]) if len(a) else np.zeros(1)
         env = np.clip(rms / (np.percentile(rms, 90) + 1e-6), 0, 1)
-        l['env'] = [round(float(v), 2) for v in env]
+        l['env'] = [round(float(v), 2) for v in env]; l['envHz'] = 30
         duree = round(len(a) / 15000, 2)
         off.append({'fichier': f'l{n}.wav', 't': l['t'], 'duree': duree})
         print(f'l{n} : {duree} s, à {l["t"]} s')

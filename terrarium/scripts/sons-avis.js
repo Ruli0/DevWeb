@@ -426,6 +426,21 @@ const BRUITAGES = {
     bruit(b, (x) => 0.7 * Math.sin(Math.PI * Math.min(1, x / 0.55)) ** 2, { bas: 600, haut: 6000, debut: 0, hasard: graine(610), duree: 0.6 });
     return b;
   },
+  // Gloups : une déglutition de dessin animé (deux bulles graves qui montent).
+  'gloups.wav': () => {
+    const { tampon, sinus, enveloppe } = O();
+    const b = tampon(0.6);
+    [[0, 150, 320], [0.16, 210, 420]].forEach(([t, f0, f1]) => sinus(b, (x) => f0 + (f1 - f0) * Math.min(1, x / 0.1), (x) => 0.6 * enveloppe(x, 0.005, 0.07), t, 'sin', 0.2));
+    return b;
+  },
+  // Pouf : une retombée dans la poussière (souffle grave court).
+  'pouf.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(0.7);
+    sinus(b, (x) => 70 + 60 * Math.exp(-x * 20), (x) => 0.7 * enveloppe(x, 0.002, 0.12), 0, 'sin', 0.4);
+    bruit(b, (x) => 0.5 * enveloppe(x, 0.004, 0.16), { bas: 150, haut: 2200, debut: 0, hasard: graine(630), duree: 0.5 });
+    return b;
+  },
   // Explosion de cartoon : un choc grave, un souffle large, des éclats.
   'explosion.wav': () => {
     const { tampon, sinus, bruit, enveloppe, graine } = O();

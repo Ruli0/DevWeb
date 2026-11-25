@@ -62,8 +62,46 @@
     return `<g class="perso hibou" data-pose="${pose}"><g class="elan"><g transform="rotate(${P.penche || 0})">${patte('jg', -44)}${patte('jd', 44)}${corps}${aile('bg', -104, P.bg[0], -1)}${aile('bd', 104, P.bd[0], 1)}<g class="tete-p">${tete}</g></g></g></g>`;
   }
 
+  // Le hibou 2 (présentateur) : le même hibou de verre, mais articulé pour être animé image par image (plans.js, animer()).
+  // Groupes : .h2-pos (place, vol) > #h2-hibou > .h2-corps (respiration, écrasement, depuis les pieds) > ailes .h2-ag / .h2-ad
+  // (épaules), .h2-tete (inclinaison autour du cou) > sourcils .h2-sg / .h2-sd (forme = émotion), pupilles .h2-pg / .h2-pd (regard),
+  // paupières .h2-lg / .h2-ld (clignement), bouche .h2-bouche et bec du bas .h2-mach (synchro labiale).
+  const SOURCILS = {
+    neutre: [[-92, -416, -52, -436, -14, -418], [14, -418, 52, -436, 92, -416]],
+    defi: [[-94, -418, -52, -416, -14, -400], [14, -436, 52, -470, 94, -440]],
+    choc: [[-94, -440, -52, -474, -12, -446], [12, -446, 52, -474, 94, -440]],
+    agace: [[-94, -432, -52, -420, -12, -396], [12, -396, 52, -420, 94, -432]],
+    panique: [[-94, -404, -52, -418, -12, -446], [12, -446, 52, -418, 94, -404]],
+    joie: [[-94, -424, -52, -462, -12, -430], [12, -430, 52, -462, 94, -424]],
+  };
+  const sourcil = (v) => `M${v[0]} ${v[1]} Q${v[2]} ${v[3]} ${v[4]} ${v[5]}`;
+  function hibou2() {
+    const yT = -338;
+    const VERRE = 'fill="#c9ecff" fill-opacity=".34"', FONCE = 'fill="#a6d8f7" fill-opacity=".46"';
+    const BORDV = 'stroke="#ffffff" stroke-opacity=".95" stroke-width="7" stroke-linejoin="round"';
+    const reflet = (d, l) => `<path d="${d}" fill="none" stroke="#ffffff" stroke-opacity=".8" stroke-width="${l}" stroke-linecap="round"/>`;
+    const aile = (cls, x, m) => `<g transform="translate(${x} -262)"><g class="${cls}"><path d="M0 -6 C${m * 62} 30 ${m * 58} 150 ${m * 8} 196 C${m * -34} 140 ${m * -30} 40 0 -6 Z" ${FONCE} ${BORDV}/>${reflet(`M${m * 22} 40 Q${m * 34} 90 ${m * 20} 140`, 5)}<path d="M${m * 4} 196 l${m * -10} 18 M${m * 18} 178 l${m * 2} 20 M${m * -10} 180 l${m * -18} 12" stroke="#ffffff" stroke-opacity=".85" stroke-width="6" stroke-linecap="round"/></g></g>`;
+    const patte = (x) => `<path d="M${x} -8 l-22 14 M${x} -8 l0 20 M${x} -8 l22 14" fill="none" stroke="#ffd45c" stroke-width="11" stroke-linecap="round"/>`;
+    const corps = `<ellipse cx="0" cy="-168" rx="124" ry="170" ${VERRE} ${BORDV}/><ellipse cx="0" cy="-130" rx="82" ry="112" fill="#ffffff" fill-opacity=".2"/>`
+      + [[-30, -190], [30, -190], [0, -150], [-34, -112], [34, -112], [0, -74]].map(([x, y]) => `<path d="M${x - 13} ${y} Q${x} ${y + 16} ${x + 13} ${y}" fill="none" stroke="#ffffff" stroke-opacity=".6" stroke-width="5" stroke-linecap="round"/>`).join('')
+      + reflet('M-98 -230 Q-112 -160 -92 -90', 9);
+    const oeil = (x, c) => `<clipPath id="h2-c${c}"><circle cx="${x}" cy="${yT}" r="50"/></clipPath><circle cx="${x}" cy="${yT}" r="52" fill="#ffffff" fill-opacity=".9" ${BORDV}/>`
+      + `<g clip-path="url(#h2-c${c})"><g class="h2-p${c}"><circle cx="${x}" cy="${yT + 2}" r="26" fill="#121c28"/><circle cx="${x + 9}" cy="${yT - 8}" r="9" fill="#ffffff"/><circle cx="${x - 8}" cy="${yT + 12}" r="4" fill="#ffffff" fill-opacity=".8"/></g>`
+      + `<rect class="h2-l${c}" x="${x - 56}" y="${yT - 56}" width="112" height="0" fill="#8fb8d6"/></g><circle cx="${x}" cy="${yT}" r="52" fill="none" ${BORDV}/>`;
+    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" ${FONCE} ${BORDV}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" ${VERRE} ${BORDV}/>`
+      + reflet(`M-104 ${yT - 44} Q-72 ${yT - 92} -22 ${yT - 100}`, 8)
+      + `<ellipse cx="-92" cy="${yT + 48}" rx="22" ry="12" fill="#ff7aa2" fill-opacity=".45"/><ellipse cx="92" cy="${yT + 48}" rx="22" ry="12" fill="#ff7aa2" fill-opacity=".45"/>`
+      + oeil(-52, 'g') + oeil(52, 'd')
+      + `<path class="h2-sg" d="${sourcil(SOURCILS.neutre[0])}" fill="none" stroke="#2a3a52" stroke-width="15" stroke-linecap="round"/><path class="h2-sd" d="${sourcil(SOURCILS.neutre[1])}" fill="none" stroke="#2a3a52" stroke-width="15" stroke-linecap="round"/>`
+      + `<ellipse class="h2-bouche" cx="0" cy="${yT + 52}" rx="22" ry="0.1" fill="#5a1630"/><ellipse cx="0" cy="${yT + 52}" rx="10" ry="0.1" class="h2-langue" fill="#ff6f91"/>`
+      + `<g transform="translate(0 ${yT + 44})"><g class="h2-mach"><path d="M-14 0 L14 0 L0 22 Z" fill="#ffc94d" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/></g></g>`
+      + `<path d="M-19 ${yT + 26} L19 ${yT + 26} L0 ${yT + 52} Z" fill="#ffd45c" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/>`;
+    return `<g class="h2-pos"><g id="h2-hibou"><g class="h2-corps">${patte(-44)}${patte(44)}${corps}${aile('h2-ag', -104, -1)}${aile('h2-ad', 104, 1)}<g class="h2-tete">${tete}</g></g></g></g>`;
+  }
+
   function svg(pose = 'debout', allure = 'bonnet') {
     if (allure === 'hibou') return hibou(pose);
+    if (allure === 'hibou2') return hibou2();
     const P = POSES[pose] || POSES.debout, A = ALLURES[allure] || ALLURES.bonnet;
     const yB = P.bassin || -200, yE = yB - 150;                    // bassin et épaules
     // Chaque membre est dessiné autour de son articulation (l'origine de son groupe) : il tourne autour d'elle sans calcul.
@@ -131,5 +169,5 @@
   // il se tient à la même abscisse, juste au-dessus de la bande des sous-titres (qui commence à 1300), dans tous les décors.
   const VISAGE = { hibou: 338, defaut: 424 };
   const placer = (allure, place) => (allure === 'hibou' ? { x: place.x, y: 1282, taille: 0.6 } : { x: place.x, y: place.y, taille: place.taille });
-  return { ALLURES, POSES, PLACES, VISAGE, placer, svg, jouer };
+  return { ALLURES, POSES, PLACES, VISAGE, SOURCILS, placer, svg, jouer };
 });

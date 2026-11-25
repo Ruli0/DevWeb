@@ -11,6 +11,98 @@
   const q = (el, s) => el.querySelector(s), qa = (el, s) => [...el.querySelectorAll(s)];
   const GR = typeof require === 'function' ? require('./grille.js') : (typeof self !== 'undefined' ? self : this).Avis.grille;
   const DEC = typeof require === 'function' ? require('./jeu-decors.js') : (typeof self !== 'undefined' ? self : this).Avis.jeuDecors;
+  // Le hibou 2 : animé image par image par une seule fonction du temps (rendre(t)), appelée par un « pilote » GSAP fini.
+  // Tout est continu (sinus, courbes lissées), donc fluide et identique à chaque rendu. Les attributs sont posés directement.
+  // Émotions par phrase (lignes[].emotion) : sourcils, inclinaison de tête, gestes d'ailes ; synchro labiale (lignes[].env) ;
+  // regard vers chaque nouvelle lettre ; clignements ; folies : zoom (phrase 1), tremble (panique), ejecte (révélation).
+  function animerHibou2(c, el, p, t0, d) {
+    const pr = q(el, '.presente'), Q = (s) => q(pr, s), P = PERSO();
+    const pos = Q('.h2-pos'), corps = Q('.h2-corps'), tete = Q('.h2-tete'), ag = Q('.h2-ag'), ad = Q('.h2-ad'), sg = Q('.h2-sg'), sd = Q('.h2-sd');
+    const pg = Q('.h2-pg'), pd = Q('.h2-pd'), lg = Q('.h2-lg'), ld = Q('.h2-ld'), bouche = Q('.h2-bouche'), langue = Q('.h2-langue'), mach = Q('.h2-mach');
+    const fantomes = qa(pr, '.h2-fantome'), svgP = q(pr, 'svg'), cadre = q(el, '.cadre'), plumes = qa(pr, '.plume'), confettis = qa(pr, '.confetti'), flash = Q('.flash'), poussiere = qa(pr, '.poussiere');
+    const L = p.presentateur.lignes || [], m0 = p.mots[0], et = p.muetCfg && p.muetCfg.etapes;
+    const indices = et ? et.ordre.map((_, j) => m0.indice.t + et.pas * (j + 1)) : [];
+    const revel = m0.reponse.t + GR.LETTRE.vol;
+    const lz = L.find((l) => l.folie === 'zoom'), lp = L.find((l) => l.folie === 'tremble'), le = L.find((l) => l.folie === 'ejecte');
+    const tE = le ? le.t : null, tP = lp ? lp.t : null, finP = lp ? lp.t + 1.8 : null;
+    const cl = (x) => Math.max(0, Math.min(1, x)), lisse = (x) => { x = cl(x); return x * x * (3 - 2 * x); };
+    const dos = (x) => { x = cl(x); const s2 = 1.4; return 1 + (s2 + 1) * Math.pow(x - 1, 3) + s2 * Math.pow(x - 1, 2); };   // back.out
+    const cloche = (t, a, mont, tenue, desc) => (t < a ? 0 : t < a + mont ? lisse((t - a) / mont) : t < a + mont + tenue ? 1 : lisse(1 - (t - a - mont - tenue) / desc));
+    const mix = (a, b, k) => a + (b - a) * k;
+    const hs = (k) => { const x = Math.sin(k * 57.3 + 7.7) * 43758.5; return x - Math.floor(x); };
+    const EMO = { neutre: { tilt: 0, ailes: [6, -6] }, defi: { tilt: 6, ailes: [8, -78] }, choc: { tilt: 0, ailes: [42, -42] }, agace: { tilt: -8, ailes: [-28, 28] }, panique: { tilt: 0, ailes: [150, -150] }, joie: { tilt: 4, ailes: [165, -165] } };
+    const emoDe = (i) => (i < 0 ? 'neutre' : L[i].emotion || 'neutre');
+    const ligneA = (t) => { let i = -1; L.forEach((l, k) => { if (l.t <= t + 1e-6) i = k; }); return i; };
+    const bouchee = (t) => {   // ouverture du bec (0 à 1) : enveloppe de la phrase en cours, interpolée et adoucie
+      const i = ligneA(t); if (i < 0) return 0; const l = L[i], e = l.env || [], hz = l.envHz || 15, x = (t - l.t) * hz;
+      if (!e.length || x >= e.length) return 0;
+      const v = (k) => (k < 0 || k >= e.length ? 0 : e[k]), k0 = Math.floor(x), f = x - k0;
+      return lisse((t - l.t) / 0.06) * lisse((e.length - x) / 2) * cl(0.5 * mix(v(k0), v(k0 + 1), f) + 0.25 * mix(v(k0 - 1), v(k0), f) + 0.25 * mix(v(k0 + 1), v(k0 + 2), f));
+    };
+    const clignes = [1.15, 3.55, 5.7, 7.95, 10.9].filter((b) => b < d - 0.2);
+    const confs = confettis.map((_, k) => { const a = -Math.PI / 2 + (hs(k) - 0.5) * 2.6, v = 700 + hs(k + 20) * 900; return { vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: (hs(k + 5) - 0.5) * 1400 }; });
+    const vol = (u) => {   // l'éjection : position, rotation et étirement du hibou, u secondes après le début de la phrase
+      if (u < 0 || u > 2.3) return { x: 0, y: 0, r: 0, sx: 1, sy: 1 };
+      if (u < 0.16) { const k = Math.sin(Math.PI * 0.5 * u / 0.16); return { x: 0, y: 0, r: 0, sx: 1 + 0.22 * k, sy: 1 - 0.28 * k }; }
+      if (u < 0.9) { const k = (u - 0.16) / 0.74, ko = 1 - (1 - k) * (1 - k), b = lisse((u - 0.16) / 0.1); return { x: -700 * ko, y: -1150 * ko, r: 720 * ko, sx: mix(1.22, 0.86, b), sy: mix(0.72, 1.22, b) }; }
+      if (u < 1.55) { const k = (u - 0.9) / 0.65, ki = k * k, b = lisse((u - 1.45) / 0.1); return { x: -700 * (1 - ki), y: -1150 * (1 - ki), r: 720 + 360 * k, sx: mix(0.86, 1, b), sy: mix(1.22, 1, b) }; }
+      if (u < 1.8) { const k = Math.sin(Math.PI * (u - 1.55) / 0.25); return { x: 0, y: 0, r: 0, sx: 1 + 0.3 * k, sy: 1 - 0.32 * k }; }
+      const k = (u - 1.8) / 0.5; return { x: 0, y: -70 * Math.sin(Math.PI * k) * (1 - k * 0.3), r: 0, sx: 1 - 0.06 * Math.sin(Math.PI * k), sy: 1 + 0.08 * Math.sin(Math.PI * k) };
+    };
+    const A = (n, v) => n && n.setAttribute('transform', v);
+    function rendre(t) {
+      const i = ligneA(t), e1 = emoDe(i), e0 = emoDe(i - 1), kE = i < 0 ? 1 : lisse((t - L[i].t) / 0.18), kA = i < 0 ? 1 : dos(lisse((t - L[i].t) / 0.55));
+      const o = bouchee(t), pan = tP != null && t >= tP && t < finP ? cloche(t, tP, 0.15, 1.4, 0.25) : 0;
+      // sourcils
+      const S0 = P.SOURCILS[e0] || P.SOURCILS.neutre, S1 = P.SOURCILS[e1] || P.SOURCILS.neutre;
+      [sg, sd].forEach((n, c2) => { const v = S0[c2].map((x, j) => mix(x, S1[c2][j], kE) - (j % 2 ? o * 6 : 0)); n.setAttribute('d', `M${v[0].toFixed(1)} ${v[1].toFixed(1)} Q${v[2].toFixed(1)} ${v[3].toFixed(1)} ${v[4].toFixed(1)} ${v[5].toFixed(1)}`); });
+      // tête : balancement, émotion, syllabes, tremblement de panique
+      const tilt = 3 * Math.sin(2 * Math.PI * t / 3.3) + mix(EMO[e0].tilt, EMO[e1].tilt, kE) + 3 * o + pan * 4 * Math.sin(t * 52);
+      A(tete, `translate(0 ${(-7 * o + 2 * Math.sin(2 * Math.PI * t / 1.7)).toFixed(2)}) rotate(${tilt.toFixed(2)} 0 -250)`);
+      // corps : respiration (étirement doux depuis les pieds) ; folie « ejecte » : vol complet
+      const sR = 0.018 * Math.sin(2 * Math.PI * t / 1.7), V = tE != null ? vol(t - tE) : vol(-1);
+      A(corps, `scale(${((1 - sR) * V.sx).toFixed(4)} ${((1 + sR) * V.sy).toFixed(4)})`);
+      const jx = pan * 6 * Math.sin(t * 61) + pan * 3 * Math.sin(t * 97);
+      A(pos, `translate(${(V.x + jx).toFixed(1)} ${V.y.toFixed(1)}) rotate(${V.r.toFixed(1)} 0 -200)`);
+      fantomes.forEach((g, k) => { const u = tE == null ? -1 : t - tE, Vf = vol(u - 0.035 * (k + 1)), vis = u > 0.18 && u < 1.5; g.setAttribute('opacity', vis ? (0.28 - k * 0.08).toFixed(2) : '0'); g.setAttribute('transform', `translate(${Vf.x.toFixed(1)} ${Vf.y.toFixed(1)}) rotate(${Vf.r.toFixed(1)} 0 -200)`); });
+      // ailes : geste de l'émotion (arrivée avec dépassement), flottement au repos, battements de joie
+      const W0 = EMO[e0].ailes, W1 = EMO[e1].ailes, bat = e1 === 'joie' ? 16 * Math.sin(t * 38) : 0, fl = 4 * Math.sin(2 * Math.PI * t / 1.3);
+      A(ag, `rotate(${(mix(W0[0], W1[0], kA) + fl + bat + pan * 10 * Math.sin(t * 47)).toFixed(2)})`);
+      A(ad, `rotate(${(mix(W0[1], W1[1], kA) - fl - bat - pan * 10 * Math.sin(t * 43) + (e1 === 'defi' ? 6 * Math.sin(t * 9) * (1 - kE * 0.3) : 0)).toFixed(2)})`);
+      // regard : vers chaque nouvelle lettre, puis vers le spectateur
+      let gx = 2 * Math.sin(2 * Math.PI * t / 4.1), gy = 0;
+      indices.concat([revel]).forEach((ti) => { const k = cloche(t, ti - 0.05, 0.12, 0.45, 0.2); gx = mix(gx, 13, k); gy = mix(gy, -15, k); });
+      if (pan) { gx += pan * 8 * Math.sin(t * 13); }
+      [pg, pd].forEach((n) => A(n, `translate(${gx.toFixed(2)} ${gy.toFixed(2)})`));
+      // paupières : clignements, regard à demi fermé quand il est agacé
+      let lid = 0; clignes.forEach((b) => { lid = Math.max(lid, cloche(t, b, 0.06, 0.02, 0.09)); });
+      lid = Math.max(lid, (e1 === 'agace' ? 0.38 * kE : 0) + (e0 === 'agace' && e1 !== 'agace' ? 0.38 * (1 - kE) : 0));
+      [lg, ld].forEach((n) => n.setAttribute('height', (112 * lid).toFixed(1)));
+      // bec
+      bouche.setAttribute('ry', (0.1 + 34 * o).toFixed(2)); langue.setAttribute('ry', (0.1 + 12 * o).toFixed(2)); langue.setAttribute('cy', (-338 + 52 + 12 * o).toFixed(1));
+      A(mach, `translate(0 ${(24 * o).toFixed(2)})`);
+      // zoom-coup de poing de la première phrase
+      const z = lz ? 1 + 0.5 * cloche(t, lz.t + 0.12, 0.14, 0.3, 0.22) : 1;
+      svgP.style.transformOrigin = '230px 1250px'; svgP.style.transform = z === 1 ? '' : `scale(${z.toFixed(4)})`;
+      // plumes qui tombent pendant la panique
+      plumes.forEach((pl, k) => { const tk = tP == null ? -1 : t - tP - 0.1 - k * 0.12, x0 = 120 + hs(k) * 230, y0 = 1120 + hs(k + 50) * 120;
+        if (tk < 0 || tk > 1.6) { pl.setAttribute('opacity', '0'); return; }
+        const kk = tk / 1.3; pl.setAttribute('opacity', (0.95 * (tk < 1.3 ? 1 : 1 - (tk - 1.3) / 0.3)).toFixed(2));
+        pl.setAttribute('transform', `translate(${(x0 + (hs(k + 9) - 0.5) * 120 * kk + 18 * Math.sin(tk * 6 + k)).toFixed(1)} ${(y0 + 260 * kk * kk).toFixed(1)}) rotate(${((hs(k + 3) - 0.5) * 300 * kk + 25 * Math.sin(tk * 5)).toFixed(1)})`); });
+      // éjection : confettis, flash, poussière à la retombée, écran qui tremble
+      const u = tE == null ? -1 : t - tE;
+      confettis.forEach((cf, k) => { const tc = u - 0.05; if (tc < 0 || tc > 1.7) { cf.setAttribute('opacity', '0'); return; } const C = confs[k];
+        cf.setAttribute('opacity', (tc < 1.1 ? 1 : 1 - (tc - 1.1) / 0.6).toFixed(2));
+        cf.setAttribute('transform', `translate(${(230 + C.vx * tc * 0.6).toFixed(1)} ${(1240 + C.vy * tc * 0.6 + 700 * tc * tc).toFixed(1)}) rotate(${(C.r * tc).toFixed(1)})`); });
+      flash.style.opacity = u >= 0 && u < 0.2 ? (0.5 * cloche(u, 0, 0.04, 0.02, 0.12)).toFixed(3) : '0';
+      poussiere.forEach((pp, k) => { const tp = u - 1.55 - k * 0.02; if (tp < 0 || tp > 0.6) { pp.setAttribute('r', '0'); return; } pp.setAttribute('r', (14 + 50 * (tp / 0.6)).toFixed(1)); pp.setAttribute('fill-opacity', (0.55 * (1 - tp / 0.6)).toFixed(2)); pp.setAttribute('cx', (150 + k * 40 + (k - 2) * 60 * tp).toFixed(1)); });
+      const sec = (u >= 0 && u < 0.35 ? 14 * (1 - u / 0.35) * Math.sin(u * 95) : 0) + (u >= 1.55 && u < 1.8 ? 8 * (1 - (u - 1.55) / 0.25) * Math.sin(u * 90) : 0);
+      if (cadre) cadre.style.translate = sec ? `${sec.toFixed(2)}px 0px` : '';
+    }
+    const pilote = { t: 0 };
+    rendre(0);
+    c.ft(pilote, { t: 0 }, { t: d, duration: d, ease: 'none', onUpdate: () => rendre(pilote.t) }, t0);
+  }
   // Chargé à l'appel : dans la page, personnage.js est lu après ce fichier.
   const PERSO = () => (typeof require === 'function' ? require('./personnage.js') : self.Avis.personnage);
   const kicker = (p, u) => (p.kicker ? `<div class="kicker">${u.esc(p.kicker)}</div>` : '');
@@ -144,7 +236,7 @@
         const mu = p.muet || p.muetCfg, N = p.mots.length;
         const indices = (mu && mu.texteIntro ? `<p class="i-intro">${u.esc(mu.texteIntro)}</p>` : '') + p.mots.map((m, k) => `<p class="i-ind"${prog ? ` style="font-size:${N === 1 ? (m.indice.texte.length <= 30 ? 100 : m.indice.texte.length <= 48 ? 88 : 74) : m.indice.texte.length <= 30 ? 84 : m.indice.texte.length <= 48 ? 72 : 60}px"` : ''}>${mu && !prog ? `<small>Mot ${k + 1}/${N}</small>` : ''}${u.esc(m.indice.texte)}</p>`).join('') + (mu && mu.texteFin ? `<p class="i-fin">${u.esc(mu.texteFin)}</p>` : '');
         const dec = DEC.decor(p.decor), fond = `<svg class="fond-papier" viewBox="0 0 1080 1920" style="--titre:${dec.titre}">${dec.fond}${dec.bas}</svg>`;
-        return `${fond}${p.titre && !prog ? `<p class="jeu-titre${mu && mu.titreFixe ? ' fixe' : ''}" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau${prog ? ' prog' : ''}" style="clip-path:none">${prog ? '' : `<div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div>`}<div class="indices">${indices}</div></div>${prog ? '' : '<i class="scotch s1"></i><i class="scotch s2"></i>'}<div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div>${prog ? '' : '<div class="tampon">TROUVÉ</div>'}${minuteur}<div class="barre${prog ? ' prog' : ''}"><div class="strip"><div class="pap" style="clip-path:${GR.papier(88, 1004, 156)}"></div></div><div class="rail"><i></i></div>${paliers}</div>${etincelles}${p.rarete ? (p.mots.map((_, k) => { const tiers = p.rarete.couleurs || ['#4da3ff', '#b45cff', '#ffcf3a']; return `<div class="rar" style="--rc:${tiers[Math.min(k, tiers.length - 1)]}"></div>`; }).join('') + '<div class="rayons"></div>') : ''}${prog && N === 1 && mu && mu.etapes ? (() => { const m0 = p.mots[0], D = Math.max(1, Math.round(m0.reponse.t + 0.5 - m0.indice.t)); return `<div class="chronog"><svg viewBox="0 0 220 220" width="220" height="220"><circle class="cg-fond" cx="110" cy="110" r="94"/><circle class="cg-arc" cx="110" cy="110" r="94"/></svg>${Array.from({ length: D }, (_, j) => `<span data-j="${j}"${D - j <= 3 ? ' class="fin"' : ''}>${D - j}</span>`).join('')}</div>`; })() : ''}${p.presentateur ? `<div class="presente"><svg viewBox="0 0 1080 1920" width="1080" height="1920"><g transform="translate(230 1470) scale(0.62)"><g class="saut">${PERSO().svg('debout', p.presentateur.allure || 'hibou')}</g></g></svg>${(() => { const h = (k) => { const x = Math.sin(k * 91.7 + 13.1) * 43758.5; return x - Math.floor(x); }, cols = ['#ffd45c', '#ff5d7a', '#4fd1c5', '#c46bff', '#7fb2ff', '#ff9a5c']; return `<svg class="eclats" viewBox="0 0 1080 1920" width="1080" height="1920">${Array.from({ length: 10 }, (_, k) => `<path class="plume" d="M0 -26 C14 -10 12 14 0 26 C-12 14 -14 -10 0 -26 Z M0 -26 V30" fill="#e9f6ff" fill-opacity=".85" stroke="#ffffff" stroke-width="2" transform="translate(${Math.round(120 + h(k) * 230)} ${Math.round(1120 + h(k + 50) * 120)})" opacity="0"/>`).join('')}${Array.from({ length: 28 }, (_, k) => `<rect class="confetti" x="-9" y="-5" width="18" height="10" rx="2" fill="${cols[k % cols.length]}" transform="translate(230 1240)" opacity="0"/>`).join('')}</svg><div class="flash"></div>`; })()}${(p.presentateur.lignes || []).map((l) => `<div class="bulle"><p>${u.esc(l.texte)}</p></div>`).join('')}</div>` : ''}${p.intro ? `<div class="intro-jeu"><svg viewBox="0 0 1080 1920" width="1080" height="1920">${dec.fond}</svg><p>${u.esc(p.intro.texte).replace(/\n/g, '<br>')}</p></div>` : ''}${p.regle ? `<div class="regle"${p.regle.length > 14 ? ' style="font-size:50px"' : ''}><svg viewBox="0 0 40 44" width="50" height="55"><rect x="16" y="0" width="8" height="6" rx="2" fill="currentColor"/><circle cx="20" cy="25" r="16" fill="none" stroke="currentColor" stroke-width="5"/><path d="M20 25 L20 15" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span>${u.esc(p.regle)}</span></div>` : ''}${prog && N === 1 && mu && mu.chrono ? `<div class="compte">${Array.from({ length: mu.chronoDuree || 5 }, (_, j) => `<span data-j="${j}"${j === (mu.chronoDuree || 5) - 1 ? ' class="fin"' : ''}>${(mu.chronoDuree || 5) - j}</span>`).join('')}</div>` : ''}${p.hype ? `<div class="hype"><div class="h-fond"></div>${p.hype.mots.map((w) => `<div class="hw ${w.style || 'sub'}" style="top:${w.top}px;font-size:${w.taille}px">${u.esc(w.texte)}${w.coeur ? '<svg class="coeur" viewBox="0 0 100 90" width="200" height="180"><path d="M50 86 C20 62 4 46 4 28 C4 14 15 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C85 4 96 14 96 28 C96 46 80 62 50 86Z" fill="#ff4fa3" stroke="#ffffff" stroke-width="5"/></svg>' : ''}</div>`).join('')}</div>` : ''}${p.accroche ? `<div class="accroche"><p>${u.esc(p.accroche.texte)}</p></div>` : ''}${prog && p.teaser ? `<div class="teaser"><p>${u.esc(p.teaser.texte)}</p><div class="t-cases">${Array.from({ length: p.teaser.n || 4 }, (_, i) => `<i>${p.teaser.reponse ? `<b style="font-size:${Math.min(110, Math.floor(760 / (p.teaser.n || 4)))}px">${u.esc(p.teaser.reponse[i] || '')}</b>` : ''}</i>`).join('')}</div></div>` : ''}${prog ? DEC.anim(p.animation)[0]() : ''}`;
+        return `${fond}${p.titre && !prog ? `<p class="jeu-titre${mu && mu.titreFixe ? ' fixe' : ''}" style="--titre:${dec.titre}">${u.md(p.titre)}</p>` : ''}<div class="bandeau${prog ? ' prog' : ''}" style="clip-path:none">${prog ? '' : `<div class="pap" style="clip-path:${GR.papier(77, 770, 172)}"></div>`}<div class="indices">${indices}</div></div>${prog ? '' : '<i class="scotch s1"></i><i class="scotch s2"></i>'}<div class="grille" data-ox="${ox}" data-oy="${oy}" style="left:${D.gx}px;top:${D.gy}px;--case:${D.caseTaille}px">${cases}</div>${prog ? '' : '<div class="tampon">TROUVÉ</div>'}${minuteur}<div class="barre${prog ? ' prog' : ''}"><div class="strip"><div class="pap" style="clip-path:${GR.papier(88, 1004, 156)}"></div></div><div class="rail"><i></i></div>${paliers}</div>${etincelles}${p.rarete ? (p.mots.map((_, k) => { const tiers = p.rarete.couleurs || ['#4da3ff', '#b45cff', '#ffcf3a']; return `<div class="rar" style="--rc:${tiers[Math.min(k, tiers.length - 1)]}"></div>`; }).join('') + '<div class="rayons"></div>') : ''}${prog && N === 1 && mu && mu.etapes ? (() => { const m0 = p.mots[0], D = Math.max(1, Math.round(m0.reponse.t + 0.5 - m0.indice.t)); return `<div class="chronog"><svg viewBox="0 0 220 220" width="220" height="220"><circle class="cg-fond" cx="110" cy="110" r="94"/><circle class="cg-arc" cx="110" cy="110" r="94"/></svg>${Array.from({ length: D }, (_, j) => `<span data-j="${j}"${D - j <= 3 ? ' class="fin"' : ''}>${D - j}</span>`).join('')}</div>`; })() : ''}${p.presentateur ? `<div class="presente"><svg viewBox="0 0 1080 1920" width="1080" height="1920"><g transform="translate(230 1470) scale(0.62)">${p.presentateur.allure === 'hibou2' ? '<use href="#h2-hibou" class="h2-fantome" opacity="0"/><use href="#h2-hibou" class="h2-fantome" opacity="0"/><use href="#h2-hibou" class="h2-fantome" opacity="0"/>' : ''}<g class="saut">${PERSO().svg('debout', p.presentateur.allure || 'hibou')}</g></g></svg>${(() => { const h = (k) => { const x = Math.sin(k * 91.7 + 13.1) * 43758.5; return x - Math.floor(x); }, cols = ['#ffd45c', '#ff5d7a', '#4fd1c5', '#c46bff', '#7fb2ff', '#ff9a5c']; return `<svg class="eclats" viewBox="0 0 1080 1920" width="1080" height="1920">${Array.from({ length: 10 }, (_, k) => `<path class="plume" d="M0 -26 C14 -10 12 14 0 26 C-12 14 -14 -10 0 -26 Z M0 -26 V30" fill="#e9f6ff" fill-opacity=".85" stroke="#ffffff" stroke-width="2" transform="translate(${Math.round(120 + h(k) * 230)} ${Math.round(1120 + h(k + 50) * 120)})" opacity="0"/>`).join('')}${Array.from({ length: 5 }, (_, k) => `<circle class="poussiere" cx="${150 + k * 40}" cy="1462" r="0" fill="#ffffff" fill-opacity=".55"/>`).join('')}${Array.from({ length: 28 }, (_, k) => `<rect class="confetti" x="-9" y="-5" width="18" height="10" rx="2" fill="${cols[k % cols.length]}" transform="translate(230 1240)" opacity="0"/>`).join('')}</svg><div class="flash"></div>`; })()}${p.presentateur.cta ? `<div class="cta">${u.esc(p.presentateur.cta.texte)}</div>` : ''}${(p.presentateur.lignes || []).map((l) => `<div class="bulle"><p>${u.esc(l.texte)}</p></div>`).join('')}</div>` : ''}${p.intro ? `<div class="intro-jeu"><svg viewBox="0 0 1080 1920" width="1080" height="1920">${dec.fond}</svg><p>${u.esc(p.intro.texte).replace(/\n/g, '<br>')}</p></div>` : ''}${p.regle ? `<div class="regle"${p.regle.length > 14 ? ' style="font-size:50px"' : ''}><svg viewBox="0 0 40 44" width="50" height="55"><rect x="16" y="0" width="8" height="6" rx="2" fill="currentColor"/><circle cx="20" cy="25" r="16" fill="none" stroke="currentColor" stroke-width="5"/><path d="M20 25 L20 15" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span>${u.esc(p.regle)}</span></div>` : ''}${prog && N === 1 && mu && mu.chrono ? `<div class="compte">${Array.from({ length: mu.chronoDuree || 5 }, (_, j) => `<span data-j="${j}"${j === (mu.chronoDuree || 5) - 1 ? ' class="fin"' : ''}>${(mu.chronoDuree || 5) - j}</span>`).join('')}</div>` : ''}${p.hype ? `<div class="hype"><div class="h-fond"></div>${p.hype.mots.map((w) => `<div class="hw ${w.style || 'sub'}" style="top:${w.top}px;font-size:${w.taille}px">${u.esc(w.texte)}${w.coeur ? '<svg class="coeur" viewBox="0 0 100 90" width="200" height="180"><path d="M50 86 C20 62 4 46 4 28 C4 14 15 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C85 4 96 14 96 28 C96 46 80 62 50 86Z" fill="#ff4fa3" stroke="#ffffff" stroke-width="5"/></svg>' : ''}</div>`).join('')}</div>` : ''}${p.accroche ? `<div class="accroche"><p>${u.esc(p.accroche.texte)}</p></div>` : ''}${prog && p.teaser ? `<div class="teaser"><p>${u.esc(p.teaser.texte)}</p><div class="t-cases">${Array.from({ length: p.teaser.n || 4 }, (_, i) => `<i>${p.teaser.reponse ? `<b style="font-size:${Math.min(110, Math.floor(760 / (p.teaser.n || 4)))}px">${u.esc(p.teaser.reponse[i] || '')}</b>` : ''}</i>`).join('')}</div></div>` : ''}${prog ? DEC.anim(p.animation)[0]() : ''}`;
       },
       jouer(c, el, p, t0, d) {
         const cases = qa(el, '.case'), indices = qa(el, '.indices p.i-ind'), intro = q(el, '.indices p.i-intro'), pFin = q(el, '.indices p.i-fin'), paliers = qa(el, '.palier'), rail = q(el, '.rail i'), grille = q(el, '.grille');
@@ -241,16 +333,21 @@
         // calculée à la préparation de la voix), une bulle par phrase, et saute de joie à la révélation.
         if (p.presentateur) {
           const pr = q(el, '.presente'), bec = q(pr, '.bouche'), yeux = q(pr, '.yeux'), saut = q(pr, '.saut'), bulles = qa(pr, '.bulle'), L = p.presentateur.lignes || [];
-          PERSO().jouer(c, pr, 'debout', t0 - 0.7, d, true);
+          const h2 = p.presentateur.allure === 'hibou2';
+          if (!h2) PERSO().jouer(c, pr, 'debout', t0 - 0.7, d, true);
           gsap.set(bulles, { opacity: 0 });
           L.forEach((l, i) => {
             const tl = t0 + l.t, fin = i + 1 < L.length ? t0 + L[i + 1].t - 0.08 : t0 + d;
             if (l.t <= 0) gsap.set(bulles[i], { opacity: 1 }); else c.ft(bulles[i], { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2.4)' }, tl);
             if (i + 1 < L.length) c.ft(bulles[i], { opacity: 1 }, { opacity: 0, duration: 0.08 }, fin);
+            if (h2) return;
             let prec = 0.1;
             (l.env || []).forEach((v, k) => { const ry = Math.max(0.1, v * 30); c.ft(bec, { attr: { ry: prec } }, { attr: { ry }, duration: 1 / 15, ease: 'none' }, tl + k / 15); prec = ry; });
             if (l.env && l.env.length) c.ft(bec, { attr: { ry: prec } }, { attr: { ry: 0.1 }, duration: 0.08 }, tl + l.env.length / 15);
           });
+          if (p.presentateur.cta) { const ct = q(pr, '.cta'); gsap.set(ct, { opacity: 0 }); c.ft(ct, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.6)' }, t0 + p.presentateur.cta.t); }
+          if (h2) animerHibou2(c, el, p, t0, d);
+          else {
           const yT = -338, cl = (t) => c.ft(yeux, { attr: { transform: 'translate(0 0) scale(1 1)' } }, { attr: { transform: `translate(0 ${yT * 0.9}) scale(1 0.1)` }, duration: 0.07, yoyo: true, repeat: 1 }, t);
           for (let t = 1.7; t < d - 0.3; t += 2.9) cl(t0 + t);
           if (p.presentateur.saut != null) { const ts = t0 + p.presentateur.saut; c.ft(saut, { attr: { transform: 'translate(0 0) rotate(0 0 -250)' } }, { attr: { transform: 'translate(0 -110) rotate(0 0 -250)' }, duration: 0.22, ease: 'power2.out', yoyo: true, repeat: 3 }, ts); }
@@ -278,6 +375,7 @@
               if (cadre) secoue(cadre, tl, 14, 5);
             }
           });
+          }
         }
         // Carte d'introduction : le décor seul (sans grille ni question) avec une phrase en très gros, puis elle s'efface et le jeu commence.
         if (p.intro) {
