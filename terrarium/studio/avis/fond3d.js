@@ -260,7 +260,8 @@ void main(){
   for (int i = 0; i < 64; i++) { float d = berg(ro + rd * t); if (d < 0.01 * t) { hit = t; break; } t += d * 0.75; if (t > 45.0) break; }
   float tS = abs(rd.y) > 1e-4 ? -ro.y / rd.y : -1.0;                        // la surface de l'eau (y = 0)
   vec3 col;
-  bool camSous = ro.y < 0.0;
+  float yProche = ro.y + rd.y * 0.6;                                         // la ligne d'eau balaie l'écran quand la caméra la traverse
+  bool camSous = yProche < 0.0 || (ro.y < 0.0 && tS < 0.0);
   if (!camSous) {
     if (rd.y > 0.0 || (hit > 0.0 && (tS < 0.0 || hit < tS))) {
       col = ciel(rd);
@@ -289,6 +290,7 @@ void main(){
     float ray = pow(0.5 + 0.5 * sin(uv.x * 9.0 + uv.y * 2.5 + tt), 6.0) * 0.6 + pow(0.5 + 0.5 * sin(uv.x * 17.0 - uv.y * 3.0 - tt * 2.0), 10.0) * 0.4;
     col += vec3(0.45, 0.85, 0.95) * ray * 0.32 * exp(ro.y * 0.09) * smoothstep(-0.6, 0.5, uv.y);
   }
+  col = mix(col, vec3(0.85, 0.95, 1.0), 0.6 * smoothstep(0.035, 0.0, abs(yProche)) * step(abs(ro.y), 0.3));   // ligne d'écume au passage de la surface
   // particules en suspension : elles montent quand la caméra descend (sensation de plongée)
   float pc = 0.0, bio = 0.0;
   for (int k = 0; k < 3; k++) { float fk = float(k), sc2 = 22.0 + fk * 14.0;

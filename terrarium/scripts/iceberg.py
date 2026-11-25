@@ -11,9 +11,10 @@ BASE = json.load(open(os.path.join(R, 'videos/episodes/jeu-mots-mirage-hibou.jso
 X = 0.3                                    # fondu entre deux étages
 TEMPS = 60 / 108
 ETAGES = [
-  dict(mot='IGLOO', q='Maison de glace des Inuits', regle='ÉTAGE 1 · LA SURFACE', ordre=[4, 2], deb=1.95, pas=2.0, d=10.3,
-       lignes=[(0.4, 'STOP ! Tu vas perdre !', 'defi', None, False), (1.95, 'Maison de glace des Inuits…', 'neutre', None, True), (3.97, 'Trop facile !', 'defi', None, False), (7.97, 'Igloo !', 'joie', None, False)],
-       sons=[('whoosh.wav', 1.2, .45), ('whoosh.wav', 1.3, .4), ('ailes.wav', 1.3, .3), ('ailes.wav', 2.82, .25), ('pouf.wav', 3.62, .5), ('whoosh.wav', 3.97, .3), ('bulles.wav', 9.0, .5)]),
+  # Étage 1 : l'accroche « STOP ! Quatre mots. Personne arrive au fond ! » dure 0,9 s de plus que « Tu vas perdre » : tout est décalé.
+  dict(mot='IGLOO', q='Maison de glace des Inuits', regle='ÉTAGE 1 · LA SURFACE', ordre=[4, 2], deb=2.85, pas=2.0, d=11.2,
+       lignes=[(0.4, 'STOP ! 4 mots. Personne arrive au fond !', 'defi', None, False), (2.85, 'Maison de glace des Inuits…', 'neutre', None, True), (4.87, 'Trop facile !', 'defi', None, False), (8.87, 'Igloo !', 'joie', None, False)],
+       sons=[('whoosh.wav', 2.11, .45), ('whoosh.wav', 2.2, .4), ('ailes.wav', 2.2, .3), ('ailes.wav', 3.72, .25), ('pouf.wav', 4.52, .5), ('whoosh.wav', 4.87, .3), ('bulles.wav', 9.9, .5)]),
   dict(mot='MORSE', q='Gros phoque à défenses', regle="ÉTAGE 2 · SOUS L'EAU", ordre=[4, 2], deb=0.25, pas=2.0, d=8.6,
        lignes=[(0.25, 'Gros phoque à défenses…', 'neutre', None, True), (2.27, 'Ça se corse…', 'choc', None, False), (6.27, 'Morse !', 'joie', None, False)],
        sons=[('whoosh.wav', 2.27, .3), ('bulles.wav', 7.3, .5)]),
@@ -26,11 +27,11 @@ ETAGES = [
 ]
 # Durée totale : la vidéo publiée (totale − 0,4 s d'amorce) fait un nombre entier de temps de musique.
 somme = sum(e['d'] for e in ETAGES[:3]) - 3 * X
-PUB = round(68 * TEMPS, 4); TOT = round(PUB + 0.4, 4)
+PUB = round(70 * TEMPS, 4); TOT = round(PUB + 0.4, 4)
 ETAGES[3]['d'] = round(TOT - somme, 4)
 G, t = [], 0.0
 for e in ETAGES: G.append(round(t, 4)); t += e['d'] - X
-PROF = [[0, 0], [9.0, 0], [10.3, 1.1], [G[1] + 7.3, 1.1], [G[1] + 8.6, 2.2], [G[2] + 7.3, 2.2], [G[2] + 8.6, 3.4], [G[3] + 10.0, 3.4], [G[3] + 11.0, 0]]
+PROF = [[0, 0], [9.9, 0], [11.2, 1.1], [G[1] + 7.3, 1.1], [G[1] + 8.6, 2.2], [G[2] + 7.3, 2.2], [G[2] + 8.6, 3.4], [G[3] + 10.0, 3.4], [G[3] + 11.0, 0]]
 for k, e in enumerate(ETAGES):
     d = copy.deepcopy(BASE); n = k + 1
     d['id'] = f'iceberg-{n}'; d['titre'] = f"L'iceberg, étage {n} ({e['mot'].lower()})"; d['numero'] = 50 + n
@@ -43,7 +44,10 @@ for k, e in enumerate(ETAGES):
     pl['fond3d'] = 'iceberg'; pl['fond3dOpts'] = {'t0': G[k], 'L': PUB, 'prof': PROF}
     P = pl['presentateur']; P['corniche'] = True; P['danse'] = True
     P['lignes'] = [dict({'t': t0, 'texte': tx, 'emotion': em}, **({'folie': fo} if fo else {}), **({'lecture': True} if lu else {})) for t0, tx, em, fo, lu in e['lignes']]
-    if n != 1: P.pop('accroche', None); P.pop('vol', None); pl.pop('amorceBoucle', None)
+    if n == 1:
+        P['accroche'] = {'texte': 'STOP !', 'sous': '4 mots. Personne arrive au fond.', 'fin': 2.45}
+        P['vol'] = {'depart': 2.2, 'arrivee': 3.0, 'pose': 4.52, 'x': 855, 'y': -871, 'direct': True}
+    else: P.pop('accroche', None); P.pop('vol', None); pl.pop('amorceBoucle', None)
     if n == 4: P['cta'] = {'t': 8.4, 'texte': "À quel étage t'as coulé ? 👇", 'haut': True}
     else: P.pop('cta', None)
     pl['sons'] = [{'f': f, 't': t0, 'v': v} for f, t0, v in e['sons']]

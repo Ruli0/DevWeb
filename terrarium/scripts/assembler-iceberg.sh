@@ -19,6 +19,6 @@ TOT=$(python3 -c "import json;print(json.load(open('$P'))['total'])")
 node -e "
 const A = require('$R/scripts/sons-avis.js'), O = require('$R/scripts/build-sons.js').outils;
 O.ecrireWav('$D/musique.wav', O.normaliser(A.vive('reverie', { duree: $TOT + 0.3, tempo: 108 }), 0.8), true);"
-ffmpeg -v error -y -i "$D/sans-musique.mkv" -i "$D/musique.wav" -filter_complex "[1:a]volume=0.5,atrim=0:$TOT[m];[0:a][m]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.7[s]" -map 0:v -map "[s]" -c:v copy -c:a aac -b:a 192k -movflags +faststart "$D/iceberg-final.mp4"
+ffmpeg -v error -y -i "$D/sans-musique.mkv" -i "$D/musique.wav" -filter_complex "[1:a]volume=0.5,atrim=0:$TOT[m];[0:a][m]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.6:level=false[s]" -map 0:v -map "[s]" -c:v copy -c:a aac -b:a 192k -movflags +faststart "$D/iceberg-final.mp4"
 rm -f "$D/iceberg-sans-boucle.mp4"
 bash "$R/scripts/boucle.sh" iceberg 0.4
