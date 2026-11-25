@@ -67,3 +67,14 @@ Cocher « contenu généré par IA » ; couverture = première image (STOP) ; ga
 > Écris la lettre où tu l'as trouvé. Le hibou répond aux meilleurs 👀
 
 Cocher « contenu généré par IA ». Différences avec SCORPION : vol et lecture raccourcis, oasis de fin, 18,35 s au lieu de 20,6 s.
+
+## Vidéo 4 : L'iceberg (4 mots, 38,9 s)
+**Vidéo** : `videos/studio/iceberg/iceberg-final.mp4` · boucle parfaite.
+**Description** :
+> 4 mots, de la surface aux abysses 🧊🦉 Jusqu'où t'es descendu ?
+
+**Hashtags** : #devinette #motmystere #quiz #iceberg #hibou
+**Commentaire épinglé** :
+> À quel étage t'as coulé ? 👇
+
+Cocher « contenu généré par IA » ; couverture = première image (STOP).
