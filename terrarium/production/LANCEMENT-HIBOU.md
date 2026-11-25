@@ -56,3 +56,14 @@ Si les objectifs sont atteints, on enchaîne avec PIEUVRE puis SCORPION, même h
 > Écris la lettre où tu l'as trouvé. Le hibou répond aux meilleurs 👀
 
 Cocher « contenu généré par IA » ; couverture = première image (STOP) ; garder le son de la vidéo ; publier vers 18-20 h.
+
+## Vidéo 3 : MIRAGE (version courte, 18,35 s)
+**Vidéo** : `videos/studio/jeu-mots-mirage-hibou/jeu-mots-mirage-hibou-final.mp4` · boucle parfaite.
+**Description** :
+> STOP ✋ Ce hibou parie ses plumes que tu ne trouves pas ce mot 🦉🏜️ Tu l'as eu à quelle lettre ?
+
+**Hashtags** : #devinette #motmystere #quiz #hibou #jeudemots
+**Commentaire épinglé** :
+> Écris la lettre où tu l'as trouvé. Le hibou répond aux meilleurs 👀
+
+Cocher « contenu généré par IA ». Différence avec SCORPION (seul changement testé) : vol et lecture raccourcis (~2 s au lieu de 5 s), vidéo de 18,35 s au lieu de 20,6 s.
