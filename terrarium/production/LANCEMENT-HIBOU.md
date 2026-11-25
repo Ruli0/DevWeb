@@ -3,9 +3,9 @@
 Fichier : `videos/studio/jeu-mots-cratere-hibou/jeu-mots-cratere-hibou-final.mp4` (12,2 s, 1080 × 1920, 60 i/s).
 
 ## Publication (Jules)
-- **Légende** : « Le hibou parie ses plumes que tu trouves pas 🦉🔥 (indice : il triche… regarde bien son aile 👀) »
+- **Légende** : « Le hibou parie ses plumes que tu trouves pas 🦉🔥 Tu l'as eu à quelle lettre ? »
 - **Hashtags** : #devinette #quiz #motmystere #hibou #defi
-- **Commentaire épinglé** : « Tu l'as trouvé à quelle lettre ? Et t'as vu ce qu'il cache sous son aile ? 👀 »
+- **Commentaire épinglé** : « Tu l'as trouvé à quelle lettre ? Le hibou lit tout 👀 »
 - **Couverture** : la première image (hibou + question + cases), déjà lisible.
 - **Obligatoire** : cocher « contenu généré par IA » (voix de synthèse).
 - Son : garder le son de la vidéo (voix + bruitages) ; ne pas ajouter de musique TikTok par-dessus la voix.
@@ -13,7 +13,7 @@ Fichier : `videos/studio/jeu-mots-cratere-hibou/jeu-mots-cratere-hibou-final.mp4
 
 ## Les trois leviers ajoutés (25 nov.)
 - **Boucle parfaite** : les 0,35 dernières secondes se fondent dans la première image (`scripts/boucle.sh`) : la vidéo reboucle sans coupure (revisionnages = signal fort pour TikTok).
-- **Le hibou triche** : à 1,2 s il soulève l'aile, la réponse « CRATÈRE » est écrite sur son flanc (0,6 s) ; ceux qui le remarquent reviennent en arrière et le disent en commentaire.
+- ~~Le hibou triche~~ : retiré à la demande de Jules (l'option `presentateur.triche` reste disponible).
 - **Appel au commentaire** : « À quelle lettre ? 💬 👉 », sous les cases, pointe vers le bouton commentaires de TikTok.
 
 ## Ce qu'on regarde à 24 h
