@@ -72,3 +72,9 @@ Les sources trouvées le 12 nov. 2026 (blogs marketing, chiffres non sourcés et
 
 ## 24 nov. 2026 : la blague Klaxon fait aussi un flop
 D'après Jules (chiffres à relever). Même plafond que tous les formats depuis la 7e vidéo : l'hypothèse « compte freiné » devient la plus probable. Test : nouveau compte (décision 78), décision après 7 jours (au-dessus de 200-300 vues : c'était le compte ; sous 100 : c'est le genre).
+
+## Relevé du 25 nov. 2026 : `jeu-mots-cratere-hibou` (hibou présentateur, 12,2 s)
+~2 h : 196 vues (portée bien meilleure que les dernières vidéos), 0 like, 1 commentaire, visionnage moyen 2,8 s (~23 %), 5,94 % jusqu'au bout, 0 follower ; diffusion en baisse à 2 h.
+- TikTok a montré la vidéo à plus de monde, mais ce premier groupe n'a pas accroché : départ avant 3 s, donc avant la danse, l'éjection et la révélation.
+- Hypothèse : l'image 0 est trop chargée (règle, question, chrono, 7 cases, hibou, bulle de 3 lignes) et ne dit pas en un coup d'œil qu'il va se passer quelque chose de drôle. Le travail sur le hibou (fluidité, émotions) ne sert à rien si personne ne reste 3 s.
+- Prochain test (après la courbe de fidélisation) : uniquement les 2 premières secondes ; une seule chose à l'image 0, le hibou en gros plan qui interpelle, puis le jeu.
