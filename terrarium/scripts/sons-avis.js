@@ -398,6 +398,43 @@ const BRUITAGES = {
   'chrono-1.6.wav': () => chronometre(1.6),
   'chrono-2.wav': () => chronometre(2),
   'chrono-3.wav': () => chronometre(3),
+  // Les bruitages « zinzin » du hibou présentateur.
+  // Boing : un ressort (fréquence qui ondule et retombe).
+  'boing.wav': () => {
+    const { tampon, sinus, enveloppe } = O();
+    const b = tampon(0.8);
+    sinus(b, (x) => 180 + 260 * Math.exp(-x * 5) * (1 + 0.35 * Math.sin(x * 70)), (x) => 0.55 * enveloppe(x, 0.004, 0.32), 0, 'sin', 0.75);
+    sinus(b, (x) => 2 * (180 + 260 * Math.exp(-x * 5) * (1 + 0.35 * Math.sin(x * 70))), (x) => 0.15 * enveloppe(x, 0.004, 0.2), 0, 'sin', 0.6);
+    return b;
+  },
+  // Hou-hou : deux ululements de hibou (sinus glissant, souffle léger).
+  'hou-hou.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(1.1);
+    [[0, 0.28], [0.36, 0.5]].forEach(([t, d], i) => {
+      const env = (x) => 0.5 * Math.min(1, x / 0.05) * Math.min(1, Math.max(0, (d - x) / 0.12));
+      sinus(b, (x) => 420 - 70 * (x / d) + 8 * Math.sin(x * 30), env, t, 'sin', d);
+      sinus(b, (x) => 2 * (420 - 70 * (x / d)), (x) => 0.12 * env(x), t, 'sin', d);
+      bruit(b, (x) => 0.05 * env(x), { bas: 300, haut: 1200, debut: t, hasard: graine(500 + i), duree: d });
+    });
+    return reverbe(b, 0.25);
+  },
+  // Whoosh : un souffle filtré qui monte puis s'éteint.
+  'whoosh.wav': () => {
+    const { tampon, bruit, graine } = O();
+    const b = tampon(0.7);
+    bruit(b, (x) => 0.7 * Math.sin(Math.PI * Math.min(1, x / 0.55)) ** 2, { bas: 600, haut: 6000, debut: 0, hasard: graine(610), duree: 0.6 });
+    return b;
+  },
+  // Explosion de cartoon : un choc grave, un souffle large, des éclats.
+  'explosion.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(1.6);
+    sinus(b, (x) => 90 * Math.exp(-x * 3) + 35, (x) => 0.9 * enveloppe(x, 0.002, 0.35), 0, 'sin', 1.2);
+    bruit(b, (x) => 0.75 * enveloppe(x, 0.003, 0.45), { bas: 80, haut: 4000, debut: 0, hasard: graine(620), duree: 1.4 });
+    bruit(b, (x) => 0.3 * enveloppe(x, 0.001, 0.08), { bas: 2500, haut: 11000, debut: 0.02, hasard: graine(621), duree: 0.4 });
+    return reverbe(b, 0.3);
+  },
   // Un klaxon de voiture « tut tut » : deux coups de deux notes carrées un peu désaccordées (tierce), avec un léger vibrato.
   'klaxon.wav': () => {
     const { tampon, sinus } = O();

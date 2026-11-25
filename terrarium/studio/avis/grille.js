@@ -189,6 +189,8 @@
 .jeu .minuteur.cache { display: none; }
 .jeu .presente { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 3; pointer-events: none; }
 .jeu .presente svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.jeu .presente .eclats { position: absolute; left: 0; top: 0; overflow: visible; }
+.jeu .presente .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
 .jeu .presente .bulle { position: absolute; left: 400px; top: 1150px; width: 490px; min-height: 170px; display: flex; align-items: center; padding: 22px 28px; box-sizing: border-box; background: #fff6e8; border-radius: 34px; box-shadow: 6px 8px 0 #00000066; transform-origin: 0% 70%; }
 .jeu .presente .bulle::before { content: ''; position: absolute; left: -30px; top: 92px; border: 22px solid transparent; border-right: 34px solid #fff6e8; border-left: 0; }
 .jeu .presente .bulle p { margin: 0; font: 800 54px/1.05 '${P.titre}'; color: #2a1a14; letter-spacing: -.02em; }

@@ -18,11 +18,14 @@ def main():
     ep = json.load(open(chemin, encoding='utf-8'))
     plan = next(p for p in ep['plans'] if p.get('presentateur'))
     lignes = plan['presentateur']['lignes']
+    # Voix de personnage : demi-tons en plus (la vitesse suit, ×2^(n/12)), présence, compression. 0 = voix brute.
+    dt = float((plan['presentateur'].get('voix') or {}).get('demiTons', 0))
+    perso = (f'asetrate={round(24000 * 2 ** (dt / 12))},aresample=48000,' if dt else '') + 'highpass=f=90,equalizer=f=3000:t=q:w=1:g=3,acompressor=threshold=-20dB:ratio=3:attack=5:release=80,'
     sortie = os.path.join(racine, 'videos/voix', ident); os.makedirs(sortie, exist_ok=True)
     off = []
     for n, l in enumerate(lignes, 1):
         src, dst = os.path.join(dossier, f'l{n}.wav'), os.path.join(sortie, f'l{n}.wav')
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-af', 'silenceremove=start_periods=1:start_threshold=-45dB,loudnorm=I=-16:TP=-1.5:LRA=7,aresample=48000', '-ac', '1', dst], check=True)
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-af', 'aresample=24000,silenceremove=start_periods=1:start_threshold=-45dB,' + perso + 'loudnorm=I=-16:TP=-1.5:LRA=7,aresample=48000', '-ac', '1', dst], check=True)
         brut = subprocess.run(['ffmpeg', '-v', 'error', '-i', dst, '-ac', '1', '-ar', '15000', '-f', 'f32le', '-'], capture_output=True).stdout
         a = np.frombuffer(brut, np.float32)
         rms = np.array([np.sqrt(np.mean(a[i:i + 1000] ** 2)) for i in range(0, len(a), 1000)]) if len(a) else np.zeros(1)
