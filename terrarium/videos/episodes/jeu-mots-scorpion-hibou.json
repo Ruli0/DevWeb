@@ -73,9 +73,8 @@
         "lignes": [
           {
             "t": 0.4,
-            "texte": "Celui-là, personne le trouve. Vas-y !",
+            "texte": "STOP ! Tu vas perdre !",
             "emotion": "defi",
-            "folie": "zoom",
             "env": [
               0.64,
               0.63,
@@ -483,14 +482,14 @@
           "texte": "À quelle lettre ? 💬 👉",
           "haut": true
         },
-        "danse": true
+        "danse": true,
+        "accroche": {
+          "texte": "STOP !",
+          "sous": "Tu vas perdre.",
+          "fin": 1.3
+        }
       },
       "sons": [
-        {
-          "f": "boing.wav",
-          "t": 0.6,
-          "v": 0.45
-        },
         {
           "f": "whoosh.wav",
           "t": 3.55,
@@ -525,9 +524,15 @@
           "f": "boing.wav",
           "t": 13.75,
           "v": 0.35
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 0.95,
+          "v": 0.45
         }
       ],
-      "amorceBoucle": 0.4
+      "amorceBoucle": 0.4,
+      "fondAnime": "desert"
     }
   ],
   "publication": {

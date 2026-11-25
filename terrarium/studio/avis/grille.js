@@ -191,6 +191,11 @@
 .jeu .presente svg { position: absolute; left: 0; top: 0; overflow: visible; }
 .jeu .presente .cta { position: absolute; left: 420px; top: 1352px; font: 900 50px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 4px 14px #000b; white-space: nowrap; transform-origin: 0% 50%; }
 .jeu .presente .cta.haut { left: auto; right: 190px; top: 1078px; font-size: 46px; transform-origin: 100% 50%; }
+.jeu .fond-anime { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
+.jeu .presente .voile { position: absolute; inset: 0; background: radial-gradient(circle at 50% 52%, #1a0806d9 0%, #0a0302f5 100%); opacity: 0; }
+.jeu .presente .accroche-h { position: absolute; left: 40px; top: 310px; width: 860px; text-align: center; opacity: 0; transform-origin: 50% 50%; }
+.jeu .presente .accroche-h p { margin: 0; font: 900 230px/0.95 '${P.titre}'; color: #fff; letter-spacing: -.02em; text-shadow: 0 0 40px #ff3b3b, 0 12px 0 #8a1010; }
+.jeu .presente .accroche-h small { display: block; margin-top: 18px; font: 900 92px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 6px 0 #0009; }
 .jeu .presente .eclats { position: absolute; left: 0; top: 0; overflow: visible; }
 .jeu .presente .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
 .jeu .presente .bulle { position: absolute; left: 400px; top: 1150px; width: 490px; min-height: 170px; display: flex; align-items: center; padding: 22px 28px; box-sizing: border-box; background: #fff6e8; border-radius: 34px; box-shadow: 6px 8px 0 #00000066; transform-origin: 0% 70%; }
