@@ -512,7 +512,8 @@
         }
       ],
       "amorceBoucle": 0.4,
-      "fondAnime": "desert"
+      "fondAnime": "desert",
+      "fond3d": "desert"
     }
   ],
   "publication": {

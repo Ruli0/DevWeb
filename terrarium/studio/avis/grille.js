@@ -189,8 +189,11 @@
 .jeu .minuteur.cache { display: none; }
 .jeu .presente { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 3; pointer-events: none; }
 .jeu .presente svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.jeu.f3d .presente > svg:not(.eclats) { filter: drop-shadow(0 10px 18px #2a0a1fcc) drop-shadow(0 0 3px #2a0a1f99); }
 .jeu .presente .cta { position: absolute; left: 420px; top: 1352px; font: 900 50px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 4px 14px #000b; white-space: nowrap; transform-origin: 0% 50%; }
 .jeu .presente .cta.haut { left: auto; right: 190px; top: 1078px; font-size: 46px; transform-origin: 100% 50%; }
+.jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }
+.jeu.f3d .fond-papier, .jeu.f3d .danse { display: none; }
 .jeu .fond-anime { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
 .jeu .presente .voile { position: absolute; inset: 0; background: radial-gradient(circle at 50% 52%, #1a0806d9 0%, #0a0302f5 100%); opacity: 0; }
 .jeu .presente .accroche-h { position: absolute; left: 40px; top: 310px; width: 860px; text-align: center; opacity: 0; transform-origin: 50% 50%; }
