@@ -88,7 +88,7 @@
     // Jamais pendant l'amorce (le raccord de la boucle reste en « défi ») ni pendant l'éjection.
     const danseOK = !!p.presentateur.danse, temps = 60 / ((p.muetCfg && p.muetCfg.tempo) || 108);
     const silences = danseOK ? L.map((l, k) => [l.t + (l.duree || 1.5) + 0.06, k + 1 < L.length ? L[k + 1].t - 0.04 : d + 1]).filter(([a, b]) => b - a > 0.3) : [];
-    const danse = (t) => { if (!danseOK || (tE != null && t > tE - 0.05 && t < tE + 2.3)) return 0; let k = 0; silences.forEach(([a, b]) => { k = Math.max(k, cloche(t, a, 0.3, Math.max(0, b - a - 0.6), 0.3)); }); return k; };
+    const danse = (t) => { if (!danseOK || (tE != null && t >= tE && t < tE + 2.3)) return 0; let k = 0; silences.forEach(([a, b]) => { k = Math.max(k, cloche(t, a, 0.3, Math.max(0, b - a - 0.6), 0.3)); }); return k; };
     const A = (n, v) => n && n.setAttribute('transform', v);
     function rendre(t) {
       const i = ligneA(t), avant = i === 0 && t < L[0].t, e1 = emoDe(i), e0 = avant || (i === 0 && p.amorceBoucle) ? e1 : emoDe(i - 1), kE = i < 0 || avant ? 1 : lisse((t - L[i].t) / 0.18), kA = i < 0 || avant ? 1 : dos(lisse((t - L[i].t) / 0.55));
