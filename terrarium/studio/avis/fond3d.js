@@ -184,6 +184,131 @@ void main(){
   const ond = (t) => (O.revel == null ? 0 : 0.004 * Math.exp(-(((t - O.revel - 0.2) / 0.25) ** 2)) + 0.006 * lis((t - O.fin + 0.9) / 0.6) * (1 - lis((t - O.fin) / 0.15)));
   return { maj(t) { U.uT.value = t; U.uRev.value = rev(t); U.uOnd.value = ond(t); r.render(sc, cam); } };
 }
+
+  /*
+   * L'iceberg : vue en coupe d'un immense iceberg, de la surface (ciel polaire, pointe qui dépasse) jusqu'aux abysses.
+   *   iceberg(canvas, L, opts) ; opts : { t0 (décalage dans la vidéo complète), L (durée de la boucle complète),
+   *   prof : [[t, profondeur], …] (instants de la vidéo complète ; profondeur 0 = surface … 4 = abysses) }.
+   * Tout dépend du temps global (t + t0) : plusieurs rendus mis bout à bout se raccordent exactement.
+   */
+  function iceberg(canvas, Lloc, opts) {
+    const O = opts || {}, W = canvas.width, H = canvas.height, LG = O.L || Lloc, T0 = O.t0 || 0, K = O.prof || [[0, 0]];
+    const r = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true });
+    r.setPixelRatio(1); r.setSize(W, H, false);
+    const sc = new THREE.Scene(), cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const U = { uT: { value: 0 }, uL: { value: LG }, uR: { value: new THREE.Vector2(W, H) }, uP: { value: 0 } };
+    const frag = `
+precision highp float;
+uniform float uT, uL, uP; uniform vec2 uR;
+#define PI 3.14159265
+const float NIV = 7.0;                       // mètres (unités) par étage
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float hash3(vec3 p){ return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453); }
+float vn3(vec3 p){ vec3 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+  return mix(mix(mix(hash3(i), hash3(i+vec3(1,0,0)), f.x), mix(hash3(i+vec3(0,1,0)), hash3(i+vec3(1,1,0)), f.x), f.y),
+             mix(mix(hash3(i+vec3(0,0,1)), hash3(i+vec3(1,0,1)), f.x), mix(hash3(i+vec3(0,1,1)), hash3(i+vec3(1,1,1)), f.x), f.y), f.z); }
+// L'iceberg : un grand corps allongé vers le bas, élargi sous l'eau, taillé en facettes (plans) et bosselé.
+float berg(vec3 p){
+  vec3 c = vec3(3.0, -13.0, 11.0);
+  vec3 q = p - c;
+  float w = 4.2 + 1.6 * smoothstep(2.0, -8.0, p.y) - 2.2 * smoothstep(-14.0, -30.0, p.y);   // plus large sous l'eau, s'affine en bas
+  float d = length(vec2(q.x, q.z) / vec2(w, w * 0.9)) - 1.0;
+  d = max(d * w * 0.8, max(p.y - 3.4 + 0.25 * q.x * q.x, -31.0 - p.y));                     // pointe émergée et fond
+  d = max(d, dot(q, normalize(vec3(0.6, 0.15, -0.78))) - 3.3);                               // facettes
+  d = max(d, dot(q, normalize(vec3(-0.75, -0.1, -0.65))) - 3.6);
+  d = max(d, dot(q, normalize(vec3(0.2, 0.55, -0.8))) - 6.0);
+  d += 0.35 * vn3(p * 0.7) + 0.12 * vn3(p * 2.1);
+  return d;
+}
+vec3 eauCouleur(float y){                     // couleur de l'eau selon la profondeur
+  vec3 c = mix(vec3(0.08, 0.42, 0.55), vec3(0.03, 0.16, 0.32), smoothstep(-1.0, -12.0, y));
+  c = mix(c, vec3(0.01, 0.05, 0.14), smoothstep(-10.0, -21.0, y));
+  return mix(c, vec3(0.0, 0.012, 0.04), smoothstep(-19.0, -28.0, y));
+}
+vec3 ciel(vec3 rd){                         // crépuscule polaire : orange-rose à l'horizon, bleu profond en haut
+  float y = max(rd.y, 0.0);
+  vec3 c = mix(vec3(1.0, 0.62, 0.42), vec3(0.85, 0.5, 0.62), smoothstep(0.0, 0.08, y));
+  c = mix(c, vec3(0.35, 0.42, 0.8), smoothstep(0.06, 0.25, y));
+  c = mix(c, vec3(0.1, 0.14, 0.38), smoothstep(0.2, 0.6, y));
+  float s = max(dot(rd, normalize(vec3(-0.55, 0.04, 1.0))), 0.0);
+  return c + vec3(1.0, 0.7, 0.45) * pow(s, 18.0) * 0.5 + vec3(1.0, 0.85, 0.65) * pow(s, 900.0) * 2.0;
+}
+vec3 glace(vec3 p, vec3 n, vec3 rd, float sous){
+  float haut = exp(min(p.y, 0.0) * 0.085);                                 // lumière qui baisse avec la profondeur
+  float fres = pow(1.0 - max(dot(n, -rd), 0.0), 3.0);
+  float fente = smoothstep(0.035, 0.0, abs(vn3(p * vec3(1.4, 0.25, 1.4)) - 0.5));   // fines crevasses verticales
+  if (sous < 0.5) {                                                          // au-dessus de l'eau : blanc éclatant, ombres bleues, soleil chaud
+    float dif = max(dot(n, normalize(vec3(-0.55, 0.3, -1.0))), 0.0);
+    vec3 c = mix(vec3(0.45, 0.62, 0.9), vec3(1.0, 0.94, 0.88), dif) + vec3(1.0, 0.6, 0.4) * pow(dif, 6.0) * 0.4;
+    return c * (1.0 - 0.1 * fente) + vec3(0.8, 0.9, 1.0) * fres * 0.35;
+  }
+  float dif = 0.35 + 0.65 * max(dot(n, normalize(vec3(-0.3, 1.0, -0.4))), 0.0);   // lumière venue de la surface
+  vec3 c = mix(vec3(0.06, 0.35, 0.6), vec3(0.45, 0.88, 1.0), dif) * haut;
+  c *= 1.0 - 0.2 * fente;
+  c += vec3(0.5, 0.95, 1.0) * fres * (0.25 + 0.5 * haut);                   // arêtes claires
+  c += vec3(0.1, 0.6, 0.8) * 0.3 * haut * pow(vn3(p * 1.3 + vec3(0.0, uT / uL * 6.2832, 0.0)), 3.0);   // lueur intérieure
+  c += vec3(0.1, 0.9, 0.85) * fres * 0.35 * smoothstep(-16.0, -26.0, p.y);    // aux abysses, les arêtes luisent
+  return c;
+}
+void main(){
+  vec2 uv = (gl_FragCoord.xy - 0.5 * uR) / uR.y;
+  float tt = 2.0 * PI * uT / uL;
+  vec3 ro = vec3(-1.6 + 0.25 * sin(tt), 0.35 - uP * NIV, 0.0);
+  vec3 rd = normalize(vec3(uv.x * 1.15, uv.y * 1.15 - 0.06, 1.0));
+  // L'iceberg
+  float t = 0.5, hit = -1.0;
+  for (int i = 0; i < 64; i++) { float d = berg(ro + rd * t); if (d < 0.01 * t) { hit = t; break; } t += d * 0.75; if (t > 45.0) break; }
+  float tS = abs(rd.y) > 1e-4 ? -ro.y / rd.y : -1.0;                        // la surface de l'eau (y = 0)
+  vec3 col;
+  bool camSous = ro.y < 0.0;
+  if (!camSous) {
+    if (rd.y > 0.0 || (hit > 0.0 && (tS < 0.0 || hit < tS))) {
+      col = ciel(rd);
+      if (hit > 0.0) { vec3 p = ro + rd * hit; vec2 e = vec2(0.02, 0.0);
+        vec3 n = normalize(vec3(berg(p + e.xyy) - berg(p - e.xyy), berg(p + e.yxy) - berg(p - e.yxy), berg(p + e.yyx) - berg(p - e.yyx)));
+        col = glace(p, n, rd, 0.0); }
+    } else {
+      // vue à travers la surface : réflexion du ciel + eau ; l'iceberg sous l'eau est vu dans la brume
+      vec3 pS = ro + rd * tS;
+      float fres = 0.12 + 0.6 * pow(1.0 - abs(rd.y), 6.0);
+      vec3 sous = eauCouleur(-1.0);
+      if (hit > 0.0) { vec3 p = ro + rd * hit; vec2 e = vec2(0.02, 0.0);
+        vec3 n = normalize(vec3(berg(p + e.xyy) - berg(p - e.xyy), berg(p + e.yxy) - berg(p - e.yxy), berg(p + e.yyx) - berg(p - e.yyx)));
+        sous = mix(glace(p, n, rd, 1.0), eauCouleur(p.y), 1.0 - exp(-(hit - tS) * 0.12)); }
+      col = mix(sous, ciel(reflect(rd, vec3(0, 1, 0))), fres);
+      col += vec3(1.0) * 0.12 * pow(max(0.0, sin(pS.x * 3.0 + tt * 3.0) * sin(pS.z * 2.0 - tt * 2.0)), 6.0);   // reflets de vagues
+    }
+  } else {
+    vec3 fond = eauCouleur(ro.y + rd.y * 12.0);
+    if (rd.y > 0.0 && tS > 0.0) fond = mix(fond, vec3(0.55, 0.85, 0.95) * (0.7 + 0.3 * sin(ro.x + rd.x * 30.0 + tt * 4.0)), exp(-tS * 0.09) * smoothstep(0.0, 0.3, rd.y));   // la surface vue d'en dessous
+    col = fond;
+    if (hit > 0.0) { vec3 p = ro + rd * hit; vec2 e = vec2(0.02, 0.0);
+      vec3 n = normalize(vec3(berg(p + e.xyy) - berg(p - e.xyy), berg(p + e.yxy) - berg(p - e.yxy), berg(p + e.yyx) - berg(p - e.yyx)));
+      col = mix(glace(p, n, rd, 1.0), fond, 1.0 - exp(-hit * mix(0.05, 0.09, smoothstep(-5.0, -25.0, ro.y)))); }
+    // rayons de lumière qui tombent de la surface
+    float ray = pow(0.5 + 0.5 * sin(uv.x * 9.0 + uv.y * 2.5 + tt), 6.0) * 0.6 + pow(0.5 + 0.5 * sin(uv.x * 17.0 - uv.y * 3.0 - tt * 2.0), 10.0) * 0.4;
+    col += vec3(0.45, 0.85, 0.95) * ray * 0.32 * exp(ro.y * 0.09) * smoothstep(-0.6, 0.5, uv.y);
+  }
+  // particules en suspension : elles montent quand la caméra descend (sensation de plongée)
+  float pc = 0.0, bio = 0.0;
+  for (int k = 0; k < 3; k++) { float fk = float(k), sc2 = 22.0 + fk * 14.0;
+    vec2 g = uv * sc2 + vec2(fk * 7.3, uP * NIV * (2.4 + fk) + uT / uL * (6.0 + fk * 3.0));
+    vec2 i = floor(g), f = fract(g) - 0.5; float h = hash(i + fk * 31.0);
+    float dd = length(f - (vec2(hash(i + 3.1), hash(i + 7.7)) - 0.5) * 0.6);
+    float pt = step(0.84, h) * smoothstep(0.09, 0.02, dd) * (0.4 + 0.6 * fk / 2.0);
+    pc += pt; bio += pt * step(0.93, h);
+  }
+  float sousEau = camSous ? 1.0 : step(0.0, -rd.y) * step(0.0, tS);
+  col += vec3(0.7, 0.85, 0.9) * pc * 0.25 * sousEau * exp(ro.y * 0.05);
+  col += vec3(0.2, 1.0, 0.9) * bio * 1.4 * smoothstep(2.4, 3.6, uP) * (0.6 + 0.4 * sin(tt * 3.0 + uv.x * 40.0));   // bioluminescence aux abysses
+  col = 1.0 - exp(-col * 1.4); col = pow(col, vec3(0.95)); col *= 1.0 - 0.32 * dot(uv, uv);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+    sc.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: U, vertexShader: 'void main(){ gl_Position = vec4(position, 1.0); }', fragmentShader: frag })));
+    const lis = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+    const prof = (tg) => { if (tg <= K[0][0]) return K[0][1]; for (let i = 0; i + 1 < K.length; i += 1) if (tg <= K[i + 1][0]) return K[i][1] + (K[i + 1][1] - K[i][1]) * lis((tg - K[i][0]) / (K[i + 1][0] - K[i][0])); return K[K.length - 1][1]; };
+    return { maj(t) { const tg = t + T0; U.uT.value = tg; U.uP.value = prof(tg); r.render(sc, cam); } };
+  }
   const mirage = (canvas, L, o) => desert(canvas, L, Object.assign({ mirage: true }, o || {}));
-  return { desert, mirage };
+  return { desert, mirage, iceberg };
 });

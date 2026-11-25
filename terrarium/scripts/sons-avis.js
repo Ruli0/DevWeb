@@ -442,6 +442,14 @@ const BRUITAGES = {
     for (let k = 0; k < 14; k += 1) { const f = note(96 + (k * 5) % 12); sinus(b, () => f, (x) => 0.06 * enveloppe(x, 0.002, 0.12), 0.25 + k * 0.07, 'sin', 0.4); }
     return reverbe(b, 0.45);
   },
+  // Bulles : une plongée (glouglous qui montent, souffle grave).
+  'bulles.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(1.4);
+    bruit(b, (x) => 0.35 * Math.sin(Math.PI * Math.min(1, x / 1.2)), { bas: 120, haut: 900, debut: 0, hasard: graine(660), duree: 1.2 });
+    for (let k = 0; k < 11; k += 1) { const t = 0.05 + k * 0.1 + 0.03 * Math.sin(k * 3.1), f0 = 300 + 140 * ((k * 7) % 5); sinus(b, (x) => f0 * (1 + 2.5 * x), (x) => 0.32 * enveloppe(x, 0.004, 0.05), t, 'sin', 0.12); }
+    return reverbe(b, 0.2);
+  },
   // Gloups : une déglutition de dessin animé (deux bulles graves qui montent).
   'gloups.wav': () => {
     const { tampon, sinus, enveloppe } = O();

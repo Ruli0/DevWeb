@@ -1,0 +1,211 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "iceberg-1",
+  "titre": "L'iceberg, étage 1 (igloo)",
+  "rubrique": "voyage",
+  "numero": 51,
+  "voix": null,
+  "musique": "aucune",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "banquise",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "IGLOO",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Maison de glace des Inuits"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          1.95
+        ],
+        "reponses": [
+          7.45
+        ],
+        "fin": 2.85,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2.0,
+          "ordre": [
+            4,
+            2
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "dunes",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "ÉTAGE 1 · LA SURFACE",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.4,
+            "texte": "STOP ! Tu vas perdre !",
+            "emotion": "defi"
+          },
+          {
+            "t": 1.95,
+            "texte": "Maison de glace des Inuits…",
+            "emotion": "neutre",
+            "lecture": true
+          },
+          {
+            "t": 3.97,
+            "texte": "Trop facile !",
+            "emotion": "defi"
+          },
+          {
+            "t": 7.97,
+            "texte": "Igloo !",
+            "emotion": "joie"
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "danse": true,
+        "accroche": {
+          "texte": "STOP !",
+          "sous": "Tu vas perdre.",
+          "fin": 1.55
+        },
+        "vol": {
+          "depart": 1.3,
+          "arrivee": 2.1,
+          "pose": 3.62,
+          "x": 855,
+          "y": -871,
+          "direct": true
+        },
+        "corniche": true
+      },
+      "sons": [
+        {
+          "f": "whoosh.wav",
+          "t": 1.2,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 1.3,
+          "v": 0.4
+        },
+        {
+          "f": "ailes.wav",
+          "t": 1.3,
+          "v": 0.3
+        },
+        {
+          "f": "ailes.wav",
+          "t": 2.82,
+          "v": 0.25
+        },
+        {
+          "f": "pouf.wav",
+          "t": 3.62,
+          "v": 0.5
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 3.97,
+          "v": 0.3
+        },
+        {
+          "f": "bulles.wav",
+          "t": 9.0,
+          "v": 0.5
+        }
+      ],
+      "amorceBoucle": 0.4,
+      "fond3d": "iceberg",
+      "fond3dOpts": {
+        "t0": 0.0,
+        "L": 37.7778,
+        "prof": [
+          [
+            0,
+            0
+          ],
+          [
+            9.0,
+            0
+          ],
+          [
+            10.3,
+            1.1
+          ],
+          [
+            17.3,
+            1.1
+          ],
+          [
+            18.6,
+            2.2
+          ],
+          [
+            25.6,
+            2.2
+          ],
+          [
+            26.9,
+            3.4
+          ],
+          [
+            36.6,
+            3.4
+          ],
+          [
+            37.6,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "publication": {
+    "texte": "STOP ✋ Ce hibou parie ses plumes que tu ne trouves pas ce mot 🦉🏜️ Tu l'as eu à quelle lettre ?",
+    "hashtags": [
+      "#devinette",
+      "#motmystere",
+      "#quiz",
+      "#hibou",
+      "#jeudemots"
+    ],
+    "commentaire": "Écris la lettre où tu l'as trouvé. Le hibou répond aux meilleurs 👀"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true
+}

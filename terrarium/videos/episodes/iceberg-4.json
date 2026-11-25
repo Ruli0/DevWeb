@@ -1,0 +1,188 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "iceberg-4",
+  "titre": "L'iceberg, étage 4 (krill)",
+  "rubrique": "voyage",
+  "numero": 54,
+  "voix": null,
+  "musique": "aucune",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "banquise",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "KRILL",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Minuscule crevette, repas des baleines"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.25
+        ],
+        "reponses": [
+          6.95
+        ],
+        "fin": 4.6278,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2.4,
+          "ordre": [
+            4,
+            2
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "dunes",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "ÉTAGE 4 · LES ABYSSES",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.25,
+            "texte": "Minuscule crevette, repas des baleines…",
+            "emotion": "neutre",
+            "lecture": true
+          },
+          {
+            "t": 5.07,
+            "texte": "Personne trouve celui-là !",
+            "emotion": "agace"
+          },
+          {
+            "t": 7.47,
+            "texte": "KRILL ! Like si t'es allé jusqu'au fond !",
+            "emotion": "joie",
+            "folie": "emerveille"
+          },
+          {
+            "t": 10.2,
+            "texte": "Encore un ?",
+            "emotion": "defi"
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "cta": {
+          "t": 8.4,
+          "texte": "À quel étage t'as coulé ? 👇",
+          "haut": true
+        },
+        "danse": true,
+        "corniche": true
+      },
+      "sons": [
+        {
+          "f": "hou-hou.wav",
+          "t": 5.1,
+          "v": 0.4
+        },
+        {
+          "f": "merveille.wav",
+          "t": 7.42,
+          "v": 0.5
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 10.0,
+          "v": 0.3
+        },
+        {
+          "f": "bulles.wav",
+          "t": 10.0,
+          "v": 0.45
+        }
+      ],
+      "fond3d": "iceberg",
+      "fond3dOpts": {
+        "t0": 26.6,
+        "L": 37.7778,
+        "prof": [
+          [
+            0,
+            0
+          ],
+          [
+            9.0,
+            0
+          ],
+          [
+            10.3,
+            1.1
+          ],
+          [
+            17.3,
+            1.1
+          ],
+          [
+            18.6,
+            2.2
+          ],
+          [
+            25.6,
+            2.2
+          ],
+          [
+            26.9,
+            3.4
+          ],
+          [
+            36.6,
+            3.4
+          ],
+          [
+            37.6,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "publication": {
+    "texte": "STOP ✋ Ce hibou parie ses plumes que tu ne trouves pas ce mot 🦉🏜️ Tu l'as eu à quelle lettre ?",
+    "hashtags": [
+      "#devinette",
+      "#motmystere",
+      "#quiz",
+      "#hibou",
+      "#jeudemots"
+    ],
+    "commentaire": "Écris la lettre où tu l'as trouvé. Le hibou répond aux meilleurs 👀"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true
+}
