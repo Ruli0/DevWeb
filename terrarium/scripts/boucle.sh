@@ -28,7 +28,7 @@ nF, nFD, n = round(F * sr), round(FD * sr), round(NI / 60 * sr)
 A, Bm = a[nF:], a[:nF]                      # sans l'amorce ; l'amorce
 off = n - nF                                # le fondu commence là où l'image commence le sien
 x = np.linspace(0, 1, nFD, endpoint=False)[:, None]
-out = A[:n].copy()
+out = np.zeros((n, 2), np.float32); m = min(n, len(A)); out[:m] = A[:m]   # le son peut avoir quelques échantillons de moins que l'image
 out[off:off + nFD] = A[off:off + nFD] * np.cos(x * np.pi / 2) + Bm[:nFD] * np.sin(x * np.pi / 2)
 out[off + nFD:n] = Bm[nFD:nFD + (n - off - nFD)]
 out.astype(np.float32).tofile(f)

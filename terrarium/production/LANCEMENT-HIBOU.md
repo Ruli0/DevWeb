@@ -43,3 +43,10 @@
 | Commentaires | au moins 1 pour 100 vues |
 
 Si les objectifs sont atteints, on enchaîne avec PIEUVRE puis SCORPION, même hibou et même gabarit. Sinon, on lit la courbe de fidélisation pour trouver la seconde où les spectateurs décrochent.
+
+## Vidéo 2 : SCORPION (le hibou danse)
+**Vidéo** : `videos/studio/jeu-mots-scorpion-hibou/jeu-mots-scorpion-hibou-final.mp4` · 15,6 s · boucle parfaite.
+**Légende** :
+> Ce hibou a parié ses plumes que tu ne trouves pas. Prouve-lui qu'il a tort 🦉🦂 Tu l'as eu à quelle lettre ?
+
+Mêmes hashtags, même commentaire épinglé, même étiquette « contenu généré par IA ». À publier le lendemain de CRATÈRE.
