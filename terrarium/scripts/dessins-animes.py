@@ -17,14 +17,14 @@ ETAGES = [
        lignes=[(0.4, 'STOP ! Quatre princesses. Tu les trouves toutes ?', 'defi', None, False), (2.85, 'Reine des neiges aux pouvoirs de glace…', 'neutre', None, True), (4.87, 'Trop facile !', 'defi', None, False), (8.87, 'Elsa !', 'joie', None, False)],
        sons=[('whoosh.wav', 2.11, .45), ('whoosh.wav', 2.2, .4), ('ailes.wav', 2.2, .3), ('ailes.wav', 3.72, .25), ('pouf.wav', 4.52, .5), ('whoosh.wav', 4.87, .3), ('merveille.wav', 9.0, .4)]),
   dict(mot='ARIEL', q='La petite sirène rousse', regle='PRINCESSE 2/4', ordre=[4, 2], deb=0.25, pas=2.0, d=8.6,
-       lignes=[(0.25, 'La petite sirène rousse…', 'neutre', None, True), (2.27, 'Ça se corse…', 'choc', None, False), (6.27, 'Ariel !', 'joie', None, False)],
+       lignes=[(0.25, 'La petite sirène rousse…', 'neutre', None, True), (2.27, 'Ça se corse…', 'choc', None, False), (6.27, "C'est Ariel !", 'joie', None, False)],
        sons=[('whoosh.wav', 2.27, .3), ('merveille.wav', 6.4, .4)]),
   dict(mot='RAIPONCE', q='Princesse aux cheveux de vingt mètres', regle='PRINCESSE 3/4', ordre=[7, 4], deb=0.25, pas=2.0, d=8.6,
        lignes=[(0.25, 'Princesse aux cheveux de vingt mètres…', 'neutre', None, True), (4.27, "Ouh là, c'est dur !", 'panique', 'tremble', False), (6.32, 'Raiponce !', 'joie', None, False)],
        sons=[('hou-hou.wav', 4.29, .4), ('merveille.wav', 6.45, .4)]),
-  dict(mot='VAIANA', q='Elle prend la mer pour sauver son île', regle='PRINCESSE 4/4', ordre=[5, 3], deb=0.25, pas=2.4, d=None,
-       lignes=[(0.25, 'Elle prend la mer pour sauver son île…', 'neutre', None, True), (5.07, 'Personne trouve celle-là !', 'agace', None, False), (7.47, 'Vaiana ! Like si tu les as toutes eues !', 'joie', 'emerveille', False), (10.2, 'Encore une ?', 'defi', None, False)],
-       sons=[('hou-hou.wav', 5.1, .4), ('merveille.wav', 7.42, .55), ('whoosh.wav', 10.0, .3)]),
+  dict(mot='CENDRILLON', q='Elle perd sa pantoufle de verre', regle='PRINCESSE 4/4', ordre=[9, 5], deb=0.25, pas=2.4, d=None,
+       lignes=[(0.25, 'Elle perd sa pantoufle de verre…', 'neutre', None, True), (5.07, 'Personne trouve celle-là !', 'agace', None, False), (7.47, 'Cendrillon !', 'joie', 'emerveille', False), (8.75, "Un like si t'as tout trouvé !", 'joie', None, False)],
+       sons=[('hou-hou.wav', 5.1, .4), ('merveille.wav', 7.42, .55), ('whoosh.wav', 10.7, .3)]),
 ]
 somme = sum(e['d'] for e in ETAGES[:3]) - 3 * X
 PUB = round(70 * TEMPS, 4); TOT = round(PUB + 0.4, 4)
