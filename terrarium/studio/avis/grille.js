@@ -214,7 +214,7 @@
 .jeu .qcm .q-prof { left: 430px; top: 1350px; width: 440px; height: 104px; border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .jeu .qcm .q-prof small { position: relative; font: 900 22px/1 '${P.titre}'; letter-spacing: .14em; color: #2d6f99; }
 .jeu .qcm .q-prof b { position: relative; margin-top: 6px; font: 900 54px/1 '${P.titre}'; color: #0c2b45; font-variant-numeric: tabular-nums; }
-.jeu .qcm .q-partage { position: absolute; left: 400px; top: 1345px; width: 500px; text-align: center; font: 900 40px/1.12 '${P.titre}'; color: #ffffff; text-shadow: 0 0 18px #7fd8ff, 0 4px 0 #0a3a5a; }
+.jeu .qcm .q-partage { position: absolute; z-index: 4; left: 400px; top: 1345px; width: 500px; text-align: center; font: 900 40px/1.12 '${P.titre}'; color: #ffffff; text-shadow: 0 0 18px #7fd8ff, 0 4px 0 #0a3a5a; }
 .jeu .qcm .q-barre { position: absolute; left: 40px; top: 1018px; width: 860px; height: 22px; border-radius: 11px; background: #ffffff40; overflow: hidden; box-shadow: 0 0 0 2px #ffffff55; }
 .jeu .qcm .q-barre i { display: block; width: 100%; height: 100%; background: #bff3ff; border-radius: 11px; }
 .jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }

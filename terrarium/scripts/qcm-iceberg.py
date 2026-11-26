@@ -43,7 +43,8 @@ P.pop('accroche', None); pl.pop('amorceBoucle', None); pl['amorceBoucle'] = 0.4
 L = [{'t': 0.4, 'texte': 'Personne arrive au fond !', 'emotion': 'defi'}]
 for i, x in enumerate(Q):
     REP = ["Quatre-vingt-dix pour cent !", "L'Arctique !", "De l'eau douce !", "En 1912 !", "La baleine bleue !", "Trois cœurs !", "Une dent !", "Onze kilomètres !", "La méduse !"]
-    l = {'t': round(T0 + i * PAS + REV + 0.05, 3), 'texte': REP[i] if i < 9 else x[5][0], 'emotion': x[5][1] if i == 9 or x[5][1] == 'panique' else 'joie'}
+    l = {'t': round(T0 + i * PAS + REV + 0.05, 3), 'texte': REP[i] if i < 9 else 'Celle-là, je te la donne pas !',   # la voix dit aussi « Écris ta réponse en commentaire ! » (affiché au-dessus)
+            'emotion': x[5][1] if i == 9 or x[5][1] == 'panique' else 'joie'}
     if x[5][1] == 'panique': l['folie'] = 'tremble'
     L.append(l)
 P['lignes'] = L
