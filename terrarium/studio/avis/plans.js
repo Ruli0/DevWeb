@@ -57,7 +57,7 @@
     const fentesM = G.marteau ? Array.from({ length: 5 }, (_, n) => `<g class="fm" opacity="0">${Array.from({ length: 4 }, (_, j) => { const a = (n * 4 + j) * 0.9 + hm(n * 7 + j) * 0.6, r = 90 + 70 * n + 60 * hm(j + n * 3); let d = `M${IX} ${IY}`, x = IX, y = IY; for (let q2 = 1; q2 <= 3; q2 += 1) { x = IX + Math.cos(a + (hm(q2 + j) - 0.5) * 0.5) * r * q2 / 3; y = IY + Math.abs(Math.sin(a + (hm(q2 + n) - 0.5) * 0.5)) * r * q2 / 3; d += ` L${x.toFixed(0)} ${y.toFixed(0)}`; } return `<path d="${d}" fill="none" stroke="#ffffff" stroke-width="${6 - n * 0.6}" stroke-linecap="round" stroke-linejoin="round"/>`; }).join('')}</g>`).join('') : '';
     const copeaux = G.marteau ? Array.from({ length: 8 }, (_, k) => `<path class="copeau" d="M0 -14 L12 6 L-10 9 Z" fill="#e6f8ff" stroke="#ffffff" stroke-width="2" opacity="0"/>`).join('') : '';
     const jauge = G.marteau ? `<g class="jauge-glace">${Array.from({ length: 5 }, (_, k) => `<g class="jg-cube" transform="translate(${-170 + k * 85} -640)"><rect x="-32" y="-32" width="64" height="64" rx="12" fill="#cdeeff" fill-opacity=".9" stroke="#ffffff" stroke-width="5"/><path d="M-20 -18 L-6 -18" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/></g>`).join('')}</g>` : '';
-    const marteau = G.marteau ? `<g class="marteau" transform="translate(-330 -820)"><g class="marteau-r"><rect x="-13" y="0" width="26" height="380" rx="10" fill="#8a5a2b" stroke="#3b2412" stroke-width="5"/><rect x="-6" y="10" width="6" height="360" fill="#c08a52" opacity=".7"/><rect x="-16" y="300" width="32" height="40" rx="6" fill="#3b2412"/><g transform="translate(0 400)"><rect x="-95" y="-48" width="190" height="96" rx="14" fill="#9aa6b2" stroke="#2c333a" stroke-width="6"/><rect x="-85" y="-40" width="170" height="20" rx="8" fill="#e8eef4" opacity=".8"/><rect x="-95" y="-48" width="30" height="96" rx="8" fill="#6d7884"/></g></g></g>` : '';
+    const marteau = G.marteau ? `<g class="marteau" transform="translate(60 -900)"><g class="marteau-r"><rect x="-14" y="0" width="28" height="450" rx="10" fill="#8a5a2b" stroke="#3b2412" stroke-width="5"/><rect x="-6" y="10" width="6" height="430" fill="#c08a52" opacity=".7"/><rect x="-17" y="10" width="34" height="70" rx="8" fill="#3b2412"/><g transform="translate(0 478)"><rect x="-95" y="-48" width="190" height="96" rx="14" fill="#9aa6b2" stroke="#2c333a" stroke-width="6"/><rect x="-85" y="-40" width="170" height="20" rx="8" fill="#e8eef4" opacity=".8"/><rect x="-95" y="-48" width="30" height="96" rx="8" fill="#6d7884"/></g></g></g>` : '';
     return `<g class="glace-tout">${fl('flamme fl-g', -205)}${fl('flamme fl-d', 205)}<g class="bloc"><clipPath id="glace-clip"><rect class="bloc-clip" x="-185" y="-540" width="370" height="560" rx="38"/></clipPath>`
       + `<g clip-path="url(#glace-clip)"><rect x="-185" y="-540" width="370" height="560" rx="38" fill="#cdeeff" fill-opacity=".6"/><ellipse cx="-110" cy="0" rx="120" ry="70" fill="#ffffff" fill-opacity=".5"/><ellipse cx="130" cy="-10" rx="110" ry="60" fill="#ffffff" fill-opacity=".42"/><ellipse cx="0" cy="-540" rx="170" ry="40" fill="#ffffff" fill-opacity=".45"/>`
       + `<rect x="-185" y="-540" width="370" height="560" rx="38" fill="none" stroke="#ffffff" stroke-opacity=".95" stroke-width="9"/>`
@@ -167,7 +167,9 @@
     const gBloc = Q('.bloc'), gClip = Q('.bloc-clip'), gBord = Q('.bord-fonte'), gFentes = qa(pr, '.fente'), gGouttes = qa(pr, '.goutte'), gEclats = qa(pr, '.eclat'), gFl = qa(pr, '.flamme');
     // Marteau : coups aux instants glace.coups ; angle du marteau (repos 25°, élan 62°, impact -27°) ; nombre de coups donnés.
     const MT = GL && GL.marteau, COUPS = MT ? GL.coups : [], gM = Q('.marteau-r'), gFM = qa(pr, '.fm'), gCop = qa(pr, '.copeau'), gCubes = qa(pr, '.jg-cube');
-    const angleM = (t) => { let a = 25; COUPS.forEach((th) => { const u = t - th; if (u > -0.42 && u < 0.45) { if (u < -0.12) a = 25 + 37 * lisse((u + 0.42) / 0.3); else if (u < 0) a = 62 - 89 * Math.pow((u + 0.12) / 0.12, 2); else if (u < 0.06) a = -27; else a = -27 + 52 * dos((u - 0.06) / 0.39); } }); return a; };
+    const angleM = (t) => { let a = -20; COUPS.forEach((th) => { const u = t - th; if (u > -0.42 && u < 0.45) { if (u < -0.12) a = -20 - 38 * lisse((u + 0.42) / 0.3); else if (u < 0) a = -58 + 73 * Math.pow((u + 0.12) / 0.12, 2); else if (u < 0.06) a = 15; else a = 15 - 35 * dos((u - 0.06) / 0.39); } }); return a; };
+    // Visible pendant le gros plan d'accroche, puis seulement autour de chaque coup (il ne cache pas les réponses).
+    const visM = (t) => { if (ac && t < ac.fin) return 1 - lisse((t - ac.fin + 0.3) / 0.3); let v = 0; COUPS.forEach((th) => { v = Math.max(v, cloche(t, th - 0.55, 0.15, 0.8, 0.2)); }); return v; };
     const coupsDonnes = (t) => COUPS.filter((th) => t >= th).length, dernier = (t) => { let r = -9; COUPS.forEach((th) => { if (t >= th) r = th; }); return r; };
     const niveauG = (t) => (GL ? GL.paliers.reduce((v, tp) => v + lisse((t - tp) / 0.7), 0) : 0);
     const libere = (t) => (GL ? lisse((t - GL.liberation) / 0.25) : 1);
@@ -184,7 +186,7 @@
       const lib = libere(t), gel = GL ? 1 - lib : 0;   // gel = 1 : figé dans la glace (il grelotte seulement)
       let choc = 0;
       if (MT) {
-        A(gM, `rotate(${angleM(t).toFixed(2)})`);
+        A(gM, `rotate(${angleM(t).toFixed(2)})`); gM.setAttribute('opacity', visM(t).toFixed(2));
         const nC = coupsDonnes(t), th = dernier(t), u = t - th;
         gFM.forEach((g, k) => g.setAttribute('opacity', (k < nC ? Math.min(1, (t - COUPS[k]) / 0.08) : 0).toFixed(2)));
         const jg2 = Q('.jauge-glace'); if (jg2 && ac) jg2.setAttribute('opacity', lisse((t - ac.fin + 0.38) / 0.38).toFixed(2));
