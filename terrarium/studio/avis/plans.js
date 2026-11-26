@@ -542,7 +542,8 @@
               if (i === 0) { gsap.set(qq, { opacity: 1, y: 0, scale: 1 }); }
               else {
                 gsap.set(qq, { opacity: 0 }); gsap.set(tg, { opacity: 0 });
-                c.ft(qq, { opacity: 0, y: PV.y + 70, scale: PV.scale }, { opacity: 1, y: PV.y, scale: PV.scale, duration: 0.35, ease: 'power2.out' }, prec + 0.1);
+                if (i === 1) gsap.set(qq, { opacity: 1, y: PV.y, scale: PV.scale });   // la 2e question attend déjà en petit dès l'image 0
+                else c.ft(qq, { opacity: 0, y: PV.y + 70, scale: PV.scale }, { opacity: 1, y: PV.y, scale: PV.scale, duration: 0.35, ease: 'power2.out' }, prec + 0.1);
                 c.ft(qq, { y: PV.y, scale: PV.scale }, { y: 0, scale: 1, duration: 0.42, ease: 'power3.inOut' }, tE);
                 c.ft(tg, { opacity: 0 }, { opacity: 1, duration: 0.25 }, tE + 0.2);
               }
