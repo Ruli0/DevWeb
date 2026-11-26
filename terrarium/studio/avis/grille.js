@@ -199,7 +199,7 @@
 .jeu .qcm .q-tete { position: absolute; left: 40px; top: 300px; width: 860px; text-align: center; color: #ffd45c; font: 900 44px/1 '${P.titre}'; letter-spacing: .03em; text-shadow: 0 4px 14px #000b; }
 .jeu .qcm .q-tete.fort { top: 290px; font-size: 52px; white-space: nowrap; color: #ffffff; text-shadow: 0 0 22px #7fd8ff, 0 4px 0 #0a3a5a; }
 .jeu .qcm .glacon { position: absolute; overflow: hidden; transform-origin: 50% 60%;
-  background: linear-gradient(165deg, #f4fdffee 0%, #cdeefcdd 38%, #9fd6f2dd 72%, #7cc3eae6 100%);
+  background: linear-gradient(165deg, #f6fdfff7 0%, #d4f1fdf2 38%, #a7daf4f0 72%, #84c7ecf4 100%);
   border: 3px solid #ffffffe6; box-shadow: inset 0 7px 0 #ffffffcc, inset 0 -12px 20px #3d8fc066, inset 10px 0 18px #ffffff55, 0 14px 0 #0b3a5a59, 0 18px 30px #00141f66, 0 0 34px #b8ecff66; }
 .jeu .qcm .glacon .reflet { position: absolute; left: -10%; top: -60%; width: 34%; height: 220%; transform: rotate(24deg); background: linear-gradient(90deg, #ffffff00, #ffffff8c, #ffffff00); }
 .jeu .qcm .glacon::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='860' height='240' viewBox='0 0 860 240'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.55' stroke-width='2'%3E%3Cpath d='M640 0 L610 60 L650 95 L620 150'/%3E%3Cpath d='M610 60 L560 70'/%3E%3Cpath d='M40 240 L80 190 L60 160'/%3E%3Cpath d='M80 190 L130 200'/%3E%3C/g%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%; }
@@ -211,6 +211,10 @@
 .jeu .qcm .q-rep b { position: relative; margin-left: 18px; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #7fd0ff, #1c6fd1 70%); color: #fff; font: 900 44px/1 '${P.titre}'; box-shadow: inset 0 -5px 0 #0003, 0 0 0 3px #ffffffaa; }
 .jeu .qcm .q-rep span { position: relative; font: 800 52px/1 '${P.titre}'; color: #0c2b45; }
 .jeu .qcm .q-mystere { position: absolute; left: 640px; top: 660px; width: 240px; height: 300px; display: grid; place-items: center; font: 900 300px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 0 40px #ffb43c, 0 10px 0 #8a5a00; }
+.jeu .qcm .q-prof { left: 430px; top: 1350px; width: 440px; height: 104px; border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.jeu .qcm .q-prof small { position: relative; font: 900 22px/1 '${P.titre}'; letter-spacing: .14em; color: #2d6f99; }
+.jeu .qcm .q-prof b { position: relative; margin-top: 6px; font: 900 54px/1 '${P.titre}'; color: #0c2b45; font-variant-numeric: tabular-nums; }
+.jeu .qcm .q-partage { position: absolute; left: 400px; top: 1345px; width: 500px; text-align: center; font: 900 40px/1.12 '${P.titre}'; color: #ffffff; text-shadow: 0 0 18px #7fd8ff, 0 4px 0 #0a3a5a; }
 .jeu .qcm .q-barre { position: absolute; left: 40px; top: 1018px; width: 860px; height: 22px; border-radius: 11px; background: #ffffff40; overflow: hidden; box-shadow: 0 0 0 2px #ffffff55; }
 .jeu .qcm .q-barre i { display: block; width: 100%; height: 100%; background: #bff3ff; border-radius: 11px; }
 .jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }

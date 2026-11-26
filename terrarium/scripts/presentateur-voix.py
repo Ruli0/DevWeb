@@ -26,6 +26,15 @@ def main():
     for n, l in enumerate(lignes, 1):
         src, dst = os.path.join(dossier, f'l{n}.wav'), os.path.join(sortie, f'l{n}.wav')
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-af', 'aresample=24000,silenceremove=start_periods=1:start_threshold=-45dB,' + perso + 'loudnorm=I=-16:TP=-1.5:LRA=7,aresample=48000', '-ac', '1', dst], check=True)
+        # Fin propre (pas de bruit parasite) : on coupe là où l'énergie de la voix retombe pour de bon (dernier passage
+        # au-dessus de -38 dB par rapport au pic, + 0,1 s de traîne), puis fondu de sortie de 90 ms.
+        a0 = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', dst, '-ac', '1', '-ar', '48000', '-f', 'f32le', '-'], capture_output=True).stdout, np.float32)
+        if len(a0):
+            w = 480; r = np.array([np.sqrt(np.mean(a0[i:i + w] ** 2)) for i in range(0, len(a0), w)]); seuil = r.max() * 10 ** (-38 / 20)
+            actifs = np.where(r > seuil)[0]
+            if len(actifs):
+                fin_s = min(len(a0) / 48000, (actifs[-1] + 1) * w / 48000 + 0.1); tmp = dst + '.fin.wav'
+                subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', dst, '-af', f'atrim=end={fin_s:.3f},afade=t=out:st={max(0, fin_s - 0.09):.3f}:d=0.09', tmp], check=True); os.replace(tmp, dst)
         # Accent (lignes[].accent {debut, db}) : une fin de phrase qui doit claquer, montée après le traitement (le compresseur l'aplatirait).
         if l.get('accent'):
             ac = l['accent']; tmp = dst + '.tmp.wav'
