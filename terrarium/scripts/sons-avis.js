@@ -468,6 +468,16 @@ const BRUITAGES = {
     for (let k = 0; k < 14; k += 1) { const f = 2600 + 380 * ((k * 7) % 11); sinus(b, () => f, (x) => 0.12 * enveloppe(x, 0.001, 0.09), 0.03 + k * 0.045, 'sin', 0.3); }
     return reverbe(b, 0.3);
   },
+  // Coup de marteau sur la glace : choc sourd, claquement, craquement cristallin qui court.
+  'coup-glace.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(1.0);
+    sinus(b, (x) => 95 * Math.exp(-x * 9) + 45, (x) => 0.85 * enveloppe(x, 0.001, 0.12), 0, 'sin', 0.4);
+    bruit(b, (x) => 0.75 * enveloppe(x, 0.0005, 0.03), { bas: 800, haut: 9000, debut: 0, hasard: graine(720), duree: 0.15 });
+    for (let k = 0; k < 10; k += 1) bruit(b, (x) => 0.32 * enveloppe(x, 0.0005, 0.012), { bas: 3000, haut: 12000, debut: 0.03 + k * 0.035 + 0.01 * Math.sin(k * 3.3), hasard: graine(730 + k), duree: 0.03 });
+    for (let k = 0; k < 6; k += 1) { const f = 3200 + 520 * ((k * 5) % 7); sinus(b, () => f, (x) => 0.07 * enveloppe(x, 0.001, 0.07), 0.02 + k * 0.05, 'sin', 0.2); }
+    return reverbe(b, 0.22);
+  },
   // Gloups : une déglutition de dessin animé (deux bulles graves qui montent).
   'gloups.wav': () => {
     const { tampon, sinus, enveloppe } = O();
