@@ -217,6 +217,22 @@
 .jeu .qcm .q-partage { position: absolute; z-index: 4; left: 400px; top: 1345px; width: 500px; text-align: center; font: 900 40px/1.12 '${P.titre}'; color: #ffffff; text-shadow: 0 0 18px #7fd8ff, 0 4px 0 #0a3a5a; }
 .jeu .qcm .q-barre { position: absolute; left: 40px; top: 1018px; width: 860px; height: 22px; border-radius: 11px; background: #ffffff40; overflow: hidden; box-shadow: 0 0 0 2px #ffffff55; }
 .jeu .qcm .q-barre i { display: block; width: 100%; height: 100%; background: #bff3ff; border-radius: 11px; }
+/* QCM simple (décompte de 5 s, question suivante visible en petit) */
+.jeu .qcm.simple .q-carte { height: 200px; }
+.jeu .qcm.simple .q-carte p { font-size: 54px; }
+.jeu .qcm.simple .q-rep { height: 88px; border-radius: 26px 30px 28px 32px; gap: 22px; }
+.jeu .qcm.simple .q-rep b { width: 62px; height: 62px; font-size: 38px; }
+.jeu .qcm.simple .q-rep span { font-size: 46px; }
+.jeu .qcm.simple .q-mystere { top: 585px; }
+.jeu .qcm.simple .q-prof { left: 170px; top: 1392px; width: 600px; height: 74px; flex-direction: row; gap: 20px; }
+.jeu .qcm.simple .q-prof b { margin-top: 0; font-size: 46px; }
+.jeu .qcm.simple .q-partage { left: 40px; top: 930px; width: 860px; font-size: 58px; }
+.jeu .qcm .q-compte { position: absolute; left: 415px; top: 905px; width: 110px; height: 110px; display: grid; place-items: center; }
+.jeu .qcm .q-compte svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.jeu .qcm .q-compte .qc-fond { fill: #0a2a4488; stroke: #ffffff55; stroke-width: 9; }
+.jeu .qcm .q-compte .qc-arc { fill: none; stroke-width: 9; stroke-linecap: round; }
+.jeu .qcm .q-compte span { position: relative; font: 900 64px/1 '${P.titre}'; color: #fff; text-shadow: 0 3px 0 #0a3a5a; }
+.jeu .qcm .q-suite { position: absolute; left: 40px; top: 1030px; width: 860px; text-align: center; font: 900 28px/1 '${P.titre}'; letter-spacing: .18em; color: #ffffffd9; text-shadow: 0 3px 10px #00141f99; }
 .jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }
 .jeu.f3d .fond-papier, .jeu.f3d .danse { display: none; }
 .jeu .fond-anime { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
