@@ -89,3 +89,14 @@ Cocher « contenu généré par IA » ; couverture = première image (STOP).
 > Et la 10e, c'était quoi ? Le hibou lit tout 👀
 
 Cocher « contenu généré par IA » ; couverture = première image (question 1). Ne pas donner la réponse de la 10e dans les commentaires (c'est le rouge) : laisser les gens débattre, puis répondre au bout de quelques heures.
+
+## Vidéo 6 : Libère le hibou (5 QCM, 28,3 s)
+**Vidéo** : `videos/studio/qcm-glace/qcm-glace-final.mp4` · boucle parfaite.
+**Description** :
+> Le hibou est gelé 🥶🦉 Réponds aux 5 questions pour le libérer ! Combien t'en as eu ?
+
+**Hashtags** : #quiz #culturegenerale #qcm #hibou #defi
+**Commentaire épinglé** :
+> Combien t'en as eu sur 5 ? Le hibou te remercie 🦉🔥
+
+Cocher « contenu généré par IA » ; une seule vidéo ce jour-là, vers 18-19 h.
