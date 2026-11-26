@@ -451,6 +451,23 @@ const BRUITAGES = {
     for (let k = 0; k < 11; k += 1) { const t = 0.05 + k * 0.1 + 0.03 * Math.sin(k * 3.1), f0 = 300 + 140 * ((k * 7) % 5); sinus(b, (x) => f0 * (1 + 2.5 * x), (x) => 0.32 * enveloppe(x, 0.004, 0.05), t, 'sin', 0.12); }
     return reverbe(b, 0.2);
   },
+  // Feu : une flamme qui s'embrase (souffle qui monte, crépitements).
+  'feu.wav': () => {
+    const { tampon, bruit, enveloppe, graine } = O();
+    const b = tampon(1.2);
+    bruit(b, (x) => 0.55 * Math.min(1, x / 0.15) * Math.exp(-x * 2.2), { bas: 200, haut: 3000, debut: 0, hasard: graine(670), duree: 1.1 });
+    for (let k = 0; k < 9; k += 1) bruit(b, (x) => 0.45 * enveloppe(x, 0.0005, 0.01), { bas: 2000, haut: 9000, debut: 0.08 + k * 0.1 + 0.04 * Math.sin(k * 5.1), hasard: graine(680 + k), duree: 0.04 });
+    return b;
+  },
+  // Bris : un bloc de glace qui éclate (choc sourd, éclats de verre cristallins).
+  'bris.wav': () => {
+    const { tampon, sinus, bruit, enveloppe, graine } = O();
+    const b = tampon(1.6);
+    sinus(b, (x) => 110 * Math.exp(-x * 4) + 50, (x) => 0.7 * enveloppe(x, 0.002, 0.2), 0, 'sin', 0.6);
+    bruit(b, (x) => 0.6 * enveloppe(x, 0.001, 0.12), { bas: 1500, haut: 12000, debut: 0, hasard: graine(700), duree: 0.5 });
+    for (let k = 0; k < 14; k += 1) { const f = 2600 + 380 * ((k * 7) % 11); sinus(b, () => f, (x) => 0.12 * enveloppe(x, 0.001, 0.09), 0.03 + k * 0.045, 'sin', 0.3); }
+    return reverbe(b, 0.3);
+  },
   // Gloups : une déglutition de dessin animé (deux bulles graves qui montent).
   'gloups.wav': () => {
     const { tampon, sinus, enveloppe } = O();

@@ -1,0 +1,297 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "qcm-glace",
+  "titre": "Libère le hibou (QCM)",
+  "rubrique": "voyage",
+  "numero": 61,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "banquise",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "GLACE",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "glace"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.3
+        ],
+        "reponses": [
+          25.7333
+        ],
+        "fin": 3,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "dunes",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "QCM",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.4,
+            "texte": "Je suis enfermé dans la glace ! Trouve les réponses pour me libérer !",
+            "emotion": "panique"
+          },
+          {
+            "t": 4.75,
+            "texte": "Quatre-vingt-dix pour cent !",
+            "emotion": "choc"
+          },
+          {
+            "t": 9.75,
+            "texte": "L'Arctique !",
+            "emotion": "choc"
+          },
+          {
+            "t": 14.75,
+            "texte": "En 1912 !",
+            "emotion": "choc"
+          },
+          {
+            "t": 19.75,
+            "texte": "La baleine bleue !",
+            "emotion": "choc"
+          },
+          {
+            "t": 24.75,
+            "texte": "Trois cœurs !",
+            "emotion": "joie"
+          },
+          {
+            "t": 26.05,
+            "texte": "Merci ! Like si tu m'as sauvé !",
+            "emotion": "joie"
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "cta": {
+          "t": 26.1,
+          "texte": "Combien t'en as eu sur 5 ? 👇",
+          "haut": true
+        },
+        "danse": false,
+        "corniche": true,
+        "glace": {
+          "paliers": [
+            4.7,
+            9.7,
+            14.7,
+            19.7
+          ],
+          "liberation": 24.7
+        }
+      },
+      "sons": [
+        {
+          "f": "chrono-3.wav",
+          "t": 1.7,
+          "v": 0.45
+        },
+        {
+          "f": "feu.wav",
+          "t": 4.68,
+          "v": 0.5
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 6.7,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 5.85,
+          "v": 0.22
+        },
+        {
+          "f": "feu.wav",
+          "t": 9.68,
+          "v": 0.5
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 11.7,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 10.85,
+          "v": 0.22
+        },
+        {
+          "f": "feu.wav",
+          "t": 14.68,
+          "v": 0.5
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 16.7,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 15.85,
+          "v": 0.22
+        },
+        {
+          "f": "feu.wav",
+          "t": 19.68,
+          "v": 0.5
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 21.7,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 20.85,
+          "v": 0.22
+        },
+        {
+          "f": "feu.wav",
+          "t": 24.68,
+          "v": 0.5
+        },
+        {
+          "f": "bris.wav",
+          "t": 24.7,
+          "v": 0.6
+        },
+        {
+          "f": "merveille.wav",
+          "t": 24.8,
+          "v": 0.45
+        }
+      ],
+      "fond3d": "iceberg",
+      "qcm": {
+        "reponse": 3.5,
+        "questions": [
+          {
+            "t": 1.2,
+            "etage": "",
+            "q": "Quelle part d'un iceberg est sous l'eau ?",
+            "r": [
+              "10 %",
+              "50 %",
+              "90 %"
+            ],
+            "ok": 2,
+            "tete": "LIBÈRE LE HIBOU !"
+          },
+          {
+            "t": 6.2,
+            "etage": "",
+            "q": "Où vit l'ours polaire ?",
+            "r": [
+              "Arctique",
+              "Antarctique",
+              "Les deux"
+            ],
+            "ok": 0,
+            "tete": "QUESTION 2/5"
+          },
+          {
+            "t": 11.2,
+            "etage": "",
+            "q": "Le Titanic a coulé en…",
+            "r": [
+              "1912",
+              "1923",
+              "1898"
+            ],
+            "ok": 0,
+            "tete": "QUESTION 3/5"
+          },
+          {
+            "t": 16.2,
+            "etage": "",
+            "q": "Le plus grand animal du monde ?",
+            "r": [
+              "Requin-baleine",
+              "Baleine bleue",
+              "Calmar géant"
+            ],
+            "ok": 1,
+            "tete": "QUESTION 4/5"
+          },
+          {
+            "t": 21.2,
+            "etage": "",
+            "q": "Combien de cœurs a une pieuvre ?",
+            "r": [
+              "1",
+              "2",
+              "3"
+            ],
+            "ok": 2,
+            "tete": "QUESTION 5/5"
+          }
+        ]
+      },
+      "fond3dOpts": {
+        "t0": 0,
+        "L": 28.3333,
+        "prof": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "amorceBoucle": 0.4
+    }
+  ],
+  "publication": {
+    "texte": "Le hibou est gelé 🥶🦉 Réponds aux 5 questions pour le libérer ! Combien t'en as eu ?",
+    "hashtags": [
+      "#quiz",
+      "#culturegenerale",
+      "#qcm",
+      "#hibou",
+      "#defi"
+    ],
+    "commentaire": "Combien t'en as eu sur 5 ? Le hibou te remercie 🦉🔥"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true
+}
