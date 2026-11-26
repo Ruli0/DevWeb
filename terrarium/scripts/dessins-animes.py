@@ -44,7 +44,7 @@ for k, e in enumerate(ETAGES):
     P = pl['presentateur']; P.pop('corniche', None); P['danse'] = True
     P['lignes'] = [dict({'t': t0, 'texte': tx, 'emotion': em}, **({'folie': fo} if fo else {}), **({'lecture': True} if lu else {})) for t0, tx, em, fo, lu in e['lignes']]
     if n == 1:
-        P['accroche'] = {'texte': 'STOP !', 'sous': '4 princesses. Tu les trouves toutes ?', 'fin': 2.45}
+        P['accroche'] = {'texte': 'STOP !', 'sous': '4 princesses. Tu les trouves toutes ?', 'fin': 2.45, 'tailleSous': 46}
         P['vol'] = {'depart': 2.2, 'arrivee': 3.0, 'pose': 4.52, 'x': 855, 'y': -871, 'direct': True}
     else: P.pop('accroche', None); P.pop('vol', None); pl.pop('amorceBoucle', None)
     if n == 4: P['cta'] = {'t': 8.4, 'texte': "Tu en as trouvé combien ? 👇", 'haut': True}

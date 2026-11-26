@@ -122,3 +122,15 @@ Cocher « contenu généré par IA » ; couverture = première image (gros plan 
 > Et la 10e, c'était quoi ? 👇
 
 Ne pas donner la réponse de la 10e (le rouge) tout de suite : laisser débattre. Publier vers 18-19 h.
+
+## Vidéo 9 : 4 princesses (dessins animés, 38,9 s) — test d'audience
+**Vidéo** : `videos/studio/dessins/dessins-final.mp4` · boucle parfaite · voix de synthèse : cocher « contenu généré par IA ».
+**Mots** : ELSA, ARIEL, RAIPONCE, CENDRILLON (du plus facile au plus long). Noms en texte seulement, aucun personnage dessiné.
+**Description** :
+> 4 princesses, de la plus facile à la plus dure 👑🦉 Tu les trouves toutes ? Envoie-le à ta meilleure amie 💜
+
+**Hashtags** : #quiz #princesse #dessinanime #devinette #hibou
+**Commentaire épinglé** :
+> Tu en as trouvé combien sur 4 ? 👇
+
+À mesurer : la répartition du public (TikTok Studio → Analyses → Spectateurs : genre, âge) comparée à celle de l'iceberg ; part restante à 1 s et 3 s ; likes / vues. Une seule vidéo ce jour-là, vers 18-19 h.

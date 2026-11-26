@@ -331,7 +331,8 @@
         "accroche": {
           "texte": "STOP !",
           "sous": "4 princesses. Tu les trouves toutes ?",
-          "fin": 2.45
+          "fin": 2.45,
+          "tailleSous": 46
         },
         "vol": {
           "depart": 2.2,
