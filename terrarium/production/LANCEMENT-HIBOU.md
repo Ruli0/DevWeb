@@ -111,3 +111,14 @@ Cocher « contenu généré par IA » ; une seule vidéo ce jour-là, vers 18-19
 > À quel coup t'as raté ? 🔨 Le hibou lit tout 👀
 
 Cocher « contenu généré par IA » ; couverture = première image (gros plan « 5 COUPS ») ; une seule vidéo ce jour-là, vers 18-19 h.
+
+## Vidéo 8 : QCM simple (sans hibou, 68,9 s) — test témoin
+**Vidéo** : `videos/studio/qcm-simple/qcm-simple-final.mp4` · boucle parfaite · pas de voix (musique de synthèse : pas de case « contenu IA » obligatoire ; la cocher par prudence si TikTok le propose).
+**Description** :
+> 10 questions, de la surface aux abysses 🧊 Tu tiens jusqu'où ? La dernière, personne la trouve… Envoie-le à un pote qui se croit fort 👀
+
+**Hashtags** : #quiz #culturegenerale #qcm #iceberg #culture
+**Commentaire épinglé** :
+> Et la 10e, c'était quoi ? 👇
+
+Ne pas donner la réponse de la 10e (le rouge) tout de suite : laisser débattre. Publier vers 18-19 h.
