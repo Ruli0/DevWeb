@@ -93,3 +93,4 @@ D'après Jules (chiffres à relever). Même plafond que tous les formats depuis 
 
 ## Relevé du 26 nov. 2026 : `iceberg` (4 mots, 38,9 s) à ~30 min
 124 vues, 9 likes (7,3 %, record ; SCORPION : 2,7 %), 1 commentaire, visionnage moyen 6,6 s (record ; SCORPION : 4,9 s), 3,36 % jusqu'au bout (bas, normal pour 39 s), 0 follower. Premier signe que la progression (étages de plus en plus durs) retient et fait liker plus qu'un seul mot. À confirmer à 4 h et 24 h.
+- À ~3 h : 494 vues, 21 likes (record), visionnage moyen 6,0 s (record), 53 min de lecture totale (record), diffusion encore à ~120 vues/h à 4 h (SCORPION était à 0 à 4 h 30). Courbe : la perte à 1 s reste la constante (~45 %), mais ~15 % passent 10 s et descendent ensuite lentement les étages. Conclusion provisoire : la progression en plusieurs mots/questions de plus en plus durs est notre meilleur format ; prochain test : le QCM iceberg (même progression, réponse plus facile à donner).
