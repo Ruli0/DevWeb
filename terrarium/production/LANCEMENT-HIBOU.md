@@ -100,3 +100,14 @@ Cocher « contenu généré par IA » ; couverture = première image (question 1
 > Combien t'en as eu sur 5 ? Le hibou te remercie 🦉🔥
 
 Cocher « contenu généré par IA » ; une seule vidéo ce jour-là, vers 18-19 h.
+
+## Vidéo 7 : 5 coups pour le libérer (marteau, 5 QCM, 30,0 s) — à publier avant « Libère le hibou »
+**Vidéo** : `videos/studio/qcm-marteau/qcm-marteau-final.mp4` · boucle parfaite.
+**Description** :
+> Chaque bonne réponse = un coup de marteau 🔨🧊 Libère le hibou ! À quel coup t'as raté ?
+
+**Hashtags** : #quiz #culturegenerale #qcm #hibou #defi
+**Commentaire épinglé** :
+> À quel coup t'as raté ? 🔨 Le hibou lit tout 👀
+
+Cocher « contenu généré par IA » ; couverture = première image (gros plan « 5 COUPS ») ; une seule vidéo ce jour-là, vers 18-19 h.
