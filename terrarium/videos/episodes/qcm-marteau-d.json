@@ -1,0 +1,741 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "qcm-marteau-d",
+  "titre": "5 coups pour le libérer (QCM) — accroche D",
+  "rubrique": "voyage",
+  "numero": 62,
+  "voix": null,
+  "musique": "reverie",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "banquise",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "GLACE",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "glace"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.3
+        ],
+        "reponses": [
+          27.4
+        ],
+        "fin": 3,
+        "tempo": 108,
+        "titreFixe": true
+      },
+      "affichage": "progressif",
+      "animation": "dunes",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "QCM",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.4,
+            "texte": "Aide-moi ! Chaque bonne réponse, c'est un coup de marteau !",
+            "emotion": "panique",
+            "jusqua": 5.4,
+            "env": [
+              0.94,
+              0.94,
+              0.93,
+              0.92,
+              0.37,
+              0.81,
+              0.99,
+              1.0,
+              0.91,
+              0.94,
+              0.78,
+              0.58,
+              0.33,
+              0.23,
+              0.02,
+              0.0,
+              0.0,
+              0.01,
+              0.52,
+              0.96,
+              0.66,
+              1.0,
+              0.44,
+              0.77,
+              0.79,
+              1.0,
+              0.95,
+              0.92,
+              0.96,
+              0.76,
+              1.0,
+              0.75,
+              0.35,
+              0.71,
+              0.98,
+              0.94,
+              0.86,
+              0.94,
+              0.53,
+              0.36,
+              0.3,
+              0.17,
+              0.02,
+              0.0,
+              0.02,
+              0.02,
+              0.54,
+              0.91,
+              0.23,
+              0.75,
+              0.9,
+              0.74,
+              0.23,
+              0.41,
+              1.0,
+              0.92,
+              1.0,
+              1.0,
+              0.92,
+              0.42,
+              0.28,
+              0.05,
+              0.76,
+              1.0,
+              0.9,
+              0.82,
+              0.12,
+              0.05,
+              0.02,
+              0.02,
+              0.02,
+              0.01,
+              0.01,
+              0.01,
+              0.01,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 2.55
+          },
+          {
+            "t": 5.6,
+            "texte": "Huit pattes !",
+            "emotion": "choc",
+            "jusqua": 6.45,
+            "env": [
+              0.47,
+              0.68,
+              0.86,
+              1.0,
+              1.0,
+              1.0,
+              0.49,
+              0.09,
+              0.05,
+              0.01,
+              0.05,
+              1.0,
+              1.0,
+              0.97,
+              0.64,
+              0.07,
+              0.02,
+              0.01,
+              0.83,
+              0.62,
+              0.29,
+              0.06,
+              0.01,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.03,
+              0.96,
+              0.78,
+              0.5,
+              0.12,
+              0.04,
+              0.01,
+              0.55,
+              0.33,
+              0.09,
+              0.01,
+              0.0,
+              0.01,
+              0.01,
+              0.02,
+              0.03,
+              0.03,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 1.55
+          },
+          {
+            "t": 10.6,
+            "texte": "Mercure !",
+            "emotion": "choc",
+            "jusqua": 11.45,
+            "env": [
+              0.34,
+              0.76,
+              1.0,
+              1.0,
+              1.0,
+              0.98,
+              0.4,
+              0.07,
+              0.02,
+              0.37,
+              0.4,
+              0.98,
+              0.97,
+              0.94,
+              1.0,
+              0.99,
+              0.91,
+              0.82,
+              0.51,
+              0.21,
+              0.03,
+              0.0,
+              0.0,
+              0.0,
+              0.01,
+              0.0,
+              0.0,
+              0.02,
+              0.03,
+              0.04,
+              0.03,
+              0.01,
+              0.0,
+              0.0,
+              0.05
+            ],
+            "envHz": 30,
+            "duree": 1.16
+          },
+          {
+            "t": 15.6,
+            "texte": "Onze joueurs !",
+            "emotion": "choc",
+            "jusqua": 16.45,
+            "env": [
+              0.79,
+              1.0,
+              1.0,
+              1.0,
+              0.97,
+              1.0,
+              0.96,
+              0.69,
+              0.72,
+              0.66,
+              0.78,
+              0.78,
+              0.88,
+              0.79,
+              0.88,
+              0.87,
+              0.76,
+              0.68,
+              0.3,
+              0.13,
+              0.03,
+              0.0,
+              0.0,
+              0.0,
+              0.01,
+              0.01,
+              0.0,
+              0.01,
+              0.01,
+              0.01,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 1.03
+          },
+          {
+            "t": 20.6,
+            "texte": "Le guépard !",
+            "emotion": "choc",
+            "jusqua": 21.45,
+            "env": [
+              0.62,
+              0.94,
+              0.88,
+              0.6,
+              0.36,
+              1.0,
+              0.7,
+              0.2,
+              0.1,
+              1.0,
+              0.98,
+              0.92,
+              1.0,
+              1.0,
+              0.99,
+              0.98,
+              0.88,
+              0.68,
+              0.46,
+              0.25,
+              0.18,
+              0.03,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.01,
+              0.03,
+              0.02,
+              0.02,
+              0.01
+            ],
+            "envHz": 30,
+            "duree": 1.15
+          },
+          {
+            "t": 25.6,
+            "texte": "Deux cent six !",
+            "emotion": "joie",
+            "env": [
+              0.17,
+              0.92,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.89,
+              0.97,
+              0.73,
+              0.3,
+              0.16,
+              0.91,
+              0.94,
+              0.94,
+              0.97,
+              0.97,
+              0.95,
+              0.97,
+              0.46,
+              0.14,
+              0.18,
+              0.93,
+              0.89,
+              0.38,
+              0.18,
+              0.23,
+              0.31,
+              0.3,
+              0.25,
+              0.25,
+              0.26,
+              0.25,
+              0.06,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 1.2
+          },
+          {
+            "t": 26.85,
+            "texte": "Libre ! Like si tu m'as sauvé !",
+            "emotion": "joie",
+            "env": [
+              0.82,
+              0.95,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.95,
+              1.0,
+              0.86,
+              0.51,
+              0.42,
+              0.83,
+              0.86,
+              0.79,
+              0.62,
+              0.42,
+              0.48,
+              0.35,
+              0.01,
+              0.0,
+              0.0,
+              0.0,
+              0.01,
+              0.4,
+              0.82,
+              0.68,
+              0.48,
+              0.25,
+              0.1,
+              0.52,
+              0.35,
+              0.17,
+              0.17,
+              0.5,
+              0.92,
+              0.94,
+              0.19,
+              0.5,
+              0.77,
+              1.0,
+              0.83,
+              1.0,
+              0.59,
+              0.46,
+              0.42,
+              0.83,
+              0.96,
+              0.88,
+              0.75,
+              0.93,
+              0.92,
+              0.86,
+              0.91,
+              1.0,
+              0.54,
+              0.18,
+              0.09,
+              0.02,
+              0.02,
+              0.07,
+              0.1,
+              0.12,
+              0.13,
+              0.12,
+              0.06,
+              0.03,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 2.21
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "cta": {
+          "t": 26.9,
+          "texte": "À quel coup t'as raté ? 👇",
+          "haut": true
+        },
+        "danse": false,
+        "corniche": true,
+        "glace": {
+          "marteau": true,
+          "coups": [
+            0.45,
+            5.5,
+            10.5,
+            15.5,
+            20.5,
+            25.5
+          ],
+          "paliers": [],
+          "liberation": 25.5
+        },
+        "accroche": {
+          "texte": "POV : 30 s pour sauver ce hibou",
+          "sous": "",
+          "fin": 1.95,
+          "taille": 120,
+          "tailleSous": 62
+        }
+      },
+      "sons": [
+        {
+          "f": "coup-glace.wav",
+          "t": 0.45,
+          "v": 0.7
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 2.5,
+          "v": 0.42
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 5.2,
+          "v": 0.3
+        },
+        {
+          "f": "coup-glace.wav",
+          "t": 5.5,
+          "v": 0.65
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 7.5,
+          "v": 0.42
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 6.65,
+          "v": 0.2
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 10.2,
+          "v": 0.3
+        },
+        {
+          "f": "coup-glace.wav",
+          "t": 10.5,
+          "v": 0.65
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 12.5,
+          "v": 0.42
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 11.65,
+          "v": 0.2
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 15.2,
+          "v": 0.3
+        },
+        {
+          "f": "coup-glace.wav",
+          "t": 15.5,
+          "v": 0.65
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 17.5,
+          "v": 0.42
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 16.65,
+          "v": 0.2
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 20.2,
+          "v": 0.3
+        },
+        {
+          "f": "coup-glace.wav",
+          "t": 20.5,
+          "v": 0.65
+        },
+        {
+          "f": "chrono-3.wav",
+          "t": 22.5,
+          "v": 0.42
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 21.65,
+          "v": 0.2
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 25.2,
+          "v": 0.3
+        },
+        {
+          "f": "coup-glace.wav",
+          "t": 25.5,
+          "v": 0.65
+        },
+        {
+          "f": "bris.wav",
+          "t": 25.52,
+          "v": 0.6
+        },
+        {
+          "f": "merveille.wav",
+          "t": 25.6,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 1.9,
+          "v": 0.4
+        }
+      ],
+      "fond3d": "iceberg",
+      "qcm": {
+        "reponse": 3.5,
+        "questions": [
+          {
+            "t": 2.0,
+            "etage": "",
+            "q": "Combien de pattes a une araignée ?",
+            "r": [
+              "6",
+              "8",
+              "10"
+            ],
+            "ok": 1,
+            "tete": "COUP 1/5"
+          },
+          {
+            "t": 7.0,
+            "etage": "",
+            "q": "Planète la plus proche du Soleil ?",
+            "r": [
+              "Vénus",
+              "Mercure",
+              "Mars"
+            ],
+            "ok": 1,
+            "tete": "COUP 2/5"
+          },
+          {
+            "t": 12.0,
+            "etage": "",
+            "q": "Joueurs d'une équipe de foot sur le terrain ?",
+            "r": [
+              "9",
+              "10",
+              "11"
+            ],
+            "ok": 2,
+            "tete": "COUP 3/5"
+          },
+          {
+            "t": 17.0,
+            "etage": "",
+            "q": "L'animal terrestre le plus rapide ?",
+            "r": [
+              "Le guépard",
+              "Le lion",
+              "Le cheval"
+            ],
+            "ok": 0,
+            "tete": "COUP 4/5"
+          },
+          {
+            "t": 22.0,
+            "etage": "",
+            "q": "Combien d'os dans le corps d'un adulte ?",
+            "r": [
+              "106",
+              "206",
+              "306"
+            ],
+            "ok": 1,
+            "tete": "COUP 5/5"
+          }
+        ]
+      },
+      "fond3dOpts": {
+        "t0": 0,
+        "L": 28.3333,
+        "prof": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "amorceBoucle": 0.4
+    }
+  ],
+  "publication": {
+    "texte": "Chaque bonne réponse = un coup de marteau 🔨🧊 Libère le hibou ! À quel coup t'as raté ?",
+    "hashtags": [
+      "#quiz",
+      "#culturegenerale",
+      "#qcm",
+      "#hibou",
+      "#defi"
+    ],
+    "commentaire": "À quel coup t'as raté ? 🔨 Le hibou lit tout 👀"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true,
+  "voixOff": [
+    {
+      "fichier": "l1.wav",
+      "t": 0.4,
+      "duree": 2.55
+    },
+    {
+      "fichier": "l2.wav",
+      "t": 5.6,
+      "duree": 1.55
+    },
+    {
+      "fichier": "l3.wav",
+      "t": 10.6,
+      "duree": 1.16
+    },
+    {
+      "fichier": "l4.wav",
+      "t": 15.6,
+      "duree": 1.03
+    },
+    {
+      "fichier": "l5.wav",
+      "t": 20.6,
+      "duree": 1.15
+    },
+    {
+      "fichier": "l6.wav",
+      "t": 25.6,
+      "duree": 1.2
+    },
+    {
+      "fichier": "l7.wav",
+      "t": 26.85,
+      "duree": 2.21
+    }
+  ]
+}

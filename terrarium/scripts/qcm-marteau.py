@@ -3,8 +3,11 @@
 « 5 coups pour le libérer » : le hibou est pris dans la glace ; accroche en gros plan avec un 1er coup de marteau à 0,3 s ;
 5 QCM de 5 s ; chaque bonne réponse = un coup de marteau sur le « ding » (fissures, copeaux, un glaçon de la jauge saute) ;
 au 5e coup la glace éclate. Épisode : videos/episodes/qcm-marteau.json (gabarit : qcm-glace).
+Variantes d'accroche (décision 100 : même vidéo, seule la 1re seconde change) : --accroche=a|b|d -> qcm-marteau-<lettre>.json
+  a : « AU SECOURS ! » crié dès l'image 0 ; b : défi « T'AURAS PAS 5/5 » ; d : texte brut « POV ».
+  (c : la fin montrée d'abord, fabriquée après le rendu par scripts/accroche-flash.sh.)
 """
-import json, copy, os
+import json, copy, os, sys
 R = os.path.join(os.path.dirname(__file__), '..')
 d = copy.deepcopy(json.load(open(os.path.join(R, 'videos/episodes/qcm-glace.json'))))
 Q = [
@@ -16,6 +19,7 @@ Q = [
 ]
 T0, PAS, REV = 2.0, 5.0, 3.5
 TEMPS = 60 / 108; PUB = round(54 * TEMPS, 4); D = round(PUB + 0.4, 4)
+V = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--accroche=')), '')
 d['id'] = 'qcm-marteau'; d['titre'] = '5 coups pour le libérer (QCM)'; d['numero'] = 62
 d['publication'] = {'texte': "Chaque bonne réponse = un coup de marteau 🔨🧊 Libère le hibou ! À quel coup t'as raté ?", 'hashtags': ['#quiz', '#culturegenerale', '#qcm', '#hibou', '#defi'], 'commentaire': "À quel coup t'as raté ? 🔨 Le hibou lit tout 👀"}
 d.pop('voixOff', None)
@@ -29,6 +33,13 @@ P['accroche'] = {'texte': '5 COUPS', 'sous': '1 bonne réponse = 1 coup de marte
 L = [{'t': 0.4, 'texte': "Aide-moi ! Chaque bonne réponse, c'est un coup de marteau !", 'emotion': 'panique', 'jusqua': round(T0 + REV - 0.1, 3)}]
 for i, x in enumerate(Q): L.append(dict({'t': round(REVS[i] + 0.1, 3), 'texte': x[3], 'emotion': 'joie' if i == 4 else 'choc'}, **({'jusqua': round(T0 + (i + 1) * PAS - 0.55, 3)} if i < 4 else {})))
 L.append({'t': round(REVS[4] + 1.35, 3), 'texte': "Libre ! Like si tu m'as sauvé !", 'emotion': 'joie'})
+ACC = {
+  'a': ({'texte': 'AU SECOURS !', 'sous': 'Réponds juste pour me libérer 🔨', 'taille': 150}, {'t': 0.05, 'texte': "Au secours ! Chaque bonne réponse, c'est un coup de marteau !"}),
+  'b': ({'texte': "T'AURAS PAS 5/5", 'sous': '1 bonne réponse = 1 coup de marteau 🔨', 'taille': 140}, {'t': 0.3, 'texte': "Je parie que t'auras pas cinq sur cinq !", 'emotion': 'defi'}),
+  'd': ({'texte': 'POV : 30 s pour sauver ce hibou', 'sous': '', 'taille': 120}, {}),
+}
+if V:
+    acc, l1 = ACC[V]; P['accroche'].update(acc); L[0].update(l1); d['id'] = f'qcm-marteau-{V}'; d['titre'] += f' — accroche {V.upper()}'
 P['lignes'] = L
 P['cta'] = {'t': round(REVS[4] + 1.4, 3), 'texte': "À quel coup t'as raté ? 👇", 'haut': True}
 S = [{'f': 'coup-glace.wav', 't': 0.45, 'v': 0.7}]
@@ -40,5 +51,5 @@ for i in range(5):
     S.append({'f': 'coup-glace.wav', 't': REVS[i], 'v': 0.65})
 S += [{'f': 'bris.wav', 't': REVS[4] + 0.02, 'v': 0.6}, {'f': 'merveille.wav', 't': round(REVS[4] + 0.1, 3), 'v': 0.45}, {'f': 'whoosh.wav', 't': 1.9, 'v': 0.4}]
 pl['sons'] = S
-open(os.path.join(R, 'videos/episodes/qcm-marteau.json'), 'w').write(json.dumps(d, ensure_ascii=False, indent=2) + '\n')
+open(os.path.join(R, f"videos/episodes/{d['id']}.json"), 'w').write(json.dumps(d, ensure_ascii=False, indent=2) + '\n')
 print('durée', D, 'publiée', PUB, 'coups', [0.45] + REVS)
