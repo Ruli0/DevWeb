@@ -80,7 +80,7 @@ Par défaut, la 3D est « douce » : facettes éclairées en dégradé, ombres d
 
 Rien d'important à droite de x 940 dans la moitié basse (boutons de TikTok).
 
-**Zone sûre TikTok (vérifiée sur une capture, 24 nov. 2026)** : rien d'important au-dessus de y 290 (barre de recherche), à droite de x 900 à partir de y 290 (avatar, cœur, commentaires, favoris, son), sous y 1480 (légende, bannière). Option de plan grille `zoneSure: true` ; contrôle : `node scripts/apercu.js <index.html> <sortie.png> --zone-tiktok t1 t2 …` (zones cachées en rouge).
+**Zone sûre TikTok (vérifiée sur une capture, 24 nov. 2026)** : rien d'important au-dessus de y 290 (barre de recherche), à droite de x 900 à partir de y 290 (avatar, cœur, commentaires, favoris, son), sous y 1480 (légende, bannière). **Bord gauche rogné (capture du 26 nov. 2026, téléphone étroit)** : TikTok réduit la vidéo à ~94 % et rogne ~50 px de chaque côté ; les cartes du QCM (gauche à x 40) étaient coupées. Largeur utile : **de x 80 à 900** (820 px, centre 490), appliquée au QCM, à la grille `zoneSure` et à l'accroche. Option de plan grille `zoneSure: true` ; contrôle : `node scripts/apercu.js <index.html> <sortie.png> --zone-tiktok t1 t2 …` (zones cachées en rouge).
 
 ## Limites connues
 

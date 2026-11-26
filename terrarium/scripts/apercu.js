@@ -1,6 +1,6 @@
 // Planche d'aperçu d'une vidéo, sans rendu : quelques secondes au lieu de plusieurs minutes.
 //   NODE_PATH=$(npm root -g) node scripts/apercu.js <id | chemin/index.html> <sortie.png> [--zone-tiktok] [t1 t2 …]
-// --zone-tiktok : dessine en rouge les zones cachées par l'interface TikTok (haut, icônes à droite, légende en bas).
+// --zone-tiktok : dessine en rouge les zones cachées par l'interface TikTok (haut, icônes à droite, légende en bas, bord gauche rogné sur les téléphones étroits).
 // Sans instants donnés : le milieu de chaque plan du scénario.
 // Utilise Playwright (installé globalement) et ffmpeg.
 const fs = require('node:fs');
@@ -43,7 +43,7 @@ const { chromium } = require('playwright');
       if (document.getElementById('zone-tiktok')) return;
       const z = document.createElement('div'); z.id = 'zone-tiktok';
       z.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:99999';
-      z.innerHTML = [[0, 0, 1080, 290], [900, 290, 180, 1630], [0, 1480, 900, 440]].map(([x, y, w, h]) => `<div style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:#ff000040;outline:3px solid #ff0000aa"></div>`).join('');
+      z.innerHTML = [[0, 0, 1080, 290], [900, 290, 180, 1630], [0, 1480, 900, 440], [0, 290, 80, 1190]].map(([x, y, w, h]) => `<div style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:#ff000040;outline:3px solid #ff0000aa"></div>`).join('');
       document.body.appendChild(z);
     });
     const f = sortie.replace(/\.png$/, `-${i}.png`);

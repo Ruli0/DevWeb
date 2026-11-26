@@ -474,7 +474,7 @@
           });
         });
         // Progressif : la caméra (échelle + translation de la grille) cadre les mots déjà posés, puis dézoome à chaque mot qui arrive.
-        const vues = [], centres = [], CX = p.zoneSure ? 470 : 540, LW = p.zoneSure ? 860 : 960, CY = p.coupure ? 1075 : 1010;
+        const vues = [], centres = [], CX = p.zoneSure ? 490 : 540, LW = p.zoneSure ? 820 : 960, CY = p.coupure ? 1075 : 1010;
         if (prog) {
           const gx = parseFloat(grille.style.left), gy = parseFloat(grille.style.top), sz = parseFloat(grille.style.getPropertyValue('--case'));
           const R = cases.map((x) => ({ l: parseFloat(x.style.left), t: parseFloat(x.style.top), k: Math.min(...x.dataset.m.split(' ').map(Number)) }));
@@ -538,7 +538,7 @@
             if (p.qcm.simple) {   // QCM simple : la question suivante (carte + réponses) attend en petit sous le décompte, puis monte prendre sa place
               const tg = q(qq, '.q-tete'), prec = i ? t0 + p.qcm.questions[i - 1].t : t0, deb = i ? t0 + p.qcm.questions[i - 1].t : t0;
               const PV = { y: 694, scale: 0.6 };
-              gsap.set(qq, { transformOrigin: '470px 372px' });
+              gsap.set(qq, { transformOrigin: '490px 372px' });
               if (i === 0) { gsap.set(qq, { opacity: 1, y: 0, scale: 1 }); }
               else {
                 gsap.set(qq, { opacity: 0 }); gsap.set(tg, { opacity: 0 });

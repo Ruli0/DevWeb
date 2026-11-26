@@ -85,8 +85,8 @@
   // La taille des cases s'adapte à la grille : toute la largeur utile (960 px) et la hauteur d'une zone de 770 px (y 490 à 1260), au plus 130 px de pas.
   const ZONE = { largeur: 960, haut: 490, hauteur: 770, vide: 8 };
   const ZONE_PROG = { largeur: 960, haut: 640, hauteur: 740, vide: 8 };
-  // Zone sûre TikTok (barre de recherche en haut, icônes à droite) : largeur 860, centrée sur x = 470 (de 40 à 900).
-  const SUR = { largeur: 860, cx: 470 };
+  // Zone sûre TikTok (barre de recherche en haut, icônes à droite, et recadrage latéral d'environ 50 px sur les téléphones étroits, vu sur une capture du 26 nov.) : largeur 820, centrée sur x = 490 (de 80 à 900).
+  const SUR = { largeur: 820, cx: 490 };
   function dims(g, prog, sur) {
     // Une seule ligne (jeu d'un seul mot horizontal) : presque toute la largeur, cases plus serrées, pour les mots longs.
     const Z = prog ? (g.lignes === 1 ? Object.assign({}, ZONE_PROG, { largeur: sur ? SUR.largeur : 1040, vide: 6 }) : (sur ? Object.assign({}, ZONE_PROG, { largeur: SUR.largeur }) : ZONE_PROG)) : ZONE;
@@ -196,7 +196,7 @@
 .jeu.qcmode .grille, .jeu.qcmode .bandeau, .jeu.qcmode .chronog, .jeu.qcmode .minuteur, .jeu.qcmode .regle { display: none !important; }
 .jeu .qcm { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .jeu .qcm .qq { position: absolute; inset: 0; }
-.jeu .qcm .q-tete { position: absolute; left: 40px; top: 300px; width: 860px; text-align: center; color: #ffd45c; font: 900 44px/1 '${P.titre}'; letter-spacing: .03em; text-shadow: 0 4px 14px #000b; }
+.jeu .qcm .q-tete { position: absolute; left: 80px; top: 300px; width: 820px; text-align: center; color: #ffd45c; font: 900 44px/1 '${P.titre}'; letter-spacing: .03em; text-shadow: 0 4px 14px #000b; }
 .jeu .qcm .q-tete.fort { top: 290px; font-size: 52px; white-space: nowrap; color: #ffffff; text-shadow: 0 0 22px #7fd8ff, 0 4px 0 #0a3a5a; }
 .jeu .qcm .glacon { position: absolute; overflow: hidden; transform-origin: 50% 60%;
   background: linear-gradient(165deg, #f6fdfff7 0%, #d4f1fdf2 38%, #a7daf4f0 72%, #84c7ecf4 100%);
@@ -204,9 +204,9 @@
 .jeu .qcm .glacon .reflet { position: absolute; left: -10%; top: -60%; width: 34%; height: 220%; transform: rotate(24deg); background: linear-gradient(90deg, #ffffff00, #ffffff8c, #ffffff00); }
 .jeu .qcm .glacon::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='860' height='240' viewBox='0 0 860 240'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.55' stroke-width='2'%3E%3Cpath d='M640 0 L610 60 L650 95 L620 150'/%3E%3Cpath d='M610 60 L560 70'/%3E%3Cpath d='M40 240 L80 190 L60 160'/%3E%3Cpath d='M80 190 L130 200'/%3E%3C/g%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%; }
 .jeu .qcm .glacon::after { content: ''; position: absolute; inset: 7px; border-radius: inherit; border: 2px solid #ffffff55; border-bottom-color: #ffffff22; pointer-events: none; }
-.jeu .qcm .q-carte { left: 40px; top: 372px; width: 860px; height: 240px; display: flex; align-items: center; justify-content: center; border-radius: 38px 46px 40px 50px; }
+.jeu .qcm .q-carte { left: 80px; top: 372px; width: 820px; height: 240px; display: flex; align-items: center; justify-content: center; border-radius: 38px 46px 40px 50px; }
 .jeu .qcm .q-carte p { position: relative; margin: 0; padding: 0 40px; text-align: center; font: 800 58px/1.1 '${P.titre}'; color: #0c2b45; letter-spacing: -.01em; text-shadow: 0 2px 0 #ffffff99; }
-.jeu .qcm .q-rep { left: 40px; width: 860px; height: 104px; display: flex; align-items: center; gap: 26px; border-radius: 28px 34px 30px 36px; --vert: 0; }
+.jeu .qcm .q-rep { left: 80px; width: 820px; height: 104px; display: flex; align-items: center; gap: 26px; border-radius: 28px 34px 30px 36px; --vert: 0; }
 .jeu .qcm .q-rep::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(165deg, #b9ffd2, #3ddc84 60%, #1fae5e); opacity: var(--vert); }
 .jeu .qcm .q-rep b { position: relative; margin-left: 18px; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #7fd0ff, #1c6fd1 70%); color: #fff; font: 900 44px/1 '${P.titre}'; box-shadow: inset 0 -5px 0 #0003, 0 0 0 3px #ffffffaa; }
 .jeu .qcm .q-rep span { position: relative; font: 800 52px/1 '${P.titre}'; color: #0c2b45; }
@@ -215,7 +215,7 @@
 .jeu .qcm .q-prof small { position: relative; font: 900 22px/1 '${P.titre}'; letter-spacing: .14em; color: #2d6f99; }
 .jeu .qcm .q-prof b { position: relative; margin-top: 6px; font: 900 54px/1 '${P.titre}'; color: #0c2b45; font-variant-numeric: tabular-nums; }
 .jeu .qcm .q-partage { position: absolute; z-index: 4; left: 400px; top: 1345px; width: 500px; text-align: center; font: 900 40px/1.12 '${P.titre}'; color: #ffffff; text-shadow: 0 0 18px #7fd8ff, 0 4px 0 #0a3a5a; }
-.jeu .qcm .q-barre { position: absolute; left: 40px; top: 1018px; width: 860px; height: 22px; border-radius: 11px; background: #ffffff40; overflow: hidden; box-shadow: 0 0 0 2px #ffffff55; }
+.jeu .qcm .q-barre { position: absolute; left: 80px; top: 1018px; width: 820px; height: 22px; border-radius: 11px; background: #ffffff40; overflow: hidden; box-shadow: 0 0 0 2px #ffffff55; }
 .jeu .qcm .q-barre i { display: block; width: 100%; height: 100%; background: #bff3ff; border-radius: 11px; }
 /* QCM simple (décompte de 5 s, question suivante visible en petit) */
 .jeu .qcm.simple .q-carte { height: 200px; }
@@ -226,18 +226,18 @@
 .jeu .qcm.simple .q-mystere { top: 585px; }
 .jeu .qcm.simple .q-prof { left: 170px; top: 1392px; width: 600px; height: 74px; flex-direction: row; gap: 20px; }
 .jeu .qcm.simple .q-prof b { margin-top: 0; font-size: 46px; }
-.jeu .qcm.simple .q-partage { left: 40px; top: 930px; width: 860px; font-size: 58px; }
-.jeu .qcm .q-compte { position: absolute; left: 415px; top: 905px; width: 110px; height: 110px; display: grid; place-items: center; }
+.jeu .qcm.simple .q-partage { left: 80px; top: 930px; width: 820px; font-size: 58px; }
+.jeu .qcm .q-compte { position: absolute; left: 435px; top: 905px; width: 110px; height: 110px; display: grid; place-items: center; }
 .jeu .qcm .q-compte svg { position: absolute; inset: 0; transform: rotate(-90deg); }
 .jeu .qcm .q-compte .qc-fond { fill: #0a2a4488; stroke: #ffffff55; stroke-width: 9; }
 .jeu .qcm .q-compte .qc-arc { fill: none; stroke-width: 9; stroke-linecap: round; }
 .jeu .qcm .q-compte span { position: relative; font: 900 64px/1 '${P.titre}'; color: #fff; text-shadow: 0 3px 0 #0a3a5a; }
-.jeu .qcm .q-suite { position: absolute; left: 40px; top: 1030px; width: 860px; text-align: center; font: 900 28px/1 '${P.titre}'; letter-spacing: .18em; color: #ffffffd9; text-shadow: 0 3px 10px #00141f99; }
+.jeu .qcm .q-suite { position: absolute; left: 80px; top: 1030px; width: 820px; text-align: center; font: 900 28px/1 '${P.titre}'; letter-spacing: .18em; color: #ffffffd9; text-shadow: 0 3px 10px #00141f99; }
 .jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }
 .jeu.f3d .fond-papier, .jeu.f3d .danse { display: none; }
 .jeu .fond-anime { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
 .jeu .presente .voile { position: absolute; inset: 0; background: radial-gradient(circle at 50% 52%, #1a0806d9 0%, #0a0302f5 100%); opacity: 0; }
-.jeu .presente .accroche-h { position: absolute; left: 40px; top: 310px; width: 860px; text-align: center; opacity: 0; transform-origin: 50% 50%; }
+.jeu .presente .accroche-h { position: absolute; left: 80px; top: 310px; width: 820px; text-align: center; opacity: 0; transform-origin: 50% 50%; }
 .jeu .presente .accroche-h p { margin: 0; font: 900 230px/0.95 '${P.titre}'; color: #fff; letter-spacing: -.02em; text-shadow: 0 0 40px #ff3b3b, 0 12px 0 #8a1010; }
 .jeu .presente .accroche-h small { display: block; margin-top: 18px; font: 900 92px/1 '${P.titre}'; color: #ffd45c; text-shadow: 0 6px 0 #0009; }
 .jeu .presente .eclats { position: absolute; left: 0; top: 0; overflow: visible; }
@@ -255,8 +255,8 @@
 .jeu .chronog .cg-arc { stroke: #ffd45c; stroke-linecap: round; filter: drop-shadow(0 0 10px #ffd45c); }
 .jeu .chronog span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 900 110px/1 '${P.titre}'; color: #fff; text-shadow: 0 6px 0 #0007; opacity: 0; font-variant-numeric: tabular-nums; }
 .jeu .chronog span.fin { color: #ff5a3c; }
-.jeu.sur .regle { top: 300px; left: 40px; width: 860px; font-size: 44px !important; letter-spacing: .02em; gap: 10px; white-space: nowrap; }
-.jeu.sur .bandeau.prog { top: 370px; width: 840px; }
+.jeu.sur .regle { top: 300px; left: 80px; width: 820px; font-size: 44px !important; letter-spacing: .02em; gap: 10px; white-space: nowrap; }
+.jeu.sur .bandeau.prog { left: 80px; top: 370px; width: 820px; }
 .jeu.sur .bandeau.prog .indices p { padding-right: 20px; }
 .jeu.sur .chronog { left: 360px; top: 700px; }
 .jeu.sur .intro-jeu p { padding: 0 180px 0 60px; font-size: 150px; }
