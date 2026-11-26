@@ -67,6 +67,7 @@
             "t": 0.4,
             "texte": "Au secours ! Je suis enfermé dans la glace ! Trouve les réponses !",
             "emotion": "panique",
+            "jusqua": 4.6,
             "env": [
               0.94,
               1.0,
@@ -177,6 +178,7 @@
             "t": 4.75,
             "texte": "Quatre-vingt-dix pour cent !",
             "emotion": "choc",
+            "jusqua": 5.65,
             "env": [
               0.35,
               0.97,
@@ -223,6 +225,7 @@
             "t": 9.75,
             "texte": "L'Arctique !",
             "emotion": "choc",
+            "jusqua": 10.65,
             "env": [
               0.57,
               1.0,
@@ -256,6 +259,7 @@
             "t": 14.75,
             "texte": "En 1912 !",
             "emotion": "choc",
+            "jusqua": 15.65,
             "env": [
               0.9,
               1.0,
@@ -314,6 +318,7 @@
             "t": 19.75,
             "texte": "La baleine bleue !",
             "emotion": "choc",
+            "jusqua": 20.65,
             "env": [
               0.92,
               0.99,

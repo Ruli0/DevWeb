@@ -26,8 +26,8 @@ pl['fond3d'] = 'iceberg'; pl['fond3dOpts'] = {'t0': 0, 'L': PUB, 'prof': [[0, 0]
 P = pl['presentateur']; P['danse'] = False
 REVS = [round(T0 + i * PAS + REV, 3) for i in range(5)]
 P['glace'] = {'paliers': REVS[:4], 'liberation': REVS[4]}
-L = [{'t': 0.4, 'texte': "Au secours ! Je suis enfermé dans la glace ! Trouve les réponses !", 'emotion': 'panique'}]
-for i, x in enumerate(Q): L.append({'t': round(REVS[i] + 0.05, 3), 'texte': x[3], 'emotion': 'joie' if i == 4 else 'choc'})
+L = [{'t': 0.4, 'texte': "Au secours ! Je suis enfermé dans la glace ! Trouve les réponses !", 'emotion': 'panique', 'jusqua': 4.6}]
+for i, x in enumerate(Q): L.append(dict({'t': round(REVS[i] + 0.05, 3), 'texte': x[3], 'emotion': 'joie' if i == 4 else 'choc'}, **({'jusqua': round(T0 + (i + 1) * PAS - 0.55, 3)} if i < 4 else {})))   # la réponse disparaît avec sa question
 L.append({'t': round(REVS[4] + 1.35, 3), 'texte': "Merci ! Like si tu m'as sauvé !", 'emotion': 'joie'})
 P['lignes'] = L
 P['cta'] = {'t': round(REVS[4] + 1.4, 3), 'texte': "Combien t'en as eu sur 5 ? 👇", 'haut': True}

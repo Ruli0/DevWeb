@@ -559,7 +559,8 @@
             if (l.lecture) return;   // la question se lit sur l'écran (karaoké), pas dans une bulle
             if (l.t <= 0 || (i === 0 && p.amorceBoucle)) gsap.set(bulles[i], { opacity: 1 }); else c.ft(bulles[i], { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.2, ease: 'back.out(2.4)' }, tl);
             const vo = p.presentateur.vol, finB = vo && l.t < vo.depart && L[i + 1] && L[i + 1].t > vo.depart ? t0 + vo.depart - 0.1 : fin;   // la bulle part quand il s'envole
-            if (i + 1 < L.length) c.ft(bulles[i], { opacity: 1 }, { opacity: 0, duration: 0.08 }, finB);
+            if (l.jusqua != null) c.ft(bulles[i], { opacity: 1 }, { opacity: 0, duration: 0.2 }, t0 + l.jusqua);   // bulle retirée avant la question suivante
+            else if (i + 1 < L.length) c.ft(bulles[i], { opacity: 1 }, { opacity: 0, duration: 0.08 }, finB);
             if (h2) return;
             let prec = 0.1;
             (l.env || []).forEach((v, k) => { const ry = Math.max(0.1, v * 30); c.ft(bec, { attr: { ry: prec } }, { attr: { ry }, duration: 1 / 15, ease: 'none' }, tl + k / 15); prec = ry; });
