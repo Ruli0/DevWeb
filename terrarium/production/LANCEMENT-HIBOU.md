@@ -79,13 +79,13 @@ Cocher « contenu généré par IA ». Différences avec SCORPION : vol et lectu
 
 Cocher « contenu généré par IA » ; couverture = première image (STOP).
 
-## Vidéo 5 : L'iceberg du savoir (QCM, 10 questions, 55,6 s)
+## Vidéo 5 : L'iceberg du savoir (QCM v2 : glaçons, 10 questions, 53,3 s)
 **Vidéo** : `videos/studio/qcm-iceberg/qcm-iceberg-final.mp4` · boucle parfaite.
 **Description** :
-> 10 questions, de la surface aux abysses 🧊🦉 Combien t'en as eu ?
+> 10 questions, de la surface aux abysses 🧊🦉 La dernière, personne la trouve…
 
 **Hashtags** : #quiz #culturegenerale #qcm #iceberg #hibou
 **Commentaire épinglé** :
-> Combien t'en as eu sur 10 ? Le hibou lit tout 👀
+> Et la 10e, c'était quoi ? Le hibou lit tout 👀
 
-Cocher « contenu généré par IA » ; couverture = première image (STOP).
+Cocher « contenu généré par IA » ; couverture = première image (question 1). Ne pas donner la réponse de la 10e dans les commentaires (c'est le rouge) : laisser les gens débattre, puis répondre au bout de quelques heures.
