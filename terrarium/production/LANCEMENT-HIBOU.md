@@ -82,7 +82,7 @@ Cocher « contenu généré par IA » ; couverture = première image (STOP).
 ## Vidéo 5 : L'iceberg du savoir (QCM v2 : glaçons, 10 questions, 53,3 s)
 **Vidéo** : `videos/studio/qcm-iceberg/qcm-iceberg-final.mp4` · boucle parfaite.
 **Description** :
-> 10 questions, de la surface aux abysses 🧊🦉 La dernière, personne la trouve…
+> 10 questions, de la surface aux abysses 🧊🦉 La dernière, personne la trouve… Envoie-le à un pote qui se croit fort 👀
 
 **Hashtags** : #quiz #culturegenerale #qcm #iceberg #hibou
 **Commentaire épinglé** :
