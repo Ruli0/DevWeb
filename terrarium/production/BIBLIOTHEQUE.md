@@ -34,6 +34,7 @@ Assemblage générique d'une vidéo en étages : `bash scripts/assembler-etages.
 - Réutilisables tels quels : « Trop facile ! » (`videos/voix-ia/iceberg/e1/l3.wav`), « Ça se corse… » (`iceberg/e2/l2.wav`), « Ouh là, c'est dur ! » (`dessins/f3/l2.wav`), « Personne trouve celle-là ! » (`dessins/f4/l2.wav`), « Un like si t'as tout trouvé ! » (`dessins/f4/l4.wav`). Les dossiers `videos/voix-ia/` ne sont pas dans le dépôt (ignorés) : à régénérer si la session est neuve.
 
 ## 5. Cadrage TikTok (obligatoire)
+**Calques plein écran** : toujours des dimensions explicites `left: 0; top: 0; width: 1080px; height: 1920px`, jamais `inset: 0` (le conteneur `.cadre` ne fait que 1010 px de large : un calque en `inset: 0` laisse une bande de 70 px à droite, vue sur « 4 princesses, 2e partie »).
 Largeur utile **x 80 → 900**, rien au-dessus de y 290 ni sous y 1480 ; `node scripts/apercu.js <index.html> <sortie.png> --zone-tiktok t1 t2 …` masque les zones perdues. Détails : `production/DA-AVIS.md`.
 
 ## 6. Recette « nouvelle vidéo en une heure »
