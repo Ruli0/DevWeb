@@ -20,7 +20,7 @@
   // Réglages du voyage (tous modifiables par `fond3dOpts` du plan ; les valeurs par défaut conviennent à une vidéo de ~39 s) :
   //   vitesse (m/s), depart (s : fin de l'amorce de boucle), rampe (s : mise en vitesse), flash [début, pic = retour au départ, fin],
   //   porte [début, fin] (ouverture des vantaux), lueur [début, fin] (lumière dorée qui sort de la porte).
-  const DEF = { vitesse: 10.2, depart: 0.4, rampe: 2.2, flash: [37.5, 37.95, 38.6], porte: [34.0, 35.8], lueur: [35.2, 37.6] };
+  const DEF = { vitesse: 10.2, depart: 0.4, rampe: 2.2, flash: [37.5, 37.95, 38.6], porte: [34.0, 35.8], lueur: [35.8, 38.4] };
   const reglages = (o) => Object.assign({}, DEF, o || {});
   const ZONES = { foret: [0, 0.28], prairie: [0.28, 0.52], lac: [0.52, 0.76], jardin: [0.76, 1.0] };
   const S_RIV = 0.64, S_LAC = 0.60;                   // position de la rivière (pont) et du centre du lac le long du chemin

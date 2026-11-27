@@ -10,6 +10,7 @@ Le but du projet est de converger vers un **outil de production de vidéos TikTo
 2. `production/PASSATION-AVIS.md` : la section 0 suffit pour fabriquer une vidéo ; le reste se lit au besoin ;
 3. le skill `avis` (dans `.claude/skills/`, à la racine du dépôt) pour monter une vidéo ;
 4. selon le besoin : `production/ACCROCHES.md`, `IDEES-VIDEOS.md`, `DA-AVIS.md`.
+5. `production/BIBLIOTHEQUE.md` : les composants réutilisables (voyage 3D vers le château, hibou prince, gabarits, voix) et comment s'en servir.
 
 ### Archives (ne pas faire évoluer sans demande)
 
