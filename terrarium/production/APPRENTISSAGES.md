@@ -105,3 +105,9 @@ D'après Jules (chiffres à relever). Même plafond que tous les formats depuis 
 - Hypothèse (non prouvée) : le thème « princesses » et/ou le décor château retient mieux ; thème, décor et heure ont changé en même temps, donc à reproduire avant de conclure.
 - 0 commentaire / 0 partage : la question de fin (« Tu en as trouvé combien ? ») ne déclenche rien.
 - À faire : captures de l'onglet « Spectateurs » (genre, âge, pays) et de la courbe de fidélisation ; test suivant « 4 princesses, 2e partie » avec une question de fin plus précise.
+
+## Relevé final du 27 nov. 2026 : `dessins` (4 princesses, fond château) à ~8 h
+487 vues, 27 likes (5,5 %), 0 commentaire, 0 partage, 2 enregistrements, visionnage moyen 8,6 s, 5,91 % jusqu'au bout, 0 follower ; deux vagues (~1 h, ~3 h) puis diffusion arrêtée vers 5 h. **Spectateurs : femmes 90 %, hommes 10 % ; 100 % de non-followers.**
+- Confirmé : le public qui regarde et like est quasi exclusivement féminin ; les thèmes « princesses / dessins animés » le retiennent mieux que tout le reste (8,6 s et 5,91 % contre 6,0 s et 2,85 % pour l'iceberg, même structure).
+- **Plafond de portée inchangé** : ~490-550 vues pour CRATÈRE, SCORPION, iceberg et princesses, alors que la rétention a presque doublé. Le frein n'est donc pas la rétention seule. Toujours à zéro : partages, commentaires, abonnements. Hypothèse (à tester) : sans ces signaux TikTok n'élargit pas la diffusion.
+- À faire : relever âge, pays et heures d'activité (onglet Spectateurs, plus bas) ; publier la 2e partie ; tester UNE variable de fin à la fois pour obtenir des partages/commentaires (« Envoie-le à ta meilleure amie 💜 » à l'image ; question clivante « 1, 2, 3 ou 4 ? »).
