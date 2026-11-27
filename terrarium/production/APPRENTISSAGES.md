@@ -98,3 +98,10 @@ D'après Jules (chiffres à relever). Même plafond que tous les formats depuis 
 
 ## Relevé du 26 nov. 2026 : `qcm-iceberg` (QCM v3, 53 s) à ~35 min
 154 vues, 2 likes (1,3 %), visionnage moyen 3,2 s, 0,63 % jusqu'au bout. Deux fois moins retenu que l'iceberg en mots au même âge (6,6 s, 9 likes). Lectures possibles : (1) ouvrir directement sur une carte de texte dense (question + 3 réponses) ne retient pas ; le gros plan du hibou « STOP ! » faisait mieux ; (2) 53 s, c'est long pour notre public ; (3) 2e vidéo du jour, 7 h après la 1re. Le format des comptes de référence (QCM) ne se transpose pas tel quel : notre force, c'est le personnage et la situation. « Libère le hibou » (situation forte dès l'image 0, 28 s) teste précisément ça.
+
+## Relevé du 27 nov. 2026 : `dessins` (4 princesses, fond château, 38,9 s) à ~3 h
+362 vues, 24 likes (6,6 %), 0 commentaire, 0 partage, 1 enregistrement, visionnage moyen 8,8 s (~23 %), 5,63 % jusqu'au bout, 54 min 57 s de lecture, 0 follower ; pic vers 1 h (~200 vues/h) puis ~70 à 3 h.
+- Meilleure rétention et meilleur taux de likes de nos vidéos (iceberg en mots, même structure : 6,0 s, 2,85 %, 4,1 %). La portée reste dans le même plafond (~400-550 attendues).
+- Hypothèse (non prouvée) : le thème « princesses » et/ou le décor château retient mieux ; thème, décor et heure ont changé en même temps, donc à reproduire avant de conclure.
+- 0 commentaire / 0 partage : la question de fin (« Tu en as trouvé combien ? ») ne déclenche rien.
+- À faire : captures de l'onglet « Spectateurs » (genre, âge, pays) et de la courbe de fidélisation ; test suivant « 4 princesses, 2e partie » avec une question de fin plus précise.
