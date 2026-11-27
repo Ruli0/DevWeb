@@ -143,3 +143,11 @@ Ne pas donner la réponse de la 10e (le rouge) tout de suite : laisser débattre
 **Hashtags** : #quiz #princesse #dessinanime #devinette #hibou
 **Commentaire épinglé** : > Laquelle t'as pas trouvée ? 👇
 À mesurer : part restante à 1 s et 3 s (accroche « AIDE-MOI ! »), visionnage moyen, commentaires (la question de fin est plus précise), répartition du public. Publier après avoir relevé la 1re partie, une seule vidéo ce jour-là, vers 18-19 h.
+
+## Vidéo 11 : 4 princes (voyage 3D, parlé, 38,9 s)
+**Vidéo** : `videos/studio/princes-masc/princes-masc-final.mp4` · boucle parfaite · voix de synthèse : cocher « contenu généré par IA ».
+**Mots** : TARZAN, CHARMANT, PHILIPPE, KRISTOFF (Éric, Simba, Aladdin, Naveen écartés : mal prononcés). **Description** :
+> Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princes pour lui ouvrir la porte ! Envoie-le à ta meilleure amie 💜
+
+**Hashtags** : #quiz #prince #dessinanime #devinette #hibou · **Commentaire épinglé** : Lequel t'as pas trouvé ? 👇
+Teste le message « Envoie-le à ta meilleure amie 💜 » affiché à l'image (partages). Une vidéo par jour, vers 18-19 h.
