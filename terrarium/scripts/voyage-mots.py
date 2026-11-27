@@ -24,10 +24,12 @@ M = spec['mots']; assert len(M) == 4, '4 mots exactement'
 REAC = spec.get('reactions', ['Trop facile !', 'Ça se corse…', "Ouh là, c'est dur !", 'Personne trouve celle-là !'])
 AC = spec['accroche']; FOND = spec.get('fond', 'chemin'); ET = spec.get('etiquette', 'ÉTAPE')
 def ordre(n): return [n - 1, round(n / 2)]
+# L'accroche parlée dure accroche.duree (s) : l'indice du 1er étage ne démarre qu'après (3,2 s au minimum), et tout le 1er étage se décale d'autant.
+SH = max(0.0, round(0.4 + AC.get('duree', 2.2) + 0.15 - 3.2, 2))
 ETAGES = [
-  dict(m=M[0], deb=3.2, pas=2.0, d=11.55,
-       lignes=[(0.4, AC['voix'], 'panique', None, False), (3.2, M[0]['indice'] + '…', 'neutre', None, True), (5.22, REAC[0], 'defi', None, False), (9.22, M[0]['reponse'], 'joie', None, False)],
-       sons=[('whoosh.wav', 2.11, .45), ('whoosh.wav', 2.2, .4), ('ailes.wav', 2.2, .3), ('ailes.wav', 3.72, .25), ('pouf.wav', 4.52, .5), ('whoosh.wav', 5.22, .3), ('merveille.wav', 9.3, .4)]),
+  dict(m=M[0], deb=round(3.2 + SH, 2), pas=2.0, d=round(11.55 + SH, 2),
+       lignes=[(0.4, AC['voix'], 'panique', None, False), (round(3.2 + SH, 2), M[0]['indice'] + '…', 'neutre', None, True), (round(5.22 + SH, 2), REAC[0], 'defi', None, False), (round(9.22 + SH, 2), M[0]['reponse'], 'joie', None, False)],
+       sons=[('whoosh.wav', 2.11, .45), ('whoosh.wav', 2.2, .4), ('ailes.wav', 2.2, .3), ('ailes.wav', round(3.72 + SH, 2), .25), ('pouf.wav', round(4.52 + SH, 2), .5), ('whoosh.wav', round(5.22 + SH, 2), .3), ('merveille.wav', round(9.3 + SH, 2), .4)]),
   dict(m=M[1], deb=0.25, pas=2.0, d=8.6,
        lignes=[(0.25, M[1]['indice'] + '…', 'neutre', None, True), (2.27, REAC[1], 'choc', None, False), (6.27, M[1]['reponse'], 'joie', None, False)],
        sons=[('whoosh.wav', 2.27, .3), ('merveille.wav', 6.4, .4)]),
@@ -63,7 +65,7 @@ for k, e in enumerate(ETAGES):
         P['accroche'] = {'texte': AC['texte'], 'sous': AC.get('sous', ''), 'fin': 2.45}
         for c in ('taille', 'tailleSous', 'glow', 'ombre', 'voile', 'opaciteVoile'):
             if c in AC: P['accroche'][c] = AC[c]
-        P['vol'] = {'depart': 2.2, 'arrivee': 3.0, 'pose': 4.52, 'x': 855, 'y': -871, 'direct': True}
+        P['vol'] = {'depart': 2.2, 'arrivee': 3.0, 'pose': round(4.52 + SH, 2), 'x': 855, 'y': -871, 'direct': True}
     else: P.pop('accroche', None); P.pop('vol', None); pl.pop('amorceBoucle', None)
     if n == 4 and spec.get('cta'): P['cta'] = {'t': 8.4, 'texte': spec['cta'], 'haut': True}
     else: P.pop('cta', None)

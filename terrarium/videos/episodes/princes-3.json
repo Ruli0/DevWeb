@@ -2,7 +2,7 @@
   "version": 4,
   "format": "avis",
   "id": "princes-3",
-  "titre": "4 princesses, 2e partie, étage 3 (aurore)",
+  "titre": "4 princesses, 2e partie, étage 3 (esmeralda)",
   "rubrique": "voyage",
   "numero": 83,
   "voix": null,
@@ -31,12 +31,12 @@
       ],
       "mots": [
         {
-          "texte": "AURORE",
+          "texte": "ESMERALDA",
           "sens": "h",
           "ligne": 0,
           "colonne": 0,
           "indice": {
-            "texte": "Elle dort cent ans"
+            "texte": "Elle danse avec sa chèvre"
           },
           "reponse": {}
         }
@@ -56,8 +56,8 @@
         "etapes": {
           "pas": 2.0,
           "ordre": [
-            5,
-            3
+            8,
+            4
           ]
         }
       },
@@ -72,20 +72,177 @@
         "lignes": [
           {
             "t": 0.25,
-            "texte": "Elle dort cent ans…",
+            "texte": "Elle danse avec sa chèvre…",
             "emotion": "neutre",
-            "lecture": true
+            "lecture": true,
+            "env": [
+              0.69,
+              1.0,
+              0.95,
+              0.73,
+              0.57,
+              0.43,
+              1.0,
+              0.82,
+              0.86,
+              1.0,
+              0.98,
+              0.4,
+              0.29,
+              1.0,
+              0.43,
+              1.0,
+              0.77,
+              0.14,
+              0.42,
+              0.4,
+              0.86,
+              0.89,
+              0.84,
+              0.82,
+              0.61,
+              0.76,
+              0.48,
+              0.66,
+              0.27,
+              0.22,
+              0.23,
+              0.48,
+              0.45,
+              0.31,
+              0.02,
+              0.01,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 1.28,
+            "mots": [
+              [
+                0.0,
+                0.2
+              ],
+              [
+                0.2,
+                0.52
+              ],
+              [
+                0.52,
+                0.66
+              ],
+              [
+                0.66,
+                0.82
+              ],
+              [
+                0.82,
+                1.1
+              ]
+            ]
           },
           {
             "t": 4.27,
             "texte": "Ouh là, c'est dur !",
             "emotion": "panique",
-            "folie": "tremble"
+            "folie": "tremble",
+            "env": [
+              0.52,
+              0.9,
+              0.99,
+              0.99,
+              1.0,
+              0.84,
+              1.0,
+              0.89,
+              0.84,
+              0.95,
+              0.88,
+              0.9,
+              1.0,
+              1.0,
+              0.89,
+              0.63,
+              0.35,
+              0.37,
+              0.28,
+              0.13,
+              0.2,
+              0.58,
+              0.71,
+              0.64,
+              0.84,
+              0.69,
+              0.67,
+              0.86,
+              0.93,
+              0.97,
+              0.95,
+              0.9,
+              1.0,
+              0.8,
+              0.61,
+              0.43,
+              0.27,
+              0.19,
+              0.09,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 1.39
           },
           {
             "t": 6.32,
-            "texte": "C'est Aurore !",
-            "emotion": "joie"
+            "texte": "C'est Esmeralda !",
+            "emotion": "joie",
+            "env": [
+              0.23,
+              0.43,
+              1.0,
+              0.64,
+              0.13,
+              0.13,
+              0.03,
+              0.15,
+              0.99,
+              0.59,
+              0.26,
+              0.2,
+              0.94,
+              1.0,
+              1.0,
+              1.0,
+              0.86,
+              0.78,
+              0.71,
+              0.71,
+              0.46,
+              0.21,
+              1.0,
+              0.93,
+              0.84,
+              0.6,
+              0.33,
+              0.07,
+              0.03,
+              0.01,
+              0.0,
+              0.0,
+              0.0,
+              0.01,
+              0.01,
+              0.01,
+              0.1,
+              0.07,
+              0.1,
+              0.08,
+              0.01,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 1.38
           }
         ],
         "voix": {
@@ -109,7 +266,7 @@
       ],
       "fond3d": "chemin",
       "fond3dOpts": {
-        "t0": 19.55,
+        "t0": 19.7,
         "L": 38.8889
       },
       "fond3dRes": [
@@ -131,5 +288,22 @@
   },
   "orbe": false,
   "ouverture": "calme",
-  "voixGeneree": true
+  "voixGeneree": true,
+  "voixOff": [
+    {
+      "fichier": "l1.wav",
+      "t": 0.25,
+      "duree": 1.28
+    },
+    {
+      "fichier": "l2.wav",
+      "t": 4.27,
+      "duree": 1.39
+    },
+    {
+      "fichier": "l3.wav",
+      "t": 6.32,
+      "duree": 1.38
+    }
+  ]
 }

@@ -6,22 +6,22 @@
   "mots": [
     {
       "mot": "BELLE",
-      "indice": "Elle aime une bête",
+      "indice": "Elle tombe amoureuse d'une bête",
       "reponse": "C'est Belle !"
     },
     {
-      "mot": "MULAN",
-      "indice": "Elle se déguise en soldat",
-      "reponse": "C'est Mulan !"
+      "mot": "TIANA",
+      "indice": "Elle est devenue grenouille",
+      "reponse": "C'est Tiana !"
     },
     {
-      "mot": "AURORE",
-      "indice": "Elle dort cent ans",
-      "reponse": "C'est Aurore !"
+      "mot": "ESMERALDA",
+      "indice": "Elle danse avec sa chèvre",
+      "reponse": "C'est Esmeralda !"
     },
     {
       "mot": "POCAHONTAS",
-      "indice": "Elle parle avec le vent",
+      "indice": "Elle chante les couleurs du vent",
       "reponse": "C'est Pocahontas !"
     }
   ],
@@ -40,7 +40,8 @@
     "glow": "#c46bff",
     "ombre": "#4a1a8a",
     "voile": "radial-gradient(circle at 50% 52%, #2a0d5ad9 0%, #12062cf2 100%)",
-    "opaciteVoile": 0.9
+    "opaciteVoile": 0.9,
+    "duree": 2.8
   },
   "final": "Un like si t'as tout trouvé !",
   "cta": "Laquelle t'as pas trouvée ? 👇",

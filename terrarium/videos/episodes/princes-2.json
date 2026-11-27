@@ -2,7 +2,7 @@
   "version": 4,
   "format": "avis",
   "id": "princes-2",
-  "titre": "4 princesses, 2e partie, étage 2 (mulan)",
+  "titre": "4 princesses, 2e partie, étage 2 (tiana)",
   "rubrique": "voyage",
   "numero": 82,
   "voix": null,
@@ -31,12 +31,12 @@
       ],
       "mots": [
         {
-          "texte": "MULAN",
+          "texte": "TIANA",
           "sens": "h",
           "ligne": 0,
           "colonne": 0,
           "indice": {
-            "texte": "Elle se déguise en soldat"
+            "texte": "Elle est devenue grenouille"
           },
           "reponse": {}
         }
@@ -72,19 +72,158 @@
         "lignes": [
           {
             "t": 0.25,
-            "texte": "Elle se déguise en soldat…",
+            "texte": "Elle est devenue grenouille…",
             "emotion": "neutre",
-            "lecture": true
+            "lecture": true,
+            "env": [
+              0.7,
+              0.79,
+              0.87,
+              0.9,
+              0.67,
+              0.25,
+              0.93,
+              0.83,
+              0.43,
+              0.72,
+              0.98,
+              0.98,
+              1.0,
+              0.95,
+              0.94,
+              0.42,
+              0.24,
+              0.56,
+              0.29,
+              1.0,
+              0.85,
+              1.0,
+              1.0,
+              0.87,
+              0.81,
+              0.54,
+              0.42,
+              0.28,
+              0.19,
+              0.12,
+              0.01,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 1.11,
+            "mots": [
+              [
+                0.0,
+                0.18
+              ],
+              [
+                0.18,
+                0.3
+              ],
+              [
+                0.3,
+                0.38
+              ],
+              [
+                0.38,
+                0.44
+              ],
+              [
+                0.44,
+                0.54
+              ],
+              [
+                0.54,
+                0.66
+              ],
+              [
+                0.66,
+                0.74
+              ],
+              [
+                0.74,
+                0.78
+              ]
+            ]
           },
           {
             "t": 2.27,
             "texte": "Ça se corse…",
-            "emotion": "choc"
+            "emotion": "choc",
+            "env": [
+              0.46,
+              0.56,
+              0.58,
+              0.68,
+              0.39,
+              0.02,
+              0.1,
+              0.72,
+              0.85,
+              0.98,
+              0.79,
+              0.72,
+              0.69,
+              0.22,
+              0.01,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.01,
+              0.0,
+              0.01,
+              0.01,
+              0.0,
+              0.11,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              0.81,
+              0.48,
+              0.16
+            ],
+            "envHz": 30,
+            "duree": 1.06
           },
           {
             "t": 6.27,
-            "texte": "C'est Mulan !",
-            "emotion": "joie"
+            "texte": "C'est Tiana !",
+            "emotion": "joie",
+            "env": [
+              0.05,
+              0.42,
+              0.89,
+              0.43,
+              0.13,
+              0.03,
+              0.05,
+              0.38,
+              0.3,
+              0.49,
+              0.98,
+              1.0,
+              0.87,
+              0.83,
+              0.97,
+              0.99,
+              0.87,
+              1.0,
+              1.0,
+              0.81,
+              0.52,
+              0.35,
+              0.12,
+              0.02,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 0.87
           }
         ],
         "voix": {
@@ -108,7 +247,7 @@
       ],
       "fond3d": "chemin",
       "fond3dOpts": {
-        "t0": 11.25,
+        "t0": 11.4,
         "L": 38.8889
       },
       "fond3dRes": [
@@ -130,5 +269,22 @@
   },
   "orbe": false,
   "ouverture": "calme",
-  "voixGeneree": true
+  "voixGeneree": true,
+  "voixOff": [
+    {
+      "fichier": "l1.wav",
+      "t": 0.25,
+      "duree": 1.11
+    },
+    {
+      "fichier": "l2.wav",
+      "t": 2.27,
+      "duree": 1.06
+    },
+    {
+      "fichier": "l3.wav",
+      "t": 6.27,
+      "duree": 0.87
+    }
+  ]
 }
