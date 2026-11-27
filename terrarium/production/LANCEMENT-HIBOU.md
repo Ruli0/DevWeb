@@ -134,3 +134,12 @@ Ne pas donner la réponse de la 10e (le rouge) tout de suite : laisser débattre
 > Tu en as trouvé combien sur 4 ? 👇
 
 À mesurer : la répartition du public (TikTok Studio → Analyses → Spectateurs : genre, âge) comparée à celle de l'iceberg ; part restante à 1 s et 3 s ; likes / vues. Une seule vidéo ce jour-là, vers 18-19 h.
+
+## Vidéo 10 : 4 princesses, 2e partie (voyage vers le château, prince hibou, 38,9 s)
+**Vidéo** : `videos/studio/princes/princes-final.mp4` · boucle parfaite · voix de synthèse : cocher « contenu généré par IA ».
+**Mots** : BELLE, TIANA, ESMERALDA, POCAHONTAS. **Description** :
+> Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princesses pour lui ouvrir la porte ! Laquelle t'as pas trouvée ?
+
+**Hashtags** : #quiz #princesse #dessinanime #devinette #hibou
+**Commentaire épinglé** : > Laquelle t'as pas trouvée ? 👇
+À mesurer : part restante à 1 s et 3 s (accroche « AIDE-MOI ! »), visionnage moyen, commentaires (la question de fin est plus précise), répartition du public. Publier après avoir relevé la 1re partie, une seule vidéo ce jour-là, vers 18-19 h.
