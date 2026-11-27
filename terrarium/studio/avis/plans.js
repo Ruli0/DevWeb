@@ -15,50 +15,90 @@
   // publiée (durée − amorce) : quand la vidéo reboucle, le fond est exactement au même état. Seul décor pour l'instant : désert.
   const hf = (k) => { const x = Math.sin(k * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
 
-  // Fond « château » (dessins animés) : un château de conte, rose et lilas, dessiné en SVG ; une caméra s'en approche (échelle autour de la
-  // porte) selon un niveau global (fondAnimeOpts.cles : [[temps global, échelle]]), la porte s'ouvre sur une lumière dorée, un flash doré
-  // recouvre l'écran, puis le château est de nouveau lointain : la vidéo reboucle sans coupure. Tout est calculé à partir du temps global.
+  // Fond « château » (dessins animés) : un château de conte perché sur une colline, au coucher du soleil (ciel dégradé, soleil et rayons, montagnes
+  // et collines lointaines dans la brume, arbres, cerisiers roses, chemin qui serpente), dessiné en SVG. Une caméra s'en approche (échelle autour
+  // de la porte, avec parallaxe : les plans lointains grossissent moins) selon un niveau global (fondAnimeOpts.cles : [[temps global, échelle]]),
+  // la porte s'ouvre sur une lumière dorée, un flash doré recouvre l'écran, puis le château est de nouveau lointain : la vidéo reboucle sans coupure.
   const GX = 540, GY = 1330;   // centre du bas de la porte (point fixe du zoom)
   function chateauSvg() {
-    const E = 'stroke="#6a3bb5" stroke-width="5" stroke-linejoin="round"';
-    const merlons = Array.from({ length: 14 }, (_, k) => `<rect x="${112 + k * 62}" y="868" width="38" height="36" ${E} fill="#b783ee"/>`).join('');
-    const briques = Array.from({ length: 6 }, (_, k) => `<path d="M${120} ${960 + k * 62} H${960}" stroke="#7d4bc4" stroke-opacity=".28" stroke-width="4"/>`).join('');
-    const tour = (x0, x1, haut, apex, nom, couleur) => {
+    const E = 'stroke="#5d3399" stroke-width="5" stroke-linejoin="round"', f1 = (v) => v.toFixed(1);
+    // crête lisse (quadratiques entre milieux) fermée vers le bas
+    const crete = (pts, bas) => { let d = `M${pts[0][0]} ${bas} L${pts[0][0]} ${pts[0][1]}`; for (let i = 1; i < pts.length - 1; i += 1) d += ` Q${pts[i][0]} ${pts[i][1]} ${f1((pts[i][0] + pts[i + 1][0]) / 2)} ${f1((pts[i][1] + pts[i + 1][1]) / 2)}`; const z = pts[pts.length - 1]; return `${d} L${z[0]} ${z[1]} L${z[0]} ${bas} Z`; };
+    const monts = crete([[-500, 1190], [-330, 1060], [-120, 1175], [90, 1040], [300, 1170], [500, 1085], [720, 1180], [900, 1050], [1130, 1175], [1330, 1070], [1580, 1190]], 1340);
+    const neige = [[-330, 1060], [90, 1040], [500, 1085], [900, 1050], [1330, 1070]].map(([x, y]) => `<path d="M${x - 46} ${y + 40} L${x} ${y} L${x + 46} ${y + 40} L${x + 22} ${y + 30} L${x} ${y + 48} L${x - 22} ${y + 32} Z" fill="#ffe9f6" fill-opacity=".7"/>`).join('');
+    const col1 = crete([[-500, 1290], [-250, 1235], [0, 1290], [260, 1225], [520, 1292], [800, 1230], [1050, 1290], [1320, 1235], [1580, 1295]], 1345);
+    const col2 = crete([[-500, 1320], [-200, 1285], [140, 1325], [430, 1290], [700, 1330], [980, 1288], [1300, 1328], [1580, 1296]], 1350);
+    // arbres : feuillus, pins et cerisiers roses
+    const feuillu = (x, y, k, c1, c2, c3) => `<rect x="${f1(x - 5 * k)}" y="${f1(y - 44 * k)}" width="${f1(10 * k)}" height="${f1(44 * k)}" fill="#5a3a2a"/><circle cx="${x}" cy="${f1(y - 78 * k)}" r="${f1(40 * k)}" fill="${c1}"/><circle cx="${f1(x - 26 * k)}" cy="${f1(y - 56 * k)}" r="${f1(30 * k)}" fill="${c1}"/><circle cx="${f1(x + 26 * k)}" cy="${f1(y - 56 * k)}" r="${f1(30 * k)}" fill="${c2}"/><circle cx="${f1(x - 12 * k)}" cy="${f1(y - 92 * k)}" r="${f1(20 * k)}" fill="${c3}" fill-opacity=".85"/>`;
+    const pin = (x, y, k) => `<rect x="${f1(x - 4 * k)}" y="${f1(y - 18 * k)}" width="${f1(8 * k)}" height="${f1(18 * k)}" fill="#5a3a2a"/>` + [0, 1, 2].map((i) => `<path d="M${f1(x - (56 - i * 12) * k)} ${f1(y - (14 + i * 40) * k)} L${x} ${f1(y - (74 + i * 40) * k)} L${f1(x + (56 - i * 12) * k)} ${f1(y - (14 + i * 40) * k)} Z" fill="${i === 1 ? '#25785f' : '#1d6a56'}"/>`).join('');
+    const vert = [['#2f8f5b', '#3fa86c', '#79d495'], ['#2a7d57', '#379f69', '#6fcf8e']], rose = ['#f27bb4', '#ff9ccb', '#ffd0e6'];
+    const arbres = [[-54, 1395, 0.9, 'v'], [-110, 1420, 0.8, 'p'], [-296, 1565, 1.3, 'r'], [-420, 1640, 1.4, 'v'], [-583, 1809, 1.9, 'p'], [-250, 1700, 1.5, 'p'], [1134, 1395, 0.9, 'v'], [1190, 1420, 0.8, 'p'], [1376, 1565, 1.3, 'r'], [1500, 1640, 1.4, 'v'], [1663, 1809, 1.9, 'p'], [1330, 1700, 1.5, 'p'], [58, 1330, 0.7, 'r'], [1022, 1330, 0.7, 'r'], [-8, 1350, 0.75, 'v'], [1088, 1350, 0.75, 'v']]
+      .map(([x, y, k, t], i) => (t === 'p' ? pin(x, y, k) : t === 'r' ? feuillu(x, y, k, rose[0], rose[1], rose[2]) : feuillu(x, y, k, ...vert[i % 2]))).join('');
+    // chemin qui serpente (du bas de la porte vers l'avant-plan)
+    const centre = (u) => [540 + 150 * Math.sin(u * 4.4) * Math.pow(u, 0.85), GY + u * 1500], demi = (u) => 34 + 300 * Math.pow(u, 1.1);
+    let g = '', dr = '';
+    for (let i = 0; i <= 40; i += 1) { const u = i / 40, [cx, cy] = centre(u); g += `${i ? 'L' : 'M'}${f1(cx - demi(u))} ${f1(cy)} `; }
+    for (let i = 40; i >= 0; i -= 1) { const u = i / 40, [cx, cy] = centre(u); dr += `L${f1(cx + demi(u))} ${f1(cy)} `; }
+    const chemin = `<path d="${g}${dr}Z" fill="url(#ch-chemin)" stroke="#fff1d6" stroke-opacity=".7" stroke-width="6"/>` + Array.from({ length: 9 }, (_, k) => { const u = 0.08 + k * 0.1, [cx, cy] = centre(u), w = demi(u); return `<path d="M${f1(cx - w * 0.82)} ${f1(cy)} Q${f1(cx)} ${f1(cy - 10 - 16 * u)} ${f1(cx + w * 0.82)} ${f1(cy)}" fill="none" stroke="#b98657" stroke-opacity=".35" stroke-width="${f1(3 + 6 * u)}"/>`; }).join('');
+    const fleurs = Array.from({ length: 90 }, (_, k) => { const y = 1480 + hf(k + 3) * 880, x = 540 + (hf(k + 41) - 0.5) * (900 + (y - 1330) * 1.5); return `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(5 + hf(k + 7) * 7 * (y - 1330) / 700)}" fill="${['#ffffff', '#ffd4ea', '#ffe27a', '#ff9ccb'][k % 4]}" fill-opacity=".85"/>`; }).join('');
+    const bosses = '<ellipse cx="-120" cy="1650" rx="520" ry="110" fill="#8fd68a" fill-opacity=".30"/><ellipse cx="1210" cy="1700" rx="560" ry="120" fill="#8fd68a" fill-opacity=".28"/><ellipse cx="-300" cy="1950" rx="620" ry="160" fill="#1c5a55" fill-opacity=".38"/><ellipse cx="1380" cy="2000" rx="640" ry="170" fill="#1c5a55" fill-opacity=".38"/><ellipse cx="540" cy="2150" rx="900" ry="200" fill="#154a52" fill-opacity=".30"/>';
+    // château
+    const merlons = Array.from({ length: 14 }, (_, k) => `<rect x="${112 + k * 62}" y="868" width="38" height="36" ${E} fill="url(#ch-mur)"/>`).join('');
+    const briques = Array.from({ length: 6 }, (_, k) => `<path d="M120 ${960 + k * 62} H960" stroke="#6f3fb0" stroke-opacity=".22" stroke-width="4"/>`).join('');
+    const fen = (cx, y) => `<circle cx="${cx}" cy="${y + 26}" r="34" fill="#ffd36b" fill-opacity=".28"/><path d="M${cx - 17} ${y + 56} V${y + 22} Q${cx} ${y - 8} ${cx + 17} ${y + 22} V${y + 56} Z" ${E} fill="#ffe27a"/>`;
+    const tour = (x0, x1, haut, apex, nom) => {
       const cx = (x0 + x1) / 2, w = x1 - x0;
-      return `<rect x="${x0}" y="${haut}" width="${w}" height="${GY - haut}" ${E} fill="${couleur}"/>`
-        + `<path d="M${x0 + 8} ${haut + 70} V${GY - 4}" stroke="#ffffff" stroke-opacity=".28" stroke-width="10" stroke-linecap="round"/>`
-        + `<path d="M${x0 - 22} ${haut} L${cx} ${apex} L${x1 + 22} ${haut} Z" ${E} fill="#ff6fb5"/><path d="M${cx} ${apex + 6} L${x1 + 8} ${haut - 4} L${cx + 18} ${haut - 4} Z" fill="#ff9fd0" fill-opacity=".7"/>`
+      return `<rect x="${x0}" y="${haut}" width="${w}" height="${GY - haut}" ${E} fill="url(#ch-mur)"/>`
+        + `<path d="M${x1 - 12} ${haut + 20} V${GY - 4}" stroke="#5d3399" stroke-opacity=".28" stroke-width="16" stroke-linecap="round"/><path d="M${x0 + 9} ${haut + 70} V${GY - 4}" stroke="#ffffff" stroke-opacity=".32" stroke-width="9" stroke-linecap="round"/>`
+        + `<path d="M${x0 - 22} ${haut} L${cx} ${apex} L${x1 + 22} ${haut} Z" ${E} fill="url(#ch-toit)"/><path d="M${cx} ${apex + 8} L${x1 + 8} ${haut - 4} L${cx + 20} ${haut - 4} Z" fill="#5d1f7a" fill-opacity=".28"/>`
         + `<rect x="${x0 - 22}" y="${haut - 8}" width="${w + 44}" height="16" rx="6" ${E} fill="#ffd45c"/>`
         + `<circle cx="${cx}" cy="${apex - 6}" r="12" ${E} fill="#ffd45c"/>`
-        + `<g class="ch-drap" data-px="${cx}" data-py="${apex - 18}" data-n="${nom}"><path d="M${cx} ${apex - 18} V${apex - 92}" stroke="#6a3bb5" stroke-width="5"/><path d="M${cx} ${apex - 92} L${cx + 66} ${apex - 70} L${cx} ${apex - 48} Z" ${E} fill="#ffd45c"/></g>`
-        + [0.18, 0.46].map((f) => `<path d="M${cx - 17} ${haut + (GY - haut) * f + 56} V${haut + (GY - haut) * f + 22} Q${cx} ${haut + (GY - haut) * f - 8} ${cx + 17} ${haut + (GY - haut) * f + 22} V${haut + (GY - haut) * f + 56} Z" ${E} fill="#ffe27a"/>`).join('');
+        + `<g class="ch-drap" data-px="${cx}" data-py="${apex - 18}"><path d="M${cx} ${apex - 18} V${apex - 92}" stroke="#5d3399" stroke-width="5"/><path d="M${cx} ${apex - 92} L${cx + 66} ${apex - 70} L${cx} ${apex - 48} Z" ${E} fill="#ff6fb5"/></g>`
+        + fen(cx, haut + (GY - haut) * 0.16) + fen(cx, haut + (GY - haut) * 0.46);
     };
-    const tours = tour(110, 230, 840, 700, 3, '#c9a0f7') + tour(850, 970, 840, 700, 4, '#c9a0f7') + tour(270, 390, 760, 610, 5, '#cfa8f9') + tour(690, 810, 760, 610, 6, '#cfa8f9') + tour(445, 635, 620, 380, 7, '#d8b4fb');
+    const tours = tour(110, 230, 840, 700) + tour(850, 970, 840, 700) + tour(270, 390, 760, 610) + tour(690, 810, 760, 610) + tour(445, 635, 620, 380);
     const porte = `<path d="M475 ${GY} V1190 Q540 1075 605 1190 V${GY} Z" fill="#ffe9a0"/><g class="ch-lueur" opacity="0"><circle cx="540" cy="1230" r="70" fill="#ffffff" fill-opacity=".9"/></g>`
       + `<g class="ch-vantaux"><g class="ch-vg"><path d="M475 ${GY} V1190 Q508 1135 540 1126 V${GY} Z" ${E} fill="#5a2f9e"/><circle cx="522" cy="1250" r="7" fill="#ffd45c"/><circle cx="522" cy="1290" r="7" fill="#ffd45c"/></g><g class="ch-vd"><path d="M605 ${GY} V1190 Q572 1135 540 1126 V${GY} Z" ${E} fill="#5a2f9e"/><circle cx="558" cy="1250" r="7" fill="#ffd45c"/><circle cx="558" cy="1290" r="7" fill="#ffd45c"/></g></g>`
       + `<path d="M475 ${GY} V1190 Q540 1075 605 1190 V${GY}" fill="none" ${E}/>`;
-    const route = `<path d="M505 ${GY} L575 ${GY} L1500 3200 L-420 3200 Z" fill="#ffd9f0" fill-opacity=".92"/><path d="M505 ${GY} L-420 3200 M575 ${GY} L1500 3200" stroke="#ff9fd0" stroke-width="8"/>`
-      + Array.from({ length: 7 }, (_, k) => { const y = GY + 40 * Math.pow(1.6, k), h = 0.495 * (y - GY); return `<path d="M${540 - 6 - h * 0.12} ${y} H${540 + 6 + h * 0.12}" stroke="#ffffff" stroke-width="${4 + k * 3}" stroke-linecap="round" stroke-opacity=".7"/>`; }).join('');
-    const nuages = Array.from({ length: 4 }, (_, k) => `<g class="ch-nuage" data-k="${k}" data-y="${430 + k * 190 + hf(k + 5) * 60}" data-x="${hf(k + 9) * 1300}"><ellipse cx="0" cy="0" rx="${110 + k * 12}" ry="${34 + k * 3}" fill="#ffffff" fill-opacity=".34"/><ellipse cx="-60" cy="12" rx="${70 + k * 6}" ry="${26}" fill="#ffffff" fill-opacity=".3"/><ellipse cx="62" cy="14" rx="76" ry="${28}" fill="#ffffff" fill-opacity=".3"/></g>`).join('');
-    const etoiles = Array.from({ length: 16 }, (_, k) => `<path class="ch-etoile" data-k="${k}" d="M0 -14 L3.5 -3.5 L14 0 L3.5 3.5 L0 14 L-3.5 3.5 L-14 0 L-3.5 -3.5 Z" fill="${k % 3 ? '#fff4b0' : '#ffffff'}" transform="translate(${(70 + hf(k + 2) * 940).toFixed(0)} ${(320 + hf(k + 17) * 1000).toFixed(0)})"/>`).join('');
-    return `<svg class="fond-anime ch" viewBox="0 0 1080 1920" width="1080" height="1920"><defs><linearGradient id="ch-sol" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a45c9"/><stop offset="1" stop-color="#341a7e"/></linearGradient></defs>`
-      + `<g class="ch-nuages">${nuages}</g><g class="ch-etoiles">${etoiles}</g>`
-      + `<path d="M-40 ${GY} Q200 1235 420 1290 T800 1275 T1120 1250 V${GY} Z" fill="#b48cf0" fill-opacity=".55"/><rect x="0" y="${GY}" width="1080" height="700" fill="url(#ch-sol)"/>`
-      + `<g class="ch-monde">${route}<rect x="110" y="900" width="860" height="${GY - 900}" ${E} fill="#b07be8"/>${briques}${merlons}${tours}${porte}</g>`
-      + `<rect class="ch-flash" x="0" y="0" width="1080" height="1920" fill="#fff0b8" opacity="0"/></svg>`;
+    const colline = `<path d="M-1200 2500 C-700 1950 -100 1338 120 1326 L960 1326 C1180 1338 1780 1950 2280 2500 Z" fill="url(#ch-herbe)"/><path d="M-1200 2500 C-700 1950 -100 1338 120 1326 L960 1326 C1180 1338 1780 1950 2280 2500" fill="none" stroke="#c8f0a0" stroke-opacity=".55" stroke-width="8"/>`;
+    const herbe = (x0, x1) => { let d = `M${x0} 1352 L${x0} 1326`; for (let x = x0; x < x1; x += 26) d += ` Q${x + 6} ${1306 - (x % 3) * 5} ${x + 13} 1324 Q${x + 20} 1310 ${x + 26} 1326`; return `<path d="${d} L${x1} 1352 Z" fill="#3f9a63"/>`; };
+    const ombre = '<ellipse cx="540" cy="1338" rx="470" ry="20" fill="#2a1060" fill-opacity=".28"/><ellipse cx="540" cy="1350" rx="150" ry="22" fill="#ffd36b" fill-opacity=".32"/>';
+    // ciel
+    const rayons = Array.from({ length: 8 }, (_, k) => { const a = (k / 8) * 2 * Math.PI, b = a + Math.PI / 16, R = 2400; return `<path d="M0 0 L${(R * Math.cos(a)).toFixed(0)} ${(R * Math.sin(a)).toFixed(0)} L${(R * Math.cos(b)).toFixed(0)} ${(R * Math.sin(b)).toFixed(0)} Z"/>`; }).join('');
+    const nuages = Array.from({ length: 5 }, (_, k) => `<g class="ch-nuage" data-k="${k}" data-y="${(420 + k * 150 + hf(k + 5) * 60).toFixed(0)}" data-x="${(hf(k + 9) * 1300).toFixed(0)}"><ellipse cx="0" cy="0" rx="${120 + k * 10}" ry="${34 + k * 3}" fill="#ffc9e4" fill-opacity=".42"/><ellipse cx="-62" cy="12" rx="${74 + k * 6}" ry="26" fill="#ffd9c0" fill-opacity=".4"/><ellipse cx="66" cy="14" rx="80" ry="28" fill="#ffc9e4" fill-opacity=".4"/><ellipse cx="0" cy="22" rx="${130 + k * 10}" ry="12" fill="#ffb98a" fill-opacity=".3"/></g>`).join('');
+    const etoiles = Array.from({ length: 12 }, (_, k) => `<path class="ch-etoile" data-k="${k}" d="M0 -13 L3.2 -3.2 L13 0 L3.2 3.2 L0 13 L-3.2 3.2 L-13 0 L-3.2 -3.2 Z" fill="${k % 3 ? '#fff4b0' : '#ffffff'}" transform="translate(${(70 + hf(k + 2) * 940).toFixed(0)} ${(310 + hf(k + 17) * 560).toFixed(0)})"/>`).join('');
+    const brume = Array.from({ length: 4 }, (_, k) => `<ellipse class="ch-brume" data-k="${k}" data-x="${(hf(k + 21) * 1300).toFixed(0)}" cx="0" cy="${1262 + k * 22}" rx="${330 + k * 30}" ry="${24 + k * 4}" fill="#ffe3f0" fill-opacity=".26"/>`).join('');
+    const oiseaux = Array.from({ length: 4 }, (_, k) => `<path class="ch-oiseau" data-k="${k}" d="M-14 0 Q-7 -11 0 0 Q7 -11 14 0" fill="none" stroke="#4a2680" stroke-width="4" stroke-linecap="round"/>`).join('');
+    return `<svg class="fond-anime ch" viewBox="0 0 1080 1920" width="1080" height="1920"><defs>`
+      + '<linearGradient id="ch-ciel" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1400"><stop offset="0" stop-color="#2c1f78"/><stop offset=".34" stop-color="#7a3fb8"/><stop offset=".6" stop-color="#d561b8"/><stop offset=".8" stop-color="#ff9aa8"/><stop offset="1" stop-color="#ffcf94"/></linearGradient>'
+      + '<radialGradient id="ch-soleil" gradientUnits="userSpaceOnUse" cx="540" cy="1240" r="760"><stop offset="0" stop-color="#fff4b8" stop-opacity=".95"/><stop offset=".3" stop-color="#ffc27a" stop-opacity=".6"/><stop offset="1" stop-color="#ff8fb0" stop-opacity="0"/></radialGradient>'
+      + '<linearGradient id="ch-mont" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6fd0"/><stop offset="1" stop-color="#d79bd0"/></linearGradient>'
+      + '<linearGradient id="ch-c1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6c8fc4"/><stop offset="1" stop-color="#c9a0d8"/></linearGradient>'
+      + '<linearGradient id="ch-c2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f9a9a"/><stop offset="1" stop-color="#9bc4b0"/></linearGradient>'
+      + '<linearGradient id="ch-mur" gradientUnits="userSpaceOnUse" x1="110" y1="0" x2="970" y2="0"><stop offset="0" stop-color="#d3adfb"/><stop offset=".55" stop-color="#b58af0"/><stop offset="1" stop-color="#9566d8"/></linearGradient>'
+      + '<linearGradient id="ch-toit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9ccd"/><stop offset="1" stop-color="#e1469f"/></linearGradient>'
+      + '<linearGradient id="ch-herbe" gradientUnits="userSpaceOnUse" x1="0" y1="1326" x2="0" y2="2500"><stop offset="0" stop-color="#5eb872"/><stop offset=".3" stop-color="#3e9a6c"/><stop offset=".7" stop-color="#26705f"/><stop offset="1" stop-color="#154349"/></linearGradient>'
+      + '<linearGradient id="ch-chemin" gradientUnits="userSpaceOnUse" x1="0" y1="1330" x2="0" y2="2800"><stop offset="0" stop-color="#fbe9c8"/><stop offset="1" stop-color="#d9a877"/></linearGradient></defs>'
+      + '<rect x="0" y="0" width="1080" height="1920" fill="url(#ch-ciel)"/><rect x="0" y="0" width="1080" height="1920" fill="url(#ch-soleil)"/>'
+      + `<g transform="translate(540 1240)"><g class="ch-rayons" fill="#fff0b8" fill-opacity=".1">${rayons}</g></g><g class="ch-nuages">${nuages}</g><g class="ch-etoiles">${etoiles}</g>`
+      + `<g class="ch-l0"><path d="${monts}" fill="url(#ch-mont)"/>${neige}</g><g class="ch-l1"><path d="${col1}" fill="url(#ch-c1)"/><path d="${col2}" fill="url(#ch-c2)"/></g><g class="ch-brumes">${brume}</g>`
+      + `<g class="ch-monde">${colline}${bosses}${fleurs}${arbres}${ombre}${chemin}<rect x="110" y="900" width="860" height="${GY - 900}" ${E} fill="url(#ch-mur)"/>${briques}${merlons}${tours}${porte}${herbe(20, 478)}${herbe(602, 1060)}</g>`
+      + `<g class="ch-oiseaux">${oiseaux}</g><rect class="ch-flash" x="0" y="0" width="1080" height="1920" fill="#fff0b8" opacity="0"/></svg>`;
   }
   function animerChateau(c, el, p, t0, d) {
     const sv = q(el, '.fond-anime'), O = p.fondAnimeOpts || {}, L = O.L || 38.9, cles = O.cles || [[0, 0.4], [L, 0.4]];
-    const monde = q(sv, '.ch-monde'), vg = q(sv, '.ch-vg'), vd = q(sv, '.ch-vd'), lueur = q(sv, '.ch-lueur'), fl = q(sv, '.ch-flash');
-    const drapeaux = qa(sv, '.ch-drap'), nuages = qa(sv, '.ch-nuage'), etoiles = qa(sv, '.ch-etoile');
+    const monde = q(sv, '.ch-monde'), l0 = q(sv, '.ch-l0'), l1 = q(sv, '.ch-l1'), vg = q(sv, '.ch-vg'), vd = q(sv, '.ch-vd'), lueur = q(sv, '.ch-lueur'), fl = q(sv, '.ch-flash'), ray = q(sv, '.ch-rayons');
+    const drapeaux = qa(sv, '.ch-drap'), nuages = qa(sv, '.ch-nuage'), etoiles = qa(sv, '.ch-etoile'), brumes = qa(sv, '.ch-brume'), oiseaux = qa(sv, '.ch-oiseau');
     const mod = (a, b) => ((a % b) + b) % b, lis = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
     const echelle = (T) => { if (O.flash && T >= O.flash[1]) return cles[0][1];
       if (T <= cles[0][0]) return cles[0][1];
-      for (let i = 1; i < cles.length; i += 1) if (T <= cles[i][0]) { const [ta, sa] = cles[i - 1], [tb, sb] = cles[i]; return Math.exp(Math.log(sa) + (Math.log(sb) - Math.log(sa)) * lis((T - ta) / (tb - ta)) * 0.5 + (Math.log(sb) - Math.log(sa)) * ((T - ta) / (tb - ta)) * 0.5); }
+      for (let i = 1; i < cles.length; i += 1) if (T <= cles[i][0]) { const [ta, sa] = cles[i - 1], [tb, sb] = cles[i], u = (T - ta) / (tb - ta); return Math.exp(Math.log(sa) + (Math.log(sb) - Math.log(sa)) * (0.5 * lis(u) + 0.5 * u)); }
       return cles[cles.length - 1][1]; };
+    const zoom = (g, k) => g.setAttribute('transform', `translate(${GX} ${GY}) scale(${k.toFixed(4)}) translate(${-GX} ${-GY})`);
     function rendre(t) {
       const T = (O.t0 || 0) + t, s = echelle(T);
-      monde.setAttribute('transform', `translate(${GX} ${GY}) scale(${s.toFixed(4)}) translate(${-GX} ${-GY})`);
+      zoom(monde, s); zoom(l1, Math.pow(s, 0.45)); zoom(l0, Math.pow(s, 0.18));
+      ray.setAttribute('transform', `rotate(${(45 * T / L).toFixed(3)})`);
       const ou = O.ouvre ? lis((T - O.ouvre[0]) / (O.ouvre[1] - O.ouvre[0])) : 0;
       vg.setAttribute('transform', `translate(475 0) scale(${(1 - 0.93 * ou).toFixed(3)} 1) translate(-475 0)`);
       vd.setAttribute('transform', `translate(605 0) scale(${(1 - 0.93 * ou).toFixed(3)} 1) translate(-605 0)`);
@@ -67,6 +107,8 @@
       fl.setAttribute('opacity', (f * 0.96).toFixed(3));
       drapeaux.forEach((g, k) => { const n = 12 + 2 * (k % 3); g.setAttribute('transform', `rotate(${(7 * Math.sin(2 * Math.PI * n * T / L + k)).toFixed(2)} ${g.dataset.px} ${g.dataset.py})`); });
       nuages.forEach((g) => { const k = +g.dataset.k, x = mod(+g.dataset.x + 1300 * (1 + (k % 2)) * T / L, 1300) - 110; g.setAttribute('transform', `translate(${x.toFixed(1)} ${(+g.dataset.y + 14 * Math.sin(2 * Math.PI * 2 * T / L + k)).toFixed(1)})`); });
+      brumes.forEach((g) => { const k = +g.dataset.k, x = mod(+g.dataset.x + 1300 * (1 + (k % 2)) * T / L, 1300) - 110; g.setAttribute('cx', x.toFixed(1)); });
+      oiseaux.forEach((g) => { const k = +g.dataset.k, x = mod(120 + k * 310 + 1300 * 2 * T / L, 1300) - 110, y = 520 + k * 120 + 30 * Math.sin(2 * Math.PI * 4 * T / L + k * 2), b = 0.55 + 0.45 * Math.sin(2 * Math.PI * 80 * T / L + k); g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(1 ${b.toFixed(2)})`); });
       etoiles.forEach((g) => { const k = +g.dataset.k, v = Math.pow(Math.abs(Math.sin(Math.PI * (4 + (k % 4)) * T / L + k * 1.7)), 3); g.setAttribute('opacity', (0.15 + 0.85 * v).toFixed(2)); });
     }
     const pilote = { t: 0 }; rendre(0);
