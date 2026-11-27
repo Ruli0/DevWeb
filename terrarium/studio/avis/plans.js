@@ -392,7 +392,7 @@
       if (cadre) cadre.style.translate = (sec + choc) ? `${(sec + choc).toFixed(2)}px ${(choc * 0.5).toFixed(2)}px` : '';
       if (MT && svgP) svgP.style.translate = choc ? `${(choc * 0.8).toFixed(2)}px ${(-choc * 0.4).toFixed(2)}px` : '';
       if (p.presentateur.croisiere && svgP) {   // il suit le chemin : dérive vers le côté où le chemin tourne, penche dans le virage, flotte
-        const W = typeof self !== 'undefined' ? self : this, Tg = ((p.fond3dOpts && p.fond3dOpts.t0) || 0) + t, E = W.Avis && W.Avis.chemin ? W.Avis.chemin.etat(Tg) : { courbure: 0 };
+        const W = typeof self !== 'undefined' ? self : this, Tg = ((p.fond3dOpts && p.fond3dOpts.t0) || 0) + t, E = W.Avis && W.Avis.chemin ? W.Avis.chemin.etat(Tg, p.fond3dOpts) : { courbure: 0 };
         const w = (1 - kC) * (VO ? lisse((t - VO.pose + 0.2) / 0.6) : 1), ph = 2 * Math.PI * Tg / ((p.fond3dOpts && p.fond3dOpts.L) || 38.9);
         const dx = Math.max(-120, Math.min(120, E.courbure * 360)) + 10 * Math.sin(ph * 5), dy = -9 * Math.sin(ph * 44) - 5 * Math.sin(ph * 88 + 1);
         svgP.style.translate = `${(dx * w).toFixed(2)}px ${(dy * w).toFixed(2)}px`;

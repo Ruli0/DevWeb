@@ -17,8 +17,11 @@
   'use strict';
   // ---------- paramètres du voyage ----------
   const LEN = 345, HC = 46, LARG = 5;                 // longueur du chemin (m), hauteur du plateau du château, largeur du chemin
-  const VC = 10.2, T0 = 0.4, RAMP = 2.2;              // vitesse de croisière (m/s), départ (fin de l'amorce), durée de la mise en vitesse
-  const T_FLASH = [37.5, 37.95, 38.6];                // montée, pic (la caméra repart de zéro), fin du flash
+  // Réglages du voyage (tous modifiables par `fond3dOpts` du plan ; les valeurs par défaut conviennent à une vidéo de ~39 s) :
+  //   vitesse (m/s), depart (s : fin de l'amorce de boucle), rampe (s : mise en vitesse), flash [début, pic = retour au départ, fin],
+  //   porte [début, fin] (ouverture des vantaux), lueur [début, fin] (lumière dorée qui sort de la porte).
+  const DEF = { vitesse: 10.2, depart: 0.4, rampe: 2.2, flash: [37.5, 37.95, 38.6], porte: [34.0, 35.8], lueur: [35.2, 37.6] };
+  const reglages = (o) => Object.assign({}, DEF, o || {});
   const ZONES = { foret: [0, 0.28], prairie: [0.28, 0.52], lac: [0.52, 0.76], jardin: [0.76, 1.0] };
   const S_RIV = 0.64, S_LAC = 0.60;                   // position de la rivière (pont) et du centre du lac le long du chemin
   const lis = (a, b, x) => { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
@@ -34,7 +37,7 @@
   // ---------- le chemin : s de 0 (départ) à 1 (porte), prolongé en ligne droite au-delà ----------
   const profil = (s) => { s = Math.min(1, Math.max(0, s)); return 0.18 * s + 0.82 * lis(0, 1, s) * (0.4 + 0.6 * lis(0, 1, s)); };
   const yAxe = (z) => HC * profil(-z / LEN);
-  const xChemin = (s) => { const a = 24 * lis(0, 0.09, s) * (1 - lis(0.82, 0.985, s)); return a * Math.sin(2 * Math.PI * 1.8 * s); };
+  const xChemin = (s) => { const a = 24 * lis(0, 0.09, s) * (1 - lis(0.70, 0.88, s)); return a * Math.sin(2 * Math.PI * 1.8 * s); };
   const pointChemin = (s) => { const z = -LEN * s; return [xChemin(Math.min(s, 1)), yAxe(z), z]; };
   const tangente = (s) => { const e = 0.002, a = pointChemin(s - e), b = pointChemin(s + e), dx = b[0] - a[0], dz = b[2] - a[2], n = Math.hypot(dx, dz) || 1; return [dx / n, dz / n]; };
   const chemin = { longueur: LEN, point: pointChemin, tangente, largeur: LARG };
@@ -61,7 +64,7 @@
     h = mix(h, Math.min(h, bed), 1 - lis(0.8, 1.5, dl));
     // plateau du château
     const dp = Math.max(Math.abs(x) / 46, Math.abs(z + LEN + 34) / 62);
-    h = mix(h, HC, 1 - lis(0.85, 1.55, dp));
+    h = mix(h, ax, 1 - lis(0.85, 1.55, dp));   // le plateau suit la pente de l'axe (pas de tranchée autour du chemin)
     return h;
   }
   // ---------- ciel, lumière : couleurs en fonction de s ----------
@@ -81,20 +84,20 @@
   };
   // ---------- la progression de la caméra ----------
   // distance parcourue d(T) (mètres) : immobile pendant l'amorce, mise en vitesse douce, croisière, puis le flash remet tout à zéro.
-  const distance = (T) => {
-    if (T >= T_FLASH[1]) return 0;
-    const tau = T - T0; if (tau <= 0) return 0;
-    return tau < RAMP ? 0.5 * (VC / RAMP) * tau * tau : VC * (tau - RAMP / 2);
+  const distance = (T, c) => {
+    if (T >= c.flash[1]) return 0;
+    const tau = T - c.depart; if (tau <= 0) return 0;
+    return tau < c.rampe ? 0.5 * (c.vitesse / c.rampe) * tau * tau : c.vitesse * (tau - c.rampe / 2);
   };
-  function etat(T) {
-    const d = distance(T), s = d / LEN, tg = tangente(Math.min(s, 1)), tg2 = tangente(Math.min(s + 12 / LEN, 1));
+  function etat(T, o) {
+    const c = reglages(o), d = distance(T, c), s = d / LEN, tg = tangente(Math.min(s, 1)), tg2 = tangente(Math.min(s + 12 / LEN, 1));
     const lacet = Math.atan2(tg[0], -tg[1]), lacet2 = Math.atan2(tg2[0], -tg2[1]);
-    return { s, lacet, courbure: (lacet2 - lacet) / (12 / VC), vitesse: d > 0 ? VC : 0 };
+    return { s, lacet, courbure: (lacet2 - lacet) / (12 / c.vitesse), vitesse: d > 0 ? c.vitesse : 0 };
   }
 
   // ---------- la scène ----------
   function creer(canvas, L, opts) {
-    opts = opts || {}; L = opts.L || L;   // période de la boucle : la durée publiée globale, pas celle de l'étage
+    opts = opts || {}; L = opts.L || L; const RG = reglages(opts);   // période de la boucle : la durée publiée globale, pas celle de l'étage
     const W = canvas.width, H = canvas.height, T0g = opts.t0 || 0;
     const r = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true });
     r.setPixelRatio(1); r.setSize(W, H, false);
@@ -222,27 +225,27 @@
     const vers = new THREE.Vector3(), cp = new THREE.Vector3();
     const tmp = new THREE.Color();
     function maj(t) {
-      const T = T0g + t, d = distance(T), s = d / LEN, K = tod(Math.min(s, 1));
+      const T = T0g + t, d = distance(T, RG), s = d / LEN, K = tod(Math.min(s, 1));
       // caméra : à 2,4 m au-dessus du chemin, regarde 14 m devant ; léger balancement (périodique)
       const ph = 2 * Math.PI * T / L, p = pointChemin(Math.min(s, 1.2));
       const sa = s + 15 / LEN, pa = pointChemin(sa), bal = 0.12 * Math.sin(ph * 14);
       cp.set(p[0] + 0.3 * Math.sin(ph * 9), p[1] + 2.5 + bal, p[2]);
       const cible = s > 1 ? [0, HC + 3.2, -LEN - 60] : [pa[0], pa[1] + 1.3, pa[2]];
       cam.position.copy(cp); vers.set(cible[0], cible[1], cible[2]); cam.lookAt(vers);
-      cam.rotateZ(-0.05 * Math.sin(ph * 5 + 1) - 0.4 * etat(T).courbure);
+      cam.rotateZ(-0.05 * Math.sin(ph * 5 + 1) - 0.4 * etat(T, RG).courbure);
       // ciel, lumière, brouillard
       tmp.setRGB(...K.brume); sc.fog.color.copy(tmp); sc.fog.near = K.near; sc.fog.far = K.far; r.setClearColor(tmp);
       U.uHaut.value.setRGB(...K.haut); U.uMilieu.value.setRGB(...K.milieu); U.uHor.value.setRGB(...K.hor); U.uSol.value.setRGB(...K.soleil);
       ciel.position.copy(cp);
       hemi.color.setRGB(...K.hS); hemi.groundColor.setRGB(...K.hG); hemi.intensity = K.hI * 0.72;
       soleil.color.setRGB(...K.soleil); soleil.intensity = K.sI * 0.68;
-      fill.position.set(cp.x - 30 * Math.sin(etat(T).lacet), cp.y + 25, cp.z + 30 * Math.cos(etat(T).lacet)); fill.target.position.copy(cp); fill.color.setRGB(...K.soleil); fill.intensity = 0.26;
+      fill.position.set(cp.x - 30 * Math.sin(etat(T, RG).lacet), cp.y + 25, cp.z + 30 * Math.cos(etat(T, RG).lacet)); fill.target.position.copy(cp); fill.color.setRGB(...K.soleil); fill.intensity = 0.26;
       matMont.color.setRGB(...K.mont);
       nuages.forEach((g) => { const u = g.userData; g.position.set(mod(u.x0 + 1600 * u.k * T / L, 1600) - 800, u.y, u.z); });
       matNuage.color.setRGB(mix(1, K.hor[0], 0.35), mix(1, K.hor[1], 0.35), mix(1, K.hor[2], 0.35));
       biomes.forEach((b) => b.maj(T, s));
-      if (chateau) { chateau.setPorte(lis(0, 1, (T - 34.0) / 1.8)); chateau.setLueur(lis(0, 1, (T - 34.6) / 2.6)); chateau.maj(T); }
-      const f = T < T_FLASH[0] ? 0 : T < T_FLASH[1] ? lis(T_FLASH[0], T_FLASH[1], T) : 1 - lis(T_FLASH[1], T_FLASH[2], T);
+      if (chateau) { chateau.setPorte(lis(RG.porte[0], RG.porte[1], T)); chateau.setLueur(lis(RG.lueur[0], RG.lueur[1], T)); chateau.maj(T); }
+      const F = RG.flash, f = T < F[0] ? 0 : T < F[1] ? lis(F[0], F[1], T) : 1 - lis(F[1], F[2], T);
       flash.material.opacity = 0.97 * f;
       r.render(sc, cam);
     }
@@ -250,5 +253,5 @@
     return { maj, camera: cam };
   }
   function racine_biomes() { const R = typeof self !== 'undefined' ? self : this; return (R.Avis && R.Avis.biomes3d) || {}; }
-  return { creer, etat, hauteur, pointChemin, tangente, EAU, ZONES, LEN, HC, T_FLASH, VC };
+  return { creer, etat, hauteur, pointChemin, tangente, EAU, ZONES, LEN, HC, DEF };
 });

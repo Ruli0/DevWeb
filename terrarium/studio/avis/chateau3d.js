@@ -111,12 +111,12 @@
     // ---------- Primitives ----------
     const gBoite = () => geo('boite', () => new THREE.BoxGeometry(1, 1, 1));
     const boite = (n, x, y, z, w, h, d, c, op) => ajouter(n, gBoite(), { p: [x, y + h / 2, z], s: [w, h, d], r: op && op.r }, c, op);
-    const cyl = (n, x, y, z, rb, rt, h, seg, c, op) => ajouter(n, geo('cy' + rb + '|' + rt + '|' + seg, () => new THREE.CylinderGeometry(rt, rb, 1, seg, 1, false)),
+    const cyl = (n, x, y, z, rb, rt, h, seg, c, op) => ajouter(n, geo('cy' + rb + '|' + rt + '|' + seg + '|' + !!(op && op.cap), () => new THREE.CylinderGeometry(rt, rb, 1, seg, 1, !(op && op.cap))),
       { p: [x, y + h / 2, z], s: [1, h, 1] }, c, op);
     // le cylindre est créé à hauteur 1 puis étiré : on fixe donc les rayons dans la clé
     const cone = (n, x, y, z, r, h, seg, c, op) => ajouter(n, geo('co' + seg, () => new THREE.CylinderGeometry(0, 1, 1, seg, 1, true)),
       { p: [x, y + h / 2, z], s: [r, h, r] }, c, Object.assign({ seg }, op || {}));
-    const boule = (n, x, y, z, r, c, op) => ajouter(n, geo('ico', () => new THREE.IcosahedronGeometry(1, 1)), { p: [x, y, z], s: [r, r, r] }, c, op);
+    const boule = (n, x, y, z, r, c, op) => ajouter(n, geo('ico' + ((op && op.d) || 0), () => new THREE.IcosahedronGeometry(1, (op && op.d) || 0)), { p: [x, y, z], s: [r, r, r] }, c, op);
     const ext = (n, shape, prof, o, c, op) => ajouter(n, new THREE.ExtrudeGeometry(shape, { depth: prof, bevelEnabled: false, curveSegments: 4 }), o, c, op);
     const plat = (n, shape, o, c, op) => ajouter(n, new THREE.ShapeGeometry(shape), o, c, op);
 
@@ -146,13 +146,13 @@
       const hw = w / 2, hs = hsDe(w, h);
       dans(x, y, z, ry, () => {
         const c = C.vitre[Math.floor(rnd() * C.vitre.length)];
-        plat('vitres', formeOgive(hw, hs, 4), { p: [0, 0, 0.04] }, c, { v: 0.05 });
-        const ring = formeOgive(hw + 0.24, hs, 4);
-        ring.holes.push(trouOgive(hw, hs, 4));
+        plat('vitres', formeOgive(hw, hs, 3), { p: [0, 0, 0.04] }, c, { v: 0.05 });
+        const ring = formeOgive(hw + 0.24, hs, 3);
+        ring.holes.push(trouOgive(hw, hs, 3));
         plat('or', ring, { p: [0, -0.2, 0.09] }, C.or, { v: 0.03 });
-        boite('or', 0, 0, 0.1, 0.09, hs + R3 * hw * 0.6, 0.06, C.or, { v: 0.02 });
-        boite('or', 0, hs * 0.45, 0.1, w, 0.09, 0.06, C.or, { v: 0.02 });
-        boite('or', 0, -0.2, 0.18, w + 0.9, 0.22, 0.38, C.orO, { v: 0.03 });
+        ajouter('or', geo('pl', () => new THREE.PlaneGeometry(1, 1)), { p: [0, (hs + R3 * hw * 0.6) / 2, 0.1], s: [0.09, hs + R3 * hw * 0.6, 1] }, C.or, { v: 0.02 });
+        ajouter('or', geo('pl', () => new THREE.PlaneGeometry(1, 1)), { p: [0, hs * 0.45 + 0.045, 0.1], s: [w, 0.09, 1] }, C.or, { v: 0.02 });
+        ajouter('or', geo('pl', () => new THREE.PlaneGeometry(1, 1)), { p: [0, -0.1, 0.16], s: [w + 0.9, 0.3, 1] }, C.orO, { v: 0.03 });
         if (opt.clef) boule('or', 0, hs + R3 * (hw + 0.24) + 0.05, 0.14, 0.18, C.or);
       });
     }
@@ -165,7 +165,7 @@
         const ring = new THREE.Shape(); ring.absarc(0, 0, r + 0.4, 0, 2 * PI, false);
         const trou = new THREE.Path(); trou.absarc(0, 0, r - 0.02, 0, 2 * PI, true); ring.holes.push(trou);
         plat('or', ring, { p: [0, 0, 0.1] }, C.or, { v: 0.02 });
-        for (let k = 0; k < 4; k++) boite('or', 0, 0, 0.12, 0.12, 2 * r, 0.08, C.or, { r: [0, 0, k * PI / 4], v: 0 });
+        for (let k = 0; k < 4; k++) ajouter('or', geo('pl', () => new THREE.PlaneGeometry(1, 1)), { p: [0, 0, 0.12], r: [0, 0, k * PI / 4], s: [0.12, 2 * r, 1] }, C.or, { v: 0 });
         boule('or', 0, 0, 0.15, r * 0.18, C.or);
       });
     }
@@ -193,7 +193,7 @@
       });
     }
     function pointe(x, y, z, hs, cr) {
-      boule('or', x, y, z, 0.85, C.or, { v: 0.02 });
+      boule('or', x, y, z, 0.85, C.or, { v: 0.02, d: 1 });
       cone('or', x, y + 0.5, z, 0.3, hs, 6, C.or, { v: 0.02 });
       boule('or', x, y + hs + 0.4, z, 0.35, C.or, { v: 0.02 });
       etincelles.push([x, y + 0.3, z, 3 + Math.floor(rnd() * 5), rnd() * 2 * PI]);
@@ -299,13 +299,13 @@
       const x = s * (9 + rnd() * 30), z = 2 + rnd() * 26;
       if (Math.abs(x) < demiRampe(z) + 2.5) continue;
       if (Math.abs(x) < 24 && z < 15 && Math.abs(x) > 12) continue;   // escaliers
-      if (rnd() < 0.3) boule('sol', x, 0.75, z, 0.9 + rnd() * 0.7, C.herbe[2], { v: 0.1, ao: false });
+      if (rnd() < 0.3) boule('sol', x, 0.75, z, 0.9 + rnd() * 0.7, C.herbe[2], { v: 0.1, ao: false, d: 1 });
       else for (let k = 0; k < 3; k++) boule('sol', x + (rnd() - 0.5) * 1.2, 0.3, z + (rnd() - 0.5) * 1.2, 0.2, coul[Math.floor(rnd() * 4)], { v: 0.06, ao: false });
     }
     // arbustes sphériques de part et d'autre de l'enceinte
     [[-34, 12], [34, 12], [-38, 22], [38, 22], [-27, 24], [27, 24]].forEach((p, i) => {
       cyl('sol', p[0], 0.06, p[1], 0.25, 0.25, 2.2, 6, 0x9b6a8a, { ao: false });
-      boule('sol', p[0], 3.4, p[1], 2.1 + (i % 2) * 0.4, i % 2 ? 0xffa0cf : 0x9fe090, { v: 0.1, ao: false });
+      boule('sol', p[0], 3.4, p[1], 2.1 + (i % 2) * 0.4, i % 2 ? 0xffa0cf : 0x9fe090, { v: 0.1, ao: false, d: 1 });
     });
 
     // =====================================================================
@@ -402,7 +402,7 @@
       const hw = 2.77, hs = (HOG - 0.03) - R3 * hw;
       const pts = [[hw, 0]].concat(ptsOgive(hw, hs, 8), [[-hw, 0]]);
       const prof = (k, e) => pts.map((p) => [p[0] * (1 - e), 4 + (p[1] - 4) * (1 - e * 0.5)]);
-      const nS = 14, cw = new THREE.Color(C.pierre2), cb = new THREE.Color(C.pierreO), ch = new THREE.Color(0xf6dcd0);
+      const nS = 14, cw = new THREE.Color(0xb08ae0), cb = new THREE.Color(0xa47ad8), ch = new THREE.Color(0xe9b8c8);
       const nP = pts.length;
       for (let j = 0; j < nP - 1; j++) {
         const t = Math.abs(j - (nP - 2) / 2) / ((nP - 2) / 2); // 1 aux pieds, 0 au sommet
@@ -421,7 +421,7 @@
       }
       // sol du passage (dalles) et seuil
       for (let i = 0; i < 14; i++) for (let k = 0; k < 4; k++) {
-        const c = ((i + k) % 2) ? C.dalle[0] : C.dalle[1];
+        const c = ((i + k) % 2) ? 0xd8bff0 : 0xe6cbb8;
         const x0 = -hw + k * hw / 2, x1 = x0 + hw / 2, z0 = -i, z1 = -(i + 1);
         quad('interieur', [x0, 0.12, z1], [x1, 0.12, z1], [x1, 0.12, z0], [x0, 0.12, z0], c, { v: 0.03 });
       }
@@ -576,11 +576,11 @@
       for (let x = -(W - EP); x < W - EP - 0.01; x += t) for (let z = -EP; z > -(PROF - EP) + 0.01; z -= t) {
         const xc = x + t / 2, zc = z - t / 2;
         if (Math.abs(xc) < LG + 0.2 && zc > -PG - 0.1) continue;
-        const c = (Math.round((x + z) / t) % 2) ? C.dalle[0] : C.dalle[1];
+        const c = (Math.round((x + z) / t) % 2) ? 0xd9c0f0 : 0xe8cdb8;
         quad('interieur', [x, y, z - t], [x + t, y, z - t], [x + t, y, z], [x, y, z], c, { v: 0.03 });
       }
       // dalles de couleur dans l'axe : tapis rose
-      for (let z = -PG; z > -41.9; z -= 3) quad('interieur', [-2.4, y + 0.02, z - 3], [2.4, y + 0.02, z - 3], [2.4, y + 0.02, z], [-2.4, y + 0.02, z], C.rose, { v: 0.04 });
+      for (let z = -PG; z > -41.9; z -= 3) quad('interieur', [-2.4, y + 0.02, z - 3], [2.4, y + 0.02, z - 3], [2.4, y + 0.02, z], [-2.4, y + 0.02, z], 0xe58ab8, { v: 0.04 });
       // jardinières : massifs de fleurs aux angles
       [[-21, -9], [21, -9], [-21, -64], [21, -64]].forEach(([x, z]) => {
         boite('murs', x, 0.12, z, 8, 0.8, 5, C.cremeO);
@@ -590,12 +590,12 @@
     // fontaine
     {
       const fz = -34;
-      cyl('murs', 0, 0.12, fz, 3.3, 3.3, 1.0, 12, C.pierre2);
-      cyl('or', 0, 1.0, fz, 3.45, 3.45, 0.2, 12, C.or, { v: 0.02 });
-      cyl('vitres', 0, 0.95, fz, 3.0, 3.0, 0.05, 12, 0x8fe4ff, { v: 0.04, ao: false });
+      cyl('murs', 0, 0.12, fz, 3.3, 3.3, 1.0, 12, C.pierre2, { cap: true });
+      cyl('or', 0, 1.0, fz, 3.45, 3.45, 0.2, 12, C.or, { v: 0.02, cap: true });
+      cyl('vitres', 0, 0.95, fz, 3.0, 3.0, 0.05, 12, 0x8fe4ff, { v: 0.04, ao: false, cap: true });
       cyl('murs', 0, 1.0, fz, 0.7, 0.55, 2.4, 8, C.pierre);
-      cyl('murs', 0, 3.2, fz, 0.4, 1.5, 0.7, 10, C.pierre2);
-      cyl('or', 0, 3.9, fz, 1.5, 1.5, 0.15, 10, C.or, { v: 0.02 });
+      cyl('murs', 0, 3.2, fz, 0.4, 1.5, 0.7, 10, C.pierre2, { cap: true });
+      cyl('or', 0, 3.9, fz, 1.5, 1.5, 0.15, 10, C.or, { v: 0.02, cap: true });
       cyl('murs', 0, 3.9, fz, 0.2, 0.2, 1.4, 6, C.pierre);
       boule('or', 0, 5.6, fz, 0.55, C.or, { v: 0.02 });
       etincelles.push([0, 5.7, fz, 4, 1.3]);
@@ -603,8 +603,8 @@
     // arbres en boule des deux côtés de la cour
     [[-16, -22], [16, -22], [-22, -36], [22, -36]].forEach((p, i) => {
       cyl('sol', p[0], 0.12, p[1], 0.3, 0.22, 2.8, 6, 0x9b6a8a, { ao: false });
-      boule('sol', p[0], 4.6, p[1], 2.4, i % 2 ? 0xffa0cf : 0xa3e48f, { v: 0.1, ao: false });
-      boule('sol', p[0] + 0.3, 6.1, p[1] - 0.2, 1.4, i % 2 ? 0xffbddf : 0xc2f0a0, { v: 0.1, ao: false });
+      boule('sol', p[0], 4.6, p[1], 2.4, i % 2 ? 0xffa0cf : 0xa3e48f, { v: 0.1, ao: false, d: 1 });
+      boule('sol', p[0] + 0.3, 6.1, p[1] - 0.2, 1.4, i % 2 ? 0xffbddf : 0xc2f0a0, { v: 0.1, ao: false, d: 1 });
     });
 
     // palais (hall) : façade sur la cour
@@ -676,13 +676,13 @@
     const mats = {
       sol: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x10300e), polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }),
       murs: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x3a2458) }),
-      toits: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x66153f), side: THREE.DoubleSide }),
-      or: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x3a2606), side: THREE.DoubleSide }),
+      toits: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x66153f) }),
+      or: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x3a2606) }),
       vitres: new THREE.MeshBasicMaterial({ vertexColors: true, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
-      vitraux: new THREE.MeshBasicMaterial({ vertexColors: true, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, side: THREE.DoubleSide }),
-      interieur: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x4a3070), side: THREE.DoubleSide }),
+      vitraux: new THREE.MeshBasicMaterial({ vertexColors: true, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
+      interieur: new THREE.MeshLambertMaterial({ vertexColors: true, emissive: new THREE.Color(0x2a1848), side: THREE.DoubleSide }),
     };
-    const emiBase = new THREE.Color(0x4a3070), emiOr = new THREE.Color(0xffcf6a);
+    const emiBase = new THREE.Color(0x2a1848), emiOr = new THREE.Color(0xffcf6a);
     Object.keys(seaux).forEach((nom) => {
       const s = seaux[nom];
       const g = new THREE.BufferGeometry();
@@ -778,18 +778,18 @@
     };
     const lueurs = [];
     // tranches dans le passage (section de l'ogive)
-    for (let k = 0; k < 5; k++) lueurs.push({ m: mkGlow(6.4, 10.6, 0, 4.6, -2.6 - k * 2.6), k: 0.35 });
-    lueurs.push({ m: mkGlow(9, 12, 0, 4.8, -14.2), k: 0.9 });                   // sortie du passage
-    lueurs.push({ m: mkGlow(70, 40, 0, 14, -30), k: 1.0 });                      // la cour inondée
+    for (let k = 0; k < 5; k++) lueurs.push({ m: mkGlow(6.4, 10.6, 0, 4.6, -2.6 - k * 2.6), k: 0.1 });
+    lueurs.push({ m: mkGlow(9, 12, 0, 4.8, -14.2), k: 0.6, p: 2.6 });                   // sortie du passage
+    lueurs.push({ m: mkGlow(70, 40, 0, 14, -30), k: 1.0, p: 3.2 });                      // la cour inondée
     lueurs.push({ m: mkGlow(22, 24, 0, 6, 0.9), k: 0.8 });                        // halo devant la porte
     lueurs.push({ m: mkGlow(16, 34, 0, 0.35, 15, [-PI / 2, 0, 0]), k: 0.55 });    // reflet sur la rampe
     let lueurU = 0;
     function setLueur(u) {
       lueurU = borne(u);
-      const e = lisse(lueurU);
-      lueurs.forEach((l) => { l.m.material.opacity = Math.min(1, e * l.k * 1.4); l.m.visible = e > 0.003; });
-      mats.interieur.emissive.copy(emiBase).lerp(emiOr, e);
-      mats.murs.emissive.setRGB(0.23 + 0.08 * e, 0.14 + 0.06 * e, 0.34);
+      const e = lisse(lueurU), ep = Math.pow(e, 1.7);
+      lueurs.forEach((l) => { const q = Math.pow(e, l.p || 1.7); l.m.material.opacity = Math.min(1, q * l.k * 1.2); l.m.visible = q > 0.003; });
+      mats.interieur.emissive.copy(emiBase).lerp(emiOr, Math.pow(e, 2.6) * 0.85);
+      mats.murs.emissive.setRGB(0.23 + 0.08 * ep, 0.14 + 0.06 * ep, 0.34);
     }
 
     function maj(T) { majDrapeaux(T); majEtincelles(T); }

@@ -102,10 +102,10 @@
           "fin": 2.45,
           "taille": 150,
           "tailleSous": 44,
-          "voile": "radial-gradient(circle at 50% 52%, #2a0d5ad9 0%, #12062cf2 100%)",
-          "opaciteVoile": 0.9,
           "glow": "#c46bff",
-          "ombre": "#4a1a8a"
+          "ombre": "#4a1a8a",
+          "voile": "radial-gradient(circle at 50% 52%, #2a0d5ad9 0%, #12062cf2 100%)",
+          "opaciteVoile": 0.9
         },
         "vol": {
           "depart": 2.2,

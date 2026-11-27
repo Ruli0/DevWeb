@@ -1,0 +1,60 @@
+{
+  "id": "princes",
+  "titre": "4 princesses, 2e partie",
+  "fond": "chemin",
+  "costume": "prince",
+  "mots": [
+    {
+      "mot": "BELLE",
+      "indice": "Elle aime une bête",
+      "reponse": "C'est Belle !"
+    },
+    {
+      "mot": "MULAN",
+      "indice": "Elle se déguise en soldat",
+      "reponse": "C'est Mulan !"
+    },
+    {
+      "mot": "AURORE",
+      "indice": "Elle dort cent ans",
+      "reponse": "C'est Aurore !"
+    },
+    {
+      "mot": "POCAHONTAS",
+      "indice": "Elle parle avec le vent",
+      "reponse": "C'est Pocahontas !"
+    }
+  ],
+  "reactions": [
+    "Trop facile !",
+    "Ça se corse…",
+    "Ouh là, c'est dur !",
+    "Personne trouve celle-là !"
+  ],
+  "accroche": {
+    "texte": "AIDE-MOI !",
+    "sous": "4 princesses ouvrent le château 🏰",
+    "voix": "Aide-moi ! Quatre princesses ouvrent le château !",
+    "taille": 150,
+    "tailleSous": 44,
+    "glow": "#c46bff",
+    "ombre": "#4a1a8a",
+    "voile": "radial-gradient(circle at 50% 52%, #2a0d5ad9 0%, #12062cf2 100%)",
+    "opaciteVoile": 0.9
+  },
+  "final": "Un like si t'as tout trouvé !",
+  "cta": "Laquelle t'as pas trouvée ? 👇",
+  "etiquette": "PRINCESSE",
+  "publication": {
+    "texte": "Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princesses pour lui ouvrir la porte ! Laquelle t'as pas trouvée ?",
+    "hashtags": [
+      "#quiz",
+      "#princesse",
+      "#dessinanime",
+      "#devinette",
+      "#hibou"
+    ],
+    "commentaire": "Laquelle t'as pas trouvée ? 👇"
+  },
+  "fond3dOpts": {}
+}
