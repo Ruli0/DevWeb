@@ -1,0 +1,184 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "princes-1",
+  "titre": "4 princesses, 2e partie, étage 1 (belle)",
+  "rubrique": "voyage",
+  "numero": 81,
+  "voix": null,
+  "musique": "aucune",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "reve",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "BELLE",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Elle aime une bête"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          3.2
+        ],
+        "reponses": [
+          8.7
+        ],
+        "fin": 2.85,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2.0,
+          "ordre": [
+            4,
+            2
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "aucune",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "PRINCESSE 1/4",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.4,
+            "texte": "Aide-moi ! Quatre princesses ouvrent le château !",
+            "emotion": "panique"
+          },
+          {
+            "t": 3.2,
+            "texte": "Elle aime une bête…",
+            "emotion": "neutre",
+            "lecture": true
+          },
+          {
+            "t": 5.22,
+            "texte": "Trop facile !",
+            "emotion": "defi"
+          },
+          {
+            "t": 9.22,
+            "texte": "C'est Belle !",
+            "emotion": "joie"
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "danse": false,
+        "accroche": {
+          "texte": "AIDE-MOI !",
+          "sous": "4 princesses ouvrent le château 🏰",
+          "fin": 2.45,
+          "taille": 150,
+          "tailleSous": 44,
+          "voile": "radial-gradient(circle at 50% 52%, #2a0d5ad9 0%, #12062cf2 100%)",
+          "opaciteVoile": 0.9,
+          "glow": "#c46bff",
+          "ombre": "#4a1a8a"
+        },
+        "vol": {
+          "depart": 2.2,
+          "arrivee": 3.0,
+          "pose": 4.52,
+          "x": 855,
+          "y": -871,
+          "direct": true
+        },
+        "costume": "prince",
+        "croisiere": true
+      },
+      "sons": [
+        {
+          "f": "whoosh.wav",
+          "t": 2.11,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 2.2,
+          "v": 0.4
+        },
+        {
+          "f": "ailes.wav",
+          "t": 2.2,
+          "v": 0.3
+        },
+        {
+          "f": "ailes.wav",
+          "t": 3.72,
+          "v": 0.25
+        },
+        {
+          "f": "pouf.wav",
+          "t": 4.52,
+          "v": 0.5
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 5.22,
+          "v": 0.3
+        },
+        {
+          "f": "merveille.wav",
+          "t": 9.3,
+          "v": 0.4
+        }
+      ],
+      "amorceBoucle": 0.4,
+      "fond3d": "chemin",
+      "fond3dOpts": {
+        "t0": 0.0,
+        "L": 38.8889
+      },
+      "fond3dRes": [
+        720,
+        1280
+      ]
+    }
+  ],
+  "publication": {
+    "texte": "Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princesses pour lui ouvrir la porte ! Laquelle t'as pas trouvée ?",
+    "hashtags": [
+      "#quiz",
+      "#princesse",
+      "#dessinanime",
+      "#devinette",
+      "#hibou"
+    ],
+    "commentaire": "Laquelle t'as pas trouvée ? 👇"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true
+}

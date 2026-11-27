@@ -1,0 +1,150 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "princes-4",
+  "titre": "4 princesses, 2e partie, étage 4 (pocahontas)",
+  "rubrique": "voyage",
+  "numero": 84,
+  "voix": null,
+  "musique": "aucune",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "reve",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "POCAHONTAS",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Elle parle avec le vent"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          0.25
+        ],
+        "reponses": [
+          6.95
+        ],
+        "fin": 4.4889,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2.4,
+          "ordre": [
+            9,
+            5
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "aucune",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "PRINCESSE 4/4",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.25,
+            "texte": "Elle parle avec le vent…",
+            "emotion": "neutre",
+            "lecture": true
+          },
+          {
+            "t": 5.07,
+            "texte": "Personne trouve celle-là !",
+            "emotion": "agace"
+          },
+          {
+            "t": 7.47,
+            "texte": "C'est Pocahontas !",
+            "emotion": "joie",
+            "folie": "emerveille"
+          },
+          {
+            "t": 8.75,
+            "texte": "Un like si t'as tout trouvé !",
+            "emotion": "joie"
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "cta": {
+          "t": 8.4,
+          "texte": "Laquelle t'as pas trouvée ? 👇",
+          "haut": true
+        },
+        "danse": false,
+        "costume": "prince",
+        "croisiere": true
+      },
+      "sons": [
+        {
+          "f": "hou-hou.wav",
+          "t": 5.1,
+          "v": 0.4
+        },
+        {
+          "f": "merveille.wav",
+          "t": 7.42,
+          "v": 0.55
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 10.7,
+          "v": 0.3
+        }
+      ],
+      "fond3d": "chemin",
+      "fond3dOpts": {
+        "t0": 27.85,
+        "L": 38.8889
+      },
+      "fond3dRes": [
+        720,
+        1280
+      ]
+    }
+  ],
+  "publication": {
+    "texte": "Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princesses pour lui ouvrir la porte ! Laquelle t'as pas trouvée ?",
+    "hashtags": [
+      "#quiz",
+      "#princesse",
+      "#dessinanime",
+      "#devinette",
+      "#hibou"
+    ],
+    "commentaire": "Laquelle t'as pas trouvée ? 👇"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true
+}

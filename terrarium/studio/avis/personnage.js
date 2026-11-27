@@ -75,8 +75,29 @@
     joie: [[-94, -424, -52, -462, -12, -430], [12, -430, 52, -462, 94, -424]],
   };
   const sourcil = (v) => `M${v[0]} ${v[1]} Q${v[2]} ${v[3]} ${v[4]} ${v[5]}`;
-  function hibou2() {
-    const yT = -338;
+  // Costume « prince » (option presentateur.costume) : couronne dans la tête, cape derrière le corps (.h2-cape ondule, voir plans.js),
+  // col d'hermine et broche devant les ailes. Sans option : aucune de ces pièces, le dessin est inchangé.
+  function costumePrince() {
+    const OR = 'fill="#ffcf3a"', LIS = 'stroke="#ffffff" stroke-opacity=".95" stroke-width="6" stroke-linejoin="round"';
+    const hem = 'Q-165 6 -130 -8 Q-95 8 -60 -6 Q-30 8 0 -4 Q30 8 60 -6 Q95 8 130 -8 Q165 6 200 -16';
+    const cape = '<defs><mask id="h2-mcape" maskUnits="userSpaceOnUse" x="-400" y="-400" width="800" height="500"><rect x="-400" y="-400" width="800" height="500" fill="#fff"/><ellipse cx="0" cy="-168" rx="120" ry="166" fill="#5c5c5c"/></mask></defs>'
+      + '<g mask="url(#h2-mcape)"><g class="h2-cape">'
+      + `<path d="M-112 -262 C-150 -230 -196 -120 -200 -16 ${hem} C196 -120 150 -230 112 -262 Q0 -290 -112 -262 Z" fill="#d02a55" ${LIS}/>`
+      + `<path d="M-200 -16 ${hem} L196 -58 Q100 -44 0 -52 Q-100 -44 -196 -58 Z" fill="#ffb3c6"/>`
+      + '<path d="M-84 -250 Q-124 -140 -146 -40 M-34 -230 Q-48 -140 -52 -60 M34 -230 Q48 -140 52 -60 M84 -250 Q124 -140 146 -40" fill="none" stroke="#9c1a3e" stroke-opacity=".5" stroke-width="6" stroke-linecap="round"/>'
+      + `<path d="M-200 -16 ${hem}" fill="none" stroke="#ffcf3a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>`
+      + '</g></g>';
+    const queue = ([x, y]) => `<path d="M${x} ${y} l-4 -10 q4 -4 8 0 z" fill="#2a2230"/>`;
+    const col = '<path d="M-124 -250 Q-124 -214 -86 -206 Q-62 -196 -40 -204 Q0 -190 40 -204 Q62 -196 86 -206 Q124 -214 124 -250 Q0 -276 -124 -250 Z" fill="#fbfbff" stroke="#b7c9e6" stroke-width="4" stroke-linejoin="round"/>'
+      + [[-104, -224], [-76, -210], [-46, -212], [0, -204], [46, -212], [76, -210], [104, -224], [-60, -226], [60, -226]].map(queue).join('')
+      + `<circle cx="0" cy="-206" r="13" ${OR} stroke="#ffffff" stroke-width="4"/><circle cx="0" cy="-206" r="6.5" fill="#ff3f8e" stroke="#ffffff" stroke-width="2"/>`;
+    const couronne = `<g transform="translate(0 -432) scale(1.18) translate(0 432)"><path d="M-46 -430 L-46 -490 L-25 -460 L0 -505 L25 -460 L46 -490 L46 -430 Z" ${OR} stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/><path d="M-46 -444 H46" stroke="#e0a020" stroke-width="5"/>`
+      + '<circle cx="-46" cy="-492" r="7" fill="#ffe9a0" stroke="#fff" stroke-width="3"/><circle cx="0" cy="-507" r="8" fill="#ffe9a0" stroke="#fff" stroke-width="3"/><circle cx="46" cy="-492" r="7" fill="#ffe9a0" stroke="#fff" stroke-width="3"/>'
+      + '<circle cx="0" cy="-436" r="8" fill="#ff3f8e" stroke="#fff" stroke-width="2.5"/><circle cx="-26" cy="-437" r="5.5" fill="#3fa0ff" stroke="#fff" stroke-width="2.5"/><circle cx="26" cy="-437" r="5.5" fill="#3fa0ff" stroke="#fff" stroke-width="2.5"/></g>';
+    return { cape, col, couronne };
+  }
+  function hibou2(opts) {
+    const yT = -338, K = opts && opts.costume === 'prince' ? costumePrince() : { cape: '', col: '', couronne: '' };
     const VERRE = 'fill="#c9ecff" fill-opacity=".34"', FONCE = 'fill="#a6d8f7" fill-opacity=".46"';
     const BORDV = 'stroke="#ffffff" stroke-opacity=".95" stroke-width="7" stroke-linejoin="round"';
     const reflet = (d, l) => `<path d="${d}" fill="none" stroke="#ffffff" stroke-opacity=".8" stroke-width="${l}" stroke-linecap="round"/>`;
@@ -88,7 +109,7 @@
     const oeil = (x, c) => `<clipPath id="h2-c${c}"><circle cx="${x}" cy="${yT}" r="50"/></clipPath><circle cx="${x}" cy="${yT}" r="52" fill="#ffffff" fill-opacity=".9" ${BORDV}/>`
       + `<g clip-path="url(#h2-c${c})"><g class="h2-p${c}"><circle cx="${x}" cy="${yT + 2}" r="26" fill="#121c28"/><circle cx="${x + 9}" cy="${yT - 8}" r="9" fill="#ffffff"/><circle cx="${x - 8}" cy="${yT + 12}" r="4" fill="#ffffff" fill-opacity=".8"/></g>`
       + `<rect class="h2-l${c}" x="${x - 56}" y="${yT - 56}" width="112" height="0" fill="#8fb8d6"/></g><circle cx="${x}" cy="${yT}" r="52" fill="none" ${BORDV}/>`;
-    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" ${FONCE} ${BORDV}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" ${VERRE} ${BORDV}/>`
+    const tete = `<path d="M-112 ${yT - 46} L-128 ${yT - 150} L-52 ${yT - 96} Z M112 ${yT - 46} L128 ${yT - 150} L52 ${yT - 96} Z" ${FONCE} ${BORDV}/><ellipse cx="0" cy="${yT}" rx="128" ry="112" ${VERRE} ${BORDV}/>${K.couronne}`
       + reflet(`M-104 ${yT - 44} Q-72 ${yT - 92} -22 ${yT - 100}`, 8)
       + `<ellipse cx="-92" cy="${yT + 48}" rx="22" ry="12" fill="#ff7aa2" fill-opacity=".45"/><ellipse cx="92" cy="${yT + 48}" rx="22" ry="12" fill="#ff7aa2" fill-opacity=".45"/>`
       + oeil(-52, 'g') + oeil(52, 'd')
@@ -98,12 +119,12 @@
       + `<path d="M-19 ${yT + 26} L19 ${yT + 26} L0 ${yT + 52} Z" fill="#ffd45c" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/>`;
     // La triche : la réponse écrite sur le flanc, sous l'aile gauche (visible seulement quand il la soulève). Texte posé par plans.js.
     const triche = '<text class="h2-triche" x="0" y="0" transform="translate(-132 -72) rotate(-82)" font-size="44" font-weight="900" font-family="Inter, Arial, sans-serif" fill="#ffd45c" stroke="#13233d" stroke-width="8" paint-order="stroke" opacity="0"></text>';
-    return `<g class="h2-pos"><g id="h2-hibou"><g class="h2-corps">${patte(-44)}${patte(44)}${corps}${triche}${aile('h2-ag', -104, -1)}${aile('h2-ad', 104, 1)}<g class="h2-tete">${tete}</g></g></g></g>`;
+    return `<g class="h2-pos"><g id="h2-hibou"><g class="h2-corps">${K.cape}${patte(-44)}${patte(44)}${corps}${triche}${aile('h2-ag', -104, -1)}${aile('h2-ad', 104, 1)}${K.col}<g class="h2-tete">${tete}</g></g></g></g>`;
   }
 
-  function svg(pose = 'debout', allure = 'bonnet') {
+  function svg(pose = 'debout', allure = 'bonnet', opts = {}) {
     if (allure === 'hibou') return hibou(pose);
-    if (allure === 'hibou2') return hibou2();
+    if (allure === 'hibou2') return hibou2(opts);
     const P = POSES[pose] || POSES.debout, A = ALLURES[allure] || ALLURES.bonnet;
     const yB = P.bassin || -200, yE = yB - 150;                    // bassin et épaules
     // Chaque membre est dessiné autour de son articulation (l'origine de son groupe) : il tourne autour d'elle sans calcul.

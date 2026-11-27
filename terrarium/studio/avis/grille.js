@@ -233,6 +233,7 @@
 .jeu .qcm .q-compte .qc-arc { fill: none; stroke-width: 9; stroke-linecap: round; }
 .jeu .qcm .q-compte span { position: relative; font: 900 64px/1 '${P.titre}'; color: #fff; text-shadow: 0 3px 0 #0a3a5a; }
 .jeu .qcm .q-suite { position: absolute; left: 80px; top: 1030px; width: 820px; text-align: center; font: 900 28px/1 '${P.titre}'; letter-spacing: .18em; color: #ffffffd9; text-shadow: 0 3px 10px #00141f99; }
+.jeu .voile-ui { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(28,10,66,.62) 0%, rgba(28,10,66,.34) 20%, rgba(28,10,66,.08) 42%, rgba(0,0,0,0) 56%, rgba(20,6,50,.22) 78%, rgba(20,6,50,.5) 100%); }
 .jeu .fond-3d { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; z-index: 0; }
 .jeu.f3d .fond-papier, .jeu.f3d .danse { display: none; }
 .jeu .fond-anime { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }

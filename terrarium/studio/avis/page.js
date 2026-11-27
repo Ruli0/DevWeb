@@ -167,6 +167,7 @@ ${lire('studio/avis/personnage.js')}
 ${f.orbe ? lire('studio/avis/orbe.js') : ''}
 ${troisD ? lire('studio/avis/decors3d.js') : ''}
 ${f.plans.some((pl) => pl.p.fond3d) ? lire('studio/avis/fond3d.js') : ''}
+${f.plans.some((pl) => pl.p.fond3d === 'chemin') ? ['biomes3d-a.js', 'biomes3d-b.js', 'chateau3d.js', 'chemin3d.js'].filter((n) => fs.existsSync(path.join(RACINE, 'studio/avis', n))).map((n) => lire('studio/avis/' + n)).join('\n') : ''}
 ${lire('studio/avis/lecteur.js')}
 (function () {
   gsap.registerPlugin(SplitText, DrawSVGPlugin);
