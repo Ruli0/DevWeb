@@ -287,20 +287,21 @@
           const ecorce = { c0: H(0x4d3b4a), c1: H(0x86675a), teinte: 0, jit: 0.1 };
           [-1, 1].forEach((cote, ic) => {
             const base = W(cote * 5.4, 0, 0), yb = ctx.hauteur(base[0], base[2]) - 0.3; base[1] = yb;
-            const m1 = W(cote * 4.7, 4.6, 0.4), m2 = W(cote * 2.9, 8.4, 0), m3 = W(cote * 0.8, 10.2, -0.3);
+            const m1 = W(cote * 4.6, 5.2, 0.3), m2 = W(cote * 3.0, 9.6, 0), m3 = W(cote * 0.9, 12.0, -0.3);
             O.occuper(base[0], base[2], 3);
-            B.push(O.segment(base, m1, 0.62, 0.5, 7, Object.assign({ seed: ia * 7 + ic }, ecorce)));
-            B.push(O.segment(m1, m2, 0.5, 0.4, 7, Object.assign({ seed: ia * 7 + ic + 3 }, ecorce)));
-            B.push(O.segment(m2, m3, 0.4, 0.3, 6, Object.assign({ seed: ia * 7 + ic + 5 }, ecorce)));
+            B.push(O.segment(base, m1, 0.55, 0.42, 7, Object.assign({ seed: ia * 7 + ic }, ecorce)));
+            [m1, m2].forEach((j, jj) => B.push(prim(O.ico(0.5 - jj * 0.08, 0), Object.assign({ p: j, seed: 5 }, ecorce))));
+            B.push(O.segment(m1, m2, 0.42, 0.34, 7, Object.assign({ seed: ia * 7 + ic + 3 }, ecorce)));
+            B.push(O.segment(m2, m3, 0.34, 0.26, 6, Object.assign({ seed: ia * 7 + ic + 5 }, ecorce)));
             B.push(prim(O.cone(1.5, 1.2, 7), Object.assign({ p: [base[0], yb - 0.2, base[2]], seed: 9 }, ecorce)));
           });
           for (let k = 0; k < 12; k += 1) {
-            const lat = (k / 11 - 0.5) * 10.5, al = ((k * 37) % 7 - 3.5) * 0.9, up = 9.6 + Math.cos(lat * 0.22) * 1.0 + ((k * 13) % 5) * 0.35, r = 2.0 + ((k * 11) % 5) * 0.3;
+            const lat = (k / 11 - 0.5) * 10.5, al = ((k * 37) % 7 - 3.5) * 0.9, up = 11.8 + Math.cos(lat * 0.22) * 1.0 + ((k * 13) % 5) * 0.35, r = 2.0 + ((k * 11) % 5) * 0.3;
             const pal = (k + ia) % 3 === 0 ? [H(0x1f6a60), H(0x62c8a0)] : (k + ia) % 3 === 1 ? [H(0x2f6c58), H(0x78cc82)] : [H(0x4a6aa8), H(0x9ab4f0)];
             const w = W(lat, up, al); B.push(prim(O.ico(r, 1), { p: w, s: [1.1, 0.8, 1.1], c0: pal[0], c1: pal[1], jit: 0.35, seed: 60 + k + ia * 20, gam: 0.8, teinte: 0 }));
           }
           for (let k = 0; k < 8; k += 1) { // guirlande de petites lanternes
-            const lat = (k / 7 - 0.5) * 8, up = 8.2 + Math.cos(lat * 0.3) * 0.9, w = W(lat, up, ((k % 3) - 1) * 1.1), col = [H(0xffe488), H(0x7ff0ff), H(0xff9ad8)][(k + ia) % 3];
+            const lat = (k / 7 - 0.5) * 8, up = 10.2 + Math.cos(lat * 0.3) * 0.9, w = W(lat, up, ((k % 3) - 1) * 1.1), col = [H(0xffe488), H(0x7ff0ff), H(0xff9ad8)][(k + ia) % 3];
             Lu.push(prim(O.ico(0.22, 0), { p: w, c: col, vari: 0.03, teinte: 0 }));
             B.push(O.segment([w[0], w[1] + 0.2, w[2]], [w[0], w[1] + 1.3, w[2]], 0.02, 0.02, 3, { c: H(0x3a5a4a), teinte: 0 }));
           }
@@ -313,14 +314,20 @@
       const exTr = (x, z) => dansClairiere(x, z, 1.5);
       // pin élancé
       const geoPinA = () => {
-        const P = [prim(O.cyl(0.42, 0.14, 11, 6), Object.assign({ seed: 1, jit: 0.04 }, bois(H(0x7a5f58))))];
-        for (let k = 0; k < 6; k += 1) P.push(prim(O.cone(2.7 * (1 - k * 0.15), 3.3 - k * 0.1, 7), { p: [0, 2.0 + k * 1.75, 0], r: [0, k * 0.8, 0], c0: H(0x174f56), c1: H(0x4fb08a), jit: 0.28, seed: 10 + k, vari: 0.12 }));
+        const P = [prim(O.cyl(0.42, 0.14, 11, 6, true), Object.assign({ seed: 1, jit: 0.04 }, bois(H(0x7a5f58))))];
+        for (let k = 0; k < 6; k += 1) P.push(prim(O.cone(2.7 * (1 - k * 0.15), 3.3 - k * 0.1, 7, k > 0), { p: [0, 2.0 + k * 1.75, 0], r: [0, k * 0.8, 0], c0: H(0x174f56), c1: H(0x4fb08a), jit: 0.28, seed: 10 + k, vari: 0.12 }));
         return O.fusion(P);
       };
       // pin trapu aux grands étages
       const geoPinB = () => {
         const P = [prim(O.cyl(0.5, 0.2, 6, 6), Object.assign({ seed: 2 }, bois(H(0x6e5560))))];
-        [[3.8, 3.4, 1.4], [2.9, 3.0, 3.4], [2.1, 2.7, 5.2], [1.2, 2.2, 6.8]].forEach((c, k) => P.push(prim(O.cone(c[0], c[1], 8), { p: [0, c[2], 0], r: [0, k * 0.5, 0], c0: H(0x1b5a5c), c1: H(0x5ec498), jit: 0.34, seed: 30 + k })));
+        [[3.8, 3.4, 1.4], [2.9, 3.0, 3.4], [2.1, 2.7, 5.2], [1.2, 2.2, 6.8]].forEach((c, k) => P.push(prim(O.cone(c[0], c[1], 8, k > 0), { p: [0, c[2], 0], r: [0, k * 0.5, 0], c0: H(0x1b5a5c), c1: H(0x5ec498), jit: 0.34, seed: 30 + k })));
+        return O.fusion(P);
+      };
+      // sapin simple (peu coûteux, pour épaissir)
+      const geoSapin = () => {
+        const P = [prim(O.cyl(0.3, 0.1, 5, 5, true), Object.assign({ seed: 8 }, bois(H(0x7a5f58))))];
+        [[2.0, 2.6, 1.2], [1.55, 2.4, 2.7], [1.1, 2.2, 4.1], [0.6, 1.6, 5.5]].forEach((c, k) => P.push(prim(O.cone(c[0], c[1], 6, k > 0), { p: [0, c[2], 0], r: [0, k, 0], c0: H(0x1a5a5a), c1: H(0x58b890), jit: 0.22, seed: 80 + k })));
         return O.fusion(P);
       };
       // chêne large
@@ -329,7 +336,7 @@
         P.push(prim(O.cone(1.3, 1.1, 7), Object.assign({ seed: 4 }, bois(H(0x6a5258)))));
         P.push(O.segment([0, 3, 0], [-1.7, 5.6, 0.4], 0.32, 0.18, 5, Object.assign({ seed: 5 }, bois())));
         P.push(O.segment([0, 3.2, 0], [1.8, 5.2, -0.6], 0.3, 0.17, 5, Object.assign({ seed: 6 }, bois())));
-        [[0, 6.2, 0, 2.9], [-2.2, 5.4, 0.6, 2.2], [2.3, 5.3, -0.7, 2.3], [0.4, 4.7, 2.0, 1.9], [-0.5, 4.8, -2.0, 2.0], [0.2, 8.0, 0.2, 1.8]].forEach((b, k) =>
+        [[0, 6.2, 0, 2.9], [-2.3, 5.2, 0.6, 2.3], [2.4, 5.3, -0.7, 2.4], [0.2, 4.7, -2.0, 2.0], [0.2, 8.0, 0.2, 1.8]].forEach((b, k) =>
           P.push(prim(O.ico(b[3], 1), { p: [b[0], b[1], b[2]], s: [1.1, 0.85, 1.1], c0: H(0x1d6256), c1: H(0x6fc07a), jit: 0.42, seed: 50 + k, gam: 0.85, vari: 0.12 })));
         return O.fusion(P);
       };
@@ -337,7 +344,7 @@
       const geoBouleau = () => {
         const P = [prim(O.cyl(0.2, 0.1, 7.5, 5), { c0: H(0xcfc9d4), c1: H(0xe8e4ea), teinte: 0, seed: 4 })];
         for (let k = 0; k < 5; k += 1) P.push(prim(O.cyl(0.215, 0.215, 0.1, 5), { p: [0, 0.8 + k * 1.3, 0], c: H(0x59505e), teinte: 0, vari: 0.05 }));
-        [[0, 7.2, 0, 1.5], [0.7, 6.1, 0.4, 1.2], [-0.7, 6.4, -0.3, 1.25], [0.1, 8.4, 0.1, 1.0]].forEach((b, k) =>
+        [[0, 7.2, 0, 1.5], [0.7, 6.1, 0.4, 1.2], [-0.7, 6.6, -0.3, 1.25]].forEach((b, k) =>
           P.push(prim(O.ico(b[3], 1), { p: [b[0], b[1], b[2]], s: [1, 1.15, 1], c0: H(0x3f8a58), c1: H(0xa8dc7a), jit: 0.3, seed: 70 + k, gam: 0.85 })));
         return O.fusion(P);
       };
@@ -350,10 +357,11 @@
         return O.fusion(P);
       };
       const arbres = [
-        { geo: geoPinA(), n: 62, r: 2.2, dmin: 4.6, dmax: 44, gam: 1.15, k: 11, h: [0.7, 1.15], w: [0.75, 1.05] },
-        { geo: geoPinB(), n: 44, r: 2.8, dmin: 4.8, dmax: 42, gam: 1.2, k: 12, h: [0.8, 1.4], w: [0.8, 1.25] },
-        { geo: geoChene(), n: 40, r: 3.0, dmin: 5.4, dmax: 46, gam: 1.2, k: 13, h: [0.8, 1.5], w: [0.85, 1.4] },
-        { geo: geoBouleau(), n: 36, r: 1.6, dmin: 4.5, dmax: 40, gam: 1.1, k: 14, h: [0.8, 1.4], w: [0.8, 1.2] },
+        { geo: geoPinA(), n: 80, r: 2.2, dmin: 4.6, dmax: 44, gam: 1.15, k: 11, h: [0.7, 1.15], w: [0.75, 1.05] },
+        { geo: geoPinB(), n: 50, r: 2.8, dmin: 4.8, dmax: 42, gam: 1.2, k: 12, h: [0.8, 1.4], w: [0.8, 1.25] },
+        { geo: geoSapin(), n: 110, r: 1.5, dmin: 4.5, dmax: 46, gam: 1.1, k: 16, h: [0.8, 1.9], w: [0.75, 1.3] },
+        { geo: geoChene(), n: 30, r: 3.0, dmin: 5.4, dmax: 46, gam: 1.2, k: 13, h: [0.8, 1.5], w: [0.85, 1.4] },
+        { geo: geoBouleau(), n: 28, r: 1.6, dmin: 4.5, dmax: 40, gam: 1.1, k: 14, h: [0.8, 1.4], w: [0.8, 1.2] },
         { geo: geoParasol(), n: 14, r: 3.2, dmin: 6.5, dmax: 46, gam: 1.0, k: 15, h: [0.8, 1.3], w: [0.8, 1.2] },
       ];
       arbres.forEach((t) => {
@@ -377,7 +385,7 @@
       // buissons
       {
         const P = [prim(O.ico(1.0, 0), { p: [0, 0.5, 0], s: [1.2, 0.8, 1.1], c0: H(0x1c5a4a), c1: H(0x58b070), jit: 0.18, seed: 3, gam: 0.8 }), prim(O.ico(0.75, 0), { p: [0.8, 0.45, 0.3], s: [1, 0.8, 1], c0: H(0x246a50), c1: H(0x70c27c), jit: 0.15, seed: 4, gam: 0.8 })];
-        const R1 = R(30), l = O.semer(R1, 150, { sa, sb, dmin: 4.4, dmax: 38, gam: 1.5, r: 0.9, exclure: (x, z) => dansClairiere(x, z, -1.5) }).map((q) => ({ p: [q.x, q.y - 0.1, q.z], ry: q.a * TAU, s: 0.8 + q.b * 1.4, c: teinte(q.c) }));
+        const R1 = R(30), l = O.semer(R1, 200, { sa, sb, dmin: 4.4, dmax: 38, gam: 1.5, r: 0.9, exclure: (x, z) => dansClairiere(x, z, -1.5) }).map((q) => ({ p: [q.x, q.y - 0.1, q.z], ry: q.a * TAU, s: 0.8 + q.b * 1.4, c: teinte(q.c) }));
         add(l, O.fusion(P), lam);
       }
       // fougères
@@ -421,16 +429,16 @@
       {
         const corps = [prim(O.cyl(0.36, 0.24, 1.6, 6), { c0: H(0xf2e6e0), c1: H(0xdccbe0), teinte: 0, jit: 0.03, seed: 3 }), prim(O.dome(9, 3), { p: [0, 1.35, 0], s: [1.75, 1.0, 1.75], c0: H(0xd8d8e8), c1: H(0xffffff), jit: 0.06, seed: 4 })];
         const lum = [prim(O.cone(1.62, 0.5, 9), { p: [0, 1.5, 0], s: [1, -1, 1], c0: H(0xffffff), c1: H(0xc0d0ff), seed: 5, vari: 0.04 })];
-        for (let k = 0; k < 7; k += 1) { const phi = 0.2 + (k % 3) * 0.32, th = k * 2.4; lum.push(prim(O.ico(0.2, 0), { p: [Math.sin(phi) * Math.cos(th) * 1.75 * 0.97, 1.35 + Math.cos(phi) * 0.98, Math.sin(phi) * Math.sin(th) * 1.75 * 0.97], s: [1, 0.55, 1], c: H(0xfff6c8), teinte: 0, vari: 0.03 })); }
+        for (let k = 0; k < 4; k += 1) { const phi = 0.25 + (k % 3) * 0.3, th = k * 2.4; lum.push(prim(O.octa(0.24), { p: [Math.sin(phi) * Math.cos(th) * 1.75 * 0.97, 1.35 + Math.cos(phi) * 0.98, Math.sin(phi) * Math.sin(th) * 1.75 * 0.97], s: [1, 0.55, 1], c: H(0xfff6c8), teinte: 0, vari: 0.03 })); }
         const gCorps = O.fusion(corps), gLum = O.fusion(lum);
-        const couleurs = [[1.0, 0.55, 0.78], [0.45, 0.9, 1.0], [0.72, 0.52, 1.0], [1.0, 0.7, 0.55]];
+        const couleurs = [[1.0, 0.55, 0.78], [0.45, 0.9, 1.0], [0.72, 0.52, 1.0], [0.85, 0.75, 1.0]];
         const R1 = R(40), grands = [], pts = [];
         // quelques grands champignons au bord du chemin et surtout dans les clairières
         const pose = (q, k, ech) => { const c = couleurs[k % couleurs.length]; grands.push({ p: [q.x, q.y - 0.05, q.z], ry: q.a * TAU, s: ech, c, c2: [c[0] * 0.7 + 0.3, c[1] * 0.7 + 0.3, c[2] * 0.7 + 0.3] }); };
         O.semer(R1, 14, { sa, sb, dmin: 4.8, dmax: 16, gam: 1.0, r: 1.2 }).forEach((q, i) => pose(q, i, 0.8 + q.b * 0.9));
         clairs.forEach((c, ic) => { for (let k = 0; k < 6; k += 1) { const a = k * 1.1 + ic, d = 1.6 + (k % 3) * 1.8 + (k > 3 ? 1.5 : 0), x = c.x + Math.cos(a) * d, z = c.z + Math.sin(a) * d; if (O.distChemin(x, z, c.s) < O.DMIN + 0.3) continue; pose({ x, z, y: ctx.hauteur(x, z), a: (k * 0.37) % 1 }, ic + k, 0.5 + ((k * 7) % 5) * 0.28); } });
         const petits = [];
-        O.semer(R1, 70, { sa, sb, dmin: 4.4, dmax: 18, gam: 1.2 }).forEach((q, i) => { const c = couleurs[i % couleurs.length]; petits.push({ p: [q.x, q.y - 0.02, q.z], ry: q.a * TAU, s: 0.14 + q.b * 0.22, c, c2: [c[0] * 0.7 + 0.3, c[1] * 0.7 + 0.3, c[2] * 0.7 + 0.3] }); });
+        O.semer(R1, 50, { sa, sb, dmin: 4.4, dmax: 18, gam: 1.2 }).forEach((q, i) => { const c = couleurs[i % couleurs.length]; petits.push({ p: [q.x, q.y - 0.02, q.z], ry: q.a * TAU, s: 0.14 + q.b * 0.22, c, c2: [c[0] * 0.7 + 0.3, c[1] * 0.7 + 0.3, c[2] * 0.7 + 0.3] }); });
         const tous = grands.concat(petits);
         add(tous, gCorps, lamDouble);
         add(tous.map((t) => Object.assign({}, t, { c: t.c2 })), gLum, lueur);
@@ -445,10 +453,17 @@
       {
         const P = [prim(O.cyl(0.02, 0.014, 0.4, 3, true), { c: H(0x58d0a0), teinte: 0, vari: 0.04 }), prim(O.octa(0.11), { p: [0, 0.43, 0], s: [1, 1.4, 1], c: [1, 1, 1], vari: 0.05 }), prim(O.octa(0.07), { p: [0.1, 0.3, 0.02], s: [1, 1.4, 1], c: [1, 1, 1], vari: 0.05 })];
         const gF = O.fusion(P), R1 = R(50), cols = [[0.4, 0.95, 1], [1, 0.55, 0.85], [1, 0.9, 0.45], [0.72, 0.6, 1]], l = [];
-        clairs.forEach((c, ic) => { for (let k = 0; k < 22; k += 1) { const a = R1() * TAU, d = Math.sqrt(R1()) * (c.r + 1.5), x = c.x + Math.cos(a) * d, z = c.z + Math.sin(a) * d; if (O.distChemin(x, z, c.s) < O.DMIN + 0.2) continue; l.push({ p: [x, ctx.hauteur(x, z) - 0.02, z], ry: R1() * TAU, s: 0.8 + R1() * 1.0, c: cols[(ic + k) % 4] }); } });
-        O.semer(R1, 90, { sa, sb, dmin: 4.4, dmax: 14, gam: 1.0 }).forEach((q, i) => l.push({ p: [q.x, q.y - 0.02, q.z], ry: q.a * TAU, s: 0.8 + q.b * 1.0, c: cols[i % 4] }));
+        clairs.forEach((c, ic) => { for (let k = 0; k < 22; k += 1) { const a = R1() * TAU, d = Math.sqrt(R1()) * (c.r + 1.5), x = c.x + Math.cos(a) * d, z = c.z + Math.sin(a) * d; if (O.distChemin(x, z, c.s) < O.DMIN + 0.2) continue; l.push({ p: [x, ctx.hauteur(x, z) - 0.02, z], ry: R1() * TAU, s: 1.2 + R1() * 1.2, c: cols[(ic + k) % 4] }); } });
+        O.semer(R1, 90, { sa, sb, dmin: 4.4, dmax: 14, gam: 1.0 }).forEach((q, i) => l.push({ p: [q.x, q.y - 0.02, q.z], ry: q.a * TAU, s: 1.2 + q.b * 1.2, c: cols[i % 4] }));
         add(l, gF, lueur);
         const gd = g.userData.pools; add(l.map((f) => ({ p: [f.p[0], f.p[1] + 0.2, f.p[2]], s: f.s * 0.9, c: [f.c[0] * 0.55, f.c[1] * 0.55, f.c[2] * 0.55] })), gd, additif);
+      }
+
+      // ---- brume basse bleutée (nappes additives, loin de l'axe du chemin) ----
+      {
+        const R1 = R(90), l = [];
+        O.semer(R1, 26, { sa, sb, dmin: 9, dmax: 40, gam: 1.0 }).forEach((q) => l.push({ p: [q.x, q.y + 0.8, q.z], s: [6 + q.a * 8, 1, 6 + q.b * 8], c: [0.1, 0.15, 0.22] }));
+        add(l, g.userData.pools, additif);
       }
 
       // ---- taches de sol : mousse, lumière, tapis de fleurs bleues ----
