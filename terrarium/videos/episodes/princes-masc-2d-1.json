@@ -1,0 +1,223 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "princes-masc-2d-1",
+  "titre": "4 princes (2D), étage 1 (tarzan)",
+  "rubrique": "voyage",
+  "numero": 81,
+  "voix": null,
+  "musique": "aucune",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "reve",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "TARZAN",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Il vit dans la jungle avec les singes"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          3.35
+        ],
+        "reponses": [
+          8.85
+        ],
+        "fin": 2.85,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2.0,
+          "ordre": [
+            5,
+            3
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "aucune",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "PRINCE 1/4",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.4,
+            "texte": "Aide-moi ! Quatre princes ouvrent le château !",
+            "emotion": "panique"
+          },
+          {
+            "t": 3.35,
+            "texte": "Il vit dans la jungle avec les singes…",
+            "emotion": "neutre",
+            "lecture": true
+          },
+          {
+            "t": 5.37,
+            "texte": "Trop facile !",
+            "emotion": "defi"
+          },
+          {
+            "t": 9.37,
+            "texte": "C'est Tarzan !",
+            "emotion": "joie"
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "danse": false,
+        "accroche": {
+          "texte": "AIDE-MOI !",
+          "sous": "4 princes ouvrent le château 🏰",
+          "fin": 2.45,
+          "taille": 150,
+          "tailleSous": 44,
+          "glow": "#c46bff",
+          "ombre": "#4a1a8a",
+          "voile": "radial-gradient(circle at 50% 52%, #2a0d5ad9 0%, #12062cf2 100%)",
+          "opaciteVoile": 0.9
+        },
+        "vol": {
+          "depart": 2.2,
+          "arrivee": 3.0,
+          "pose": 4.67,
+          "x": 855,
+          "y": -871,
+          "direct": true
+        },
+        "costume": "prince"
+      },
+      "sons": [
+        {
+          "f": "whoosh.wav",
+          "t": 2.11,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 2.2,
+          "v": 0.4
+        },
+        {
+          "f": "ailes.wav",
+          "t": 2.2,
+          "v": 0.3
+        },
+        {
+          "f": "ailes.wav",
+          "t": 3.87,
+          "v": 0.25
+        },
+        {
+          "f": "pouf.wav",
+          "t": 4.67,
+          "v": 0.5
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 5.37,
+          "v": 0.3
+        },
+        {
+          "f": "merveille.wav",
+          "t": 9.45,
+          "v": 0.4
+        }
+      ],
+      "amorceBoucle": 0.4,
+      "fond3d": "mirage",
+      "fond3dOpts": {
+        "revel": 14.68,
+        "fin": 18.2
+      },
+      "fondAnime": "chateau",
+      "fondAnimeOpts": {
+        "t0": 0.0,
+        "L": 38.8889,
+        "cles": [
+          [
+            0,
+            0.55
+          ],
+          [
+            11.4,
+            0.72
+          ],
+          [
+            19.7,
+            0.9
+          ],
+          [
+            28.0,
+            1.15
+          ],
+          [
+            35.4,
+            1.4
+          ],
+          [
+            36.5,
+            1.55
+          ],
+          [
+            38.5,
+            8.0
+          ]
+        ],
+        "ouvre": [
+          37.3,
+          38.3
+        ],
+        "flash": [
+          38.2,
+          38.65,
+          39.2
+        ]
+      }
+    }
+  ],
+  "publication": {
+    "texte": "Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princes pour lui ouvrir la porte ! Envoie-le à ta meilleure amie 💜",
+    "hashtags": [
+      "#quiz",
+      "#prince",
+      "#dessinanime",
+      "#devinette",
+      "#hibou"
+    ],
+    "commentaire": "Lequel t'as pas trouvé ? 👇"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true
+}

@@ -57,6 +57,10 @@ for k, e in enumerate(ETAGES):
     pl['regle'] = f'{ET} {n}/4'; pl['decor'] = 'reve'; pl['animation'] = 'aucune'; pl.pop('fondAnime', None)
     if FOND == 'chemin':
         pl['fond3d'] = 'chemin'; pl['fond3dRes'] = [720, 1280]; pl['fond3dOpts'] = dict({'t0': G[k], 'L': PUB}, **spec.get('fond3dOpts', {}))
+    if FOND == 'chateau2d':   # château dessiné en SVG (voir dessins-animes.py) : la caméra s'approche à chaque mot, la porte s'ouvre à la fin
+        pl['fondAnime'] = 'chateau'
+        pl['fondAnimeOpts'] = {'t0': G[k], 'L': PUB, 'cles': [[0, 0.55], [G[1], 0.72], [G[2], 0.9], [G[3], 1.15], [G[3] + 7.4, 1.4], [G[3] + 8.5, 1.55], [G[3] + 10.5, 8.0]],
+                               'ouvre': [round(G[3] + 9.3, 3), round(G[3] + 10.3, 3)], 'flash': [round(G[3] + 10.2, 3), round(G[3] + 10.65, 3), round(G[3] + 11.2, 3)]}
     P = pl['presentateur']; P.pop('corniche', None); P['danse'] = False
     if spec.get('costume'): P['costume'] = spec['costume']
     if spec.get('croisiere', FOND == 'chemin'): P['croisiere'] = True
