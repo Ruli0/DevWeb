@@ -151,3 +151,5 @@ Ne pas donner la réponse de la 10e (le rouge) tout de suite : laisser débattre
 
 **Hashtags** : #quiz #prince #dessinanime #devinette #hibou · **Commentaire épinglé** : Lequel t'as pas trouvé ? 👇
 Teste le message « Envoie-le à ta meilleure amie 💜 » affiché à l'image (partages). Une vidéo par jour, vers 18-19 h.
+
+**Variante 2D de la vidéo 11** : `videos/studio/princes-masc-2d/princes-masc-2d-final.mp4` (même description, mêmes mots et mêmes voix, château dessiné en SVG). Ne publier qu'une des deux versions, la même semaine pas les deux le même jour.
