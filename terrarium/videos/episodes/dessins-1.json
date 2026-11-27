@@ -62,7 +62,7 @@
         }
       },
       "affichage": "progressif",
-      "animation": "vinyle",
+      "animation": "aucune",
       "premiereLettre": true,
       "finaleDelai": 0.5,
       "regle": "PRINCESSE 1/4",
@@ -380,7 +380,51 @@
           "v": 0.4
         }
       ],
-      "amorceBoucle": 0.4
+      "amorceBoucle": 0.4,
+      "fondAnime": "chateau",
+      "fondAnimeOpts": {
+        "t0": 0.0,
+        "L": 38.8889,
+        "cles": [
+          [
+            0,
+            0.55
+          ],
+          [
+            10.9,
+            0.72
+          ],
+          [
+            19.2,
+            0.9
+          ],
+          [
+            27.5,
+            1.15
+          ],
+          [
+            34.9,
+            1.4
+          ],
+          [
+            36.0,
+            1.55
+          ],
+          [
+            38.0,
+            8.0
+          ]
+        ],
+        "ouvre": [
+          36.8,
+          37.8
+        ],
+        "flash": [
+          37.7,
+          38.15,
+          38.7
+        ]
+      }
     }
   ],
   "publication": {

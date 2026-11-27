@@ -40,7 +40,11 @@ for k, e in enumerate(ETAGES):
     pl['mots'][0]['texte'] = e['mot']; pl['mots'][0]['indice'] = {'texte': e['q']}
     nh = len(e['ordre']); rep = round(e['deb'] + e['pas'] * (nh + 1) - 0.5, 4)
     pl['muet'].update({'debuts': [e['deb']], 'reponses': [rep], 'fin': round(e['d'] - rep, 4), 'etapes': {'pas': e['pas'], 'ordre': e['ordre']}})
-    pl['regle'] = e['regle']; pl['decor'] = 'reve'; pl['animation'] = 'vinyle'; pl.pop('fondAnime', None); pl.pop('fond3d', None); pl.pop('fond3dOpts', None)
+    pl['regle'] = e['regle']; pl['decor'] = 'reve'; pl['animation'] = 'aucune'; pl.pop('fond3d', None); pl.pop('fond3dOpts', None)
+    # Fond château (décision 103) : la caméra s'approche à chaque princesse ; à la fin la porte s'ouvre, flash doré, retour au château lointain (boucle).
+    pl['fondAnime'] = 'chateau'
+    pl['fondAnimeOpts'] = {'t0': G[k], 'L': PUB, 'cles': [[0, 0.55], [G[1], 0.72], [G[2], 0.9], [G[3], 1.15], [G[3] + 7.4, 1.4], [G[3] + 8.5, 1.55], [G[3] + 10.5, 8.0]],
+                           'ouvre': [round(G[3] + 9.3, 3), round(G[3] + 10.3, 3)], 'flash': [round(G[3] + 10.2, 3), round(G[3] + 10.65, 3), round(G[3] + 11.2, 3)]}
     P = pl['presentateur']; P.pop('corniche', None); P['danse'] = True
     P['lignes'] = [dict({'t': t0, 'texte': tx, 'emotion': em}, **({'folie': fo} if fo else {}), **({'lecture': True} if lu else {})) for t0, tx, em, fo, lu in e['lignes']]
     if n == 1:

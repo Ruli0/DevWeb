@@ -14,7 +14,66 @@
   // Fond animé (« vidéo » de fond), dessiné une fois, animé image par image par animerFond(). Tout est périodique sur la durée
   // publiée (durée − amorce) : quand la vidéo reboucle, le fond est exactement au même état. Seul décor pour l'instant : désert.
   const hf = (k) => { const x = Math.sin(k * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+
+  // Fond « château » (dessins animés) : un château de conte, rose et lilas, dessiné en SVG ; une caméra s'en approche (échelle autour de la
+  // porte) selon un niveau global (fondAnimeOpts.cles : [[temps global, échelle]]), la porte s'ouvre sur une lumière dorée, un flash doré
+  // recouvre l'écran, puis le château est de nouveau lointain : la vidéo reboucle sans coupure. Tout est calculé à partir du temps global.
+  const GX = 540, GY = 1330;   // centre du bas de la porte (point fixe du zoom)
+  function chateauSvg() {
+    const E = 'stroke="#6a3bb5" stroke-width="5" stroke-linejoin="round"';
+    const merlons = Array.from({ length: 14 }, (_, k) => `<rect x="${112 + k * 62}" y="868" width="38" height="36" ${E} fill="#b783ee"/>`).join('');
+    const briques = Array.from({ length: 6 }, (_, k) => `<path d="M${120} ${960 + k * 62} H${960}" stroke="#7d4bc4" stroke-opacity=".28" stroke-width="4"/>`).join('');
+    const tour = (x0, x1, haut, apex, nom, couleur) => {
+      const cx = (x0 + x1) / 2, w = x1 - x0;
+      return `<rect x="${x0}" y="${haut}" width="${w}" height="${GY - haut}" ${E} fill="${couleur}"/>`
+        + `<path d="M${x0 + 8} ${haut + 70} V${GY - 4}" stroke="#ffffff" stroke-opacity=".28" stroke-width="10" stroke-linecap="round"/>`
+        + `<path d="M${x0 - 22} ${haut} L${cx} ${apex} L${x1 + 22} ${haut} Z" ${E} fill="#ff6fb5"/><path d="M${cx} ${apex + 6} L${x1 + 8} ${haut - 4} L${cx + 18} ${haut - 4} Z" fill="#ff9fd0" fill-opacity=".7"/>`
+        + `<rect x="${x0 - 22}" y="${haut - 8}" width="${w + 44}" height="16" rx="6" ${E} fill="#ffd45c"/>`
+        + `<circle cx="${cx}" cy="${apex - 6}" r="12" ${E} fill="#ffd45c"/>`
+        + `<g class="ch-drap" data-px="${cx}" data-py="${apex - 18}" data-n="${nom}"><path d="M${cx} ${apex - 18} V${apex - 92}" stroke="#6a3bb5" stroke-width="5"/><path d="M${cx} ${apex - 92} L${cx + 66} ${apex - 70} L${cx} ${apex - 48} Z" ${E} fill="#ffd45c"/></g>`
+        + [0.18, 0.46].map((f) => `<path d="M${cx - 17} ${haut + (GY - haut) * f + 56} V${haut + (GY - haut) * f + 22} Q${cx} ${haut + (GY - haut) * f - 8} ${cx + 17} ${haut + (GY - haut) * f + 22} V${haut + (GY - haut) * f + 56} Z" ${E} fill="#ffe27a"/>`).join('');
+    };
+    const tours = tour(110, 230, 840, 700, 3, '#c9a0f7') + tour(850, 970, 840, 700, 4, '#c9a0f7') + tour(270, 390, 760, 610, 5, '#cfa8f9') + tour(690, 810, 760, 610, 6, '#cfa8f9') + tour(445, 635, 620, 380, 7, '#d8b4fb');
+    const porte = `<path d="M475 ${GY} V1190 Q540 1075 605 1190 V${GY} Z" fill="#ffe9a0"/><g class="ch-lueur" opacity="0"><circle cx="540" cy="1230" r="70" fill="#ffffff" fill-opacity=".9"/></g>`
+      + `<g class="ch-vantaux"><g class="ch-vg"><path d="M475 ${GY} V1190 Q508 1135 540 1126 V${GY} Z" ${E} fill="#5a2f9e"/><circle cx="522" cy="1250" r="7" fill="#ffd45c"/><circle cx="522" cy="1290" r="7" fill="#ffd45c"/></g><g class="ch-vd"><path d="M605 ${GY} V1190 Q572 1135 540 1126 V${GY} Z" ${E} fill="#5a2f9e"/><circle cx="558" cy="1250" r="7" fill="#ffd45c"/><circle cx="558" cy="1290" r="7" fill="#ffd45c"/></g></g>`
+      + `<path d="M475 ${GY} V1190 Q540 1075 605 1190 V${GY}" fill="none" ${E}/>`;
+    const route = `<path d="M505 ${GY} L575 ${GY} L1500 3200 L-420 3200 Z" fill="#ffd9f0" fill-opacity=".92"/><path d="M505 ${GY} L-420 3200 M575 ${GY} L1500 3200" stroke="#ff9fd0" stroke-width="8"/>`
+      + Array.from({ length: 7 }, (_, k) => { const y = GY + 40 * Math.pow(1.6, k), h = 0.495 * (y - GY); return `<path d="M${540 - 6 - h * 0.12} ${y} H${540 + 6 + h * 0.12}" stroke="#ffffff" stroke-width="${4 + k * 3}" stroke-linecap="round" stroke-opacity=".7"/>`; }).join('');
+    const nuages = Array.from({ length: 4 }, (_, k) => `<g class="ch-nuage" data-k="${k}" data-y="${430 + k * 190 + hf(k + 5) * 60}" data-x="${hf(k + 9) * 1300}"><ellipse cx="0" cy="0" rx="${110 + k * 12}" ry="${34 + k * 3}" fill="#ffffff" fill-opacity=".34"/><ellipse cx="-60" cy="12" rx="${70 + k * 6}" ry="${26}" fill="#ffffff" fill-opacity=".3"/><ellipse cx="62" cy="14" rx="76" ry="${28}" fill="#ffffff" fill-opacity=".3"/></g>`).join('');
+    const etoiles = Array.from({ length: 16 }, (_, k) => `<path class="ch-etoile" data-k="${k}" d="M0 -14 L3.5 -3.5 L14 0 L3.5 3.5 L0 14 L-3.5 3.5 L-14 0 L-3.5 -3.5 Z" fill="${k % 3 ? '#fff4b0' : '#ffffff'}" transform="translate(${(70 + hf(k + 2) * 940).toFixed(0)} ${(320 + hf(k + 17) * 1000).toFixed(0)})"/>`).join('');
+    return `<svg class="fond-anime ch" viewBox="0 0 1080 1920" width="1080" height="1920"><defs><linearGradient id="ch-sol" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a45c9"/><stop offset="1" stop-color="#341a7e"/></linearGradient></defs>`
+      + `<g class="ch-nuages">${nuages}</g><g class="ch-etoiles">${etoiles}</g>`
+      + `<path d="M-40 ${GY} Q200 1235 420 1290 T800 1275 T1120 1250 V${GY} Z" fill="#b48cf0" fill-opacity=".55"/><rect x="0" y="${GY}" width="1080" height="700" fill="url(#ch-sol)"/>`
+      + `<g class="ch-monde">${route}<rect x="110" y="900" width="860" height="${GY - 900}" ${E} fill="#b07be8"/>${briques}${merlons}${tours}${porte}</g>`
+      + `<rect class="ch-flash" x="0" y="0" width="1080" height="1920" fill="#fff0b8" opacity="0"/></svg>`;
+  }
+  function animerChateau(c, el, p, t0, d) {
+    const sv = q(el, '.fond-anime'), O = p.fondAnimeOpts || {}, L = O.L || 38.9, cles = O.cles || [[0, 0.4], [L, 0.4]];
+    const monde = q(sv, '.ch-monde'), vg = q(sv, '.ch-vg'), vd = q(sv, '.ch-vd'), lueur = q(sv, '.ch-lueur'), fl = q(sv, '.ch-flash');
+    const drapeaux = qa(sv, '.ch-drap'), nuages = qa(sv, '.ch-nuage'), etoiles = qa(sv, '.ch-etoile');
+    const mod = (a, b) => ((a % b) + b) % b, lis = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+    const echelle = (T) => { if (O.flash && T >= O.flash[1]) return cles[0][1];
+      if (T <= cles[0][0]) return cles[0][1];
+      for (let i = 1; i < cles.length; i += 1) if (T <= cles[i][0]) { const [ta, sa] = cles[i - 1], [tb, sb] = cles[i]; return Math.exp(Math.log(sa) + (Math.log(sb) - Math.log(sa)) * lis((T - ta) / (tb - ta)) * 0.5 + (Math.log(sb) - Math.log(sa)) * ((T - ta) / (tb - ta)) * 0.5); }
+      return cles[cles.length - 1][1]; };
+    function rendre(t) {
+      const T = (O.t0 || 0) + t, s = echelle(T);
+      monde.setAttribute('transform', `translate(${GX} ${GY}) scale(${s.toFixed(4)}) translate(${-GX} ${-GY})`);
+      const ou = O.ouvre ? lis((T - O.ouvre[0]) / (O.ouvre[1] - O.ouvre[0])) : 0;
+      vg.setAttribute('transform', `translate(475 0) scale(${(1 - 0.93 * ou).toFixed(3)} 1) translate(-475 0)`);
+      vd.setAttribute('transform', `translate(605 0) scale(${(1 - 0.93 * ou).toFixed(3)} 1) translate(-605 0)`);
+      lueur.setAttribute('opacity', ou.toFixed(3));
+      let f = 0; if (O.flash) { const [a, b, e] = O.flash; f = T < b ? lis((T - a) / (b - a)) : 1 - lis((T - b) / (e - b)); f = T < a ? 0 : Math.max(0, f); }
+      fl.setAttribute('opacity', (f * 0.96).toFixed(3));
+      drapeaux.forEach((g, k) => { const n = 12 + 2 * (k % 3); g.setAttribute('transform', `rotate(${(7 * Math.sin(2 * Math.PI * n * T / L + k)).toFixed(2)} ${g.dataset.px} ${g.dataset.py})`); });
+      nuages.forEach((g) => { const k = +g.dataset.k, x = mod(+g.dataset.x + 1300 * (1 + (k % 2)) * T / L, 1300) - 110; g.setAttribute('transform', `translate(${x.toFixed(1)} ${(+g.dataset.y + 14 * Math.sin(2 * Math.PI * 2 * T / L + k)).toFixed(1)})`); });
+      etoiles.forEach((g) => { const k = +g.dataset.k, v = Math.pow(Math.abs(Math.sin(Math.PI * (4 + (k % 4)) * T / L + k * 1.7)), 3); g.setAttribute('opacity', (0.15 + 0.85 * v).toFixed(2)); });
+    }
+    const pilote = { t: 0 }; rendre(0);
+    c.ft(pilote, { t: 0 }, { t: d, duration: d, ease: 'none', onUpdate: () => rendre(pilote.t) }, t0);
+  }
   function fondAnimeSvg(nom, sans2d) {
+    if (nom === 'chateau') return chateauSvg();
     if (nom !== 'desert') return '';
     const dune = (base, a1, a2, ph) => { let d = `M0 1920 L0 ${base}`; for (let x = 0; x <= 2160; x += 30) d += ` L${x} ${(base + a1 * Math.sin(2 * Math.PI * x / 1080 * 2 + ph) + a2 * Math.sin(2 * Math.PI * x / 1080 * 3 + ph * 2)).toFixed(1)}`; return `${d} L2160 1920 Z`; };
     const rayons = Array.from({ length: 12 }, (_, k) => { const a = (k / 12) * 2 * Math.PI, b = a + Math.PI / 24, R = 2200; return `<path d="M0 0 L${(R * Math.cos(a)).toFixed(0)} ${(R * Math.sin(a)).toFixed(0)} L${(R * Math.cos(b)).toFixed(0)} ${(R * Math.sin(b)).toFixed(0)} Z"/>`; }).join('');
@@ -25,6 +84,7 @@
     return `<svg class="fond-anime" viewBox="0 0 1080 1920" width="1080" height="1920">${d2d}${sans2d ? '' : boule}<g class="fa-grains">${grains}</g></svg>`;   // pas de buisson roulant avec le fond 3D (demande de Jules)
   }
   function animerFond(c, el, p, t0, d) {
+    if (p.fondAnime === 'chateau') return animerChateau(c, el, p, t0, d);
     const sv = q(el, '.fond-anime'); if (!sv) return;
     const Lp = d - (p.amorceBoucle || 0), ray = q(sv, '.fa-rayons'), d1 = q(sv, '.fa-dune1'), d2 = q(sv, '.fa-dune2'), gr = qa(sv, '.fa-grain'), bo = q(sv, '.fa-boule'), bor = q(sv, '.fa-boule-r');
     const G = gr.map((_, k) => ({ x0: hf(k + 11) * 1180, y0: 260 + hf(k + 23) * 1560, m: 1 + Math.floor(hf(k + 31) * 3), a: 6 + hf(k + 41) * 16, ph: hf(k + 53) * 6.28 }));
