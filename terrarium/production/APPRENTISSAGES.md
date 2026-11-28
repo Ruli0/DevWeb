@@ -111,3 +111,8 @@ D'après Jules (chiffres à relever). Même plafond que tous les formats depuis 
 - Confirmé : le public qui regarde et like est quasi exclusivement féminin ; les thèmes « princesses / dessins animés » le retiennent mieux que tout le reste (8,6 s et 5,91 % contre 6,0 s et 2,85 % pour l'iceberg, même structure).
 - **Plafond de portée inchangé** : ~490-550 vues pour CRATÈRE, SCORPION, iceberg et princesses, alors que la rétention a presque doublé. Le frein n'est donc pas la rétention seule. Toujours à zéro : partages, commentaires, abonnements. Hypothèse (à tester) : sans ces signaux TikTok n'élargit pas la diffusion.
 - À faire : relever âge, pays et heures d'activité (onglet Spectateurs, plus bas) ; publier la 2e partie ; tester UNE variable de fin à la fois pour obtenir des partages/commentaires (« Envoie-le à ta meilleure amie 💜 » à l'image ; question clivante « 1, 2, 3 ou 4 ? »).
+
+## Relevés du 28 nov. 2026 : les vidéos 3D font moins bien que la 1re partie
+- 4 princesses 2e partie (3D, « AIDE-MOI ! », 17 h 06) : 118 vues à 2 h 15, 0 like, 2,7 s, 0,71 %. 4 princes 3D : 260 vues en 16 h, 3,8 s, 2,27 %. Référence 1re partie (château 2D, « STOP ! », 9 h 06) : 487 vues, 8,6 s, 5,91 %, 27 likes.
+- Les deux 3D partagent l'accroche « AIDE-MOI ! » + prince hibou + fond 3D ; heure et nombre de vidéos du jour ont aussi changé (3 en moins de 12 h, comme le QCM v3 qui avait flopé). Cause non établie : une variable à la fois.
+- Règle : une vidéo par jour, le matin vers 9 h. Test en cours : « 4 princes » 2D avec l'accroche « STOP ! » de la 1re partie.
