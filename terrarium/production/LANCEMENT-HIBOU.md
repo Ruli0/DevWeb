@@ -153,3 +153,6 @@ Ne pas donner la réponse de la 10e (le rouge) tout de suite : laisser débattre
 Teste le message « Envoie-le à ta meilleure amie 💜 » affiché à l'image (partages). Une vidéo par jour, vers 18-19 h.
 
 **Variante 2D de la vidéo 11** : `videos/studio/princes-masc-2d/princes-masc-2d-final.mp4` (même description, mêmes mots et mêmes voix, château dessiné en SVG). Ne publier qu'une des deux versions, la même semaine pas les deux le même jour.
+
+## Vidéo 12 : 4 princes, 2D, accroche « STOP ! » (test d'accroche)
+**Vidéo** : `videos/studio/princes-stop/princes-stop-final.mp4` (mêmes mots, fond 2D et voix que « 4 princes 2D », accroche de la 1re partie « STOP ! 4 princes. Tu les trouves tous ? »). Description, hashtags et commentaire : comme la vidéo 11. **Publier seule, demain vers 9 h** ; relever à 1 h, 3 h, 24 h. Si le visionnage moyen retrouve ~8 s, l'accroche « AIDE-MOI ! » ou la 3D était en cause ; sinon, c'est l'heure ou le thème.
