@@ -1,0 +1,56 @@
+{
+  "id": "princes-stop",
+  "titre": "4 princes (2D, STOP)",
+  "fond": "chateau2d",
+  "costume": "prince",
+  "mots": [
+    {
+      "mot": "TARZAN",
+      "indice": "Il vit dans la jungle avec les singes",
+      "reponse": "C'est Tarzan !"
+    },
+    {
+      "mot": "CHARMANT",
+      "indice": "Il retrouve la pantoufle de verre",
+      "reponse": "C'est Charmant !"
+    },
+    {
+      "mot": "PHILIPPE",
+      "indice": "Il réveille la belle au bois dormant",
+      "reponse": "C'est Philippe !"
+    },
+    {
+      "mot": "KRISTOFF",
+      "indice": "Il vend de la glace avec son renne",
+      "reponse": "C'est Kristoff !"
+    }
+  ],
+  "reactions": [
+    "Trop facile !",
+    "Ça se corse…",
+    "Ouh là, c'est dur !",
+    "Personne trouve celle-là !"
+  ],
+  "accroche": {
+    "texte": "STOP !",
+    "sous": "4 princes. Tu les trouves tous ?",
+    "voix": "Stop ! Quatre princes. Tu les trouves tous ?",
+    "tailleSous": 46,
+    "duree": 2.3
+  },
+  "final": "Un like si t'as tout trouvé !",
+  "cta": "Envoie-le à ta meilleure amie 💜",
+  "etiquette": "PRINCE",
+  "publication": {
+    "texte": "Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princes pour lui ouvrir la porte ! Envoie-le à ta meilleure amie 💜",
+    "hashtags": [
+      "#quiz",
+      "#prince",
+      "#dessinanime",
+      "#devinette",
+      "#hibou"
+    ],
+    "commentaire": "Lequel t'as pas trouvé ? 👇"
+  },
+  "fond3dOpts": {}
+}

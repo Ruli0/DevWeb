@@ -1,0 +1,482 @@
+{
+  "version": 4,
+  "format": "avis",
+  "id": "princes-stop-1",
+  "titre": "4 princes (2D, STOP), étage 1 (tarzan)",
+  "rubrique": "voyage",
+  "numero": 81,
+  "voix": null,
+  "musique": "aucune",
+  "reglages": {
+    "musique": 0.6,
+    "musiqueSeule": 1.0,
+    "bruitages": 1.0
+  },
+  "plans": [
+    {
+      "plan": "grille",
+      "fond": "nuit",
+      "personnage": false,
+      "decor": "reve",
+      "titre": "Plus malin qu'un *nomade* ?",
+      "stades": [
+        "Touriste",
+        "Guide",
+        "Nomade"
+      ],
+      "figures": [
+        "touriste",
+        "marin",
+        "robinson"
+      ],
+      "mots": [
+        {
+          "texte": "TARZAN",
+          "sens": "h",
+          "ligne": 0,
+          "colonne": 0,
+          "indice": {
+            "texte": "Il vit dans la jungle avec les singes"
+          },
+          "reponse": {}
+        }
+      ],
+      "muet": {
+        "intro": 0.3,
+        "cadence": 3,
+        "debuts": [
+          3.2
+        ],
+        "reponses": [
+          8.7
+        ],
+        "fin": 2.85,
+        "tempo": 108,
+        "titreFixe": true,
+        "etapes": {
+          "pas": 2.0,
+          "ordre": [
+            5,
+            3
+          ]
+        }
+      },
+      "affichage": "progressif",
+      "animation": "aucune",
+      "premiereLettre": true,
+      "finaleDelai": 0.5,
+      "regle": "PRINCE 1/4",
+      "zoneSure": true,
+      "presentateur": {
+        "allure": "hibou2",
+        "lignes": [
+          {
+            "t": 0.4,
+            "texte": "Stop ! Quatre princes. Tu les trouves tous ?",
+            "emotion": "panique",
+            "env": [
+              0.17,
+              0.03,
+              0.26,
+              1.0,
+              1.0,
+              0.71,
+              0.1,
+              0.05,
+              0.03,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.01,
+              0.81,
+              1.0,
+              0.62,
+              0.21,
+              0.34,
+              1.0,
+              0.27,
+              0.11,
+              0.26,
+              1.0,
+              0.96,
+              1.0,
+              0.72,
+              0.28,
+              0.09,
+              0.07,
+              0.09,
+              0.0,
+              0.56,
+              0.87,
+              0.86,
+              0.99,
+              0.7,
+              0.23,
+              0.38,
+              0.76,
+              0.91,
+              0.41,
+              0.14,
+              0.04,
+              0.9,
+              1.0,
+              0.96,
+              0.55,
+              0.62,
+              0.36,
+              0.24,
+              0.22,
+              0.13,
+              0.02,
+              0.0,
+              0.0,
+              0.02,
+              0.06,
+              0.01,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 2.0
+          },
+          {
+            "t": 3.2,
+            "texte": "Il vit dans la jungle avec les singes…",
+            "emotion": "neutre",
+            "lecture": true,
+            "env": [
+              0.93,
+              0.94,
+              0.75,
+              0.85,
+              0.64,
+              0.62,
+              1.0,
+              0.99,
+              1.0,
+              0.95,
+              1.0,
+              0.78,
+              0.82,
+              0.79,
+              0.62,
+              0.54,
+              0.82,
+              0.69,
+              0.98,
+              0.95,
+              1.0,
+              1.0,
+              0.65,
+              0.98,
+              0.94,
+              0.86,
+              0.43,
+              0.51,
+              0.63,
+              0.2,
+              0.07,
+              0.49,
+              0.71,
+              0.48,
+              0.39,
+              0.2,
+              0.23,
+              0.79,
+              0.87,
+              0.74,
+              0.81,
+              0.91,
+              1.0,
+              1.0,
+              0.69,
+              0.66,
+              0.26,
+              0.01,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.58,
+              0.86,
+              0.32,
+              0.33,
+              0.24,
+              0.13,
+              0.2,
+              0.21,
+              0.03,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 2.11,
+            "mots": [
+              [
+                0.0,
+                0.2
+              ],
+              [
+                0.2,
+                0.32
+              ],
+              [
+                0.32,
+                0.48
+              ],
+              [
+                0.48,
+                0.6
+              ],
+              [
+                0.6,
+                0.82
+              ],
+              [
+                0.82,
+                1.08
+              ],
+              [
+                1.08,
+                1.32
+              ],
+              [
+                1.32,
+                1.76
+              ],
+              [
+                1.76,
+                2.06
+              ]
+            ]
+          },
+          {
+            "t": 5.22,
+            "texte": "Trop facile !",
+            "emotion": "defi",
+            "env": [
+              0.19,
+              0.31,
+              0.62,
+              1.0,
+              1.0,
+              0.98,
+              0.69,
+              0.26,
+              0.11,
+              0.69,
+              0.95,
+              0.64,
+              0.36,
+              0.23,
+              0.11,
+              0.16,
+              1.0,
+              1.0,
+              0.99,
+              0.92,
+              0.87,
+              0.62,
+              0.66,
+              0.51,
+              0.25,
+              0.17,
+              0.01,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.04,
+              0.14,
+              0.02
+            ],
+            "envHz": 30,
+            "duree": 1.14
+          },
+          {
+            "t": 9.22,
+            "texte": "C'est Tarzan !",
+            "emotion": "joie",
+            "env": [
+              0.35,
+              0.35,
+              0.37,
+              0.9,
+              0.72,
+              0.3,
+              0.06,
+              0.02,
+              0.85,
+              0.82,
+              0.75,
+              0.72,
+              0.94,
+              0.81,
+              0.53,
+              1.0,
+              1.0,
+              0.82,
+              0.88,
+              1.0,
+              1.0,
+              0.75,
+              0.52,
+              0.29,
+              0.07,
+              0.02,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "envHz": 30,
+            "duree": 0.95
+          }
+        ],
+        "voix": {
+          "demiTons": 2
+        },
+        "danse": false,
+        "accroche": {
+          "texte": "STOP !",
+          "sous": "4 princes. Tu les trouves tous ?",
+          "fin": 2.45,
+          "tailleSous": 46
+        },
+        "vol": {
+          "depart": 2.2,
+          "arrivee": 3.0,
+          "pose": 4.52,
+          "x": 855,
+          "y": -871,
+          "direct": true
+        },
+        "costume": "prince"
+      },
+      "sons": [
+        {
+          "f": "whoosh.wav",
+          "t": 2.11,
+          "v": 0.45
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 2.2,
+          "v": 0.4
+        },
+        {
+          "f": "ailes.wav",
+          "t": 2.2,
+          "v": 0.3
+        },
+        {
+          "f": "ailes.wav",
+          "t": 3.72,
+          "v": 0.25
+        },
+        {
+          "f": "pouf.wav",
+          "t": 4.52,
+          "v": 0.5
+        },
+        {
+          "f": "whoosh.wav",
+          "t": 5.22,
+          "v": 0.3
+        },
+        {
+          "f": "merveille.wav",
+          "t": 9.3,
+          "v": 0.4
+        }
+      ],
+      "amorceBoucle": 0.4,
+      "fond3d": "mirage",
+      "fond3dOpts": {
+        "revel": 14.68,
+        "fin": 18.2
+      },
+      "fondAnime": "chateau",
+      "fondAnimeOpts": {
+        "t0": 0.0,
+        "L": 38.8889,
+        "cles": [
+          [
+            0,
+            0.55
+          ],
+          [
+            11.25,
+            0.72
+          ],
+          [
+            19.55,
+            0.9
+          ],
+          [
+            27.85,
+            1.15
+          ],
+          [
+            35.25,
+            1.4
+          ],
+          [
+            36.35,
+            1.55
+          ],
+          [
+            38.35,
+            8.0
+          ]
+        ],
+        "ouvre": [
+          37.15,
+          38.15
+        ],
+        "flash": [
+          38.05,
+          38.5,
+          39.05
+        ]
+      }
+    }
+  ],
+  "publication": {
+    "texte": "Le prince hibou doit rejoindre le château 👑🏰 Trouve les 4 princes pour lui ouvrir la porte ! Envoie-le à ta meilleure amie 💜",
+    "hashtags": [
+      "#quiz",
+      "#prince",
+      "#dessinanime",
+      "#devinette",
+      "#hibou"
+    ],
+    "commentaire": "Lequel t'as pas trouvé ? 👇"
+  },
+  "orbe": false,
+  "ouverture": "calme",
+  "voixGeneree": true,
+  "voixOff": [
+    {
+      "fichier": "l1.wav",
+      "t": 0.4,
+      "duree": 2.0
+    },
+    {
+      "fichier": "l2.wav",
+      "t": 3.2,
+      "duree": 2.11
+    },
+    {
+      "fichier": "l3.wav",
+      "t": 5.22,
+      "duree": 1.14
+    },
+    {
+      "fichier": "l4.wav",
+      "t": 9.22,
+      "duree": 0.95
+    }
+  ]
+}
